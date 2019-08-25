@@ -1,3 +1,4 @@
+
 #' Read files of a gtfs.zip feed and load them to memory as data.frames/data.tables. The 
 #' function will load to memory the following files: "calendar.txt", "routes.txt", "shapes.txt", 
 #' "stop_times.txt", "stops.txt" and "trips.txt".
@@ -10,14 +11,10 @@
 #'
 #' read_gtfs(gtfszip= "./data/poa_gtfs.zip")
 #'}
-
-
 read_gtfs <- function(gtfszip){
-
 # Use GForce Optimisations in data.table operations
   # details > https://jangorecki.gitlab.io/data.cube/library/data.table/html/datatable-optimize.html
   options(datatable.optimize=Inf)
-
 
 # Unzip files
   tempd <- file.path(tempdir(), "gtfsdir") # create tempr dir to save GTFS unzipped files

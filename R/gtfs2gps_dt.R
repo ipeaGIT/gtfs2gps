@@ -1,3 +1,6 @@
+
+gtfs2gps_dt <- function(){
+
 setwd("R:/Dropbox/git_projects/gtfs2vein")
 
 setwd("C:/Users/r1701707/Desktop/gtfs2vein")
@@ -220,3 +223,4 @@ x <- rbindlist(x)
 # perhaps using https://github.com/kvnkuang/pbmcapply
 
 
+}

@@ -86,6 +86,8 @@ getGPStable <- function(mdata, mdata_id, trips, trip_id, mydelay){
     myresult %>% select(trip_id, stop_id, departure_time, lat = y, long = x, stop_sequence)
 }
 
+speedup <- function(){
+
 library(dplyr)
 library(sf)
 
@@ -133,3 +135,5 @@ for(i in 1:maxi)
 }
 
 write.csv(result, "gps-poa.csv")
+
+}
