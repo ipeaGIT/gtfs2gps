@@ -8,8 +8,8 @@ test_that("filter_by_shape_id", {
 
     expect_equal(poa$shapes$shape_id %>% unique() %>% length(), 4)
 
-    subset <- filter_by_shape_id(poa, c("A141", "T2-1"))
-    expect_equal(subset$shapes$shape_id %>% unique() %>% length(), 1)
+    subset <- filter_by_shape_id(poa, c("A141-1", "T2-1"))
+    expect_equal(subset$shapes$shape_id %>% unique() %>% length(), 2)
 })
 
 test_that("filter_valid_stop_times", {
