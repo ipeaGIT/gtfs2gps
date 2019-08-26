@@ -19,8 +19,11 @@ Suggests:
     knitr,
     testthat
 Imports:
+      data.table,
       dplyr,
-      tidytransit,
+      Rcpp,
+      sf,
+      tidytransit
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
 LinkingTo: Rcpp
