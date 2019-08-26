@@ -1,6 +1,6 @@
 
-#' @title Filter gtfs_data by shape if
-#' @description Filter a gtfs_data data in the tidytransit format. It gets a set of
+#' @title Filter GTFS data by shape ids
+#' @description Filter a GTFS data in the tidytransit format. It gets a set of
 #' shape ids and returns a new gtfs_data by removing the other shape ids from the
 #' shapes. It also removes the unnecessary trips, stop_times, stops, and routes
 #' accordingly.
@@ -26,4 +26,12 @@ filter_by_shape_id <- function(gtfs_data, shape_ids){
   return(gtfs_data)
 }
 
-#shape_ids <- c("T2-1", "A141-2", "176-1")
+#' @title Filter GTFS data using valid stop times
+#' @description Filter a GTFS in the tidytransit format. It removes stop_times
+#' with NA values in arrival_time, departure_time, and arrival_time_hms.
+#' @export
+filter_valid_stop_times <- function(gtfs_data){
+  gtfs_data$stop_times <- gtfs_data$stop_times %>%
+    dplyr::filter(!is.na(.$arrival_time) & !is.na(departure_time) & !is.na(arrival_time_hms))
+  return(gtfs_data)
+}

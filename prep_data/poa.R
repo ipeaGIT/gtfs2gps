@@ -10,9 +10,8 @@ gtfs <- tidytransit::read_gtfs(local_gtfs_path,
 
 shape_ids <- c("T2-1", "176-1", "A141-1", "R10-2")
 
-new_gtfs <- filter_by_shape_id(gtfs, shape_ids)
-
-new_gtfs$stop_times <- new_gtfs$stop_times %>% filter(!is.na(arrival_time))
+new_gtfs <- filter_by_shape_id(gtfs, shape_ids) %>%
+  filter_valid_stop_times()
 
 plot(new_gtfs)
 
