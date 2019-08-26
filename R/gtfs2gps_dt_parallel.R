@@ -1,3 +1,6 @@
+
+gtfs2gps_dt_parallel <- function(){
+
 setwd("R:/Dropbox/git_projects/gtfs2vein")
 # setwd("C:/Users/r1701707/Desktop/gtfs2vein")
 
@@ -274,3 +277,5 @@ system.time( test <- gtfs2gps_dt(gtfszip) )
 
 
 # p <- profvis::profvis( test <- gtfs2gps_dt(gtfszip) )
+
+}

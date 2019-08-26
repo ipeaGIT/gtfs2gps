@@ -1,4 +1,6 @@
 
+gtfs2gps <- function(){
+
 library(dplyr)
 library(purrr)
 library(sf)
@@ -237,3 +239,5 @@ for(i in 1:maxi)
 
 # TODO:
 # lat e long nao sao em graus, eles estao em metros - GPS eh em graus
+
+}

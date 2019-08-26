@@ -1,3 +1,6 @@
+
+nyc <- function(){
+
 library(tidytransit)
 library(magrittr)
 library(dplyr)
@@ -85,3 +88,4 @@ tm_shape(gE_CO) +
     tm_layout(legend.position = c("left", "top")) +
     tm_shape(data) +
     tm_lines(lwd = 1, col = "gray")
+}

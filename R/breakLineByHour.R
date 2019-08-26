@@ -1,4 +1,6 @@
 
+breakLineByHour <- function(){
+
 library(dplyr)
 library(sf)
 
@@ -230,3 +232,5 @@ plot(travelsByHour, type="l", lwd=2)
 plot(kmByHour, type="l", lwd=2)
 plot(velByHour, type="l", lwd=2)
 plot(emisByHour, type="l", lwd=2)
+
+}

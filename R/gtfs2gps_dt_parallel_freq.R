@@ -1,6 +1,7 @@
 # DIST entre paradas (velocidade variavel)
 # freia velocidade perto de paradas
 
+gtfs2gps_dt_parallel_freq <- function(){
 
 setwd("R:/Dropbox/git_projects/gtfs2vein")
 # setwd("C:/Users/r1701707/Desktop/gtfs2vein")
@@ -345,3 +346,4 @@ system.time( test <- gtfs2gps_dt_freq(gtfszip) )
 
 
 # p <- profvis::profvis( test <- gtfs2gps_dt(gtfszip) )
+}
