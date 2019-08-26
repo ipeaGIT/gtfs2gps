@@ -21,9 +21,12 @@ Suggests:
 Imports:
       data.table,
       dplyr,
+      fasttime,
+      future.apply,
       Rcpp,
       sf,
-      tidytransit
+      tidytransit,
+      utils
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
 LinkingTo: Rcpp
