@@ -17,7 +17,7 @@ read_gtfs <- function(gtfszip){
 
   # Unzip files
   tempd <- file.path(tempdir(), "gtfsdir") # create tempr dir to save GTFS unzipped files
-  unlink(paste0(normalizePath(tempd), "/", dir(tempd)), recursive = TRUE) # clean tempfiles in that dir
+  unlink(normalizePath(paste0(tempd, "/", dir(tempd)), mustWork = FALSE), recursive = TRUE) # clean tempfiles in that dir
   unzip(zipfile = gtfszip, exdir = tempd, overwrite = TRUE) # unzip files
   unzippedfiles <- list.files(tempd) # list of unzipped files
 
