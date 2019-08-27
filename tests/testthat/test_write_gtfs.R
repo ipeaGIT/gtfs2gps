@@ -1,8 +1,12 @@
-context("Read")
+context("Write")
 
-test_that("read_gtfs", {
+test_that("write_gtfs", {
     poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
 
+    write_gtfs(poa, "poa2.zip")
+    
+    poa <- read_gtfs("poa2.zip")
+    
     expect_type(poa, "list")
     expect_equal(length(poa), 7)
     
@@ -14,7 +18,8 @@ test_that("read_gtfs", {
     expect_equal(length(poa$trips), 10)
     expect_equal(length(poa$calendar), 10)
     
-    expect_equal(dim(poa$stop_times)[1], 774)
     expect_equal(dim(poa$shapes)[1], 1265)
     expect_equal(dim(poa$trips)[1], 387)
+    
+    invisible(file.remove("poa2.zip"))
 })
