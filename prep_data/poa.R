@@ -11,4 +11,4 @@ shape_ids <- c("T2-1", "176-1", "A141-1", "R10-2")
 new_gtfs <- filter_by_shape_id(gtfs, shape_ids) %>%
   filter_valid_stop_times()
 
-write_gtfs(new_gtfs, "poa.zip")
+write_gtfs(new_gtfs, "inst/extdata/poa.zip")
