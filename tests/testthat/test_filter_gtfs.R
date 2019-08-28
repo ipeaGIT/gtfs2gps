@@ -1,10 +1,7 @@
 context("Filter")
 
 test_that("filter_by_shape_id", {
-    poa <- tidytransit::read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"),
-                                  local = TRUE,
-                                  geometry = TRUE,
-                                  frequency = TRUE)
+    poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
 
     expect_equal(poa$shapes$shape_id %>% unique() %>% length(), 4)
 
@@ -13,10 +10,7 @@ test_that("filter_by_shape_id", {
 })
 
 test_that("filter_valid_stop_times", {
-  poa <- tidytransit::read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"),
-                                local = TRUE,
-                                geometry = TRUE,
-                                frequency = TRUE)
+  poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
   
   expect_equal(dim(poa$stop_times)[1], 774)
   
