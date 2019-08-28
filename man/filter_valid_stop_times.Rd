@@ -7,6 +7,6 @@
 filter_valid_stop_times(gtfs_data)
 }
 \description{
-Filter a GTFS in the tidytransit format. It removes stop_times
+Filter a GTFS data read using gtfs2gps::read_gtfs(). It removes stop_times
 with NA values in arrival_time, departure_time, and arrival_time_hms.
 }

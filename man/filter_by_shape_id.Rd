@@ -12,8 +12,8 @@ filter_by_shape_id(gtfs_data, shape_ids)
 \item{shape_ids}{A vector of shape_ids belonging to the shapes of the gtfs_data data.}
 }
 \description{
-Filter a GTFS data in the tidytransit format. It gets a set of
-shape ids and returns a new gtfs_data by removing the other shape ids from the
+Filter a GTFS data read using gtfs2gps::read_gtfs(). It gets a set of
+shape ids and returns a new GTFS data by removing the other shape ids from the
 shapes. It also removes the unnecessary trips, stop_times, stops, and routes
 accordingly.
 }
