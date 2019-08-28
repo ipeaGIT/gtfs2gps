@@ -5,6 +5,7 @@ test_that("gtfs_shape_as_sf", {
 
     poa_sf <- gtfs_shapes_as_sf(poa)
     
-    expect_true(inherits(poa_sf, "sfc"))
-    expect_equal(length(poa_sf), 4)
+    expect_true(inherits(poa_sf, "sf"))
+    expect_equal(dim(poa_sf)[1], 4)
+})
 })
