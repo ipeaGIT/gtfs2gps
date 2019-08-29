@@ -21,7 +21,6 @@ Suggests:
 Imports:
       data.table,
       dplyr,
-      fasttime,
       future.apply,
       Rcpp,
       sf,

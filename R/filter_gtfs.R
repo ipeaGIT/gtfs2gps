@@ -31,7 +31,7 @@ filter_by_shape_id <- function(gtfs_data, shape_ids){
 #' with NA values in arrival_time, departure_time, and arrival_time_hms.
 #' @export
 filter_valid_stop_times <- function(gtfs_data){
-  gtfs_data$stop_times <- subset(gtfs_data$stop_times, arrival_time != "" & departure_time != "")
+  gtfs_data$stop_times <- subset(gtfs_data$stop_times, !is.na(arrival_time) & !is.na(departure_time))
   return(gtfs_data)
 }
 
