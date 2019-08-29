@@ -43,5 +43,7 @@ filter_week_days <- function(gtfs_data){
     calendar_temp <- subset(gtfs_data$calendar, monday > 0 | tuesday > 0 | wednesday > 0 | thursday > 0 | friday > 0)
     serviceids <- calendar_temp$service_id
     gtfs_data$trips <- subset(gtfs_data$trips, service_id %in% serviceids)
+    gtfs_data$calendar[, sunday := 0]
+    gtfs_data$calendar[, saturday := 0]
     return(gtfs_data)
 }

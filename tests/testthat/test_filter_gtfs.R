@@ -25,4 +25,6 @@ test_that("filter_week_days", {
   
   subset <- filter_week_days(poa)
   expect_equal(dim(subset$trips)[1], 194)
+  expect_equal(sum(subset$calendar$sunday), 0)
+  expect_equal(sum(subset$calendar$saturday), 0)
 })
