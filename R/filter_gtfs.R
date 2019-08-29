@@ -34,3 +34,14 @@ filter_valid_stop_times <- function(gtfs_data){
   gtfs_data$stop_times <- subset(gtfs_data$stop_times, arrival_time != "" & departure_time != "")
   return(gtfs_data)
 }
+
+#' @title Filter GTFS trips operating on week days
+#' @description Filter a GTFS data read using gtfs2gps::read_gtfs(). It removes the
+#' trips operating only saturday or sunday.
+#' @export
+filter_week_days <- function(gtfs_data){
+    calendar_temp <- subset(gtfs_data$calendar, monday > 0 | tuesday > 0 | wednesday > 0 | thursday > 0 | friday > 0)
+    serviceids <- calendar_temp$service_id
+    gtfs_data$trips <- subset(gtfs_data$trips, service_id %in% serviceids)
+    return(gtfs_data)
+}

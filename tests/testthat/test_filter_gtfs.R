@@ -17,3 +17,12 @@ test_that("filter_valid_stop_times", {
   subset <- filter_valid_stop_times(poa)
   expect_equal(dim(subset$stop_times)[1], 774)
 })
+
+test_that("filter_week_days", {
+  poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+
+  expect_equal(dim(poa$trips)[1], 387)
+  
+  subset <- filter_week_days(poa)
+  expect_equal(dim(subset$trips)[1], 194)
+})
