@@ -1,4 +1,11 @@
 
+# Rafael
+devtools::load_all('R:/Dropbox/git_projects/gtfs2gps')
+#devtools::load_all('C:/Users/r1701707/Desktop/geobr')
+
+
+
+
 gtfs2gps_dt_parallel <- function(){
 
 library(utils)
@@ -16,6 +23,7 @@ library(future.apply)
 
 gtfszip <- "R:/Dropbox/bases_de_dados/GTFS/Fortaleza/GTFS_fortaleza_20190815.zip"
 
+gtfszip <-'./data/testdata_for.zip'
 
 gtfs2gps_dt <- function(gtfszip, week_days=T){
 
@@ -29,7 +37,8 @@ gc(reset = T)
 
 
 # Read GTFS data
-  source("./R/read_gtfs.R")
+  message('reading gtfs\n')
+  # source('./R/read_gtfs.R')
   gtfs_data <- read_gtfs(gtfszip = gtfszip)
     
 
@@ -40,21 +49,12 @@ gc(reset = T)
     }
     
   
-  
-  
-  
-# Prepare stop times data
-# (1 get current date, (2) paste date and (3) convert depart_time to "POSIXt" format
-  date_temp <- Sys.Date()
-  stoptimes[!is.na(departure_time) & departure_time != "", departure_time :=  paste(date_temp, departure_time)]
-  stoptimes[, departure_time := fasttime::fastPOSIXct(departure_time, tz="GMT", required.components = 6) ]
-  # perhaps use data.table native format >>> data.table::as.ITime("05:20:00") 
 
-  
-# Prepare shapes data
-  # Convert all shapes into sf object
-  shapes_sf <- gtfs_shapes_as_sf(shapes)
+# Convert all shapes into sf object
+  #source('./R/gtfs_as_sf.R')
+  shapes_sf <- gtfs_shapes_as_sf(gtfs_data)
   head(shapes_sf)
+  
   
   # all shape ids
   all_shapeids <- unique(shapes_sf$shape_id)
@@ -65,7 +65,9 @@ gc(reset = T)
   pb <- utils::txtProgressBar(min = 0, max = total, style = 3)
 
 ###### PART 2.1 Core function to work on each Shape id ------------------------------------
-corefun <- function(shapeid){ 
+  message('starting to work on Shape IDs\n')
+  
+  corefun <- function(shapeid){ 
   
   # #get a list of all trip ids
   # all_shapeids <- unique(shapes_sf$shape_id)
@@ -84,43 +86,46 @@ corefun <- function(shapeid){
 # Select corresponding route, route type, stops and shape of that trip
   
   # Skip shape_id IF there is no route_id associated with that shape_id
-  routeid <- trips[shape_id==shapeid]$route_id[1]
+  routeid <- gtfs_data$trips[shape_id==shapeid]$route_id[1]
   
   if(is.na(routeid)){
    # message(paste0('skipping ', shapeid))
     return(NULL)
     
   }else{
-    routeid <- trips[shape_id==shapeid]$route_id[1]
-    routetype <- routes[route_id ==routeid ]$route_type
+    routeid <- gtfs_data$trips[shape_id==shapeid]$route_id[1]
+    routetype <- gtfs_data$routes[route_id ==routeid ]$route_type
     
     # trips
-    trips_temp <- trips[shape_id== shapeid & route_id== routeid, ]
+    trips_temp <- gtfs_data$trips[shape_id== shapeid & route_id== routeid, ]
     all_tripids <- unique(trips_temp$trip_id)
     
     # stops sequence with lat long
     # each shape_id only have one stop sequence
-    stops_seq <- stoptimes[trip_id == all_tripids[1], .(stop_id, stop_sequence)] # get stop sequence
-    stops_seq[stops, on= "stop_id", c('stop_lat', 'stop_lon') := list(i.stop_lat, i.stop_lon)] # add lat long info
+    stops_seq <- gtfs_data$stop_times[trip_id == all_tripids[1], .(stop_id, stop_sequence)] # get stop sequence
+    stops_seq[gtfs_data$stops, on= "stop_id", c('stop_lat', 'stop_lon') := list(i.stop_lat, i.stop_lon)] # add lat long info
     
     # convert stops to sf
-    stops_sf <- gtfs_stops_as_sf(stops_seq)
+    stops_sf <- sf::st_as_sf(stops_seq, coords = c('stop_lon', 'stop_lat'), agr="identity")
     
     # shape
     shape_sf_temp <- subset(shapes_sf, shape_id == shapeid)
     
     # Use point interpolation to get shape with higher spatial resolution
-    shp_length <- shape_sf_temp %>% sf::st_sf() %>% sf::st_set_crs(4326) %>% sf::st_length() %>% as.numeric() 
+    shp_length <- shape_sf_temp %>% sf::st_sf() %>% sf::st_set_crs(4326) %>% sf::st_length() %>% as.numeric()
     spatial_resolution = 15 # meters
-    sampling <- shp_length / spatial_resolution
-    shape_sf_temp <- sf::st_line_sample(shape_sf_temp, n = sampling ) %>% sf::st_cast("LINESTRING")
+    sampling <- ceiling(shp_length / spatial_resolution)
+      # ERROR? shape_sf_temp <- sf::st_line_sample(shape_sf_temp, n = sampling ) %>% sf::st_cast("LINESTRING")
+      shape_sf_temp2 <- sf::st_segmentize(shape_sf_temp, units::set_units(.015, km) ) %>% sf::st_cast("LINESTRING")
+    
     
     # get shape points in high resolution
-    new_shape <- shape_sf_temp %>% sf::st_cast("POINT") %>% sf::st_sf()
+    new_shape <- shape_sf_temp2 %>% sf::st_cast("POINT") %>% sf::st_sf()
     
     
     # snap stops to route shape
     source("./R/fun_snap_points.R") # snap stops to route shape
+    st_crs(stops_sf) <- st_crs(new_shape)
     stops_snapped_sf <- st_snap_points(stops_sf, new_shape)
 
     
@@ -133,7 +138,7 @@ corefun <- function(shapeid){
 ### Start building new stop_times.txt file
     
     # get shape points in high resolution
-    new_stoptimes <- data.table(shape_id = new_shape$shape_id[1],
+    new_stoptimes <- data.table::data.table(shape_id = new_shape$shape_id[1],
                                 id = 1:nrow(new_shape),
                                 route_type = routetype,
                                 shape_pt_lon = sf::st_coordinates(new_shape)[,1],
@@ -165,13 +170,13 @@ corefun <- function(shapeid){
 
 ###### PART 2.2 Function recalculate new stop_times for each trip id of each Shape id ------------------------------------
 
-### Function to generate the GPS-lie data set of each trip id
+### Function to generate the GPS-like data set of each trip_id
 update_newstoptimes <- function(tripid){
   
   # tripid <- all_tripids[1]
 
   # stoptimes
-  stoptimes_temp <- stoptimes[ trip_id == tripid]
+  stoptimes_temp <- gtfs_data$stop_times[ trip_id == tripid]
   
   # Get trip duration and length
   trip_duration <- stoptimes_temp[, difftime(departure_time[.N], departure_time[1L], units="hours") ]
