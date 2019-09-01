@@ -212,11 +212,11 @@ update_newstoptimes <- function(tripid){
   
   # Determine the start time of the trip (time stamp the 1st GPS point of the trip)
   class(new_stoptimes$departure_time)
-  suppressWarnings(new_stoptimes[id==1, departure_time := departtime_1st ] )
+  suppressWarnings(new_stoptimes[id==1, departure_time := as.ITime(departtime_1st) ] )
   
   
   # recalculate time stamps
-  new_stoptimes[, departure_time:= departure_time[1L] + ( cumdist/ trip_speed*60) ]
+  new_stoptimes[, departure_time:= as.ITime(departure_time[1L] + ( cumdist/ trip_speed*60)) ]
   
   return(new_stoptimes)
 }
