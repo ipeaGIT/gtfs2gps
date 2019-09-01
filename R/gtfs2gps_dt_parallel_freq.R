@@ -87,8 +87,6 @@ corefun <- function(shapeid){
     # convert stops to sf
     stops_sf <- sf::st_as_sf(stops_seq, coords = c('stop_lon', 'stop_lat'), agr="identity")
     
-    
-    
     # shape
     shape_sf_temp <- subset(shapes_sf, shape_id == shapeid)
     
@@ -112,7 +110,6 @@ corefun <- function(shapeid){
   # update stops_seq lat long with snapped coordinates
     stops_seq$stop_lon <- sf::st_coordinates(stops_snapped_sf)[,1]
     stops_seq$stop_lat <- sf::st_coordinates(stops_snapped_sf)[,2]
-    
     
     
 ### Start building new stop_times.txt file
@@ -162,8 +159,6 @@ corefun <- function(shapeid){
 
 # add trip_id and route_id
   new_stoptimes[, trip_id := tripid]
-  # gtfs_data$stop_times[ trip_id == tripid, ]
-  
 
 # Add departure_time
   new_stoptimes[gtfs_data$stop_times, on = c('trip_id', 'stop_id'), 'departure_time' := i.departure_time]
@@ -201,9 +196,9 @@ corefun <- function(shapeid){
   departtime_1st <- departtime_1st - (dist_1st/trip_speed*60) # time in seconds
   
   
-# Determine the start time of the trip (time stamp of the 1st GPS point of the trip)
+  # Determine the start time of the trip (time stamp of the 1st GPS point of the trip)
   # DELETE class(new_stoptimes$departure_time)
-  new_stoptimes[id==1, departure_time := departtime_1st ] 
+  suppressWarnings(new_stoptimes[id==1, departure_time := departtime_1st ] )
   
   
 # recalculate time stamps for a general example (what we really need is the time elapsed between points)
@@ -281,7 +276,7 @@ update_newstoptimes_freq <- function(starttime){
 
 # Parallel processing using future.apply
    future::plan(future::multiprocess)
-   output <- future.apply::future_lapply(X = all_shapeids, FUN=corefun, future.packages=c('data.table', 'sf', 'fasttime', 'Rcpp', 'magrittr')) %>% data.table::rbindlist()
+   output <- future.apply::future_lapply(X = all_shapeids, FUN=corefun, future.packages=c('data.table', 'sf', 'Rcpp', 'magrittr')) %>% data.table::rbindlist()
   
    ### Single core
    # all_shapeids <- all_shapeids[1:3]
