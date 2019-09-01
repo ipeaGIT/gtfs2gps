@@ -59,16 +59,7 @@ gc(reset = T)
   
 # Prepare shapes data
   # Convert all shapes into sf object
-  shapes_sf <- shapes[
-    , {
-      geometry <- sf::st_linestring(x = matrix(c(shape_pt_lon, shape_pt_lat), ncol = 2)) # add crs(!)
-      geometry <- sf::st_sfc(geometry)
-      geometry <- sf::st_sf(geometry = geometry)
-    }
-    , by = shape_id
-    ]
-  
-  shapes_sf <- sf::st_as_sf(shapes_sf)
+  shapes_sf <- gtfs_shapes_as_sf(shapes)
   head(shapes_sf)
   
   # all shape ids
@@ -119,7 +110,7 @@ corefun <- function(shapeid){
     stops_seq[stops, on= "stop_id", c('stop_lat', 'stop_lon') := list(i.stop_lat, i.stop_lon)] # add lat long info
     
     # convert stops to sf
-    stops_sf <- sf::st_as_sf(stops_seq, coords = c('stop_lon', 'stop_lat'), agr="identity")
+    stops_sf <- gtfs_stops_as_sf(stops_seq)
     
     # shape
     shape_sf_temp <- subset(shapes_sf, shape_id == shapeid)
