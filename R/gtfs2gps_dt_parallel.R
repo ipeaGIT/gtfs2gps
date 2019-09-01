@@ -20,6 +20,7 @@ library(future.apply)
 
 
 gtfs <-'./data/testdata_poa.zip'
+gtfs <-'./data/testdata_for.zip'
 
 gtfs2gps_dt <- function(gtfszip, week_days=T){
 
@@ -159,7 +160,7 @@ gc(reset = T)
     new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type="lead"), data.table::shift(shape_pt_lon, type="lead"), tolerance = 10000000000.0)]
     ### using pure R if C++ does not work
       # source("./R/fun_dthaversine.R")
-      # new_stoptimes[, dist2 := dt.haversine(shape_pt_lat, shape_pt_lon, data.table::lead(shape_pt_lat), data.table::lead(shape_pt_lon))]
+      # new_stoptimes[, dist := dt.haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type='lead'), data.table::shift(shape_pt_lon, type='lead'))]
     
     
 
@@ -213,7 +214,7 @@ update_newstoptimes <- function(tripid){
   # Determine the start time of the trip (time stamp the 1st GPS point of the trip)
   class(new_stoptimes$departure_time)
   new_stoptimes[, departure_time := fasttime::fastPOSIXct(departure_time, tz="GMT", required.components = 6) ]
-  new_stoptimes[id==1, departure_time := departtime_1st ] 
+  suppressWarnings(new_stoptimes[id==1, departure_time := departtime_1st ] )
   
   
   # recalculate time stamps
