@@ -256,7 +256,7 @@ update_newstoptimes <- function(tripid){
 
 
 ### Run ======
-system.time( test <- gtfs2gps_dt(gtfs) )
+system.time( test <- gtfs2gps_dt(gtfszip) )
 
 
 
