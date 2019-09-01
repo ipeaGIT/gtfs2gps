@@ -123,15 +123,17 @@ gc(reset = T)
   
     
     # snap stops to route shape
-    source("./R/fun_snap_points.R") # snap stops to route shape
-    st_crs(stops_sf) <- st_crs(new_shape)
-    stops_snapped_sf <- st_snap_points(stops_sf, new_shape)
-
+      st_crs(stops_sf) <- st_crs(new_shape)
     
+      # source("./R/fun_snap_points.R") # USING PURE R
+      # stops_snapped_sf <- st_snap_points(stops_sf, new_shape)
+      Rcpp::sourceCpp("./src/snap_points.cpp") # Using C++
+      stops_snapped_sf <- cppSnapPoints(stops_sf %>% sf::st_coordinates(), new_shape %>% sf::st_coordinates())
+      
     # update stops_seq lat long with snapped coordinates
-    stops_seq$stop_lon <- sf::st_coordinates(stops_snapped_sf)[,1]
-    stops_seq$stop_lat <- sf::st_coordinates(stops_snapped_sf)[,2]
-    
+      stops_seq$stop_lon <- stops_snapped_sf$x
+      stops_seq$stop_lat <- stops_snapped_sf$y
+      
     
     
 ### Start building new stop_times.txt file
