@@ -12,7 +12,7 @@
 #' plot(poa_sf["id"], lwd = 2)
 gtfs_shapes_as_sf <- function(gtfs, crs = 4326){
   
-  temp_shapes <- g$shapes[,
+  temp_shapes <- gtfs$shapes[,
                           {
                             geometry <- sf::st_linestring(x = matrix(c(shape_pt_lon, shape_pt_lat), ncol = 2))
                             geometry <- sf::st_sfc(geometry)
