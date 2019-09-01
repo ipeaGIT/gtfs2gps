@@ -1,9 +1,6 @@
 
 gtfs2gps_dt_parallel <- function(){
 
-setwd("R:/Dropbox/git_projects/gtfs2vein")
-# setwd("C:/Users/r1701707/Desktop/gtfs2vein")
-
 library(utils)
 library(Rcpp)
 library(sf)
@@ -11,19 +8,14 @@ library(magrittr)
 library(mapview)
 library(dplyr)
 library(data.table)
-library(fasttime)
 library(future.apply)
 
 
 
 
-gtfszip <- "./data/GTFS_POA_20190415.zip"
-gc(reset = T)
 
-gtfs_for <- "R:/Dropbox/bases_de_dados/GTFS/Fortaleza/GTFS_fortaleza_20190815.zip"
+gtfszip <- "R:/Dropbox/bases_de_dados/GTFS/Fortaleza/GTFS_fortaleza_20190815.zip"
 
-gtfs_SPTRANS <- "R:/Dropbox/bases_de_dados/GTFS/SP GTFS/GTFS Sptrans_20190815.zip"
-read_gtfs(gtfs_SPTRANS)
 
 gtfs2gps_dt <- function(gtfszip, week_days=T){
 
@@ -38,16 +30,18 @@ gc(reset = T)
 
 # Read GTFS data
   source("./R/read_gtfs.R")
-  read_gtfs(gtfszip = gtfszip)
+  gtfs_data <- read_gtfs(gtfszip = gtfszip)
     
 
-# Filter trips
+# Filter trips 
   if( week_days==T ){
     # keep only services operating on week days
-      calendar_temp <- calendar[ monday >0 | tuesday  >0 | wednesday  >0 | thursday  >0 | friday  >0, ]
-      serviceids <- calendar_temp$service_id
-      trips <- trips[ service_id %in% serviceids]
-      }
+    gtfs_data <- filter_week_days(gtfs_data) 
+    }
+    
+  
+  
+  
   
 # Prepare stop times data
 # (1 get current date, (2) paste date and (3) convert depart_time to "POSIXt" format
