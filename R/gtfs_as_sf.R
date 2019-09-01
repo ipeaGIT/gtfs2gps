@@ -11,21 +11,21 @@
 #' poa_sf <- gtfs_shapes_as_sf(poa)
 #' plot(poa_sf["id"], lwd = 2)
 gtfs_shapes_as_sf <- function(gtfs, crs = 4326){
-  mysplit <- gtfs$shapes %>%
-    split(.$shape_id)
   
-  lines <- mysplit %>%
-    purrr::map(~dplyr::select(., shape_pt_lon, shape_pt_lat) %>%
-               as.matrix %>%
-               sf::st_linestring()) %>%
-    sf::st_sfc()
+  temp_shapes <- g$shapes[,
+                          {
+                            geometry <- sf::st_linestring(x = matrix(c(shape_pt_lon, shape_pt_lat), ncol = 2))
+                            geometry <- sf::st_sfc(geometry)
+                            geometry <- sf::st_sf(geometry = geometry)
+                          }
+                          , by = shape_id
+                          ]
   
-  data.frame(
-    geom = lines,
-    id = names(mysplit),
-    length = lines %>% sf::st_length() %>% units::set_units(km),
-    stringsAsFactors = FALSE) %>%
-    sf::st_sf(crs = crs)
+  # add shape length
+  temp_shapes[, length := sf::st_length(geometry) %>% units::set_units(km), by=shape_id]
+  
+  # back to sf
+  sf::st_as_sf(temp_shapes, crs=crs) %>% return()
 }
 
 #' @title Convert GTFS stops to simple feature
