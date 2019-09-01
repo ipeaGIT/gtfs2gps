@@ -19,8 +19,8 @@ library(future.apply)
 
 
 
-gtfs <-'./data/testdata_poa.zip'
-gtfs <-'./data/testdata_for.zip'
+gtfszip <-'./data/testdata_poa.zip'
+gtfszip <-'./data/testdata_for.zip'
 
 gtfs2gps_dt <- function(gtfszip, week_days=T){
 
@@ -69,7 +69,6 @@ gc(reset = T)
   # all_shapeids <- unique(shapes_sf$shape_id)
   # all_shapeids <- all_shapeids[1:100]
   # shapeid <- all_shapeids[1]
-  # shapeid <- "T51-1"
 
   
   # Progress bar input
@@ -116,8 +115,8 @@ gc(reset = T)
     
     
     # get shape points in high resolution
-    new_shape <- shape_sf_temp2 %>% sf::st_cast("POINT") %>% sf::st_sf()
-    
+    new_shape <- sf::st_cast(shape_sf_temp2, "POINT", warn=F) %>% sf::st_sf()
+  
     
     # snap stops to route shape
     source("./R/fun_snap_points.R") # snap stops to route shape
@@ -207,13 +206,12 @@ update_newstoptimes <- function(tripid){
   # distance from trip start to 1st stop
   dist_1st <- new_stoptimes[id== pos_non_NA]$cumdist/1000 # in Km
   # get the depart time from 1st stop
-  departtime_1st <- new_stoptimes[id== pos_non_NA]$departure_time %>% as.POSIXct()
+  departtime_1st <- new_stoptimes[id== pos_non_NA]$departure_time
   departtime_1st <- departtime_1st - (dist_1st/trip_speed*60) # time in seconds
   
   
   # Determine the start time of the trip (time stamp the 1st GPS point of the trip)
   class(new_stoptimes$departure_time)
-  new_stoptimes[, departure_time := fasttime::fastPOSIXct(departure_time, tz="GMT", required.components = 6) ]
   suppressWarnings(new_stoptimes[id==1, departure_time := departtime_1st ] )
   
   

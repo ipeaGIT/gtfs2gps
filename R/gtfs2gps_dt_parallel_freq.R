@@ -3,6 +3,15 @@
 
 
 
+library(utils)
+library(Rcpp)
+library(sf)
+library(magrittr)
+library(mapview)
+library(dplyr)
+library(data.table)
+library(future.apply)
+
 gtfszip <-'./data/testdata_sptrans.zip'
 
 
@@ -98,7 +107,7 @@ corefun <- function(shapeid){
     shape_sf_temp2 <- sf::st_segmentize(shape_sf_temp, units::set_units(.015, km) ) %>% sf::st_cast("LINESTRING")
     
     # get shape points in high resolution
-    new_shape <- shape_sf_temp2 %>% sf::st_cast("POINT", warn=F) %>% sf::st_sf()
+    new_shape <- sf::st_cast(shape_sf_temp2, "POINT", warn=F) %>% sf::st_sf()
     
     
   # snap stops to route shape
@@ -136,14 +145,14 @@ corefun <- function(shapeid){
     # a$stop_sequence == stops_seq$stop_sequence
 
  # calculate Distance between successive points
-    # using C++ : Source: https://stackoverflow.com/questions/36817423/how-to-efficiently-calculate-distance-between-pair-of-coordinates-using-data-tab?noredirect=1&lq=1
-    Rcpp::sourceCpp("./src/distance_calcs.cpp") # calculate Distance between successive points
-    new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type="lead"), data.table::shift(shape_pt_lon, type="lead"), tolerance = 10000000000.0)]
-    ### using pure R if C++ does not work
-      # source("./R/fun_dthaversine.R")
-      # new_stoptimes[, dist2 := dt.haversine(shape_pt_lat, shape_pt_lon, data.table::lead(shape_pt_lat), data.table::lead(shape_pt_lon))]
+    ### using pure R
+       source("./R/fun_dthaversine.R")
+       new_stoptimes[, dist := dt.haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type='lead'), data.table::shift(shape_pt_lon, type='lead'))]
     
-
+       # using C++ : Source: https://stackoverflow.com/questions/36817423/how-to-efficiently-calculate-distance-between-pair-of-coordinates-using-data-tab?noredirect=1&lq=1
+       #    Rcpp::sourceCpp("./src/distance_calcs.cpp") # calculate Distance between successive points
+       #    new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type="lead"), data.table::shift(shape_pt_lon, type="lead"), tolerance = 10000000000.0)]
+       
     
     
     
@@ -219,8 +228,6 @@ corefun <- function(shapeid){
   
 
 
-  
-  
 ###### PART 2.2 Function to calculate new stop_times for all departures of each each trip id / Shape id ------------------------------------
 update_newstoptimes_freq <- function(starttime){
   
