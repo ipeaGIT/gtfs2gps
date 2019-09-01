@@ -17,7 +17,7 @@ test_that("read_gtfs", {
     expect_type(poa$stop_times$arrival_time, "integer")
     expect_type(poa$stop_times$departure_time, "integer")
     
-    expect_equal(dim(poa$stop_times)[1], 774)
+    expect_equal(dim(poa$stop_times)[1], 23040)
     expect_equal(dim(poa$shapes)[1], 1265)
     expect_equal(dim(poa$trips)[1], 387)
     

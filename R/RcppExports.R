@@ -2,6 +2,19 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 rcpp_distance_haversine <- function(latFrom, lonFrom, latTo, lonTo, tolerance) {
-    .Call('_gtfs2gps_rcpp_distance_haversine', PACKAGE = 'gtfs2gps', latFrom, lonFrom, latTo, lonTo, tolerance)
+    .Call(`_gtfs2gps_rcpp_distance_haversine`, latFrom, lonFrom, latTo, lonTo, tolerance)
+}
+
+#' @title Snap points to the closest points from another set
+#' @description Snap a set of points to the closest points available in another set
+#' of points. The result is a data.frame.
+#' @param data A set of points to be snapped (a matrix). The result will have  
+#' the same number of rows of this argument. Each row will return the respective
+#' snapped point.
+#' @param ref A set of reference points (another matrix). The result will be 
+#' a subset of this parameter.
+#' @export
+cppSnapPoints <- function(data, ref) {
+    .Call(`_gtfs2gps_cppSnapPoints`, data, ref)
 }
 

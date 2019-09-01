@@ -14,8 +14,7 @@ unique(gtfs$shapes$shape_id)
 
 shape_ids <- paste0("shape", 800:900, "-I")
 
-new_gtfs <- filter_by_shape_id(gtfs, shape_ids) %>%
-  filter_valid_stop_times()
+new_gtfs <- filter_by_shape_id(gtfs, shape_ids)
 
 unique(new_gtfs$shapes$shape_id)
 

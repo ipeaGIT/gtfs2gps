@@ -28,10 +28,20 @@ filter_by_shape_id <- function(gtfs_data, shape_ids){
 
 #' @title Filter GTFS data using valid stop times
 #' @description Filter a GTFS data read using gtfs2gps::read_gtfs(). It removes stop_times
-#' with NA values in arrival_time, departure_time, and arrival_time_hms.
+#' with NA values in arrival_time, departure_time, and arrival_time_hms. It also filters
+#' stops and routes accordingly.
 #' @export
 filter_valid_stop_times <- function(gtfs_data){
   gtfs_data$stop_times <- subset(gtfs_data$stop_times, !is.na(arrival_time) & !is.na(departure_time))
+
+  stop_ids <- unique(gtfs_data$stop_times$stop_id)
+
+  gtfs_data$stops <- subset(gtfs_data$stops, stop_id %in% stop_ids)
+
+  route_ids <- unique(gtfs_data$trips$route_id)
+
+  gtfs_data$routes <- subset(gtfs_data$routes, route_id %in% route_ids)
+
   return(gtfs_data)
 }
 

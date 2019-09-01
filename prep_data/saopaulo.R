@@ -10,8 +10,7 @@ gtfs <- read_gtfs(local_gtfs_path)
 
 shape_ids <- 50000:55000
 
-new_gtfs <- filter_by_shape_id(gtfs, shape_ids) %>%
-  filter_valid_stop_times()
+new_gtfs <- filter_by_shape_id(gtfs, shape_ids)
 
 gtfs_shapes_as_sf(new_gtfs) %>%
   sf::st_geometry() %>%
