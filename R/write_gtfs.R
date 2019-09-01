@@ -1,6 +1,7 @@
 
 #' @title Write GTFS data into a zip file
 #' @description Write GTFS stored in memory as a list of data.tables into a zipped GTFS feed.
+#' This function overwrites the file zip file if it exists.
 #' @param gtfs A GTFS data.
 #' @param file A .zip file name.
 #' @export
@@ -28,5 +29,5 @@ write_gtfs <- function(gtfs, file){
   zip(zipfile = "result.zip", files = list.files("."), flags = "-r9Xq")
 
   setwd(currentDir)
-  invisible(file.copy(paste0(tempd, "/result.zip"), file))
+  invisible(file.copy(paste0(tempd, "/result.zip"), file, overwrite = TRUE))
 }
