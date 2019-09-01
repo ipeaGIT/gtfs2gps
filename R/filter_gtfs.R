@@ -31,6 +31,19 @@ filter_by_shape_id <- function(gtfs_data, shape_ids){
 #' with NA values in arrival_time, departure_time, and arrival_time_hms.
 #' @export
 filter_valid_stop_times <- function(gtfs_data){
-  gtfs_data$stop_times <- subset(gtfs_data$stop_times, arrival_time != "" & departure_time != "")
+  gtfs_data$stop_times <- subset(gtfs_data$stop_times, !is.na(arrival_time) & !is.na(departure_time))
   return(gtfs_data)
+}
+
+#' @title Filter GTFS trips operating on week days
+#' @description Filter a GTFS data read using gtfs2gps::read_gtfs(). It removes the
+#' trips operating only saturday or sunday.
+#' @export
+filter_week_days <- function(gtfs_data){
+    calendar_temp <- subset(gtfs_data$calendar, monday > 0 | tuesday > 0 | wednesday > 0 | thursday > 0 | friday > 0)
+    serviceids <- calendar_temp$service_id
+    gtfs_data$trips <- subset(gtfs_data$trips, service_id %in% serviceids)
+    gtfs_data$calendar[, sunday := 0]
+    gtfs_data$calendar[, saturday := 0]
+    return(gtfs_data)
 }
