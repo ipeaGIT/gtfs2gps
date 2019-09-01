@@ -40,12 +40,9 @@ gc(reset = T)
 
 # Filter trips 
   if( week_days==T ){
-    # keep only services operating on week days
     source('./R/filter_gtfs.R')
-    
     gtfs_data <- filter_week_days(gtfs_data) 
-    }
-    
+  }
   
 
 # Convert all shapes into sf object
