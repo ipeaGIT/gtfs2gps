@@ -29,7 +29,7 @@ st_snap_points = function(x, y, max_dist = 100) {
                   
                 # buffer 100 m ?
                   
-                  nrst = sf::st_nearest_points(st_geometry(x)[i], y)
+                  nrst = suppressWarnings( sf::st_nearest_points(st_geometry(x)[i], y) )
                   nrst_len = sf::st_length(nrst)
                   nrst_mn = which.min(nrst_len)
                   if (as.vector(nrst_len[nrst_mn]) > max_dist) return(sf::st_geometry(x)[i])

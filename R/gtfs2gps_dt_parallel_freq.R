@@ -1,10 +1,7 @@
 # DIST entre paradas (velocidade variavel)
 # freia velocidade perto de paradas
 
-gtfs2gps_dt_parallel_freq <- function(){
 
-setwd("R:/Dropbox/git_projects/gtfs2vein")
-# setwd("C:/Users/r1701707/Desktop/gtfs2vein")
 
 library(utils)
 library(Rcpp)
@@ -13,13 +10,9 @@ library(magrittr)
 library(mapview)
 library(dplyr)
 library(data.table)
-library(fasttime)
 library(future.apply)
-gc(reset = T)
 
-
-# gtfszip <- "./data/GTFS_POA_20190415.zip"
-gtfszip <- "R:/Dropbox/bases_de_dados/GTFS/SP GTFS/GTFS Sptrans_20190815.zip"
+gtfszip <-'./data/testdata_sptrans.zip'
 
 
 gtfs2gps_dt_freq <- function(gtfszip, week_days=T){
@@ -35,38 +28,20 @@ gc(reset = T)
 
 # Read GTFS data
   source("./R/read_gtfs.R")
-  read_gtfs(gtfszip = gtfszip)
+  gtfs_data <- read_gtfs(gtfszip = gtfszip)
     
 
-# Filter trips
+# Filter trips keep only services operating on week days
   if( week_days==T ){
-    # keep only services operating on week days
-      calendar_temp <- calendar[ monday >0 | tuesday  >0 | wednesday  >0 | thursday  >0 | friday  >0, ]
-      serviceids <- calendar_temp$service_id
-      trips <- trips[ service_id %in% serviceids]
-      }
-  
-# Prepare stop times data
-# (1 get current date, (2) paste date and (3) convert depart_time to "POSIXt" format
-  date_temp <- Sys.Date()
-  stoptimes[!is.na(departure_time) & departure_time != "", departure_time :=  paste(date_temp, departure_time)]
-  stoptimes[, departure_time := fasttime::fastPOSIXct(departure_time, tz="GMT", required.components = 6) ]
-  # ? perhaps use data.table native format >>> data.table::as.ITime("05:20:00") 
+    source('./R/filter_gtfs.R')
+    gtfs_data <- filter_week_days(gtfs_data) 
+  }
 
   
-# Prepare frequencies data
- if(exists("frequencies")){
-   frequencies[, start_time :=  paste(date_temp, start_time)][, end_time :=  paste(date_temp, end_time)]
-   frequencies[, start_time := fasttime::fastPOSIXct(start_time, tz="GMT", required.components = 6) ]
-   frequencies[, end_time := fasttime::fastPOSIXct(end_time, tz="GMT", required.components = 6) ]
-   }
   
-  
-# Prepare shapes data
-  # Convert all shapes into sf object
-  
-  
-  shapes_sf <- gtfs_shapes_as_sf(shapes)
+# Convert all shapes into sf object
+  source('./R/gtfs_as_sf.R')
+  shapes_sf <- gtfs_shapes_as_sf(gtfs_data)
   head(shapes_sf)
   
   # all shape ids
@@ -98,7 +73,7 @@ corefun <- function(shapeid){
   
 # Check if there is a route associated with that shape
   # Skip shape_id IF there is no route_id associated with that shape_id
-  routeid <- trips[shape_id==shapeid]$route_id[1]
+  routeid <- gtfs_data$trips[shape_id==shapeid]$route_id[1]
   
   if(is.na(routeid)){
    # message(paste0('skipping ', shapeid))
@@ -106,22 +81,20 @@ corefun <- function(shapeid){
     
   }else{
 # Select corresponding route, route type, stops and shape of that trip
-    routeid <- trips[shape_id==shapeid]$route_id[1]
-    routetype <- routes[route_id ==routeid ]$route_type
+    routeid <- gtfs_data$trips[shape_id==shapeid]$route_id[1]
+    routetype <- gtfs_data$routes[route_id ==routeid ]$route_type
     
     # trips
-    trips_temp <- trips[shape_id== shapeid & route_id== routeid, ]
+    trips_temp <- gtfs_data$trips[shape_id== shapeid & route_id== routeid, ]
     all_tripids <- unique(trips_temp$trip_id)
     
     # stops sequence with lat long
     # each shape_id only have one stop sequence
-    stops_seq <- stoptimes[trip_id == all_tripids[1], .(stop_id, stop_sequence)] # get stop sequence
-    stops_seq[stops, on= "stop_id", c('stop_lat', 'stop_lon') := list(i.stop_lat, i.stop_lon)] # add lat long info
+    stops_seq <- gtfs_data$stop_times[trip_id == all_tripids[1], .(stop_id, stop_sequence)] # get stop sequence
+    stops_seq[gtfs_data$stops, on= "stop_id", c('stop_lat', 'stop_lon') := list(i.stop_lat, i.stop_lon)] # add lat long info
     
     # convert stops to sf
-    stops_sf <- gtfs_stops_as_sf(stops_seq)
-    
-    
+    stops_sf <- sf::st_as_sf(stops_seq, coords = c('stop_lon', 'stop_lat'), agr="identity")
     
     # shape
     shape_sf_temp <- subset(shapes_sf, shape_id == shapeid)
@@ -130,21 +103,22 @@ corefun <- function(shapeid){
     shp_length <- shape_sf_temp %>% sf::st_sf() %>% sf::st_set_crs(4326) %>% sf::st_length() %>% as.numeric() # in meters
     spatial_resolution = 15 # meters
     sampling <- shp_length / spatial_resolution
-    shape_sf_temp <- sf::st_line_sample(shape_sf_temp, n = sampling ) %>% sf::st_cast("LINESTRING")
+    # ERROR? shape_sf_temp <- sf::st_line_sample(shape_sf_temp, n = sampling ) %>% sf::st_cast("LINESTRING")
+    shape_sf_temp2 <- sf::st_segmentize(shape_sf_temp, units::set_units(.015, km) ) %>% sf::st_cast("LINESTRING")
     
     # get shape points in high resolution
-    new_shape <- shape_sf_temp %>% sf::st_cast("POINT") %>% sf::st_sf()
+    new_shape <- sf::st_cast(shape_sf_temp2, "POINT", warn=F) %>% sf::st_sf()
     
     
   # snap stops to route shape
     source("./R/fun_snap_points.R") # snap stops to route shape
+    st_crs(stops_sf) <- st_crs(new_shape)
     stops_snapped_sf <- st_snap_points(stops_sf, new_shape)
 
     
   # update stops_seq lat long with snapped coordinates
     stops_seq$stop_lon <- sf::st_coordinates(stops_snapped_sf)[,1]
     stops_seq$stop_lat <- sf::st_coordinates(stops_snapped_sf)[,2]
-    
     
     
 ### Start building new stop_times.txt file
@@ -171,14 +145,14 @@ corefun <- function(shapeid){
     # a$stop_sequence == stops_seq$stop_sequence
 
  # calculate Distance between successive points
-    # using C++ : Source: https://stackoverflow.com/questions/36817423/how-to-efficiently-calculate-distance-between-pair-of-coordinates-using-data-tab?noredirect=1&lq=1
-    Rcpp::sourceCpp("./src/distance_calcs.cpp") # calculate Distance between successive points
-    new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type="lead"), data.table::shift(shape_pt_lon, type="lead"), tolerance = 10000000000.0)]
-    ### using pure R if C++ does not work
-      # source("./R/fun_dthaversine.R")
-      # new_stoptimes[, dist2 := dt.haversine(shape_pt_lat, shape_pt_lon, data.table::lead(shape_pt_lat), data.table::lead(shape_pt_lon))]
+    ### using pure R
+       source("./R/fun_dthaversine.R")
+       new_stoptimes[, dist := dt.haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type='lead'), data.table::shift(shape_pt_lon, type='lead'))]
     
-
+       # using C++ : Source: https://stackoverflow.com/questions/36817423/how-to-efficiently-calculate-distance-between-pair-of-coordinates-using-data-tab?noredirect=1&lq=1
+       #    Rcpp::sourceCpp("./src/distance_calcs.cpp") # calculate Distance between successive points
+       #    new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type="lead"), data.table::shift(shape_pt_lon, type="lead"), tolerance = 10000000000.0)]
+       
     
     
     
@@ -194,11 +168,9 @@ corefun <- function(shapeid){
 
 # add trip_id and route_id
   new_stoptimes[, trip_id := tripid]
-  # stoptimes[ trip_id == tripid, ]
-  
 
 # Add departure_time
-  new_stoptimes[stoptimes, on = c('trip_id', 'stop_id'), 'departure_time' := i.departure_time]
+  new_stoptimes[gtfs_data$stop_times, on = c('trip_id', 'stop_id'), 'departure_time' := i.departure_time]
 
 # Get trip duration  between 1st and last stop
   time_at_first_stop <- new_stoptimes[!is.na(departure_time), first(departure_time)]
@@ -229,30 +201,26 @@ corefun <- function(shapeid){
 # distance from trip start to 1st stop
   dist_1st <- new_stoptimes[id== pos_non_NA]$cumdist/1000 # in Km
 # get the depart time from 1st stop
-  departtime_1st <- new_stoptimes[id== pos_non_NA]$departure_time %>% as.POSIXct()
+  departtime_1st <- new_stoptimes[id== pos_non_NA]$departure_time
   departtime_1st <- departtime_1st - (dist_1st/trip_speed*60) # time in seconds
   
   
-# Determine the start time of the trip (time stamp of the 1st GPS point of the trip)
+  # Determine the start time of the trip (time stamp of the 1st GPS point of the trip)
   # DELETE class(new_stoptimes$departure_time)
-  new_stoptimes[, departure_time := fasttime::fastPOSIXct(departure_time, tz="GMT", required.components = 6) ]
-  new_stoptimes[id==1, departure_time := departtime_1st ] 
+  suppressWarnings(new_stoptimes[id==1, departure_time := departtime_1st ] )
   
   
 # recalculate time stamps for a general example (what we really need is the time elapsed between points)
-  new_stoptimes[ departure_time== departure_time[1L], departure_time := departure_time[1L] ]
-  new_stoptimes[ , departure_time := first(departure_time) + ( cumdist/trip_speed*3600) ] #get travel time in seconds
-
+  # new_stoptimes[ departure_time== departure_time[1L], departure_time := departure_time[1L] ]
+  new_stoptimes[ , departure_time := as.ITime( first(departure_time) + ( cumdist/trip_speed*3600)) ] #get travel time in seconds
   
-# Get freq infor for that trip
-  freq_temp <- subset(frequencies, trip_id== tripid)
+
+# Get freq info for that trip
+  freq_temp <- subset(gtfs_data$frequencies, trip_id== tripid)
   
 # number of trips
   freq_temp[, service_duration := as.numeric(difftime(freq_temp$end_time[1], freq_temp$start_time[1], units="secs")) ]
   freq_temp[, number_of_departures := ceiling(service_duration/headway_secs) ]
-  
-# add unique rowid
-  freq_temp[, period := .I]
   
 # get all start times of each period
   all_starttimes <- freq_temp$start_time
@@ -260,8 +228,6 @@ corefun <- function(shapeid){
   
 
 
-  
-  
 ###### PART 2.2 Function to calculate new stop_times for all departures of each each trip id / Shape id ------------------------------------
 update_newstoptimes_freq <- function(starttime){
   
@@ -284,14 +250,14 @@ update_newstoptimes_freq <- function(starttime){
     # i <- 4
     
     # Update 1st departure time
-    dt_list[[i]][ departure_time==first(departure_time), departure_time := starttime]
+    dt_list[[i]][ departure_time==first(departure_time), departure_time := as.ITime(starttime)]
     
     # Updating all other stop times according to travel speed and distances
-    dt_list[[i]][, departure_time:= departure_time[1L] + ( cumdist/ trip_speed*3660)]
+    dt_list[[i]][, departure_time:= as.ITime(departure_time[1L] + ( cumdist/ trip_speed*3660))]
     
     
     # Updating all stop times by adding the headway
-    dt_list[[i]][, departure_time:= departure_time + ((i-1)* thisheadway) ]
+    dt_list[[i]][, departure_time:= as.ITime(departure_time + ((i-1)* thisheadway)) ]
   }
   
   # Apply function and return the stop times of all departures from that period
@@ -308,7 +274,7 @@ update_newstoptimes_freq <- function(starttime){
   
   # clean memory
   rm(shape_stoptimes)
-  gc(reset = T) # verbose=T ?
+  gc(reset = T)
   
 }
   
@@ -317,7 +283,7 @@ update_newstoptimes_freq <- function(starttime){
 
 # Parallel processing using future.apply
    future::plan(future::multiprocess)
-   output <- future.apply::future_lapply(X = all_shapeids, FUN=corefun, future.packages=c('data.table', 'sf', 'fasttime', 'Rcpp', 'magrittr')) %>% data.table::rbindlist()
+   output <- future.apply::future_lapply(X = all_shapeids, FUN=corefun, future.packages=c('data.table', 'sf', 'Rcpp', 'magrittr')) %>% data.table::rbindlist()
   
    ### Single core
    # all_shapeids <- all_shapeids[1:3]
@@ -341,4 +307,4 @@ system.time( test <- gtfs2gps_dt_freq(gtfszip) )
 
 
 # p <- profvis::profvis( test <- gtfs2gps_dt(gtfszip) )
-}
+
