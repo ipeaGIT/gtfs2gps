@@ -218,9 +218,6 @@ corefun <- function(shapeid){
   freq_temp[, service_duration := as.numeric(difftime(freq_temp$end_time[1], freq_temp$start_time[1], units="secs")) ]
   freq_temp[, number_of_departures := ceiling(service_duration/headway_secs) ]
   
-# add unique rowid
-  freq_temp[, period := .I]
-  
 # get all start times of each period
   all_starttimes <- freq_temp$start_time
   
