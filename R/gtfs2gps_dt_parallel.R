@@ -22,6 +22,10 @@ library(future.apply)
 gtfszip <-'./data/testdata_poa.zip'
 gtfszip <-'./data/testdata_for.zip'
 
+gtfszip <- 'R:/Dropbox/bases_de_dados/GTFS/SP GTFS/GTFS EMTU_20190815.zip'
+
+
+
 gtfs2gps_dt <- function(gtfszip, week_days=T){
 
 
