@@ -6,8 +6,6 @@ devtools::load_all('R:/Dropbox/git_projects/gtfs2gps')
 
 
 
-gtfs2gps_dt_parallel <- function(){
-
 library(utils)
 library(Rcpp)
 library(sf)
@@ -21,9 +19,7 @@ library(future.apply)
 
 
 
-gtfszip <- "R:/Dropbox/bases_de_dados/GTFS/Fortaleza/GTFS_fortaleza_20190815.zip"
-
-gtfszip <-'./data/testdata_for.zip'
+gtfs <-'./data/testdata_poa.zip'
 
 gtfs2gps_dt <- function(gtfszip, week_days=T){
 
@@ -38,20 +34,22 @@ gc(reset = T)
 
 # Read GTFS data
   message('reading gtfs\n')
-  # source('./R/read_gtfs.R')
+  source('./R/read_gtfs.R')
   gtfs_data <- read_gtfs(gtfszip = gtfszip)
     
 
 # Filter trips 
   if( week_days==T ){
     # keep only services operating on week days
+    source('./R/filter_gtfs.R')
+    
     gtfs_data <- filter_week_days(gtfs_data) 
     }
     
   
 
 # Convert all shapes into sf object
-  #source('./R/gtfs_as_sf.R')
+  source('./R/gtfs_as_sf.R')
   shapes_sf <- gtfs_shapes_as_sf(gtfs_data)
   head(shapes_sf)
   
@@ -245,7 +243,7 @@ update_newstoptimes <- function(tripid){
 
 # Parallel processing using future.apply
    future::plan(future::multiprocess)
-   output <- future.apply::future_lapply(X = all_shapeids, FUN=corefun, future.packages=c('data.table', 'sf', 'fasttime', 'Rcpp', 'magrittr')) %>% data.table::rbindlist()
+   output <- future.apply::future_lapply(X = all_shapeids, FUN=corefun, future.packages=c('data.table', 'sf', 'Rcpp', 'magrittr')) %>% data.table::rbindlist()
   
    ### Single core
    # output <- lapply(X = all_shapeids, FUN=corefun) %>% data.table::rbindlist()
@@ -262,10 +260,9 @@ update_newstoptimes <- function(tripid){
 
 
 ### Run ======
-system.time( test <- gtfs2gps_dt(gtfszip) )
+system.time( test <- gtfs2gps_dt(gtfs) )
 
 
 
-# p <- profvis::profvis( test <- gtfs2gps_dt(gtfszip) )
+# p <- profvis::profvis( test <- gtfs2gps_dt(gtfs) )
 
-}
