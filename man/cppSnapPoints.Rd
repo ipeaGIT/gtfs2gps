@@ -2,16 +2,19 @@
 % Please edit documentation in R/RcppExports.R
 \name{cppSnapPoints}
 \alias{cppSnapPoints}
-\title{Snap points to closest stops}
+\title{Snap points to the closest points from another set}
 \usage{
 cppSnapPoints(data, ref)
 }
 \arguments{
-\item{data}{A set of points to be snapped.}
+\item{data}{A set of points to be snapped (a matrix). The result will have
+the same number of rows of this argument. Each row will return the respective
+snapped point.}
 
-\item{ref}{A set of points whose subset will be the snapped points, which are
-the nearest points to the x values.}
+\item{ref}{A set of reference points (another matrix). The result will be 
+a subset of this parameter.}
 }
 \description{
-Snap a set of points to the closest points available in a set of stops.
+Snap a set of points to the closest points available in another set
+of points. The result is a data.frame.
 }
