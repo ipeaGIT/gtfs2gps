@@ -31,9 +31,6 @@ gtfs2gps_dt <- function(gtfszip, week_days=T){
 
 ###### PART 1. Load and prepare data inputs ------------------------------------
 
-# Use GForce Optimisations in data.table operations
-# details > https://jangorecki.gitlab.io/data.cube/library/data.table/html/datatable-optimize.html
-options(datatable.optimize=Inf)
 gc(reset = T)
 
 
