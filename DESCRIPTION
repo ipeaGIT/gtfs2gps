@@ -20,7 +20,6 @@ Suggests:
     testthat
 Imports:
       data.table,
-      dplyr,
       future,
       future.apply,
       magrittr,
