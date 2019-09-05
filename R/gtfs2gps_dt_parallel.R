@@ -178,6 +178,7 @@ gtfs2gps_dt_parallel <- function(gtfszip, spatial_resolution = 15, week_days = T
   ###### PART 3. Apply Core function in parallel to all shape ids------------------------------------
     
   # Parallel processing using future.apply
+  future::plan(future::multiprocess)
   output <- future.apply::future_lapply(X = all_shapeids, FUN = corefun, future.packages = c('data.table', 'sf', 'Rcpp', 'magrittr')) %>% data.table::rbindlist()
   
   ### Single core
