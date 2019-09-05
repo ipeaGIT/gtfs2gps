@@ -12,7 +12,7 @@ using namespace Rcpp;
 //' a subset of this parameter.
 //' @export
 // [[Rcpp::export]]
-Rcpp::DataFrame cppSnapPoints(Rcpp::NumericMatrix& data, Rcpp::NumericMatrix& ref){
+Rcpp::DataFrame cpp_snap_points(Rcpp::NumericMatrix& data, Rcpp::NumericMatrix& ref){
   Rcpp::NumericVector result_x;
   Rcpp::NumericVector result_y;
   

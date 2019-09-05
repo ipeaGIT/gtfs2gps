@@ -81,7 +81,7 @@ gtfs2gps_dt_parallel <- function(gtfszip, spatial_resolution = 15, week_days = T
       # snap stops to route shape
       st_crs(stops_sf) <- st_crs(new_shape)
 
-      stops_snapped_sf <- cppSnapPoints(stops_sf %>% sf::st_coordinates(), new_shape %>% sf::st_coordinates())
+      stops_snapped_sf <- cpp_snap_points(stops_sf %>% sf::st_coordinates(), new_shape %>% sf::st_coordinates())
 
       # update stops_seq lat long with snapped coordinates
       stops_seq$stop_lon <- stops_snapped_sf$x

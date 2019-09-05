@@ -11,9 +11,8 @@
 #'
 #' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
 read_gtfs <- function(gtfszip){
-  # Use GForce Optimisations in data.table operations
-  # details > https://jangorecki.gitlab.io/data.cube/library/data.table/html/datatable-optimize.html
-  options(datatable.optimize = Inf)
+  if(!file.exists(gtfszip))
+    stop(paste0("File '", gtfszip, "' does not exist"))
 
   # Unzip files
   tempd <- file.path(tempdir(), "gtfsdir") # create tempr dir to save GTFS unzipped files
