@@ -22,7 +22,7 @@ gtfs_shapes_as_sf <- function(gtfs, crs = 4326){
                           ]
   
   # add shape length
-  temp_shapes[, length := sf::st_length(geometry) %>% units::set_units(km), by=shape_id]
+  temp_shapes[, length := sf::st_length(geometry) %>% units::set_units("km"), by = shape_id]
   
   # back to sf
   sf::st_as_sf(temp_shapes, crs=crs) %>% return()

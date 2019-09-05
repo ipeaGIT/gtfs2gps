@@ -6,6 +6,9 @@
 \usage{
 filter_valid_stop_times(gtfs_data)
 }
+\arguments{
+\item{gtfs_data}{A tibble in the tidytransit format.}
+}
 \description{
 Filter a GTFS data read using gtfs2gps::read_gtfs(). It removes stop_times
 with NA values in arrival_time, departure_time, and arrival_time_hms. It also filters

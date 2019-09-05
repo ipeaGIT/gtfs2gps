@@ -73,13 +73,13 @@ gtfs2gps_dt_parallel <- function(gtfszip, spatial_resolution = 15, week_days = T
 
       sampling <- ceiling(shp_length / spatial_resolution)
       # ERROR? shape_sf_temp <- sf::st_line_sample(shape_sf_temp, n = sampling ) %>% sf::st_cast("LINESTRING")
-      shape_sf_temp2 <- sf::st_segmentize(shape_sf_temp, units::set_units(.015, km) ) %>% sf::st_cast("LINESTRING")
+      shape_sf_temp2 <- sf::st_segmentize(shape_sf_temp, units::set_units(.015, "km") ) %>% sf::st_cast("LINESTRING")
 
       # get shape points in high resolution
       new_shape <- sf::st_cast(shape_sf_temp2, "POINT", warn = FALSE) %>% sf::st_sf()
 
       # snap stops to route shape
-      st_crs(stops_sf) <- st_crs(new_shape)
+      sf::st_crs(stops_sf) <- sf::st_crs(new_shape)
 
       stops_snapped_sf <- cpp_snap_points(stops_sf %>% sf::st_coordinates(), new_shape %>% sf::st_coordinates())
 
@@ -157,10 +157,10 @@ gtfs2gps_dt_parallel <- function(gtfszip, spatial_resolution = 15, week_days = T
 
         # Determine the start time of the trip (time stamp the 1st GPS point of the trip)
         class(new_stoptimes$departure_time)
-        suppressWarnings(new_stoptimes[id == 1, departure_time := as.ITime(departtime_1st)])
+        suppressWarnings(new_stoptimes[id == 1, departure_time := data.table::as.ITime(departtime_1st)])
 
         # recalculate time stamps
-        new_stoptimes[, departure_time := as.ITime(departure_time[1L] + (cumdist / trip_speed * 60))]
+        new_stoptimes[, departure_time := data.table::as.ITime(departure_time[1L] + (cumdist / trip_speed * 60))]
 
         return(new_stoptimes)
       }

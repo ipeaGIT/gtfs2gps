@@ -26,7 +26,7 @@ write_gtfs <- function(gtfs, file){
   currentDir <- getwd()
   setwd(tempd)
 
-  zip(zipfile = "result.zip", files = list.files("."), flags = "-r9Xq")
+  utils::zip(zipfile = "result.zip", files = list.files("."), flags = "-r9Xq")
 
   setwd(currentDir)
   invisible(file.copy(paste0(tempd, "/result.zip"), file, overwrite = TRUE))

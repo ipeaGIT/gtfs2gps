@@ -24,6 +24,8 @@ Imports:
       future.apply,
       magrittr,
       Rcpp,
+      units,
+      future,
       sf,
       utils
 RoxygenNote: 6.1.1
