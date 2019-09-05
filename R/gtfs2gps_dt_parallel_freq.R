@@ -277,14 +277,3 @@ update_newstoptimes_freq <- function(starttime){
 }
 
 
-
-
-
-
-### Run ======
-system.time( test <- gtfs2gps_dt_freq(gtfsf) )
-
-
-
-# p <- profvis::profvis( test <- gtfs2gps_dt(gtfszip) )
-
