@@ -6,3 +6,4 @@
 *.swp
 src/*.dll
 src/*.o
+/src/tmp.def
