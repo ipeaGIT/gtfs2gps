@@ -8,6 +8,8 @@ utils::globalVariables(c(".", "%>%", ":="))
   # Start parallel processing with the future library
   future::plan(future::multiprocess)
   
+  # allow for large files in memory during parallel processing
+  options(future.globals.maxSize= Inf)
 }
 
 #' @importFrom graphics hist par plot
