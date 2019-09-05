@@ -20,30 +20,20 @@ gtfs2gps_dt_freq <- function(gtfszip, week_days=T){
 
 ###### PART 1. Load and prepare data inputs ------------------------------------
 
-# Use GForce Optimisations in data.table operations
-# details > https://jangorecki.gitlab.io/data.cube/library/data.table/html/datatable-optimize.html
-options(datatable.optimize=Inf)
-gc(reset = T)
-
-
 # Read GTFS data
-  source("./R/read_gtfs.R")
-  gtfs_data <- read_gtfs(gtfszip = gtfszip)
-    
+gtfs_data <- read_gtfs(gtfszip = gtfszip)
+
 
 # Filter trips keep only services operating on week days
   if( week_days==T ){
-    source('./R/filter_gtfs.R')
     gtfs_data <- filter_week_days(gtfs_data) 
   }
 
   
   
 # Convert all shapes into sf object
-  source('./R/gtfs_as_sf.R')
-  shapes_sf <- gtfs_shapes_as_sf(gtfs_data)
-  head(shapes_sf)
-  
+shapes_sf <- gtfs_shapes_as_sf(gtfs_data)
+
   # all shape ids
   all_shapeids <- unique(shapes_sf$shape_id)
   
@@ -101,24 +91,23 @@ corefun <- function(shapeid){
     
   # Use point interpolation to get shape with higher spatial resolution
     shp_length <- shape_sf_temp %>% sf::st_sf() %>% sf::st_set_crs(4326) %>% sf::st_length() %>% as.numeric() # in meters
-    spatial_resolution = 15 # meters
+    spatial_resolution <- spatial_resolution/1000
     sampling <- shp_length / spatial_resolution
     # ERROR? shape_sf_temp <- sf::st_line_sample(shape_sf_temp, n = sampling ) %>% sf::st_cast("LINESTRING")
-    shape_sf_temp2 <- sf::st_segmentize(shape_sf_temp, units::set_units(.015, km) ) %>% sf::st_cast("LINESTRING")
+    shape_sf_temp2 <- sf::st_segmentize(shape_sf_temp, units::set_units(spatial_resolution, km) ) %>% sf::st_cast("LINESTRING")
     
     # get shape points in high resolution
     new_shape <- sf::st_cast(shape_sf_temp2, "POINT", warn=F) %>% sf::st_sf()
     
     
   # snap stops to route shape
-    source("./R/fun_snap_points.R") # snap stops to route shape
     st_crs(stops_sf) <- st_crs(new_shape)
-    stops_snapped_sf <- st_snap_points(stops_sf, new_shape)
-
+    stops_snapped_sf <- cpp_snap_points(stops_sf %>% sf::st_coordinates(), new_shape %>% sf::st_coordinates())
     
-  # update stops_seq lat long with snapped coordinates
-    stops_seq$stop_lon <- sf::st_coordinates(stops_snapped_sf)[,1]
-    stops_seq$stop_lat <- sf::st_coordinates(stops_snapped_sf)[,2]
+    
+    # update stops_seq lat long with snapped coordinates
+    stops_seq$stop_lon <- stops_snapped_sf$x
+    stops_seq$stop_lat <- stops_snapped_sf$y
     
     
 ### Start building new stop_times.txt file
@@ -145,14 +134,8 @@ corefun <- function(shapeid){
     # a$stop_sequence == stops_seq$stop_sequence
 
  # calculate Distance between successive points
-    ### using pure R
-       source("./R/fun_dthaversine.R")
-       new_stoptimes[, dist := dt.haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type='lead'), data.table::shift(shape_pt_lon, type='lead'))]
+    new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type="lead"), data.table::shift(shape_pt_lon, type="lead"), tolerance = 10000000000.0)]
     
-       # using C++ : Source: https://stackoverflow.com/questions/36817423/how-to-efficiently-calculate-distance-between-pair-of-coordinates-using-data-tab?noredirect=1&lq=1
-       #    Rcpp::sourceCpp("./src/distance_calcs.cpp") # calculate Distance between successive points
-       #    new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type="lead"), data.table::shift(shape_pt_lon, type="lead"), tolerance = 10000000000.0)]
-       
     
     
     
@@ -172,6 +155,9 @@ corefun <- function(shapeid){
 # Add departure_time
   new_stoptimes[gtfs_data$stop_times, on = c('trip_id', 'stop_id'), 'departure_time' := i.departure_time]
 
+  subset(gtfs_data$stop_times, trip_id=="121G-10-0")
+  
+  stop_sequence
 # Get trip duration  between 1st and last stop
   time_at_first_stop <- new_stoptimes[!is.na(departure_time), first(departure_time)]
   time_at_last_stop <- new_stoptimes[!is.na(departure_time), last(departure_time)]
