@@ -20,22 +20,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// cppSnapPoints
-Rcpp::DataFrame cppSnapPoints(Rcpp::NumericMatrix& data, Rcpp::NumericMatrix& ref);
-RcppExport SEXP _gtfs2gps_cppSnapPoints(SEXP dataSEXP, SEXP refSEXP) {
+// cpp_snap_points
+Rcpp::DataFrame cpp_snap_points(Rcpp::NumericMatrix& data, Rcpp::NumericMatrix& ref);
+RcppExport SEXP _gtfs2gps_cpp_snap_points(SEXP dataSEXP, SEXP refSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::NumericMatrix& >::type data(dataSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericMatrix& >::type ref(refSEXP);
-    rcpp_result_gen = Rcpp::wrap(cppSnapPoints(data, ref));
+    rcpp_result_gen = Rcpp::wrap(cpp_snap_points(data, ref));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
     {"_gtfs2gps_rcpp_distance_haversine", (DL_FUNC) &_gtfs2gps_rcpp_distance_haversine, 5},
-    {"_gtfs2gps_cppSnapPoints", (DL_FUNC) &_gtfs2gps_cppSnapPoints, 2},
+    {"_gtfs2gps_cpp_snap_points", (DL_FUNC) &_gtfs2gps_cpp_snap_points, 2},
     {NULL, NULL, 0}
 };
 

@@ -14,7 +14,7 @@ test_that("snap_points", {
   shape_points <- shape_points[,1:2] %>% as.data.frame()
   shape_points <- sf::st_as_sf(shape_points, coords = c('X', 'Y'), agr="identity", crs = 31982)
   
-  result <- cppSnapPoints(stops %>% sf::st_coordinates(), shape_points %>% sf::st_coordinates()) %>%
+  result <- cpp_snap_points(stops %>% sf::st_coordinates(), shape_points %>% sf::st_coordinates()) %>%
     sf::st_as_sf(coords = c('x', 'y'), agr="identity", crs = 31982)
   
   #plot(sf::st_geometry(shapes), pch=20)
@@ -36,7 +36,7 @@ test_that("snap_points", {
   shape_points <- shape_points[,1:2] %>% as.data.frame()
   shape_points <- sf::st_as_sf(shape_points, coords = c('X', 'Y'), agr="identity", crs = 31982)
   
-  result <- cppSnapPoints(stops %>% sf::st_coordinates(), shape_points %>% sf::st_coordinates()) %>%
+  result <- cpp_snap_points(stops %>% sf::st_coordinates(), shape_points %>% sf::st_coordinates()) %>%
     sf::st_as_sf(coords = c('x', 'y'), agr="identity", crs = 31982)
   
   expect_equal(dim(result)[1], 62)
