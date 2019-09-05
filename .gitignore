@@ -7,4 +7,3 @@
 src/*.dll
 src/*.o
 /src/tmp.def
-/tests/test_rafa.R
