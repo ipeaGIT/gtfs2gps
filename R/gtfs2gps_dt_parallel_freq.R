@@ -1,6 +1,6 @@
 
 
-gtfs2gps_dt_freq <- function(gtfszip, week_days=T){
+gtfs2gps_dt_freq2 <- function(gtfszip, week_days=T){
 
 
 ###### PART 1. Load and prepare data inputs ------------------------------------
@@ -37,7 +37,7 @@ corefun <- function(shapeid){
   # all_shapeids <- unique(shapes_sf$shape_id) %>% all_shapeids[1:100]
   # shapeid <- all_shapeids[1]
   
-  
+  message(shapeid)
   # # Progress bar input
   # i <- match(c(shapeid), all_shapeids)
   # # Progress bar update
@@ -262,9 +262,9 @@ update_newstoptimes_freq <- function(starttime){
 ###### PART 3. Apply Core function in parallel to all shape ids------------------------------------
 
 # Parallel processing using future.apply
-   future::plan(future::multiprocess)
-   output <- future.apply::future_lapply(X = all_shapeids, FUN = corefun, future.packages = c('data.table', 'sf', 'Rcpp', 'magrittr')) %>% data.table::rbindlist()
-   
+   #output <- future.apply::future_lapply(X = all_shapeids, FUN = corefun, future.packages = c('data.table', 'sf', 'Rcpp', 'magrittr')) %>% data.table::rbindlist()
+    output <- lapply(X = all_shapeids, FUN = corefun) %>% data.table::rbindlist()
+  
    ### Single core
    # all_shapeids <- all_shapeids[1:3]
    # output2 <- pbapply::pblapply(X = all_shapeids, FUN=corefun) %>% data.table::rbindlist()
