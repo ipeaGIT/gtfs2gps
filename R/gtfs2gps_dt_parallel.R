@@ -71,7 +71,7 @@ gtfs2gps_dt_parallel <- function(gtfszip, spatial_resolution = 15, week_days = T
       # Use point interpolation to get shape with higher spatial resolution
       shp_length <- shape_sf_temp %>% sf::st_sf() %>% sf::st_set_crs(4326) %>% sf::st_length() %>% as.numeric()
 
-      sampling <- ceiling(shp_length / spatial_resolution)
+      #sampling <- ceiling(shp_length / spatial_resolution)
       # ERROR? shape_sf_temp <- sf::st_line_sample(shape_sf_temp, n = sampling ) %>% sf::st_cast("LINESTRING")
       shape_sf_temp2 <- sf::st_segmentize(shape_sf_temp, units::set_units(.015, km) ) %>% sf::st_cast("LINESTRING")
 
@@ -170,7 +170,6 @@ gtfs2gps_dt_parallel <- function(gtfszip, spatial_resolution = 15, week_days = T
       return(partial_stoptimes)
 
       # 2.2 test in parallel
-      #future::plan(future::multiprocess) # parallel processing with the future library 
       #output2.2 <- future.apply::future_lapply(X = all_tripids, FUN=update_newstoptimes) %>% data.table::rbindlist()
     }
   }
@@ -178,7 +177,6 @@ gtfs2gps_dt_parallel <- function(gtfszip, spatial_resolution = 15, week_days = T
   ###### PART 3. Apply Core function in parallel to all shape ids------------------------------------
     
   # Parallel processing using future.apply
-  future::plan(future::multiprocess)
   output <- future.apply::future_lapply(X = all_shapeids, FUN = corefun, future.packages = c('data.table', 'sf', 'Rcpp', 'magrittr')) %>% data.table::rbindlist()
   
   ### Single core
