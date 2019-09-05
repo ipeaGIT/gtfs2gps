@@ -1,4 +1,3 @@
-
 #' @title Convert GTFS to GPS given a spatial resolution
 #' @description Convert GTFS data to GPS format by sampling points using a
 #' spatial resolution. This function creates additional points in order to
@@ -113,9 +112,6 @@ gtfs2gps_dt_parallel <- function(gtfszip, spatial_resolution = 15, week_days = T
       # calculate Distance between successive points
       # using C++ : Source: https://stackoverflow.com/questions/36817423/how-to-efficiently-calculate-distance-between-pair-of-coordinates-using-data-tab?noredirect=1&lq=1
       new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type="lead"), data.table::shift(shape_pt_lon, type="lead"), tolerance = 10000000000.0)]
-      ### using pure R if C++ does not work
-      # source("./R/fun_dthaversine.R")
-      # new_stoptimes[, dist := dt.haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type='lead'), data.table::shift(shape_pt_lon, type='lead'))]
 
       ###### PART 2.2 Function recalculate new stop_times for each trip id of each Shape id ------------------------------------
 
