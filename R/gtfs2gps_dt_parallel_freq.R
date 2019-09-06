@@ -1,6 +1,6 @@
 
 
-gtfs2gps_dt_freq <- function(gtfszip, week_days=T){
+gtfs2gps_dt_freq2 <- function(gtfszip, week_days=T){
 
 
 ###### PART 1. Load and prepare data inputs ------------------------------------
@@ -37,7 +37,7 @@ corefun <- function(shapeid){
   # all_shapeids <- unique(shapes_sf$shape_id) %>% all_shapeids[1:100]
   # shapeid <- all_shapeids[1]
   
-  
+  message(shapeid)
   # # Progress bar input
   # i <- match(c(shapeid), all_shapeids)
   # # Progress bar update
@@ -72,6 +72,7 @@ corefun <- function(shapeid){
     
     # shape
     shape_sf_temp <- subset(shapes_sf, shape_id == shapeid)
+     # mapview(shape_sf_temp) + stops_sf
     
   # Use point interpolation to get shape with higher spatial resolution
     shp_length <- shape_sf_temp %>% sf::st_sf() %>% sf::st_set_crs(4326) %>% sf::st_length() %>% as.numeric() # in meters
@@ -125,6 +126,8 @@ corefun <- function(shapeid){
 
  # calculate Distance between successive points
     # using C++ : Source: https://stackoverflow.com/questions/36817423/how-to-efficiently-calculate-distance-between-pair-of-coordinates-using-data-tab?noredirect=1&lq=1
+    sourceCpp("./src/snap_points.cpp")
+    sourceCpp("./src/distance_calcs.cpp")
     new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type="lead"), data.table::shift(shape_pt_lon, type="lead"), tolerance = 10000000000.0)]
     
     
@@ -262,9 +265,9 @@ update_newstoptimes_freq <- function(starttime){
 ###### PART 3. Apply Core function in parallel to all shape ids------------------------------------
 
 # Parallel processing using future.apply
-   future::plan(future::multiprocess)
-   output <- future.apply::future_lapply(X = all_shapeids, FUN = corefun, future.packages = c('data.table', 'sf', 'Rcpp', 'magrittr')) %>% data.table::rbindlist()
-   
+   #output <- future.apply::future_lapply(X = all_shapeids, FUN = corefun, future.packages = c('data.table', 'sf', 'Rcpp', 'magrittr')) %>% data.table::rbindlist()
+    output <- lapply(X = all_shapeids, FUN = corefun) %>% data.table::rbindlist()
+  
    ### Single core
    # all_shapeids <- all_shapeids[1:3]
    # output2 <- pbapply::pblapply(X = all_shapeids, FUN=corefun) %>% data.table::rbindlist()
@@ -276,15 +279,4 @@ update_newstoptimes_freq <- function(starttime){
 #   close(pb)
 }
 
-
-
-
-
-
-### Run ======
-system.time( test <- gtfs2gps_dt_freq(gtfsf) )
-
-
-
-# p <- profvis::profvis( test <- gtfs2gps_dt(gtfszip) )
 
