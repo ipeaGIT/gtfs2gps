@@ -126,6 +126,8 @@ corefun <- function(shapeid){
 
  # calculate Distance between successive points
     # using C++ : Source: https://stackoverflow.com/questions/36817423/how-to-efficiently-calculate-distance-between-pair-of-coordinates-using-data-tab?noredirect=1&lq=1
+    sourceCpp("./src/snap_points.cpp")
+    sourceCpp("./src/distance_calcs.cpp")
     new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type="lead"), data.table::shift(shape_pt_lon, type="lead"), tolerance = 10000000000.0)]
     
     

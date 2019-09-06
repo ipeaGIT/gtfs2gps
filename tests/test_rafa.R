@@ -8,8 +8,8 @@ library(devtools)
 library(usethis)
 library(profvis)
 library(mapview)
+library(Rcpp)
 
- 'sistema com tela azul' %like% 'tela' 
 
 
 # devtools::install_github("ipeaGIT/gtfs2gps")
