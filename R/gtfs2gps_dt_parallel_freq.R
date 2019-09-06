@@ -72,6 +72,7 @@ corefun <- function(shapeid){
     
     # shape
     shape_sf_temp <- subset(shapes_sf, shape_id == shapeid)
+     # mapview(shape_sf_temp) + stops_sf
     
   # Use point interpolation to get shape with higher spatial resolution
     shp_length <- shape_sf_temp %>% sf::st_sf() %>% sf::st_set_crs(4326) %>% sf::st_length() %>% as.numeric() # in meters

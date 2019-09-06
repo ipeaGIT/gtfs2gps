@@ -7,6 +7,7 @@ library(roxygen2)
 library(devtools)
 library(usethis)
 library(profvis)
+library(mapview)
 
  'sistema com tela azul' %like% 'tela' 
 
@@ -56,5 +57,13 @@ devtools::document(pkg = ".")
 p <-   profvis( update_newstoptimes("T2-1@1#2146") )
 
 p <-   profvis( b <- corefun("T2-1") )
+
+
+
+
+
+
+
+
 
 
