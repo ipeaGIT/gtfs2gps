@@ -24,7 +24,9 @@ Imports:
       future.apply,
       magrittr,
       Rcpp,
+      units,
       sf,
+      lwgeom,
       utils
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr

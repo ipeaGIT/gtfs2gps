@@ -6,6 +6,9 @@
 \usage{
 filter_week_days(gtfs_data)
 }
+\arguments{
+\item{gtfs_data}{A tibble in the tidytransit format.}
+}
 \description{
 Filter a GTFS data read using gtfs2gps::read_gtfs(). It removes the
 trips operating only saturday or sunday.
