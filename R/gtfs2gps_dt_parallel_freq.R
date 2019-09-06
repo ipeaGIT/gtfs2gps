@@ -79,14 +79,14 @@ corefun <- function(shapeid){
     spatial_resolution <- 15/1000
     sampling <- shp_length / spatial_resolution
     # ERROR? shape_sf_temp <- sf::st_line_sample(shape_sf_temp, n = sampling ) %>% sf::st_cast("LINESTRING")
-    shape_sf_temp2 <- sf::st_segmentize(shape_sf_temp, units::set_units(spatial_resolution, km) ) %>% sf::st_cast("LINESTRING")
+    shape_sf_temp2 <- sf::st_segmentize(shape_sf_temp, units::set_units(spatial_resolution, "km") ) %>% sf::st_cast("LINESTRING")
     
     # get shape points in high resolution
     new_shape <- sf::st_cast(shape_sf_temp2, "POINT", warn=F) %>% sf::st_sf()
     
     
   # snap stops to route shape
-    st_crs(stops_sf) <- st_crs(new_shape)
+    sf::st_crs(stops_sf) <- sf::st_crs(new_shape)
     stops_snapped_sf <- cpp_snap_points(stops_sf %>% sf::st_coordinates(), new_shape %>% sf::st_coordinates())
     
     
@@ -98,7 +98,7 @@ corefun <- function(shapeid){
 ### Start building new stop_times.txt file
     
     # get shape points in high resolution
-    new_stoptimes <- data.table(shape_id = new_shape$shape_id[1],
+    new_stoptimes <- data.table::data.table(shape_id = new_shape$shape_id[1],
                                 id = 1:nrow(new_shape),
                                 route_type = routetype,
                                 shape_pt_lon = sf::st_coordinates(new_shape)[,1],
@@ -126,8 +126,8 @@ corefun <- function(shapeid){
 
  # calculate Distance between successive points
     # using C++ : Source: https://stackoverflow.com/questions/36817423/how-to-efficiently-calculate-distance-between-pair-of-coordinates-using-data-tab?noredirect=1&lq=1
-    sourceCpp("./src/snap_points.cpp")
-    sourceCpp("./src/distance_calcs.cpp")
+    Rcpp::sourceCpp("./src/snap_points.cpp")
+    Rcpp::sourceCpp("./src/distance_calcs.cpp")
     new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type="lead"), data.table::shift(shape_pt_lon, type="lead"), tolerance = 10000000000.0)]
     
     
@@ -157,8 +157,8 @@ corefun <- function(shapeid){
   
   
 # Get trip duration  between 1st and last stop
-  time_at_first_stop <- new_stoptimes[!is.na(departure_time), first(departure_time)]
-  time_at_last_stop <- new_stoptimes[!is.na(departure_time), last(departure_time)]
+  time_at_first_stop <- new_stoptimes[!is.na(departure_time), data.table::first(departure_time)]
+  time_at_last_stop <- new_stoptimes[!is.na(departure_time), data.table::last(departure_time)]
   trip_duration <- difftime(time_at_last_stop, time_at_first_stop, units="hours")
   
 # Get trips distance between 1st and last stop ( in KM)
@@ -195,7 +195,7 @@ corefun <- function(shapeid){
   
 # recalculate time stamps for a general example (what we really need is the time elapsed between points)
   # new_stoptimes[ departure_time== departure_time[1L], departure_time := departure_time[1L] ]
-  new_stoptimes[ , departure_time := as.ITime( first(departure_time) + ( cumdist/trip_speed*3600)) ] #get travel time in seconds
+  new_stoptimes[ , departure_time := data.table::as.ITime(data.table::first(departure_time) + ( cumdist/trip_speed*3600)) ] #get travel time in seconds
   
 
 # Get freq info for that trip
@@ -225,7 +225,7 @@ update_newstoptimes_freq <- function(starttime){
   
   # # Replicate one new_stop_times for each departure  
   # all_departures <- rep(list(new_stoptimes), nmber_of_departures)
-  dt_list <- replicate(4, list(copy(new_stoptimes)))
+  dt_list <- replicate(4, list(data.table::copy(new_stoptimes)))
   
   
   # Function to update stoptimes of each departure
@@ -233,18 +233,18 @@ update_newstoptimes_freq <- function(starttime){
     # i <- 4
     
     # Update 1st departure time
-    dt_list[[i]][ departure_time==first(departure_time), departure_time := as.ITime(starttime)]
+    dt_list[[i]][ departure_time==data.table::first(departure_time), departure_time := data.table::as.ITime(starttime)]
     
     # Updating all other stop times according to travel speed and distances
-    dt_list[[i]][, departure_time:= as.ITime(departure_time[1L] + ( cumdist/ trip_speed*3660))]
+    dt_list[[i]][, departure_time:= data.table::as.ITime(departure_time[1L] + ( cumdist/ trip_speed*3660))]
     
     
     # Updating all stop times by adding the headway
-    dt_list[[i]][, departure_time:= as.ITime(departure_time + ((i-1)* thisheadway)) ]
+    dt_list[[i]][, departure_time:= data.table::as.ITime(departure_time + ((i-1)* thisheadway)) ]
   }
   
   # Apply function and return the stop times of all departures from that period
-  departure_stoptimes <-  lapply(X=seq_along(dt_list), FUN= update_departure_stoptimes) %>% rbindlist()
+  departure_stoptimes <-  lapply(X=seq_along(dt_list), FUN= update_departure_stoptimes) %>% data.table::rbindlist()
   
   
   return(departure_stoptimes)
@@ -252,7 +252,7 @@ update_newstoptimes_freq <- function(starttime){
   
 }
   # apply 2.2 function to all trip ids of a certain shape id
-  shape_stoptimes <- lapply(X=all_starttimes, update_newstoptimes_freq)%>% rbindlist()
+  shape_stoptimes <- lapply(X=all_starttimes, update_newstoptimes_freq) %>% data.table::rbindlist()
   return(shape_stoptimes)
   
   # clean memory

@@ -13,7 +13,7 @@ utils::globalVariables(c(".", "%>%", ":="))
 }
 
 #' @importFrom magrittr %>%
-#' @importFrom data.table :=
+#' @importFrom data.table := %between%
 #' @useDynLib gtfs2gps, .registration = TRUE
 NULL
 
@@ -24,4 +24,5 @@ if(getRversion() >= "2.15.1") utils::globalVariables(
     'departure_time', 'arrival_time', 'start_time', 'end_time', 'i.stop_sequence',
     'shape_pt_lon', 'shape_pt_lat', 'id', 'cumdist', 'i.departure_time',
     '.N', 'update_newstoptimes',
-    'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'))
+    'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday',
+    'service_duration', 'headway_secs', 'number_of_departures'))
