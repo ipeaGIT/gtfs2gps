@@ -1,6 +1,4 @@
 
-test_rafa <- function(){
-
 library(sf)
 library(data.table)
 library(magrittr)
@@ -61,4 +59,3 @@ p <-   profvis( update_newstoptimes("T2-1@1#2146") )
 p <-   profvis( b <- corefun("T2-1") )
 
 
-}
