@@ -164,8 +164,16 @@ corefun <- function(shapeid){
       trip_duration <- stoptimes_temp[, difftime(departure_time[.N], departure_time[1L], units = "hours") ]
       trip_duration <- as.numeric(trip_duration)
       
+      
       # length of the trip (in KM)
-      trip_dist <- shp_length / 1000 # in Km
+        # discover node id of first and last stops
+        node_first_stop <- new_stoptimes[ id==min(id[which(!is.na(stop_id))]),]$id
+        node_last_stop <- new_stoptimes[ id==max(id[which(!is.na(stop_id))]),]$id
+        
+        # sum distance between the nodes of first and last stops
+        trip_dist <-  new_stoptimes[ between(id, node_first_stop, node_last_stop), sum(dist)] / 1000 # in Km
+      
+      # Trip speed
       trip_speed <- trip_dist / trip_duration
       
       # Add departure_time
