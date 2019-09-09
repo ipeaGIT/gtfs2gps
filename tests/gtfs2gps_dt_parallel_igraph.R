@@ -96,6 +96,10 @@ corefun <- function(shapeid){
     # Add stops to shape
     new_stoptimes[stops_seq, on = c(shape_pt_lat="stop_lat"), c('stop_id', 'stop_sequence') := list(i.stop_id, i.stop_sequence) ]
     
+    # make sure 1st stop has postion 1
+    new_stoptimes$stop_sequence[which(!is.na(new_stoptimes$stop_sequence))][1] <- 1 
+    
+    
     ###check if everything is Ok
     ##kept path
     # a <- new_stoptimes[, .(shape_pt_lon, shape_pt_lat)] %>% as.matrix %>% sf::st_linestring()
@@ -178,6 +182,14 @@ corefun <- function(shapeid){
       
       # Add departure_time
       new_stoptimes[stoptimes_temp, on = 'stop_id', 'departure_time' := i.departure_time]
+      
+      # make sure 1st departure_time is the first (problems may occur when the 1st and last stopd of the route are the same)
+      first_departtime <- subset(gtfs_data$stop_times, trip_id ==tripid & stop_sequence==1)$departure_time
+      new_stoptimes$departure_time[which(!is.na(new_stoptimes$departure_time))][1] <- first_departtime
+      
+      
+      
+      
       
       # add trip_id
       new_stoptimes[, trip_id := tripid]
