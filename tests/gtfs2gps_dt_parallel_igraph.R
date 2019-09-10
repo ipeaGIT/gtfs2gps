@@ -80,6 +80,9 @@ corefun <- function(shapeid){
     
     stops_snapped_sf <- cpp_snap_points(stops_sf %>% sf::st_coordinates(), new_shape %>% sf::st_coordinates())
     
+    
+    mapview(shape_sf_temp2) + stops_sf 
+      
     # update stops_seq lat long with snapped coordinates
     stops_seq$stop_lon <- stops_snapped_sf$x
     stops_seq$stop_lat <- stops_snapped_sf$y
@@ -99,6 +102,9 @@ corefun <- function(shapeid){
     # make sure 1st stop has postion 1
     new_stoptimes$stop_sequence[which(!is.na(new_stoptimes$stop_sequence))][1] <- 1 
     
+    # alternative to duplicate repeated stops
+    new_stoptimes <- merge(x=new_stoptimes, y=stops_seq, by.x= "shape_pt_lat", by.y="stop_lat",  all.x = T)
+    new_stoptimes <- setDT(new_stoptimes[order(id)])
     
     ###check if everything is Ok
     ##kept path
@@ -139,7 +145,7 @@ corefun <- function(shapeid){
       GraphResult <- rbind(GraphResult, TempGraphResult) }
     
     # Creat routable igraph object
-    MyIgraph <- graph_from_data_frame(GraphResult) 
+    MyIgraph <- igraph::graph_from_data_frame(GraphResult) 
     
     
     # # calulate distances
@@ -171,12 +177,21 @@ corefun <- function(shapeid){
       
       # length of the trip (in KM)
         # discover node id of first and last stops
-        node_first_stop <- new_stoptimes[ id==min(id[which(!is.na(stop_id))]),]$id
-        node_last_stop <- new_stoptimes[ id==max(id[which(!is.na(stop_id))]),]$id
-        
-        # sum distance between the nodes of first and last stops
+        node_first_stop <- new_stoptimes[ id==min(id[which(!is.na(stop_id))]),]$id[1]
+        node_last_stop <- new_stoptimes[ id==max(id[which(!is.na(stop_id))]),]$id[1]
+      
+    # three alternatives
+        # 1. sum distance between the nodes of first and last stops
         trip_dist <-  new_stoptimes[ between(id, node_first_stop, node_last_stop), sum(dist)] / 1000 # in Km
       
+        # multiply the quantity of nodes traversed * distance between two nodes
+        (node_last_stop -node_first_stop) *0.01352668 /1000
+        
+        # igraph distance
+        igraph::distances(MyIgraph, node_first_stop, node_last_stop) /1000
+        
+        
+
       # Trip speed
       trip_speed <- trip_dist / trip_duration
       
