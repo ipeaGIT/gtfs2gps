@@ -182,7 +182,9 @@ corefun <- function(shapeid){
       
     # three alternatives
         # 1. sum distance between the nodes of first and last stops
-        trip_dist <-  new_stoptimes[ between(id, node_first_stop, node_last_stop), sum(dist)] / 1000 # in Km
+        trip_dist <-  
+          
+        new_stoptimes[ between(id, node_first_stop, node_last_stop), sum(dist)] / 1000 # in Km
       
         # multiply the quantity of nodes traversed * distance between two nodes
         (node_last_stop -node_first_stop) *0.01352668 /1000
@@ -220,9 +222,10 @@ corefun <- function(shapeid){
       pos_non_NA <- Position(function(pos_non_NA) !is.na(pos_non_NA), pos_non_NA)
       
       # distance from trip start to 1st stop
-      dist_1st <- new_stoptimes[id == pos_non_NA]$cumdist / 1000 # in Km
+      dist_1st <- igraph::distances(MyIgraph, 1, pos_non_NA) /1000 # in Km
+          
       # get the depart time from 1st stop
-      departtime_1st <- new_stoptimes[id == pos_non_NA]$departure_time
+      departtime_1st <- new_stoptimes[id == pos_non_NA]$departure_time[1]
       departtime_1st <- departtime_1st - (dist_1st / trip_speed * 60) # time in seconds
       
       # Determine the start time of the trip (time stamp the 1st GPS point of the trip)
