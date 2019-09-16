@@ -7,3 +7,4 @@
 src/*.dll
 src/*.o
 /src/tmp.def
+vignettes/*.zip
