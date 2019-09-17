@@ -91,12 +91,27 @@ To convert GTFS to GPS format, use `gtfs2gps()`. [...]
 Finally, we can plot the points as shown below.
 
 ```{r}
-  poa_gps_sf <- sf::st_as_sf(x = poa_gps,                         
+  poa_gps_sf <- sf::st_as_sf(x = poa_gps,
            coords = c("shape_pt_lon", "shape_pt_lat"),
            crs = 4326)
   
   plot(sf::st_geometry(poa_gps_sf))
   plot(sf::st_geometry(sp_small_sf), col = "blue", add = TRUE)
+  box()
+```
+
+As the points are created using a distance of $15m$, it is necessary to zoom in to visually separate them. The following figure shows the points in a bounding box from the first 60 points.
+
+```{r}
+  poa_gps_small <- poa_gps[1:60, ]
+
+  poa_gps_small_sf <- sf::st_as_sf(x = poa_gps_small,
+           coords = c("shape_pt_lon", "shape_pt_lat"),
+           crs = 4326)
+  
+  plot(sf::st_geometry(poa_gps_small_sf), pch = 20)
+  plot(sf::st_geometry(sp_small_sf), col = "blue", add = TRUE)
+  plot(sf::st_geometry(poa_gps_sf), add = TRUE, pch = 20)
   box()
 ```
 
