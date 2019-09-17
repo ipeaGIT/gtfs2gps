@@ -11,7 +11,6 @@
 #' poa_sf <- gtfs_shapes_as_sf(poa)
 #' plot(poa_sf["id"], lwd = 2)
 gtfs_shapes_as_sf <- function(gtfs, crs = 4326){
-  
   temp_shapes <- gtfs$shapes[,
                           {
                             geometry <- sf::st_linestring(x = matrix(c(shape_pt_lon, shape_pt_lat), ncol = 2))
@@ -23,9 +22,9 @@ gtfs_shapes_as_sf <- function(gtfs, crs = 4326){
   
   # add shape length
   temp_shapes[, length := sf::st_length(geometry) %>% units::set_units("km"), by = shape_id]
-  
+
   # back to sf
-  sf::st_as_sf(temp_shapes, crs=crs) %>% return()
+  sf::st_as_sf(temp_shapes, crs = crs)  %>% sf::as_Spatial() %>% sf::st_as_sf()
 }
 
 #' @title Convert GTFS stops to simple feature
