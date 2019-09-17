@@ -1,7 +1,7 @@
 ---
 title: 'gtfs2gps: Converting GTFS data to GPS format'
 author: "Rafael H. M. Pereira, Pedro R. Andrade"
-date: "`r format('16 September 2019')`"
+date: "`r format('17 September 2019')`"
 urlcolor: blue
 output:
   pdf_document:
@@ -57,12 +57,21 @@ library(magrittr)
 
 object.size(sp) %>% format(units="Kb")
 
-sp_small <- gtfs2gps::filter_by_shape_id(sp, 53000:55000)
+sp_small <- gtfs2gps::filter_by_shape_id(sp, 53000:53020)
 
 object.size(sp_small) %>% format(units="Kb")
 ```
 
 Note that `shape\_id` might be a string or a number, depending on the available values.
+
+```{r}
+sp_sf <- gtfs_shapes_as_sf(sp)
+sp_small_sf <- gtfs_shapes_as_sf(sp_small)
+
+plot(sf::st_geometry(sp_sf))
+plot(sf::st_geometry(sp_small_sf), col = "blue", add = TRUE)
+box()
+```
 
 After simplifying the data, it is possible to save it as a GTFS file, as shown below.
 
@@ -72,11 +81,23 @@ write_gtfs(sp_small, "sp_small.zip")
 
 # Converting to GPS format
 
-To convert GTFS to GPS format, use `gtfs2gps()`. [...] This function takes time to run.
+To convert GTFS to GPS format, use `gtfs2gps()`. [...]
 
 ```{r}
   poa_gps <- gtfs2gps_dt_parallel("sp_small.zip")
   poa_gps
+```
+
+Finally, we can plot the points as shown below.
+
+```{r}
+  poa_gps_sf <- sf::st_as_sf(x = poa_gps,                         
+           coords = c("shape_pt_lon", "shape_pt_lat"),
+           crs = 4326)
+  
+  plot(sf::st_geometry(poa_gps_sf))
+  plot(sf::st_geometry(sp_small_sf), col = "blue", add = TRUE)
+  box()
 ```
 
 # Final remarks
