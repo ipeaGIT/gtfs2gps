@@ -2,8 +2,9 @@
 #' @title Read GTFS data into a list of data.tables
 #' @description Read files of a zipped GTFS feed and load them to memory as a list of data.tables.
 #' It will load the following files: "agency.txt", "calendar.txt", "routes.txt", "shapes.txt", 
-#' "stop_times.txt", "stops.txt", and "trips.txt". If some of these files do not exit,
-#' it will stop with an error.
+#' "stop_times.txt", "stops.txt", "trips.txt", and "frequencies.txt", with
+#' this last one being optional. If some of the mandatory files do not exit,
+#' this function will stop with an error.
 #' @param gtfszip A zipped GTFS data.
 #' @export
 #' @examples
