@@ -94,9 +94,22 @@ gtfs2gps_dt_parallel <- function(gtfszip, spatial_resolution = 15, week_days = T
                               route_type = routetype,
                               shape_pt_lon = sf::st_coordinates(new_shape)[,1],
                               shape_pt_lat = sf::st_coordinates(new_shape)[,2])
-  
+
+    max_stoptimes <- dim(new_stoptimes)[1]
+    max_stops_seq <- dim(stops_seq)[1]
+    j <- 1
+
+    for(i in 1:max_stoptimes){
+      if(all.equal(new_stoptimes$shape_pt_lon[i], stops_seq$stop_lon[j], 0.000001) == TRUE &&
+         all.equal(new_stoptimes$shape_pt_lat[i], stops_seq$stop_lat[j], 0.000001) == TRUE){
+        new_stoptimes[i, "stop_id"] <- stops_seq[j, "stop_id"]
+        new_stoptimes[i, "stop_sequence"] <- stops_seq[j, "stop_sequence"]
+        j <- j + 1
+      }
+    }
+
     # Add stops to shape
-    new_stoptimes[stops_seq, on = c(shape_pt_lat = "stop_lat"), c('stop_id', 'stop_sequence') := list(i.stop_id, i.stop_sequence)]
+    #new_stoptimes[stops_seq, on = c(shape_pt_lat = "stop_lat"), c('stop_id', 'stop_sequence') := list(i.stop_id, i.stop_sequence)]
 
     ###check if everything is Ok
     ##kept path
