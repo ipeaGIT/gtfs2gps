@@ -150,13 +150,13 @@ gtfs2gps_dt_parallel <- function(gtfszip, spatial_resolution = 15, week_days = T
       dist_1st <- new_stoptimes[id == pos_non_NA]$cumdist / 1000 # in Km
       # get the depart time from 1st stop
       departtime_1st <- new_stoptimes[id == pos_non_NA]$departure_time
-      departtime_1st <- departtime_1st - (dist_1st / trip_speed * 60) # time in seconds
+      departtime_1st <- departtime_1st - (dist_1st / trip_speed * 60 * 60) # time in seconds
 
       # Determine the start time of the trip (time stamp the 1st GPS point of the trip)
       suppressWarnings(new_stoptimes[id == 1, departure_time := data.table::as.ITime(departtime_1st)])
 
       # recalculate time stamps
-      new_stoptimes[, departure_time := data.table::as.ITime(departure_time[1L] + (cumdist / trip_speed * 60))]
+      new_stoptimes[, departure_time := data.table::as.ITime(departure_time[1L] + (cumdist/1000 / trip_speed * 60 * 60))]
 
       return(new_stoptimes)
     }
