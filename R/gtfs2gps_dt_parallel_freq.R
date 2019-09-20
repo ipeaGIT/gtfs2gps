@@ -105,12 +105,24 @@ corefun <- function(shapeid){
                                 shape_pt_lat = sf::st_coordinates(new_shape)[,2])
     
     
-    # Add stops to shape
-    new_stoptimes[stops_seq, on=c(shape_pt_lat="stop_lat"),  c('stop_id', 'stop_sequence') := list(i.stop_id, i.stop_sequence) ]
+    # Add stops to shape ( fixing issue of issue #17 of  routes that are closed circuits represented on a single line)
+        # new_stoptimes[stops_seq, on=c(shape_pt_lat="stop_lat"),  c('stop_id', 'stop_sequence') := list(i.stop_id, i.stop_sequence) ]
+        # 
+        # # make sure 1st stop has postion 1
+        # new_stoptimes$stop_sequence[which(!is.na(new_stoptimes$stop_sequence))][1] <- 1 
     
-    # make sure 1st stop has postion 1
-    new_stoptimes$stop_sequence[which(!is.na(new_stoptimes$stop_sequence))][1] <- 1 
+    max_stoptimes <- dim(new_stoptimes)[1]
+    max_stops_seq <- dim(stops_seq)[1]
+    j <- 1
     
+    for(i in 1:max_stoptimes){
+      if(all.equal(new_stoptimes$shape_pt_lon[i], stops_seq$stop_lon[j], 0.000001) == TRUE &&
+         all.equal(new_stoptimes$shape_pt_lat[i], stops_seq$stop_lat[j], 0.000001) == TRUE){
+        new_stoptimes[i, "stop_id"] <- stops_seq[j, "stop_id"]
+        new_stoptimes[i, "stop_sequence"] <- stops_seq[j, "stop_sequence"]
+        j <- j + 1
+      }
+    }
     
     
     
