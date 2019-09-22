@@ -12,7 +12,7 @@ For some GTFS feeds, like the one of Porto Alegre, there is only information abo
 | ... | ... | ... | ... | ...|...|
 | T1-2@1#600 | 5503 | 06:53:00 | -30.01022 | -51.1456|65|
 
-In this case, we cannot estimate the vehicle speed between each pair of stops. We can, however, easily estimate the average speed of the average speed of the vehicle over the entire trip. To do this, we need the lenght of the travelled distance of the vehicle in that trip.
+In this case, we cannot estimate the vehicle speed between each pair of stops. We can, however, easily estimate the average speed of the average speed of the vehicle over the entire trip. To do this, we need the length of the travelled distance of the vehicle in that trip.
 
 ```
 # get total duration of trip
@@ -40,7 +40,7 @@ avg_speed = trip_dist / trip_duration
 
 ```
 
-With these information at hand, we can choose the spatial resolution we want in our data GPS-like data. Let's say we want a timestamp every 20 seconds. In this case, this is the strucutre of the dataframe we want to arrive at. What we need now is to interpolate in space what is the location of the vehicle given that we know the its average speed `avg_speed` and trajectory `shapes_sf`
+With these information at hand, we can choose the spatial resolution we want in our data GPS-like data. Let's say we want a timestamp every 20 seconds. In this case, this is the structure of the dataframe we want to arrive at. What we need now is to interpolate in space what is the location of the vehicle given that we know the its average speed `avg_speed` and trajectory `shapes_sf`
 
 
 |trip_id|stop_id|departure_time|lat|long|stop_sequence|
