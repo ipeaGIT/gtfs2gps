@@ -12,7 +12,7 @@ For some GTFS feeds, like the one of Porto Alegre, there is only information abo
 | ... | ... | ... | ... | ...|...|
 | T1-2@1#600 | 5503 | 06:53:00 | -30.01022 | -51.1456|65|
 
-In this case, we cannot estimate the vehicle speed between each pair of stops. We can, however, easily estimate the averge speed of the average speed of the vehicle over the entire trip. To do this, we need the lenght of the travelled distance of the vehicle in that trip.
+In this case, we cannot estimate the vehicle speed between each pair of stops. We can, however, easily estimate the average speed of the average speed of the vehicle over the entire trip. To do this, we need the lenght of the travelled distance of the vehicle in that trip.
 
 ```
 # get total duration of trip

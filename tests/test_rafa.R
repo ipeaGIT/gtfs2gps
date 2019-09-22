@@ -103,14 +103,14 @@ devtools::document(pkg = "gtfs2gps")
 
 
 # Write package manual.pdf
-system("R CMD Rd2pdf --title=Package geobr --output=./geobr/manual.pdf")
-# system("R CMD Rd2pdf geobr")
+system("R CMD Rd2pdf --title=Package gtfs2gps --output=./gtfs2gps/manual.pdf")
+# system("R CMD Rd2pdf gtfs2gps")
 
 
 
 
 # Ignore these files/folders when building the package (but keep them on github)
-setwd("R:/Dropbox/git_projects/geobr")
+setwd("R:/Dropbox/git_projects/gtfs2gps")
 
 
 usethis::use_build_ignore("test")
@@ -132,20 +132,20 @@ usethis::use_build_ignore("crosswalk_pre.R")
 
 
 
-setwd("R:/Dropbox/git_projects/geobr")
+setwd("R:/Dropbox/git_projects/gtfs2gps")
 setwd("..")
 
 
 # Install package
-# devtools::install("geobr", build_vignettes = T)
-# system("R CMD INSTALL --build geobr")
+# devtools::install("gtfs2gps", build_vignettes = T)
+# system("R CMD INSTALL --build gtfs2gps")
 
 # build binary
-system("R CMD build geobr --resave-data") # build tar.gz
-# devtools::build(pkg = "geobr", path=".", binary = T, manual=T)
+system("R CMD build gtfs2gps --resave-data") # build tar.gz
+# devtools::build(pkg = "gtfs2gps", path=".", binary = T, manual=T)
 
 # Check package errors
-# devtools::check("geobr")
-system("R CMD check geobr_1.0.tar.gz")
-system("R CMD check --as-cran geobr_1.0.tar.gz")
+# devtools::check("gtfs2gps")
+system("R CMD check gtfs2gps_1.0.tar.gz")
+system("R CMD check --as-cran gtfs2gps_1.0.tar.gz")
 
