@@ -26,7 +26,7 @@ devtools::document(pkg = ".")
   # freq based
   gtfsf <- './inst/extdata/saopaulo.zip'
 
-  
+emtu <- "R:/Dropbox/bases_de_dados/GTFS/SP GTFS/GTFS EMTU_20190815.zip"
   
   
 ##### TESTS normal fun ------------------------
