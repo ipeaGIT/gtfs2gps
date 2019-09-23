@@ -143,8 +143,7 @@ gtfs2gps_dt_parallel <- function(gtfszip, spatial_resolution = 15, week_days = T
       new_stoptimes[, cumdist := cumsum(dist)]
       
       # find position of first non-missing departure_time
-      pos_non_NA <- new_stoptimes$departure_time
-      pos_non_NA <- Position(function(pos_non_NA) !is.na(pos_non_NA), pos_non_NA)
+      pos_non_NA <-  which(is.na(new_stoptimes$departure_time)==F)[1]
 
       # distance from trip start to 1st stop
       dist_1st <- new_stoptimes[id == pos_non_NA]$cumdist / 1000 # in Km
