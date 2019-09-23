@@ -4,7 +4,7 @@
 \alias{cpp_snap_points}
 \title{Snap points to the closest points from another set}
 \usage{
-cpp_snap_points(data, ref)
+cpp_snap_points(data, ref, spatial_resolution)
 }
 \arguments{
 \item{data}{A set of points to be snapped (a matrix). The result will have

@@ -14,7 +14,7 @@ rcpp_distance_haversine <- function(latFrom, lonFrom, latTo, lonTo, tolerance) {
 #' @param ref A set of reference points (another matrix). The result will be 
 #' a subset of this parameter.
 #' @export
-cpp_snap_points <- function(data, ref) {
-    .Call(`_gtfs2gps_cpp_snap_points`, data, ref)
+cpp_snap_points <- function(data, ref, spatial_resolution) {
+    .Call(`_gtfs2gps_cpp_snap_points`, data, ref, spatial_resolution)
 }
 

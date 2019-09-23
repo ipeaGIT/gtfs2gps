@@ -7,6 +7,8 @@ test_that("gtfs_shape_as_sf", {
     
     expect_true(inherits(poa_sf, "sf"))
     expect_equal(dim(poa_sf)[1], 4)
+    
+    expect_true("length" %in% names(poa_sf))
 })
 
 test_that("gtfs_stops_as_sf", {
