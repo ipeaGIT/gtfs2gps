@@ -61,6 +61,8 @@ routetype <- gtfs_data$routes[route_id == routeid]$route_type
 trips_temp <- gtfs_data$trips[shape_id == shapeid & route_id == routeid, ]
 all_tripids <- unique(trips_temp$trip_id)
 
+
+
 # stops sequence with lat long
 # each shape_id only have one stop sequence
 # get stop sequence
