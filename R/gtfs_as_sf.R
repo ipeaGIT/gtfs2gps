@@ -19,13 +19,11 @@ gtfs_shapes_as_sf <- function(gtfs, crs = 4326){
                           }
                           , by = shape_id
                           ]
-  # set coordinate system 
-  sf::st_crs(temp_shapes$geometry) <- crs
-  # add shape length
-  temp_shapes[, length := sf::st_length(geometry) %>% units::set_units("km"), by = shape_id]
 
-  # back to sf
-  sf::st_as_sf(temp_shapes, crs = crs)  %>% sf::as_Spatial() %>% sf::st_as_sf()
+  sf::st_as_sf(temp_shapes, crs = crs) %>%
+    sf::as_Spatial() %>%
+    sf::st_as_sf() %>%
+    dplyr::mutate(length = sf::st_length(geometry) %>% units::set_units("km"))
 }
 
 #' @title Convert GTFS stops to simple feature
