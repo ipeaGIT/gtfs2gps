@@ -31,16 +31,16 @@ devtools::document(pkg = ".")
   
 ##### TESTS normal fun ------------------------
   # normal data
-  normal <- gtfs2gps_dt_parallel(gtfsn)
+  system.time(  normal <- gtfs2gps_dt_parallel(gtfsn) ) # 61.55  secs
 
   # freq data
-  normfreq <- gtfs2gps_dt_parallel(gtfsf)
+  system.time(  normfreq <- gtfs2gps_dt_parallel(gtfsf) ) # 130.50 secs
   
   
 ##### TESTS freq fun ------------------------
 
     
-  f <- gtfs2gps_dt_freq2(gtfsf)
+ system.time( f <- gtfs2gps_dt_freq2(gtfsf) ) # 156.50 
   
   
   
