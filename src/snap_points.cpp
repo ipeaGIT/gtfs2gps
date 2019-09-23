@@ -1,6 +1,11 @@
 
 #include <Rcpp.h>
+
 using namespace Rcpp;
+
+double distanceHaversine(double latf, double lonf, double latt, double lont,
+                         double tolerance);
+double toRadians(double deg);
 
 //' @title Snap points to the closest points from another set
 //' @description Snap a set of points to the closest points available in another set
@@ -12,39 +17,45 @@ using namespace Rcpp;
 //' a subset of this parameter.
 //' @export
 // [[Rcpp::export]]
-Rcpp::DataFrame cpp_snap_points(Rcpp::NumericMatrix& data, Rcpp::NumericMatrix& ref){
+Rcpp::DataFrame cpp_snap_points(Rcpp::NumericMatrix& data, Rcpp::NumericMatrix& ref, int spatial_resolution){
   Rcpp::NumericVector result_x;
   Rcpp::NumericVector result_y;
+  Rcpp::NumericVector result_pos;
   
   const int nrow = data.nrow();
   const int ref_nrow = ref.nrow();
-  
+  int ref_i = -1;
+  int total_found = 0;
+
   for(int i = 0; i < nrow; i++){
-    double min_dist = 1e+100;
-    double min_pos = -1;
-    
     const double x = data[i];
     const double y = data[i + nrow];
-    
-    for(int ref_i = 0; ref_i < ref_nrow; ref_i++){
+    double dist;
+
+    do {
+      ref_i++;
       const double ref_x = ref[ref_i];
-      const double ref_y = ref[ref_i + ref_nrow ];
-      
-      const double dist = sqrt(pow(x - ref_x, 2) + pow(y - ref_y, 2));
-      
-      if(dist < min_dist){
-        min_dist = dist;
-        min_pos = ref_i;
-      }
+      const double ref_y = ref[ref_i + ref_nrow];
+
+      dist = distanceHaversine(toRadians(y), toRadians(x), toRadians(ref_y), toRadians(ref_x), 1);
+    } while (dist > spatial_resolution && ref_i < ref_nrow);
+
+    if(ref_i < ref_nrow){
+      result_x.push_back(ref[ref_i]);
+      result_y.push_back(ref[ref_i + ref_nrow]);
+      result_pos.push_back(ref_i + 1);
+      total_found++;
     }
-    
-    result_x.push_back(ref[min_pos]);
-    result_y.push_back(ref[min_pos + ref_nrow]);
+  }
+
+  if(total_found < nrow){
+    return cpp_snap_points(data, ref, spatial_resolution * 2);
   }
   
   Rcpp::DataFrame result = 
     Rcpp::DataFrame::create(Rcpp::Named("x") = result_x,
-                            Rcpp::Named("y") = result_y);
+                            Rcpp::Named("y") = result_y,
+                            Rcpp::Named("pos") = result_pos);
   
   return result;
 }

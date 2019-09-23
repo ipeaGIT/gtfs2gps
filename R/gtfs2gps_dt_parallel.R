@@ -79,13 +79,13 @@ gtfs2gps_dt_parallel <- function(gtfszip, spatial_resolution = 15, week_days = T
     # get shape points in high resolution
     new_shape <- sf::st_cast(shape_sf_temp2, "POINT", warn = FALSE) %>% sf::st_sf()
 
+    spatial_resolution <- units::set_units(spatial_resolution, "m")
     # snap stops to route shape
-    stops_snapped_sf <- cpp_snap_points(stops_sf %>% sf::st_coordinates(), new_shape %>% sf::st_coordinates())
+    stops_snapped_sf <- cpp_snap_points(stops_sf %>% sf::st_coordinates(), new_shape %>% sf::st_coordinates(), spatial_resolution)
 
     # update stops_seq lat long with snapped coordinates
-    stops_seq$stop_lon <- stops_snapped_sf$x
-    stops_seq$stop_lat <- stops_snapped_sf$y
-
+    stops_seq$ref <- stops_snapped_sf$pos
+    
     ### Start building new stop_times.txt file
 
     # get shape points in high resolution
@@ -95,21 +95,8 @@ gtfs2gps_dt_parallel <- function(gtfszip, spatial_resolution = 15, week_days = T
                               shape_pt_lon = sf::st_coordinates(new_shape)[,1],
                               shape_pt_lat = sf::st_coordinates(new_shape)[,2])
 
-    
-  # Add stops to shape ( fixing issue of issue #17 of  routes that are closed circuits represented on a single line)
-    max_stoptimes <- dim(new_stoptimes)[1]
-    max_stops_seq <- dim(stops_seq)[1]
-    j <- 1
-
-    for(i in 1:max_stoptimes){
-      if(all.equal(new_stoptimes$shape_pt_lon[i], stops_seq$stop_lon[j], 0.000001) == TRUE &&
-         all.equal(new_stoptimes$shape_pt_lat[i], stops_seq$stop_lat[j], 0.000001) == TRUE){
-        new_stoptimes[i, "stop_id"] <- stops_seq[j, "stop_id"]
-        new_stoptimes[i, "stop_sequence"] <- stops_seq[j, "stop_sequence"]
-        j <- j + 1
-      }
-    }
-
+    new_stoptimes[stops_seq$ref, "stop_id"] <- stops_seq$stop_id
+    new_stoptimes[stops_seq$ref, "stop_sequence"] <- stops_seq$stop_sequence
 
     ###check if everything is Ok
     ##kept path
