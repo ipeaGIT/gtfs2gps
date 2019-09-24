@@ -130,7 +130,7 @@ gtfs2gps_dt_parallel <- function(gtfszip, spatial_resolution = 15, week_days = T
       stop_id_ok <- gtfs_data$stop_times[trip_id == tripid & is.na(departure_time) == F,]$stop_sequence
       
       trip_speed <- c()
-      for(i in 1:(length(stop_id_ok)-1)){
+      speed_fun <- function(i){
         
         # time difference btwn two consecutive stops with info on 'departure_time'
         dt <- difftime(stoptimes_temp$arrival_time[stop_id_ok[i+1]],
@@ -149,7 +149,11 @@ gtfs2gps_dt_parallel <- function(gtfszip, spatial_resolution = 15, week_days = T
         
         # add mean_speed on new_stoptimes
         new_stoptimes[stop_range, speed := trip_speed[i]]
-        }
+        return(new_stoptimes)
+      }
+      
+      # apply function
+      new_stoptimes <- lapply(X =  1:(length(stop_id_ok)-1), speed_fun) %>% as.data.table()  
       
       
       
