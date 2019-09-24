@@ -114,7 +114,7 @@ gtfs2gps_dt_parallel <- function(gtfszip, spatial_resolution = 15, week_days = T
 
     new_stoptimes <- na.omit(new_stoptimes, cols = "dist")
 
-    ###### PART 2.2 Function recalculate new stop_times for each trip id of each Shape id ------------------------------------
+###### PART 2.2 Function recalculate new stop_times for each trip id of each Shape id ------------------------------------
 
     ### Function to generate the GPS-like data set of each trip_id
     update_newstoptimes <- function(tripid){
@@ -123,37 +123,43 @@ gtfs2gps_dt_parallel <- function(gtfszip, spatial_resolution = 15, week_days = T
       new_stoptimes[, cumdist := cumsum(dist)]
       # stoptimes
       stoptimes_temp <- gtfs_data$stop_times[trip_id == tripid]
-      #
-      # average speed between points
-      #
+      
+    # average speed between points
+      
+      # 'stop_sequence' of the stops which have proper info on 'departure_time'
       stop_id_ok <- gtfs_data$stop_times[trip_id == tripid & is.na(departure_time) == F,]$stop_sequence
+      
       trip_speed <- c()
       for(i in 1:(length(stop_id_ok)-1)){
+        
+        # time difference btwn two consecutive stops with info on 'departure_time'
         dt <- difftime(stoptimes_temp$arrival_time[stop_id_ok[i+1]],
                        stoptimes_temp$departure_time[stop_id_ok[i]])
+        
+        # distance btwn two consecutive stops with info on 'departure_time'
         ds <- new_stoptimes[stop_sequence==stop_id_ok[i+1],"cumdist"]-
           new_stoptimes[stop_sequence==stop_id_ok[i],"cumdist"]
         
-        trip_speed[i] <- 3.6*as.numeric(ds)/(as.numeric(dt)*60) # km/h
+        # calculate speed in km/h
+        trip_speed[i] <- 3.6*as.numeric(ds)/(as.numeric(dt)*60)
+        
+        # index of all 'id' nodes to which the speed info should be imputed to
+        stop_range <- which(new_stoptimes$stop_sequence %in% stop_id_ok[i]):
+          (which(new_stoptimes$stop_sequence %in% stop_id_ok[i+1])-1)
         
         # add mean_speed on new_stoptimes
-        speed_stop_range <- which(new_stoptimes$stop_sequence%in%stop_id_ok[i]):
-          (which(new_stoptimes$stop_sequence%in%stop_id_ok[i+1])-1)
-        
-        new_stoptimes[speed_stop_range, speed := trip_speed[i]]
-        
-      }
-      # fill last position
-      ind_last <- which(new_stoptimes$stop_sequence%in%tail(stop_id_ok,1))
-      new_stoptimes$speed[ind_last] <- mean(new_stoptimes$speed,na.rm=T)
-      # Get trip duration and length
-      #trip_duration <- stoptimes_temp[, difftime(departure_time[.N], departure_time[1L], units = "hours")]
-      trip_duration <- 3.6*new_stoptimes$dist/new_stoptimes$speed # s 
-      # length of the trip (in KM)
-      #shp_length <- units::set_units(shp_length, "km")
-      #trip_speed <- as.numeric(shp_length) / as.numeric(trip_duration)
+        new_stoptimes[stop_range, speed := trip_speed[i]]
+        }
+      
+      
+      
+    # Speed info that was missing (either before or after 1st/last stops)
+      new_stoptimes[, speed := ifelse( is.na(speed), mean(new_stoptimes$speed,na.rm=T), speed) ]
+                    
+    # Get trip duration in seconds
+      trip_duration <- 3.6*new_stoptimes$dist/new_stoptimes$speed
 
-      # Add departure_time
+      # merge add departure_time
       new_stoptimes[stoptimes_temp, on = 'stop_id', 'departure_time' := i.departure_time]
 
       # add trip_id
@@ -167,6 +173,7 @@ gtfs2gps_dt_parallel <- function(gtfszip, spatial_resolution = 15, week_days = T
       
       # distance from trip start to 1st stop
       dist_1st <- new_stoptimes[id == pos_non_NA]$cumdist / 1000 # in Km
+      
       # get the depart time from 1st stop
       departtime_1st <- new_stoptimes[id == pos_non_NA]$departure_time
       departtime_1st <- departtime_1st - (dist_1st / trip_speed[1] * 60 * 60) # time in seconds
