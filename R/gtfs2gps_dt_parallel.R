@@ -80,12 +80,9 @@ gtfs2gps_dt_parallel <- function(gtfszip, spatial_resolution = 15, week_days = T
     new_shape <- sf::st_cast(shape_sf_temp2, "POINT", warn = FALSE) %>% sf::st_sf()
 
     spatial_resolution <- units::set_units(spatial_resolution, "m")
-    # snap stops to route shape
-    stops_snapped_sf <- cpp_snap_points(stops_sf %>% sf::st_coordinates(), new_shape %>% sf::st_coordinates(), spatial_resolution)
+    # update stops_seq with snap stops to route shape
+    stops_seq$ref <- cpp_snap_points(stops_sf %>% sf::st_coordinates(), new_shape %>% sf::st_coordinates(), spatial_resolution)
 
-    # update stops_seq lat long with snapped coordinates
-    stops_seq$ref <- stops_snapped_sf$pos
-    
     ### Start building new stop_times.txt file
 
     # get shape points in high resolution

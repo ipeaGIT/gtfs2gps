@@ -17,9 +17,7 @@ double toRadians(double deg);
 //' a subset of this parameter.
 //' @export
 // [[Rcpp::export]]
-Rcpp::DataFrame cpp_snap_points(Rcpp::NumericMatrix& data, Rcpp::NumericMatrix& ref, int spatial_resolution){
-  Rcpp::NumericVector result_x;
-  Rcpp::NumericVector result_y;
+Rcpp::NumericVector cpp_snap_points(Rcpp::NumericMatrix& data, Rcpp::NumericMatrix& ref, int spatial_resolution){
   Rcpp::NumericVector result_pos;
   
   const int nrow = data.nrow();
@@ -41,8 +39,6 @@ Rcpp::DataFrame cpp_snap_points(Rcpp::NumericMatrix& data, Rcpp::NumericMatrix& 
     } while (dist > spatial_resolution && ref_i < ref_nrow);
 
     if(ref_i < ref_nrow){
-      result_x.push_back(ref[ref_i]);
-      result_y.push_back(ref[ref_i + ref_nrow]);
       result_pos.push_back(ref_i + 1);
       total_found++;
     }
@@ -51,11 +47,6 @@ Rcpp::DataFrame cpp_snap_points(Rcpp::NumericMatrix& data, Rcpp::NumericMatrix& 
   if(total_found < nrow){
     return cpp_snap_points(data, ref, spatial_resolution * 2);
   }
-  
-  Rcpp::DataFrame result = 
-    Rcpp::DataFrame::create(Rcpp::Named("x") = result_x,
-                            Rcpp::Named("y") = result_y,
-                            Rcpp::Named("pos") = result_pos);
-  
-  return result;
+
+  return result_pos;
 }
