@@ -8,3 +8,4 @@ src/*.dll
 src/*.o
 /src/tmp.def
 vignettes/*.zip
+/tests/test_ig.txt
