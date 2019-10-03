@@ -2,10 +2,15 @@
 #' @title Test whether a GTFS feed is frequency based
 #' @description Test whether a GTFS feed is frequency based or whether the stop_times.txt file
 #' presents detailed time table for all routes and trip ids .
-#' @param gtfs A GTFS data.
+#' @param gtfs A GTFS data set stored in memory as a list of data.tables/data.frames.
 #' @export
 #' @examples
+#' library(gtfs2gps)
+#' 
+#' # read a gtfs.zip to memory
 #' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+#' 
+#' # Test whether a GTFS feed is frequency based
 #' test_gtfs_freq(poa)
 #'
 test_gtfs_freq <- function(gtfs){
