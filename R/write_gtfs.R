@@ -2,7 +2,7 @@
 #' @title Write GTFS data into a zip file
 #' @description Write GTFS stored in memory as a list of data.tables into a zipped GTFS feed.
 #' This function overwrites the file zip file if it exists.
-#' @param gtfs A GTFS data.
+#' @param gtfs A GTFS data set stored in memory as a list of data.tables/data.frames.
 #' @param file A .zip file name.
 #' @export
 #' @examples
