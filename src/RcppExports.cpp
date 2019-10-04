@@ -21,7 +21,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_snap_points
-Rcpp::DataFrame cpp_snap_points(Rcpp::NumericMatrix& data, Rcpp::NumericMatrix& ref, int spatial_resolution);
+Rcpp::NumericVector cpp_snap_points(Rcpp::NumericMatrix& data, Rcpp::NumericMatrix& ref, int spatial_resolution);
 RcppExport SEXP _gtfs2gps_cpp_snap_points(SEXP dataSEXP, SEXP refSEXP, SEXP spatial_resolutionSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
