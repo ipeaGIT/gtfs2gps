@@ -8,29 +8,6 @@
 #' @param week_days Use only the week days? Default is TRUE.
 #' @export
 #'   # my changes #### 
-rm(list=ls())
-library(sf)
-library(data.table)
-library(magrittr)
-library(future.apply)
-library(roxygen2)
-library(devtools)
-library(usethis)
-library(profvis)
-library(dplyr)
-library(mapview)
-library(lwgeom)
-library(Rcpp)
-library(ggplot2)
-#devtools::install_github("ipeaGIT/gtfs2gps")
-library(gtfs2gps)
-gtfszip = "inst/gtfs_for_etufor_2019-10.zip"
-source("R/read_gtfs.R")
-source("R/gtfs_as_sf.R")
-source("R/test_gtfs_freq.R")
-source("joao_test/dt_parallel/mod_updates.R")
-week_days=F
-#break()
 gtfs2gps_dt_single <- function(gtfszip, filepath, spatial_resolution = 15, week_days = TRUE){
   #
   #
