@@ -157,27 +157,3 @@ gtfs2gps_dt_single <- function(gtfszip, filepath, spatial_resolution = 15, week_
     # # closing progress bar
   #   close(pb)
 }
-break()
-system.time({
-  output1 <- gtfs2gps_dt_single(gtfszip = "inst/gtfs_for_etufor_2019-10.zip",
-                               filepath = "joao_test/output/gtfs_for_etufor_2019-10",
-                               spatial_resolution = 15,week_days = F)
-})
-# usuário   sistema decorrido 
-# 687.81    272.47  14380.50
-system.time({
-  output2 <- gtfs2gps_dt_single(gtfszip = "inst/gtfs_poa_eptc_2019-06.zip",
-                               filepath = "joao_test/output/gtfs_poa_eptc_2019-06",
-                               spatial_resolution = 15,week_days = F)
-})
-
-system.time({
-  output3 <- gtfs2gps_dt_single(gtfszip = "inst/gtfs_spo_sptrans_2019-10.zip",
-                               filepath = "joao_test/output/gtfs_spo_sptrans_2019-10",
-                               spatial_resolution = 15,week_days = F)
-})
-system.time({
-  output4 <- gtfs2gps_dt_single(gtfszip = "inst/gtfs_spo_emtu_2019-10.zip",
-                                filepath = "joao_test/output/gtfs_spo_emtu_2019-10",
-                                spatial_resolution = 15,week_days = F)
-})
