@@ -132,10 +132,9 @@ gtfs2gps_dt_single <- function(gtfszip, filepath, spatial_resolution = 15, week_
     }
     
     #
-    # Salva arquivo
-    write.table(x = new_stoptimes,
-                file = paste0(filepath,"/",shapeid,".txt"),
-                sep="\t",row.names=FALSE,quote=FALSE)
+    # Write object
+    fwrite(x = new_stoptimes,
+           file = paste0(filepath,"/",shapeid,".txt"))
     
     return(new_stoptimes)
     
