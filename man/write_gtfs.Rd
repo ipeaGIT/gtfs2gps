@@ -7,7 +7,7 @@
 write_gtfs(gtfs, file)
 }
 \arguments{
-\item{gtfs}{A GTFS data.}
+\item{gtfs}{A GTFS data set stored in memory as a list of data.tables/data.frames.}
 
 \item{file}{A .zip file name.}
 }
@@ -18,6 +18,10 @@ This function overwrites the file zip file if it exists.
 \examples{
 library(gtfs2gps)
 
+# read a gtfs.zip to memory
 poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+
+# write GTFS data into a zip file
 write_gtfs(poa, "mypoa.zip")
+
 }
