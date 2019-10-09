@@ -16,16 +16,15 @@
 test_gtfs_freq <- function(gtfs){
   
 # Does the GTFS feed has a frequencies.txt file?
+  
+  # No (it might have an empty frequencies.txt file)
+  if (is.null(gtfs$frequencies) == T | is.null(dim(gtfs$frequencies)[1])) { 
+   # message("Simple GTFS feed")
+    return("simple")
+    } else
+  
   # Yes
     if (is.null(gtfs$frequencies) == F) {
       message("Frequency-based GTFS feed")
       return("frequency")}
-    
-    
-  # No (it might have an empty frequencies.txt file)
-    if (is.null(gtfs$frequencies) == T |   is.null(dim(gtfs$frequencies)[1])) { 
-      message("Simple GTFS feed")
-      return("simple")}
-
-  }
-
+    }
