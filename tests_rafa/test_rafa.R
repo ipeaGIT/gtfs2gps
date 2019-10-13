@@ -1,12 +1,3 @@
-626277_volta
-626371_circular
-Error in `[.data.table`(new_stoptimes, id == 1, `:=`(departure_time, data.table::as.ITime(departtime_1st))) : 
-  RHS of assignment to existing column 'departure_time' is zero length but not NULL. If you intend to delete the column use NULL. Otherwise, the RHS must have length > 0; e.g., NA_integer_. If you are trying to change the column type to be an empty list column then, as with all column type changes, provide a full length RHS vector such as vector('list',nrow(DT)); i.e., 'plonk' in the new column.
-Called from: `[.data.table`(new_stoptimes, id == 1, `:=`(departure_time, 
-                                                         data.table::as.ITime(departtime_1st)))
-Browse[1]> Q
-Timing stopped at: 968.8 116.8 2859
-
 library(sf)
 library(data.table)
 library(magrittr)
@@ -95,7 +86,6 @@ library(usethis)
 
 
 setwd("R:/Dropbox/git/gtfs2gps")
-setwd("..")
 
 # update `NEWS.md` file
 # update `DESCRIPTION` file
@@ -104,10 +94,10 @@ setwd("..")
 
 # checks spelling
 library(spelling)
-devtools::spell_check(pkg = "gtfs2gps", vignettes = TRUE, use_wordlist = TRUE)
+devtools::spell_check(pkg = ".", vignettes = TRUE, use_wordlist = TRUE)
 
 # Update documentation
-devtools::document(pkg = "gtfs2gps")
+devtools::document(pkg = ".")
 
 
 # Write package manual.pdf

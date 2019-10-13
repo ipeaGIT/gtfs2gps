@@ -9,15 +9,9 @@
 #' @export
 #'   # my changes #### 
 gtfs2gps_dt_single <- function(gtfszip, filepath, spatial_resolution = 15, week_days = TRUE){
-  #
-  #
-  #
+
   ###### PART 1. Load and prepare data inputs ------------------------------------
-  # 
-  #
-  #
-  gc(reset = TRUE)
-  
+
   # Read GTFS data
   gtfs_data <- read_gtfs(gtfszip = gtfszip)
   
@@ -31,20 +25,12 @@ gtfs2gps_dt_single <- function(gtfszip, filepath, spatial_resolution = 15, week_
   
   # all shape ids
   all_shapeids <- unique(shapes_sf$shape_id)
-  # all_shapeids <- unique(shapes_sf$shape_id)
-  # Progress bar start
-  #total <- length(all_shapeids)
-  #shapeid <- last(all_shapeids)
-  #  pb <- utils::txtProgressBar(min = 0, max = total, style = 3)
-  #
-  #
-  #
+
   ###### PART 2. Analysing data type ----------------------------------------------
-  # 
-  #
-  #
-  corefun <- function(shapeid){ 
-    # #get a list of all trip ids
+
+    corefun <- function(shapeid){ 
+      
+    # get a list of all shape ids
      all_shapeids <- unique(shapes_sf$shape_id)#; shapeid <- all_shapeids[1]
     #all_shapeids <- all_shapeids[1]
     # break()
@@ -62,9 +48,10 @@ gtfs2gps_dt_single <- function(gtfszip, filepath, spatial_resolution = 15, week_
     
     if(is.na(routeid)) return(NULL)
     
+    # identify route type    
     routetype <- gtfs_data$routes[route_id == routeid]$route_type
     
-    # trips
+    # get all trips linked to that route
     trips_temp <- gtfs_data$trips[shape_id == shapeid & route_id == routeid, ]
     all_tripids <- unique(trips_temp$trip_id)
     
