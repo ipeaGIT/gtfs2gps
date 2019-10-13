@@ -1,3 +1,11 @@
+626277_volta
+626371_circular
+Error in `[.data.table`(new_stoptimes, id == 1, `:=`(departure_time, data.table::as.ITime(departtime_1st))) : 
+  RHS of assignment to existing column 'departure_time' is zero length but not NULL. If you intend to delete the column use NULL. Otherwise, the RHS must have length > 0; e.g., NA_integer_. If you are trying to change the column type to be an empty list column then, as with all column type changes, provide a full length RHS vector such as vector('list',nrow(DT)); i.e., 'plonk' in the new column.
+Called from: `[.data.table`(new_stoptimes, id == 1, `:=`(departure_time, 
+                                                         data.table::as.ITime(departtime_1st)))
+Browse[1]> Q
+Timing stopped at: 968.8 116.8 2859
 
 library(sf)
 library(data.table)
@@ -31,7 +39,7 @@ emtu <- "R:/Dropbox/bases_de_dados/GTFS/SP GTFS/GTFS EMTU_20190815.zip"
   
 ##### TESTS normal fun ------------------------
   # normal data
-  system.time(  normal <- gtfs2gps_dt_parallel(gtfsn) ) # 61.55  secs
+  system.time(  normal <- gtfs2gps_dt_parallel2(emtu) ) # 61.55  secs
 
   # freq data
   system.time(  normfreq <- gtfs2gps_dt_parallel(gtfsf) ) # 130.50 secs
