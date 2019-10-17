@@ -13,6 +13,9 @@ rcpp_distance_haversine <- function(latFrom, lonFrom, latTo, lonTo, tolerance) {
 #' snapped point.
 #' @param ref A set of reference points (another matrix). The result will be 
 #' a subset of this parameter.
+#' @param spatial_resolution The spatial resolution of data, which means that from each
+#' point of data it is possible to reach at least one point within data with distance 
+#' equals or less than spatial_resolution.
 #' @export
 cpp_snap_points <- function(data, ref, spatial_resolution) {
     .Call(`_gtfs2gps_cpp_snap_points`, data, ref, spatial_resolution)

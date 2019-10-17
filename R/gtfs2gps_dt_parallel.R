@@ -107,7 +107,7 @@ gtfs2gps_dt_parallel <- function(gtfszip, spatial_resolution = 15, week_days = T
   
     # calculate Distance between successive points
     # using C++ : Source: https://stackoverflow.com/questions/36817423/how-to-efficiently-calculate-distance-between-pair-of-coordinates-using-data-tab?noredirect=1&lq=1
-    new_stoptimes[, dist := gtfs2gps:::rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type="lead"), data.table::shift(shape_pt_lon, type="lead"), tolerance = 10000000000.0)]
+    new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type="lead"), data.table::shift(shape_pt_lon, type="lead"), tolerance = 10000000000.0)]
 
     new_stoptimes <- na.omit(new_stoptimes, cols = "dist")
 
@@ -127,8 +127,7 @@ gtfs2gps_dt_parallel <- function(gtfszip, spatial_resolution = 15, week_days = T
       stop_id_ok <- gtfs_data$stop_times[trip_id == tripid & is.na(departure_time) == F,]$stop_sequence
       
       trip_speed <- c()
-      speed_fun <- function(i){
-        
+      for(i in 1:(length(stop_id_ok)-1)){
         # time difference btwn two consecutive stops with info on 'departure_time'
         dt <- difftime(stoptimes_temp$arrival_time[stop_id_ok[i+1]],
                        stoptimes_temp$departure_time[stop_id_ok[i]])
@@ -149,14 +148,9 @@ gtfs2gps_dt_parallel <- function(gtfszip, spatial_resolution = 15, week_days = T
         return(new_stoptimes)
       }
       
-      # apply function
-      new_stoptimes <- lapply(X =  1:(length(stop_id_ok)-1), speed_fun) %>% as.data.table()  
-      
-      
-      
     # Speed info that was missing (either before or after 1st/last stops)
       new_stoptimes[, speed := ifelse( is.na(speed), mean(new_stoptimes$speed,na.rm=T), speed) ]
-                    
+
     # Get trip duration in seconds
       trip_duration <- 3.6*new_stoptimes$dist/new_stoptimes$speed
 

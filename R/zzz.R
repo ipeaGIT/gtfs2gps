@@ -4,16 +4,13 @@ utils::globalVariables(c(".", "%>%", ":="))
   # Use GForce Optimisations in data.table operations
   # details > https://jangorecki.gitlab.io/data.cube/library/data.table/html/datatable-optimize.html
   options(datatable.optimize = Inf)
-  
-  # Start parallel processing with the future library
-  future::plan(future::multiprocess)
-  
-  # allow for large files in memory during parallel processing
-  options(future.globals.maxSize= Inf)
 }
 
 #' @importFrom magrittr %>%
 #' @importFrom data.table := %between%
+#' @importFrom stats na.omit
+#' @importFrom utils head tail
+#' @importFrom stats lag na.omit
 #' @useDynLib gtfs2gps, .registration = TRUE
 NULL
 
@@ -25,4 +22,5 @@ if(getRversion() >= "2.15.1") utils::globalVariables(
     'shape_pt_lon', 'shape_pt_lat', 'id', 'cumdist', 'i.departure_time',
     '.N', 'update_newstoptimes',
     'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday',
-    'service_duration', 'headway_secs', 'number_of_departures'))
+    'service_duration', 'headway_secs', 'number_of_departures',
+    'cumtime', 'speed', 'lag'))

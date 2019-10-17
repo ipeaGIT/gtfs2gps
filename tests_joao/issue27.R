@@ -252,7 +252,7 @@ lapply(X = all_tripids, FUN = update_newstoptimes) %>% data.table::rbindlist()
 # Parallel processing using future.apply
 future::plan(future::multiprocess)
 output <- future.apply::future_lapply(X = all_shapeids, FUN = corefun, future.packages = c('data.table', 'sf', 'Rcpp', 'magrittr')) %>% data.table::rbindlist()
-
+future::plan(future::sequential)
 ### Single core
 # output <- lapply(X = all_shapeids, FUN=corefun) %>% data.table::rbindlist()
 

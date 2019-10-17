@@ -282,7 +282,7 @@ update_newstoptimes_freq <- function(starttime){
   future::plan(future::multiprocess)
   output <- future.apply::future_lapply(X = all_shapeids, FUN = corefun, future.packages = c('data.table', 'sf', 'Rcpp', 'magrittr')) %>% data.table::rbindlist()
    # output <- lapply(X = all_shapeids, FUN = corefun) %>% data.table::rbindlist()
-  
+  future::plan(future::sequential)
    ### Single core
    # all_shapeids <- all_shapeids[1:3]
    # output2 <- pbapply::pblapply(X = all_shapeids, FUN=corefun) %>% data.table::rbindlist()

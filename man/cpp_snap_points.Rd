@@ -13,6 +13,10 @@ snapped point.}
 
 \item{ref}{A set of reference points (another matrix). The result will be 
 a subset of this parameter.}
+
+\item{spatial_resolution}{The spatial resolution of data, which means that from each
+point of data it is possible to reach at least one point within data with distance 
+equals or less than spatial_resolution.}
 }
 \description{
 Snap a set of points to the closest points available in another set

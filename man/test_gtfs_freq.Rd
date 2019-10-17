@@ -9,9 +9,12 @@ test_gtfs_freq(gtfs)
 \arguments{
 \item{gtfs}{A GTFS data set stored in memory as a list of data.tables/data.frames.}
 }
+\value{
+A string "frequency" or "simple".
+}
 \description{
-Test whether a GTFS feed is frequency based or whether the stop_times.txt file
-presents detailed time table for all routes and trip ids .
+Test whether a GTFS feed is frequency based or whether frequencies.txt
+presents detailed time table for all routes and trip ids.
 }
 \examples{
 library(gtfs2gps)
@@ -21,5 +24,4 @@ poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
 
 # Test whether a GTFS feed is frequency based
 test_gtfs_freq(poa)
-
 }
