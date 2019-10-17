@@ -1,4 +1,4 @@
-update_freq <- function(tripid,new_stoptimes){
+update_freq <- function(tripid, new_stoptimes, gtfs_data){
   #tripid <- all_tripids[1]
   # add trip_id
   new_stoptimes[, trip_id := tripid]
@@ -121,7 +121,7 @@ update_freq <- function(tripid,new_stoptimes){
 # UPDATE NEWSTOPTIMES DATA.FRAME
 #
 #
-update_dt <- function(tripid,new_stoptimes){
+update_dt <- function(tripid, new_stoptimes, gtfs_data){
   #tripid <- all_tripids[1]
   # add trip_id
   new_stoptimes[, trip_id := tripid]

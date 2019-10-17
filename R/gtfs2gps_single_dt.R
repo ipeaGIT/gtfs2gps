@@ -93,10 +93,10 @@ gtfs2gps_dt_single <- function(gtfszip, filepath = ".", spatial_resolution = 15,
 
 ###### PART 2.2 Function recalculate new stop_times for each trip id of each Shape id ------------------------------------
     
-    if(test_gtfs_freq(gtfs_data)=="frequency"){
-      new_stoptimes <- lapply(X=all_tripids,FUN=update_freq,new_stoptimes) %>% data.table::rbindlist()
+    if(test_gtfs_freq(gtfs_data) == "frequency"){
+      new_stoptimes <- lapply(X = all_tripids, FUN = update_freq, new_stoptimes, gtfs_data) %>% data.table::rbindlist()
     }else{
-      new_stoptimes <- lapply(X=all_tripids,FUN=update_dt,new_stoptimes) %>% data.table::rbindlist()
+      new_stoptimes <- lapply(X = all_tripids, FUN = update_dt, new_stoptimes, gtfs_data) %>% data.table::rbindlist()
     }
 
     # Write object
