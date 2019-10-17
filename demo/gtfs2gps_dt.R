@@ -195,7 +195,7 @@ all_tripids <- all_tripids[1:10]
 # library(pbapply)
 # 
 # 
-# p <- profvis::profvis( x <- pblapply(X= all_tripids, FUN=gtfs2gps) %>% rbindlist() )
+# p <- profvis::profvis( x <- pblapply(X= all_tripids, FUN=gtfs2gps) %>% data.table::rbindlist() )
 
 
 system.time( x <- pbapply::pblapply(X= all_tripids, FUN=gtfs2gps_dt) )
@@ -214,7 +214,7 @@ parallel::clusterExport(cl=cl, varlist= c("all_tripids", "routes", "shapes", "st
 
 # apply function in parallel
 system.time( x <- parallel::parLapply(cl, all_tripids, gtfs2gps_dt) )
-x <- rbindlist(x)
+x <- data.table::rbindlist(x)
 
 # stopCluster(cl)
 

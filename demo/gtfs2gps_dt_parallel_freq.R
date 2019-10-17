@@ -241,7 +241,7 @@ update_newstoptimes_freq <- function(starttime){
   }
   
   # Apply function and return the stop times of all departures from that period
-  departure_stoptimes <-  lapply(X=seq_along(dt_list), FUN= update_departure_stoptimes) %>% rbindlist()
+  departure_stoptimes <-  lapply(X=seq_along(dt_list), FUN= update_departure_stoptimes) %>% data.table::rbindlist()
   
   
   return(departure_stoptimes)
@@ -249,7 +249,7 @@ update_newstoptimes_freq <- function(starttime){
   
 }
   # apply 2.2 function to all trip ids of a certain shape id
-  shape_stoptimes <- lapply(X=all_starttimes, update_newstoptimes_freq)%>% rbindlist()
+  shape_stoptimes <- lapply(X=all_starttimes, update_newstoptimes_freq)%>% data.table::rbindlist()
   return(shape_stoptimes)
   
   # clean memory

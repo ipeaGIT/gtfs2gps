@@ -5,9 +5,10 @@
 #' distance, indicated as a spatial resolution.
 #' @param gtfszip A path to a GTFS file to be converted to GPS.
 #' @param spatial_resolution The spatial resolution in meters. Default is 15m.
+#' @param filepath Output file path.
 #' @param week_days Use only the week days? Default is TRUE.
 #' @export
-gtfs2gps_dt_single <- function(gtfszip, filepath, spatial_resolution = 15, week_days = TRUE){
+gtfs2gps_dt_single <- function(gtfszip, filepath = ".", spatial_resolution = 15, week_days = TRUE){
 ###### PART 1. Load and prepare data inputs ------------------------------------
 
   # Read GTFS data
@@ -87,7 +88,7 @@ gtfs2gps_dt_single <- function(gtfszip, filepath, spatial_resolution = 15, week_
     new_stoptimes[stops_seq$ref, "stop_sequence"] <- stops_seq$stop_sequence
 
     # calculate Distance between successive points
-    new_stoptimes[, dist := gtfs2gps:::rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type="lead"), data.table::shift(shape_pt_lon, type="lead"), tolerance = 10000000000.0)]
+    new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type="lead"), data.table::shift(shape_pt_lon, type="lead"), tolerance = 10000000000.0)]
     new_stoptimes <- na.omit(new_stoptimes, cols = "dist")
 
 ###### PART 2.2 Function recalculate new stop_times for each trip id of each Shape id ------------------------------------
@@ -99,7 +100,7 @@ gtfs2gps_dt_single <- function(gtfszip, filepath, spatial_resolution = 15, week_
     }
 
     # Write object
-    fwrite(x = new_stoptimes,
+    data.table::fwrite(x = new_stoptimes,
            file = paste0(filepath,"/",shapeid,".txt"))
     
     return(new_stoptimes)

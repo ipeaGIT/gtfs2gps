@@ -26,6 +26,8 @@ Imports:
       Rcpp,
       units,
       sf,
+      sp,
+      dplyr,
       lwgeom,
       utils
 RoxygenNote: 6.1.1

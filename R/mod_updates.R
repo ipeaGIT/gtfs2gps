@@ -28,12 +28,12 @@ update_freq <- function(tripid,new_stoptimes){
   # apply function for speed estimation
   new_stoptimes[speed_valid,speed:={lapply(ranges, function(x){
     new_stoptimes[x,][,speed:={
-      dt = last(departure_time)-first(departure_time)
-      ds = last(cumdist)-first(cumdist)
+      dt = data.table::last(departure_time)-data.table::first(departure_time)
+      ds = data.table::last(cumdist)-data.table::first(cumdist)
       v = 3.6*ds/dt
       list(v=v)
     }][-nrow(new_stoptimes[x,]),"speed"] 
-  }) %>% rbindlist()}]
+  }) %>% data.table::rbindlist()}]
   # Speed info that was missing (either before or after 1st/last stops)
   #new_stoptimes[, speed := ifelse( is.na(speed), mean(new_stoptimes$speed,na.rm=T), speed) ]
   new_stoptimes[, speed := ifelse( is.na(speed), mean(speed,na.rm=T), speed) ]
@@ -152,12 +152,12 @@ update_dt <- function(tripid,new_stoptimes){
   #c <- new_stoptimes
   new_stoptimes[speed_valid,speed:={lapply(ranges, function(x){
     new_stoptimes[x,][,speed:={
-      dt = last(departure_time)-first(departure_time)
-      ds = last(cumdist)-first(cumdist)
+      dt = data.table::last(departure_time)-data.table::first(departure_time)
+      ds = data.table::last(cumdist)-data.table::first(cumdist)
       v = 3.6*ds/dt
       list(v=v)
     }][-nrow(new_stoptimes[x,]),"speed"] 
-  }) %>% rbindlist()}]
+  }) %>% data.table::rbindlist()}]
   # Speed info that was missing (either before or after 1st/last stops)
   new_stoptimes[, speed := ifelse( is.na(speed), mean(speed,na.rm=T), speed) ]
   # Get trip duration in seconds

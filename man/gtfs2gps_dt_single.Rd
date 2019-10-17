@@ -4,11 +4,13 @@
 \alias{gtfs2gps_dt_single}
 \title{Convert GTFS to GPS given a spatial resolution}
 \usage{
-gtfs2gps_dt_single(gtfszip, filepath, spatial_resolution = 15,
+gtfs2gps_dt_single(gtfszip, filepath = ".", spatial_resolution = 15,
   week_days = TRUE)
 }
 \arguments{
 \item{gtfszip}{A path to a GTFS file to be converted to GPS.}
+
+\item{filepath}{Output file path.}
 
 \item{spatial_resolution}{The spatial resolution in meters. Default is 15m.}
 
