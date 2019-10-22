@@ -9,7 +9,7 @@
 #' @examples
 #' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
 #' poa_sf <- gtfs_shapes_as_sf(poa)
-#' plot(poa_sf["id"], lwd = 2)
+#' plot(sf::st_geometry(poa_sf), lwd = 2)
 gtfs_shapes_as_sf <- function(gtfs, crs = 4326){
   temp_shapes <- gtfs$shapes[,
                           {
@@ -37,8 +37,8 @@ gtfs_shapes_as_sf <- function(gtfs, crs = 4326){
 #' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
 #' poa_shapes <- gtfs_shapes_as_sf(poa)
 #' poa_stops <- gtfs_stops_as_sf(poa)
-#' plot(st_geometry(poa_shapes), lwd = 2)
-#' plot(st_geometry(poa_stops), pch = 20, col ="blue", add = TRUE)
+#' plot(sf::st_geometry(poa_shapes), lwd = 2)
+#' plot(sf::st_geometry(poa_stops), pch = 20, col ="blue", add = TRUE)
 gtfs_stops_as_sf <- function(gtfs, crs = 4326){
   gtfs$stops %>%
     sf::st_as_sf(coords = c('stop_lon', 'stop_lat'), agr = "identity", crs = crs)
