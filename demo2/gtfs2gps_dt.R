@@ -216,11 +216,4 @@ parallel::clusterExport(cl=cl, varlist= c("all_tripids", "routes", "shapes", "st
 system.time( x <- parallel::parLapply(cl, all_tripids, gtfs2gps_dt) )
 x <- data.table::rbindlist(x)
 
-# stopCluster(cl)
-
-
-# Add progress bar
-# perhaps using https://github.com/kvnkuang/pbmcapply
-
-
 }
