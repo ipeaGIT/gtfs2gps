@@ -5,7 +5,7 @@
 \title{Convert GTFS to GPS given a spatial resolution}
 \usage{
 gtfs2gps_dt_single(gtfszip, filepath = ".", spatial_resolution = 15,
-  week_days = TRUE)
+  week_days = TRUE, progress = TRUE)
 }
 \arguments{
 \item{gtfszip}{A path to a GTFS file to be converted to GPS.}
@@ -15,6 +15,8 @@ gtfs2gps_dt_single(gtfszip, filepath = ".", spatial_resolution = 15,
 \item{spatial_resolution}{The spatial resolution in meters. Default is 15m.}
 
 \item{week_days}{Use only the week days? Default is TRUE.}
+
+\item{progress}{Show a progress bar? Default is TRUE.}
 }
 \description{
 Convert GTFS data to GPS format by sampling points using a

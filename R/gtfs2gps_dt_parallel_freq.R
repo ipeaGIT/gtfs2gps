@@ -21,15 +21,7 @@ shapes_sf <- gtfs_shapes_as_sf(gtfs_data)
 
   # all shape ids
   all_shapeids <- unique(shapes_sf$shape_id)
-  
-  
-  # # Progress bar start
-  # total <- length(all_shapeids)
-  # pb <- utils::txtProgressBar(min = 0, max = total, style = 3)
 
-  
-  
-  
 ###### PART 2.1 Core function to work on each Shape id ------------------------------------
 corefun <- function(shapeid){ 
   
@@ -38,13 +30,8 @@ corefun <- function(shapeid){
   # shapeid <- all_shapeids[1]
   
   message(shapeid)
-  # # Progress bar input
   # i <- match(c(shapeid), all_shapeids)
-  # # Progress bar update
-  # utils::setTxtProgressBar(pb, i)
 
-  
-  
 # Check if there is a route associated with that shape
   # Skip shape_id IF there is no route_id associated with that shape_id
   routeid <- gtfs_data$trips[shape_id==shapeid]$route_id[1]
@@ -276,20 +263,12 @@ update_newstoptimes_freq <- function(starttime){
   
 ###### PART 3. Apply Core function in parallel to all shape ids------------------------------------
 
-# Parallel processing using future.apply
-  future::plan(future::multiprocess)
-  output <- future.apply::future_lapply(X = all_shapeids, FUN = corefun, future.packages = c('data.table', 'sf', 'Rcpp', 'magrittr')) %>% data.table::rbindlist()
-   # output <- lapply(X = all_shapeids, FUN = corefun) %>% data.table::rbindlist()
-  future::plan(future::sequential)
+   output <- lapply(X = all_shapeids, FUN = corefun) %>% data.table::rbindlist()
    ### Single core
    # all_shapeids <- all_shapeids[1:3]
    # output2 <- pbapply::pblapply(X = all_shapeids, FUN=corefun) %>% data.table::rbindlist()
-  
 
   return(output)
-  
-# # closing progress bar
-#   close(pb)
 }
 
 

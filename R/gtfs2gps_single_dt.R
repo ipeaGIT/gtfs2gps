@@ -7,8 +7,9 @@
 #' @param spatial_resolution The spatial resolution in meters. Default is 15m.
 #' @param filepath Output file path.
 #' @param week_days Use only the week days? Default is TRUE.
+#' @param progress Show a progress bar? Default is TRUE.
 #' @export
-gtfs2gps_dt_single <- function(gtfszip, filepath = ".", spatial_resolution = 15, week_days = TRUE){
+gtfs2gps_dt_single <- function(gtfszip, filepath = ".", spatial_resolution = 15, week_days = TRUE, progress = TRUE){
 ###### PART 1. Load and prepare data inputs ------------------------------------
 
   # Read GTFS data
@@ -108,20 +109,12 @@ gtfs2gps_dt_single <- function(gtfszip, filepath = ".", spatial_resolution = 15,
 
   ###### PART 3. Apply Core function in parallel to all shape ids------------------------------------
   
-  # Parallel processing using future.apply
-  
-  future::plan(future::multiprocess)
-  output <- future.apply::future_lapply(X = all_shapeids, 
-                                        FUN = corefun, 
-                                        future.packages = c('data.table', 'sf', 'Rcpp', 'magrittr')) %>% data.table::rbindlist()
-  #### output <- lapply(X = all_shapeids, FUN = corefun) %>% data.table::rbindlist()
+  #output <- lapply(X = all_shapeids, FUN = corefun) %>% data.table::rbindlist()
 
-  future::plan(future::sequential)
-    
+  output <- pbSapply(3, progress, X = all_shapeids, FUN = corefun)
+
   ### Single core
   # all_shapeids <- all_shapeids[1:3]
   # output2 <- pbapply::pblapply(X = all_shapeids, FUN=corefun) %>% data.table::rbindlist()
   return(output)
-    # # closing progress bar
-  #   close(pb)
 }

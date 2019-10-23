@@ -6,8 +6,9 @@
 #' @param gtfszip A path to a GTFS file to be converted to GPS.
 #' @param spatial_resolution The spatial resolution in meters. Default is 15m.
 #' @param week_days Use only the week days? Default is TRUE.
+#' @param progress Show a progress bar? Default is TRUE.
 #' @export
-gtfs2gps_dt_parallel <- function(gtfszip, spatial_resolution = 15, week_days = TRUE){
+gtfs2gps_dt_parallel <- function(gtfszip, spatial_resolution = 15, week_days = TRUE, progress = TRUE){
   ###### PART 1. Load and prepare data inputs ------------------------------------
   gc(reset = TRUE)
 
@@ -25,10 +26,6 @@ gtfs2gps_dt_parallel <- function(gtfszip, spatial_resolution = 15, week_days = T
   # all shape ids
   all_shapeids <- unique(shapes_sf$shape_id)
 
-  # Progress bar start
-  total <- length(all_shapeids)
-#  pb <- utils::txtProgressBar(min = 0, max = total, style = 3)
-
   ###### PART 2.1 Core function to work on each Shape id ------------------------------------
   corefun <- function(shapeid){
     # #get a list of all trip ids
@@ -38,8 +35,6 @@ gtfs2gps_dt_parallel <- function(gtfszip, spatial_resolution = 15, week_days = T
   
     # Progress bar input
     i <- match(shapeid, all_shapeids)
-    # Progress bar update
-#    utils::setTxtProgressBar(pb, i)
 
     # Select corresponding route, route type, stops and shape of that trip
     
@@ -186,19 +181,15 @@ gtfs2gps_dt_parallel <- function(gtfszip, spatial_resolution = 15, week_days = T
     lapply(X = all_tripids, FUN = update_newstoptimes) %>% data.table::rbindlist()
 
     # 2.2 test in parallel
-    #output2.2 <- future.apply::future_lapply(X = all_tripids, FUN=update_newstoptimes) %>% data.table::rbindlist()
   }
 
   ###### PART 3. Apply Core function in parallel to all shape ids------------------------------------
     
   # Parallel processing using future.apply
-  future::plan(future::multiprocess)
-  output <- future.apply::future_lapply(X = all_shapeids, FUN = corefun, future.packages = c('data.table', 'sf', 'Rcpp', 'magrittr')) %>% data.table::rbindlist()
-  
   ### Single core
   # output <- lapply(X = all_shapeids, FUN=corefun) %>% data.table::rbindlist()
   
-  # closing progress bar
-#  close(pb)
+  output <- pbSapply(3, progress, X = all_shapeids, FUN = corefun)
+
   return(output)
 }

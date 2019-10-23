@@ -3,7 +3,7 @@ context("gtfs2gps_dt_single")
 test_that("gtfs2gps_dt_single", {
     poa <- system.file("extdata/poa.zip", package="gtfs2gps")
 
-    poa_gps <- gtfs2gps_dt_single(poa)
+    poa_gps <- gtfs2gps_dt_single(poa, progress = FALSE)
     
     #poa_shape <- read_gtfs(poa) %>% gtfs_shapes_as_sf()
     #plot(poa_shape)

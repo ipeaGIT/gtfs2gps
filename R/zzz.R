@@ -7,6 +7,7 @@ utils::globalVariables(c(".", "%>%", ":="))
 }
 
 #' @importFrom magrittr %>%
+#' @importFrom foreach %dopar% foreach
 #' @importFrom data.table := %between%
 #' @importFrom stats na.omit
 #' @importFrom utils head tail
@@ -23,4 +24,4 @@ if(getRversion() >= "2.15.1") utils::globalVariables(
     '.N', 'update_newstoptimes',
     'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday',
     'service_duration', 'headway_secs', 'number_of_departures',
-    'cumtime', 'speed', 'lag'))
+    'cumtime', 'speed', 'lag', 'i'))

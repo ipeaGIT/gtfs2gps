@@ -3,7 +3,7 @@ context("gtfs2gps")
 test_that("gtfs2gps_dt_parallel", {
     poa <- system.file("extdata/poa.zip", package="gtfs2gps")
 
-    poa_gps <- gtfs2gps_dt_parallel(poa)
+    poa_gps <- gtfs2gps_dt_parallel(poa, progress = FALSE)
     
     expect_equal(dim(poa_gps)[1], 309283)
     
