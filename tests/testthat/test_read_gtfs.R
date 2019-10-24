@@ -27,4 +27,20 @@ test_that("read_gtfs", {
 
     expect_type(sp$frequencies$start_time, "integer")
     expect_type(sp$frequencies$end_time, "integer")
+    
+    file.copy(system.file("extdata/poa.zip", package="gtfs2gps"), "poa.zip")
+
+    unzip("poa.zip")
+
+    files <- c("agency.txt", "routes.txt", "stops.txt", "stop_times.txt", "shapes.txt", "trips.txt", "calendar.txt")
+
+    for(i in 1:length(files)){
+      file.remove("myfile.zip")
+      zip("myfile.zip", files[-i], flags = "-q")
+      expect_error(read_gtfs("myfile.zip"), paste("File", files[i], "is missing"))
+    }
+
+    file.remove("myfile.zip")
+    file.remove(files)
+    file.remove("poa.zip")
 })
