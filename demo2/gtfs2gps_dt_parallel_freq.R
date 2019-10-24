@@ -21,15 +21,7 @@ shapes_sf <- gtfs_shapes_as_sf(gtfs_data)
 
   # all shape ids
   all_shapeids <- unique(shapes_sf$shape_id)
-  
-  
-  # # Progress bar start
-  # total <- length(all_shapeids)
-  # pb <- utils::txtProgressBar(min = 0, max = total, style = 3)
 
-  
-  
-  
 ###### PART 2.1 Core function to work on each Shape id ------------------------------------
 corefun <- function(shapeid){ 
   

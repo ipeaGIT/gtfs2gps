@@ -20,8 +20,6 @@ Suggests:
     testthat
 Imports:
       data.table,
-      future,
-      future.apply,
       magrittr,
       Rcpp,
       units,
@@ -29,6 +27,9 @@ Imports:
       sp,
       dplyr,
       lwgeom,
+      doSNOW,
+      snow,
+      foreach,
       utils
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
