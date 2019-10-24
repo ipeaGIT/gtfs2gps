@@ -5,11 +5,13 @@
 #' distance, indicated as a spatial resolution.
 #' @param gtfszip A path to a GTFS file to be converted to GPS.
 #' @param spatial_resolution The spatial resolution in meters. Default is 15m.
-#' @param filepath Output file path.
+#' @param filepath Output file path. As default, the output is returned in R.
+#' When this argument is set, each route is saved into a file within filepath,
+#' with the name equals to its id. In this case, no output is returned.
 #' @param week_days Use only the week days? Default is TRUE.
 #' @param progress Show a progress bar? Default is TRUE.
 #' @export
-gtfs2gps_dt_single <- function(gtfszip, filepath = ".", spatial_resolution = 15, week_days = TRUE, progress = TRUE){
+gtfs2gps_dt_single <- function(gtfszip, filepath = NULL, spatial_resolution = 15, week_days = TRUE, progress = TRUE){
 ###### PART 1. Load and prepare data inputs ------------------------------------
 
   # Read GTFS data
@@ -100,10 +102,13 @@ gtfs2gps_dt_single <- function(gtfszip, filepath = ".", spatial_resolution = 15,
       new_stoptimes <- lapply(X = all_tripids, FUN = update_dt, new_stoptimes, gtfs_data) %>% data.table::rbindlist()
     }
 
-    # Write object
-    data.table::fwrite(x = new_stoptimes,
-           file = paste0(filepath,"/",shapeid,".txt"))
-    
+    if(!is.null(filepath)){
+      # Write object
+      data.table::fwrite(x = new_stoptimes,
+             file = paste0(filepath, "/", shapeid, ".txt"))
+      return(NULL)
+    }
+
     return(new_stoptimes)
   }
 

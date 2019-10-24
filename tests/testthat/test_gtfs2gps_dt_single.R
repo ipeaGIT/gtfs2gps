@@ -24,6 +24,19 @@ test_that("gtfs2gps_dt_single", {
     
     expect_true(all(!is.na(poa_gps$dist)))
 
+    # save into file
+    poa_gps <- gtfs2gps_dt_single(poa, progress = FALSE, filepath = ".")
+    expect_null(poa_gps)
+    
+    files <- list.files(".", pattern = "\\.txt$")
+    names <- gsub('.{4}$', '', files)
+    
+    poa_shape <- gtfs_shapes_as_sf(read_gtfs(poa))
+    expect_setequal(poa_shape$shape_id, names)
+    
+    file.remove(files)
+    
+    # run with a larger dataset
     sp <- system.file("extdata/saopaulo.zip", package="gtfs2gps")
     
     sp_gps <- gtfs2gps_dt_single(sp)
