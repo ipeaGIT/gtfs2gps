@@ -14,10 +14,12 @@ test_that("snap_points", {
   shape_points <- shape_points[, 1:2] %>% as.data.frame()
   shape_points <- sf::st_as_sf(shape_points, coords = c('X', 'Y'), agr = "identity", crs = 31982)
 
-  res <- 300
-  result <- cpp_snap_points(stops %>% sf::st_coordinates(), shape_points %>% sf::st_coordinates(), res)
-
+  res <- 15
+  result <- cpp_snap_points(stops %>% sf::st_coordinates(), stops %>% sf::st_coordinates(), res)
+  
   expect_equal(result, 1)
+
+  expect_error(cpp_snap_points(stops %>% sf::st_coordinates(), matrix(2, 1), res), "Could not find a nearest point closer than 245m.")
 
   # complete test
   gtfs <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps")) %>%
@@ -30,6 +32,7 @@ test_that("snap_points", {
   shape_points <- shape_points[,1:2] %>% as.data.frame()
   shape_points <- sf::st_as_sf(shape_points, coords = c('X', 'Y'), agr="identity", crs = 31982)
   
+  res <- 3000
   result <- cpp_snap_points(stops %>% sf::st_coordinates(), shape_points %>% sf::st_coordinates(), res)
   
   expect_equal(length(result), 62)

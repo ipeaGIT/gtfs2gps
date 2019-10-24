@@ -12,9 +12,9 @@ test_that("gtfs2gps_dt_single", {
     #write_sf(poa_shape, "poa_shape.shp")
     #write_sf(poa_gps_shape, "poa_gps_shape.shp")
     
-    expect(dim(poa_gps)[1] %in% c(309283, 309129))
+    expect(dim(poa_gps)[1] %in% c(309283, 309129), "length of gtfs incorrect")
     
-    expect(length(poa_gps$dist[which(!poa_gps$dist < 15)]) %in% c(22, 77))
+    expect(length(poa_gps$dist[which(!poa_gps$dist < 15)]) %in% c(22, 77), "incorrect number of distances greater than 15m")
     
     expect_equal(sum(poa_gps$dist), 4139392, 0.001)
     
@@ -23,4 +23,25 @@ test_that("gtfs2gps_dt_single", {
         "departure_time", "stop_id", "stop_sequence", "dist", "shape_id", "cumdist", "speed", "cumtime")))
     
     expect_true(all(!is.na(poa_gps$dist)))
+
+    # save into file
+    poa_gps <- gtfs2gps_dt_single(poa, progress = FALSE, filepath = ".")
+    expect_null(poa_gps)
+    
+    files <- list.files(".", pattern = "\\.txt$")
+    names <- gsub('.{4}$', '', files)
+    
+    poa_shape <- gtfs_shapes_as_sf(read_gtfs(poa))
+    expect_setequal(poa_shape$shape_id, names)
+    
+    file.remove(files)
+    
+    # run with a larger dataset
+    sp <- system.file("extdata/saopaulo.zip", package="gtfs2gps")
+    
+    sp_gps <- gtfs2gps_dt_single(sp)
+    
+    expect_true(all(sp_gps$dist > 0))
+    expect_true(all(sp_gps$speed > 0))
+    expect_true(all(sp_gps$cumtime > 0))
 })

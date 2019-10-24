@@ -24,13 +24,13 @@ read_gtfs <- function(gtfszip){
   result <- list()
 
   # read files to memory
-  if("agency.txt"      %in% unzippedfiles){result$agency      <- data.table::fread(paste0(tempd,"/agency.txt"),      encoding="UTF-8")}  else{stop(message("Error: File routes.txt is missing"))}
-  if("routes.txt"      %in% unzippedfiles){result$routes      <- data.table::fread(paste0(tempd,"/routes.txt"),      encoding="UTF-8")}  else{stop(message("Error: File routes.txt is missing"))}
-  if("stops.txt"       %in% unzippedfiles){result$stops       <- data.table::fread(paste0(tempd,"/stops.txt"),       encoding="UTF-8")}  else{stop(message("Error: File stops.txt is missing"))}
-  if("stop_times.txt"  %in% unzippedfiles){result$stop_times  <- data.table::fread(paste0(tempd,"/stop_times.txt"),  encoding="UTF-8")}  else{stop(message("Error: File stop_times.txt is missing"))}
-  if("shapes.txt"      %in% unzippedfiles){result$shapes      <- data.table::fread(paste0(tempd,"/shapes.txt"),      encoding="UTF-8")}  else{stop(message("Error: File shapes.txt is missing"))}
-  if("trips.txt"       %in% unzippedfiles){result$trips       <- data.table::fread(paste0(tempd,"/trips.txt"),       encoding="UTF-8")}  else{stop(message("Error: File trips.txt is missing"))}
-  if("calendar.txt"    %in% unzippedfiles){result$calendar    <- data.table::fread(paste0(tempd,"/calendar.txt"),    encoding="UTF-8")}  else{stop(message("Error: File calendar.txt is missing"))}
+  if("agency.txt"      %in% unzippedfiles){result$agency      <- data.table::fread(paste0(tempd,"/agency.txt"),      encoding="UTF-8")}  else{stop("File agency.txt is missing")}
+  if("routes.txt"      %in% unzippedfiles){result$routes      <- data.table::fread(paste0(tempd,"/routes.txt"),      encoding="UTF-8")}  else{stop("File routes.txt is missing")}
+  if("stops.txt"       %in% unzippedfiles){result$stops       <- data.table::fread(paste0(tempd,"/stops.txt"),       encoding="UTF-8")}  else{stop("File stops.txt is missing")}
+  if("stop_times.txt"  %in% unzippedfiles){result$stop_times  <- data.table::fread(paste0(tempd,"/stop_times.txt"),  encoding="UTF-8")}  else{stop("File stop_times.txt is missing")}
+  if("shapes.txt"      %in% unzippedfiles){result$shapes      <- data.table::fread(paste0(tempd,"/shapes.txt"),      encoding="UTF-8")}  else{stop("File shapes.txt is missing")}
+  if("trips.txt"       %in% unzippedfiles){result$trips       <- data.table::fread(paste0(tempd,"/trips.txt"),       encoding="UTF-8")}  else{stop("File trips.txt is missing")}
+  if("calendar.txt"    %in% unzippedfiles){result$calendar    <- data.table::fread(paste0(tempd,"/calendar.txt"),    encoding="UTF-8")}  else{stop("File calendar.txt is missing")}
   if("frequencies.txt" %in% unzippedfiles){result$frequencies <- data.table::fread(paste0(tempd,"/frequencies.txt"), encoding="UTF-8")}
 
   mysub <- function(value) sub("^24:", "00:", value)
