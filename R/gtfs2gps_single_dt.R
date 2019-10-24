@@ -42,7 +42,7 @@ gtfs2gps_dt_single <- function(gtfszip, filepath = NULL, spatial_resolution = 15
     routeid <- gtfs_data$trips[shape_id == shapeid]$route_id[1]
     
     # Skip shape_id IF there is no route_id associated with that shape_id
-    if(is.na(routeid)) return(NULL)
+    if(is.na(routeid)) return(NULL) # nocov
     
     # identify route type    
     routetype <- gtfs_data$routes[route_id == routeid]$route_type
