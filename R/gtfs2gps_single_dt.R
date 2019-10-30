@@ -25,16 +25,11 @@ gtfs2gps_dt_single <- function(gtfszip, filepath = NULL, spatial_resolution = 15
   # Convert all shapes into sf objects
   shapes_sf <- gtfs_shapes_as_sf(gtfs_data)
 
-  # all shape ids
-  all_shapeids <- unique(shapes_sf$shape_id)
-
 ###### PART 2. Analysing data type ----------------------------------------------
   corefun <- function(shapeid){
     # test
+    # all_shapeids <- unique(shapes_sf$shape_id)
     # shapeid <- all_shapeids[1]
-    
-    # get a list of all shape ids
-    all_shapeids <- unique(shapes_sf$shape_id)#; shapeid <- all_shapeids[1]
 
     ## Select corresponding route, route type, stops and shape of that trip
 
@@ -113,6 +108,9 @@ gtfs2gps_dt_single <- function(gtfszip, filepath = NULL, spatial_resolution = 15
   }
 
   ###### PART 3. Apply Core function in parallel to all shape ids------------------------------------
+
+  # all shape ids
+  all_shapeids <- unique(shapes_sf$shape_id)
   
   #output <- lapply(X = all_shapeids, FUN = corefun) %>% data.table::rbindlist()
 

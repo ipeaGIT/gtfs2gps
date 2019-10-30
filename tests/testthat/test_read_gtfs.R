@@ -35,7 +35,7 @@ test_that("read_gtfs", {
     files <- c("agency.txt", "routes.txt", "stops.txt", "stop_times.txt", "shapes.txt", "trips.txt", "calendar.txt")
 
     for(i in 1:length(files)){
-      file.remove("myfile.zip")
+      if(file.exists("myfile.zip")) file.remove("myfile.zip")
       zip("myfile.zip", files[-i], flags = "-q")
       expect_error(read_gtfs("myfile.zip"), paste("File", files[i], "is missing"))
     }
