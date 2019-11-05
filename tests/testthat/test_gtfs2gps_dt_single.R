@@ -12,11 +12,11 @@ test_that("gtfs2gps_dt_single", {
     #write_sf(poa_shape, "poa_shape.shp")
     #write_sf(poa_gps_shape, "poa_gps_shape.shp")
     
-    expect(dim(poa_gps)[1] %in% c(309283, 309129), "length of gtfs incorrect")
+    expect(dim(poa_gps)[1] %in% c(303851, 309283, 309129), "length of gtfs incorrect")
     
-    expect(length(poa_gps$dist[which(!poa_gps$dist < 15)]) %in% c(22, 77), "incorrect number of distances greater than 15m")
+    expect(length(poa_gps$dist[which(!poa_gps$dist < 15)]) %in% c(21, 22, 77), "incorrect number of distances greater than 15m")
     
-    expect_equal(sum(poa_gps$dist), 4139392, 0.001)
+    expect_equal(sum(poa_gps$dist), 4066410, 0.001)
     
     expect_true(all(names(poa_gps) %in% 
       c("trip_id", "route_type", "id", "shape_pt_lon", "shape_pt_lat",
@@ -24,6 +24,9 @@ test_that("gtfs2gps_dt_single", {
     
     expect_true(all(!is.na(poa_gps$dist)))
 
+    expect_true(all(poa_gps$dist > 0))
+    expect_true(all(poa_gps$speed > 0))
+    expect_true(all(poa_gps$cumtime > 0))
     # save into file
     poa_gps <- gtfs2gps_dt_single(poa, progress = FALSE, filepath = ".")
     expect_null(poa_gps)
