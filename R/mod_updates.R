@@ -178,8 +178,9 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data){
   # update indexes in 'newstoptimes'
   #temp_newdeparture <-  data.table::as.ITime( new_stoptimes$departure_time[1L]+lag(new_stoptimes$cumtime,1,0))
   new_stoptimes[,departure_time:=data.table::as.ITime(round(departure_time[1L]+lag(cumtime,1,0)))]
-  
+
+  new_stoptimes <- new_stoptimes[speed > 0 & cumtime > 0]
+
   return(new_stoptimes)
-  
 }
 
