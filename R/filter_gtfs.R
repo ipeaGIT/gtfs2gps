@@ -6,6 +6,7 @@
 #' accordingly.
 #' @param gtfs_data A tibble in the tidytransit format.
 #' @param shape_ids A vector of shape_ids belonging to the shapes of the gtfs_data data.
+#' Note that shape_id might be loaded as a string or a number, depending on the available values.
 #' @export
 filter_by_shape_id <- function(gtfs_data, shape_ids){
   gtfs_data$shapes <- subset(gtfs_data$shapes, shape_id %in% shape_ids)

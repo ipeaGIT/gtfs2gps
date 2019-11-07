@@ -9,7 +9,7 @@ output:
     latex_engine: pdflatex
   html_document:
     df_print: paged
-abstract: This package has a set of functions to convert GTFS data to GPS format using data.table. It also has some functions to subset such data in time and space.
+abstract: Package `gtfs2gps` has a set of functions to convert GTFS data to GPS format using `data.table`. It also has some functions to subset GTFS data in time and space and to convert both representations to simple feature format.
 vignette: |
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{colrow: Handling SimU, CR, and LU datas}
@@ -18,7 +18,7 @@ vignette: |
 
 # Introduction 
 
-This package allows users to handle and converting GTFS data using data.table. Before using the package, just install it from GitHub.
+Package `gtfs2gps` allows users to handle and converting GTFS data using `data.table` format. Before using the package, just install it from GitHub.
 
 ```{r, eval = FALSE}
 devtools::install_github("ipeaGIT/gtfs2gps")
@@ -27,42 +27,43 @@ devtools::install_github("ipeaGIT/gtfs2gps")
 # Loading data
 
 After loading the package, GTFS data can be read into R by using `read_gtfs()`.
-This function gets a zipped GTFS file and returns a list of `data.table` objects. The returning list contains the data of each GTFS file indexed according to their names.
+This function gets a zipped GTFS file and returns a list of `data.table` objects. The returning list contains the data of each GTFS file indexed according to their file names without extension.
 
 ```{r}
 library("gtfs2gps")
 sp <- read_gtfs(system.file("extdata/saopaulo.zip", package="gtfs2gps"))
 names(sp)
+sp$trips
 ```
 
 Note that not all GTFS files are loaded into R. This function loads only the necessary data to spatially and temporally handle trips and stops, which are:
-agency, calendar, routes, shapes, 
-stop_times, stops, trips, and frequencies (this last one is optional).
+agency.txt, calendar.txt, routes.txt, shapes.txt, 
+stop_times.txt, stops.txt, trips.txt, and frequencies.txt (this last one is optional).
 If a given GTFS zipped file does not contain all the required files then `read_gtfs()` will stop with an error.
 
 # Simplifying Data
 
-As GTFS data are usually very big, any exploratory analysis usually involves subestting  it in order to speedup the process. There are some functions to filter a GTFS data:
+As GTFS data are usually very big, any exploratory analysis has to firstly subset it in order to speedup the process. There are some functions to filter a GTFS data:
 
 \begin{description}
-\item[filter\_by\_shape\_id()]: Filter shapes using given shape ids.
-\item[filter\_valid\_stop\_times()]: Return only stop times that have geospatial locations.
-\item[filter\_week\_days()]: Remove weekend trips.
+\item[filter\_by\_shape\_id():] Filter shapes using given shape ids.
+\item[filter\_valid\_stop\_times():] Return only stop times that have geospatial locations.
+\item[filter\_week\_days():] Remove weekend trips.
 \end{description}
 
-These functions also subset all the other GTFS files in order to remove all the unnecessary rows, keeping the data consistent. The returning values of the three functions is a `data.table`. For example, in the code below we filter only shape ids between 53000 and 55000.
+These functions subset all the relevant GTFS files in order to remove all the unnecessary rows, keeping the data consistent. The returning values of the three functions is a `data.table`. For example, in the code below we filter only shape ids between 53000 and 53020.
 
 ```{r}
 library(magrittr)
 
-object.size(sp) %>% format(units="Kb")
+object.size(sp) %>% format(units = "Kb")
 
 sp_small <- gtfs2gps::filter_by_shape_id(sp, 53000:53020)
 
-object.size(sp_small) %>% format(units="Kb")
+object.size(sp_small) %>% format(units = "Kb")
 ```
 
-Note that `shape\_id` might be a string or a number, depending on the available values.
+We can then convert both data to simple feature format and plot them.
 
 ```{r}
 sp_sf <- gtfs_shapes_as_sf(sp)
@@ -73,7 +74,7 @@ plot(sf::st_geometry(sp_small_sf), col = "blue", add = TRUE)
 box()
 ```
 
-After simplifying the data, it is possible to save it as a GTFS file, as shown below.
+After simplifying the data, it is also possible to save it as a new GTFS file using `write_gtfs()`, as shown below.
 
 ```{r}
 write_gtfs(sp_small, "sp_small.zip")
@@ -81,19 +82,22 @@ write_gtfs(sp_small, "sp_small.zip")
 
 # Converting to GPS format
 
-To convert GTFS to GPS format, use `gtfs2gps()`. [...]
+To convert GTFS to GPS format, use `gtfs2gps_dt_single()`. This
+function takes a GTFS zipped file as argument and returns a
+`data.table` where each row works as a GPS sample for a given
+trip in the GTFS file. See the example as follows.
 
 ```{r}
-  poa_gps <- gtfs2gps_dt_parallel("sp_small.zip")
-  poa_gps
+  sp_gps <- gtfs2gps_dt_single("sp_small.zip", progress = FALSE)
+  sp_gps
 ```
 
 Finally, we can plot the points as shown below.
 
 ```{r}
-  poa_gps_sf <- gps_as_sf(poa_gps)
+  sp_gps_sf <- gps_as_sf(sp_gps)
 
-  plot(sf::st_geometry(poa_gps_sf))
+  plot(sf::st_geometry(sp_gps_sf))
   plot(sf::st_geometry(sp_small_sf), col = "blue", add = TRUE)
   box()
 ```
@@ -101,14 +105,29 @@ Finally, we can plot the points as shown below.
 As the points are created using a distance of $15m$, it is necessary to zoom in to visually separate them. The following figure shows the points in a bounding box from the first 60 points.
 
 ```{r}
-  poa_gps_small <- poa_gps[1:60, ]
+  sp_gps_small <- sp_gps[1:60, ]
 
-  poa_gps_small_sf <- gps_as_sf(poa_gps_small)
+  sp_gps_small_sf <- gps_as_sf(sp_gps_small)
   
-  plot(sf::st_geometry(poa_gps_small_sf), pch = 20)
+  plot(sf::st_geometry(sp_gps_small_sf), pch = 20)
   plot(sf::st_geometry(sp_small_sf), col = "blue", add = TRUE)
-  plot(sf::st_geometry(poa_gps_sf), add = TRUE, pch = 20)
+  plot(sf::st_geometry(sp_gps_sf), add = TRUE, pch = 20)
   box()
+```
+
+Function `gtfs2gps_dt_single()` also works with GTFS data that do not have frequency.txt. It automatically recognises the format and then it uses only stop_times.txt to create the GPS data.
+
+```{r}
+poa <- system.file("extdata/poa.zip", package="gtfs2gps")
+
+poa_gps <- gtfs2gps_dt_single(poa, progress = FALSE)
+poa_gps_sf <- gps_as_sf(poa_gps)
+
+poa_sf <- read_gtfs(poa) %>% gtfs_shapes_as_sf()
+
+plot(sf::st_geometry(poa_gps_sf))
+plot(sf::st_geometry(poa_sf), col = "blue", add = TRUE)
+box()
 ```
 
 # Final remarks
