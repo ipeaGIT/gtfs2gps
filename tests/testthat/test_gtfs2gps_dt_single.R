@@ -41,8 +41,14 @@ test_that("gtfs2gps_dt_single", {
     
     # run with a larger dataset
     sp <- system.file("extdata/saopaulo.zip", package="gtfs2gps")
-    
-    sp_gps <- gtfs2gps_dt_single(sp)
+
+    sp_gps <- gtfs2gps_dt_single(sp, progress = FALSE)
+
+    expect_true(all(names(sp_gps) %in% 
+      c("trip_id", "route_type", "id", "shape_pt_lon", "shape_pt_lat",
+        "departure_time", "stop_id", "stop_sequence", "dist", "shape_id", "cumdist", "speed", "cumtime")))
+
+    expect_equal(dim(sp_gps)[1], 20418074)
     
     expect_true(all(sp_gps$dist > 0))
     expect_true(all(sp_gps$speed > 0))

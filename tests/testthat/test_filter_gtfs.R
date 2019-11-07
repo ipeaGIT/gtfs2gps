@@ -18,7 +18,15 @@ test_that("filter_by_shape_id", {
     expect_equal(dim(subset$stop_times)[1], prev_stop_times)
     expect_equal(dim(subset$stops)[1], prev_stops)
     expect_equal(dim(subset$routes)[1], prev_routes)
+
+    sp <- read_gtfs(system.file("extdata/saopaulo.zip", package="gtfs2gps"))
+
+    sp_small <- gtfs2gps::filter_by_shape_id(sp, 53000:53020)
     
+    expect(dim(sp$stop_times)[1] > dim(sp_small$stop_times)[1], "Stop_times were not subset")
+    expect(dim(sp$stops)[1] > dim(sp_small$stops)[1], "Stops were not subset")
+    expect(dim(sp$routes)[1] > dim(sp_small$routes)[1], "Routes were not subset")
+    expect(dim(sp$frequencies)[1] > dim(sp_small$frequencies)[1], "Frequencies were not subset")
 })
 
 test_that("filter_valid_stop_times", {
