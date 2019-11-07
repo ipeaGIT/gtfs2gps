@@ -15,6 +15,9 @@ filter_by_shape_id <- function(gtfs_data, shape_ids){
   
   gtfs_data$stop_times <- subset(gtfs_data$stop_times, trip_id %in% trip_ids)
   
+  if(!is.null(gtfs_data$frequencies))
+    gtfs_data$frequencies <- subset(gtfs_data$frequencies, trip_id %in% trip_ids)
+
   stop_ids <- unique(gtfs_data$stop_times$stop_id)
   
   gtfs_data$stops <- subset(gtfs_data$stops, stop_id %in% stop_ids)
