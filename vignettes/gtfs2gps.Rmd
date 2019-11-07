@@ -1,7 +1,7 @@
 ---
 title: 'gtfs2gps: Converting GTFS data to GPS format'
-author: "Rafael H. M. Pereira, Pedro R. Andrade"
-date: "`r format('17 September 2019')`"
+author: "Rafael H. M. Pereira, Pedro R. Andrade, Joao Bazzo"
+date: "`r format('7 November 2019')`"
 urlcolor: blue
 output:
   pdf_document:
