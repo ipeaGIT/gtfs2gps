@@ -93,18 +93,10 @@ trip in the GTFS file. See the example as follows.
 ```
 
 Finally, we can plot the points as shown below.
-
-```{r}
-  sp_gps_sf <- gps_as_sf(sp_gps)
-
-  plot(sf::st_geometry(sp_gps_sf))
-  plot(sf::st_geometry(sp_small_sf), col = "blue", add = TRUE)
-  box()
-```
-
 As the points are created using a distance of $15m$, it is necessary to zoom in to visually separate them. The following figure shows the points in a bounding box from the first 60 points.
 
 ```{r}
+  sp_gps_sf <- gps_as_sf(sp_gps)
   sp_gps_small <- sp_gps[1:60, ]
 
   sp_gps_small_sf <- gps_as_sf(sp_gps_small)
@@ -125,7 +117,7 @@ poa_gps_sf <- gps_as_sf(poa_gps)
 
 poa_sf <- read_gtfs(poa) %>% gtfs_shapes_as_sf()
 
-plot(sf::st_geometry(poa_gps_sf))
+plot(sf::st_geometry(poa_gps_sf[1:200,]))
 plot(sf::st_geometry(poa_sf), col = "blue", add = TRUE)
 box()
 ```
