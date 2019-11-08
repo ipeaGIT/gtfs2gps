@@ -82,13 +82,13 @@ write_gtfs(sp_small, "sp_small.zip")
 
 # Converting to GPS format
 
-To convert GTFS to GPS format, use `gtfs2gps_dt_single()`. This
+To convert GTFS to GPS format, use `gtfs2gps()`. This
 function takes a GTFS zipped file as argument and returns a
 `data.table` where each row works as a GPS sample for a given
 trip in the GTFS file. See the example as follows.
 
 ```{r}
-  sp_gps <- gtfs2gps_dt_single("sp_small.zip", progress = FALSE)
+  sp_gps <- gtfs2gps("sp_small.zip", progress = FALSE)
   sp_gps
 ```
 
@@ -115,12 +115,12 @@ As the points are created using a distance of $15m$, it is necessary to zoom in 
   box()
 ```
 
-Function `gtfs2gps_dt_single()` also works with GTFS data that do not have frequency.txt. It automatically recognises the format and then it uses only stop_times.txt to create the GPS data.
+Function `gtfs2gps()` also works with GTFS data that do not have frequency.txt. It automatically recognises the format and then it uses only stop_times.txt to create the GPS data.
 
 ```{r}
 poa <- system.file("extdata/poa.zip", package="gtfs2gps")
 
-poa_gps <- gtfs2gps_dt_single(poa, progress = FALSE)
+poa_gps <- gtfs2gps(poa, progress = FALSE)
 poa_gps_sf <- gps_as_sf(poa_gps)
 
 poa_sf <- read_gtfs(poa) %>% gtfs_shapes_as_sf()

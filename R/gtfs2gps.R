@@ -11,7 +11,7 @@
 #' @param week_days Use only the week days? Default is TRUE.
 #' @param progress Show a progress bar? Default is TRUE.
 #' @export
-gtfs2gps_dt_single <- function(gtfszip, filepath = NULL, spatial_resolution = 15, week_days = TRUE, progress = TRUE){
+gtfs2gps <- function(gtfszip, filepath = NULL, spatial_resolution = 15, week_days = TRUE, progress = TRUE){
 ###### PART 1. Load and prepare data inputs ------------------------------------
 
   # Read GTFS data
