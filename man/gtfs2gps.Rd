@@ -4,19 +4,18 @@
 \alias{gtfs2gps}
 \title{Convert GTFS to GPS given a spatial resolution}
 \usage{
-gtfs2gps(gtfszip, filepath = NULL, spatial_resolution = 15,
-  week_days = TRUE, progress = TRUE)
+gtfs2gps(gtfs_data, filepath = NULL, spatial_resolution = 15,
+  progress = TRUE)
 }
 \arguments{
-\item{gtfszip}{A path to a GTFS file to be converted to GPS.}
+\item{gtfs_data}{A path to a GTFS file to be converted to GPS, or a GTFS data
+represented as a list of data.tables.}
 
 \item{filepath}{Output file path. As default, the output is returned in R.
 When this argument is set, each route is saved into a file within filepath,
 with the name equals to its id. In this case, no output is returned.}
 
 \item{spatial_resolution}{The spatial resolution in meters. Default is 15m.}
-
-\item{week_days}{Use only the week days? Default is TRUE.}
 
 \item{progress}{Show a progress bar? Default is TRUE.}
 }

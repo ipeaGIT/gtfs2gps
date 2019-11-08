@@ -3,7 +3,9 @@ context("gtfs2gps")
 test_that("gtfs2gps", {
     poa <- system.file("extdata/poa.zip", package="gtfs2gps")
 
-    poa_gps <- gtfs2gps(poa, progress = FALSE)
+    poa_gps <- read_gtfs(poa) %>%
+      filter_week_days() %>%
+      gtfs2gps(progress = FALSE)
     
     #poa_shape <- read_gtfs(poa) %>% gtfs_shapes_as_sf()
     #plot(poa_shape)
@@ -12,7 +14,7 @@ test_that("gtfs2gps", {
     #write_sf(poa_shape, "poa_shape.shp")
     #write_sf(poa_gps_shape, "poa_gps_shape.shp")
     
-    expect(dim(poa_gps)[1] %in% c(303851, 309283, 309129), "length of gtfs incorrect")
+    expect(dim(poa_gps)[1] %in% c(303697, 303851, 309283, 309129), "length of gtfs incorrect")
     
     expect(length(poa_gps$dist[which(!poa_gps$dist < 15)]) %in% c(21, 22, 77), "incorrect number of distances greater than 15m")
     
@@ -48,7 +50,7 @@ test_that("gtfs2gps", {
       c("trip_id", "route_type", "id", "shape_pt_lon", "shape_pt_lat",
         "departure_time", "stop_id", "stop_sequence", "dist", "shape_id", "cumdist", "speed", "cumtime")))
 
-    expect_equal(dim(sp_gps)[1], 20418074)
+    expect(dim(sp_gps)[1] %in% c(20418074, 20418493))
     
     expect_true(all(sp_gps$dist > 0))
     expect_true(all(sp_gps$speed > 0))

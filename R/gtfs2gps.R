@@ -3,25 +3,21 @@
 #' spatial resolution. This function creates additional points in order to
 #' guarantee that two points in a same trip will have at most a given
 #' distance, indicated as a spatial resolution.
-#' @param gtfszip A path to a GTFS file to be converted to GPS.
+#' @param gtfs_data A path to a GTFS file to be converted to GPS, or a GTFS data
+#' represented as a list of data.tables.
 #' @param spatial_resolution The spatial resolution in meters. Default is 15m.
 #' @param filepath Output file path. As default, the output is returned in R.
 #' When this argument is set, each route is saved into a file within filepath,
 #' with the name equals to its id. In this case, no output is returned.
-#' @param week_days Use only the week days? Default is TRUE.
 #' @param progress Show a progress bar? Default is TRUE.
 #' @export
-gtfs2gps <- function(gtfszip, filepath = NULL, spatial_resolution = 15, week_days = TRUE, progress = TRUE){
+gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, progress = TRUE){
 ###### PART 1. Load and prepare data inputs ------------------------------------
 
-  # Read GTFS data
-  gtfs_data <- read_gtfs(gtfszip = gtfszip)
-  
-  # Filter trips
-  if(week_days){
-    gtfs_data <- filter_week_days(gtfs_data) 
-  }
-  
+  if(class(gtfs_data) == "character")
+    # Read GTFS data
+    gtfs_data <- read_gtfs(gtfszip = gtfs_data)
+
   # Convert all shapes into sf objects
   shapes_sf <- gtfs_shapes_as_sf(gtfs_data)
 
