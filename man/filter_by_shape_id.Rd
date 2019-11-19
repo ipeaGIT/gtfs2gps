@@ -9,7 +9,8 @@ filter_by_shape_id(gtfs_data, shape_ids)
 \arguments{
 \item{gtfs_data}{A tibble in the tidytransit format.}
 
-\item{shape_ids}{A vector of shape_ids belonging to the shapes of the gtfs_data data.}
+\item{shape_ids}{A vector of shape_ids belonging to the shapes of the gtfs_data data.
+Note that shape_id might be loaded as a string or a number, depending on the available values.}
 }
 \description{
 Filter a GTFS data read using gtfs2gps::read_gtfs(). It gets a set of

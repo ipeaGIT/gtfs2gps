@@ -3,29 +3,24 @@
 #' spatial resolution. This function creates additional points in order to
 #' guarantee that two points in a same trip will have at most a given
 #' distance, indicated as a spatial resolution.
-#' @param gtfszip A path to a GTFS file to be converted to GPS.
+#' @param gtfs_data A path to a GTFS file to be converted to GPS, or a GTFS data
+#' represented as a list of data.tables.
 #' @param spatial_resolution The spatial resolution in meters. Default is 15m.
 #' @param filepath Output file path. As default, the output is returned in R.
 #' When this argument is set, each route is saved into a file within filepath,
 #' with the name equals to its id. In this case, no output is returned.
-#' @param week_days Use only the week days? Default is TRUE.
 #' @param progress Show a progress bar? Default is TRUE.
 #' @export
-gtfs2gps_dt_single <- function(gtfszip, filepath = NULL, spatial_resolution = 15, week_days = TRUE, progress = TRUE){
-###### PART 1. Load and prepare data inputs ------------------------------------
+gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, progress = TRUE){
+  ###### PART 1. Load and prepare data inputs ------------------------------------
 
-  # Read GTFS data
-  gtfs_data <- read_gtfs(gtfszip = gtfszip)
-  
-  # Filter trips
-  if(week_days){
-    gtfs_data <- filter_week_days(gtfs_data) 
-  }
-  
+  if(class(gtfs_data) == "character")
+    gtfs_data <- read_gtfs(gtfszip = gtfs_data)
+
   # Convert all shapes into sf objects
   shapes_sf <- gtfs_shapes_as_sf(gtfs_data)
 
-###### PART 2. Analysing data type ----------------------------------------------
+  ###### PART 2. Analysing data type ----------------------------------------------
   corefun <- function(shapeid){
     # test
     # all_shapeids <- unique(shapes_sf$shape_id)
@@ -43,29 +38,25 @@ gtfs2gps_dt_single <- function(gtfszip, filepath = NULL, spatial_resolution = 15
     routetype <- gtfs_data$routes[route_id == routeid]$route_type
     
     # get all trips linked to that route
-    trips_temp <- gtfs_data$trips[shape_id == shapeid & route_id == routeid, ]
-    all_tripids <- unique(trips_temp$trip_id)
+    all_tripids <- gtfs_data$trips[shape_id == shapeid & route_id == routeid, ]$trip_id %>%
+      unique()
     
     # Get the stops sequence with lat long linked to that route
     # each shape_id only has one stop sequence
-    stops_seq <- gtfs_data$stop_times[trip_id == all_tripids[1], .(stop_id, stop_sequence)]    # get stop sequence
-    stops_seq[gtfs_data$stops, on = "stop_id", c('stop_lat', 'stop_lon') := list(i.stop_lat, i.stop_lon)]    # add lat long info
-    
+    stops_seq <- gtfs_data$stop_times[trip_id == all_tripids[1], .(stop_id, stop_sequence)] # get stop sequence
+    stops_seq[gtfs_data$stops, on = "stop_id", c('stop_lat', 'stop_lon') := list(i.stop_lat, i.stop_lon)] # add lat long info
+
     # convert stops to sf
     stops_sf <- sf::st_as_sf(stops_seq, coords = c('stop_lon', 'stop_lat'), agr = "identity", crs = sf::st_crs(shapes_sf))
 
-    # Get shape linked to that route
-    shape_sf_temp <- subset(shapes_sf, shape_id == shapeid)
-    
-    # Use point interpolation to get route shape at higher spatial resolution
-    shp_length <- shape_sf_temp %>% sf::st_sf() %>% sf::st_length() # %>% as.numeric() # meters
-    
-    # sampling <- ceiling(shp_length / spatial_resolution)
     spatial_resolution <- units::set_units(15 / 1000, "km")
-    shape_sf_temp2 <- sf::st_segmentize(shape_sf_temp, spatial_resolution) %>% sf::st_cast("LINESTRING")
-    
-    # get shape points in high resolution
-    new_shape <- sf::st_cast(shape_sf_temp2, "POINT", warn = FALSE) %>% sf::st_sf()
+
+    new_shape <- subset(shapes_sf, shape_id == shapeid) %>% 
+      sf::st_segmentize(spatial_resolution) %>%
+      sf::st_cast("LINESTRING") %>%
+      sf::st_cast("POINT", warn = FALSE) %>%
+      sf::st_sf()
+
     spatial_resolution <- units::set_units(spatial_resolution, "m")
     
     # update stops_seq with snap stops to route shape
@@ -86,12 +77,12 @@ gtfs2gps_dt_single <- function(gtfszip, filepath = NULL, spatial_resolution = 15
     new_stoptimes[stops_seq$ref, "stop_sequence"] <- stops_seq$stop_sequence
 
     # calculate Distance between successive points
-    new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type="lead"), data.table::shift(shape_pt_lon, type="lead"), tolerance = 10000000000.0)]
+    new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type = "lead"), data.table::shift(shape_pt_lon, type = "lead"), tolerance = 1e10)]
     new_stoptimes <- na.omit(new_stoptimes, cols = "dist")
 
-###### PART 2.2 Function recalculate new stop_times for each trip id of each Shape id ------------------------------------
-    
-    new_stoptimes <- lapply(X = all_tripids, FUN = update_single, new_stoptimes, gtfs_data) %>% data.table::rbindlist()
+    ###### PART 2.2 Function recalculate new stop_times for each trip id of each Shape id ------------------------------------
+    new_stoptimes <- lapply(X = all_tripids, FUN = update_single, new_stoptimes, gtfs_data) %>%
+      data.table::rbindlist()
     
     #if(test_gtfs_freq(gtfs_data) == "frequency"){
     #  new_stoptimes <- lapply(X = all_tripids, FUN = update_freq, new_stoptimes, gtfs_data) %>% data.table::rbindlist()
@@ -99,8 +90,7 @@ gtfs2gps_dt_single <- function(gtfszip, filepath = NULL, spatial_resolution = 15
     #  new_stoptimes <- lapply(X = all_tripids, FUN = update_dt, new_stoptimes, gtfs_data) %>% data.table::rbindlist()
     #}
 
-    if(!is.null(filepath)){
-      # Write object
+    if(!is.null(filepath)){ # Write object
       data.table::fwrite(x = new_stoptimes,
              file = paste0(filepath, "/", shapeid, ".txt"))
       return(NULL)
