@@ -38,8 +38,8 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, progre
     routetype <- gtfs_data$routes[route_id == routeid]$route_type
     
     # get all trips linked to that route
-    trips_temp <- gtfs_data$trips[shape_id == shapeid & route_id == routeid, ]
-    all_tripids <- unique(trips_temp$trip_id)
+    all_tripids <- gtfs_data$trips[shape_id == shapeid & route_id == routeid, ]$trip_id %>%
+      unique()
     
     # Get the stops sequence with lat long linked to that route
     # each shape_id only has one stop sequence
@@ -49,18 +49,14 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, progre
     # convert stops to sf
     stops_sf <- sf::st_as_sf(stops_seq, coords = c('stop_lon', 'stop_lat'), agr = "identity", crs = sf::st_crs(shapes_sf))
 
-    # Get shape linked to that route
-    shape_sf_temp <- subset(shapes_sf, shape_id == shapeid)
-    
-    # Use point interpolation to get route shape at higher spatial resolution
-    shp_length <- shape_sf_temp %>% sf::st_sf() %>% sf::st_length() # %>% as.numeric() # meters
-    
-    # sampling <- ceiling(shp_length / spatial_resolution)
     spatial_resolution <- units::set_units(15 / 1000, "km")
-    shape_sf_temp2 <- sf::st_segmentize(shape_sf_temp, spatial_resolution) %>% sf::st_cast("LINESTRING")
-    
-    # get shape points in high resolution
-    new_shape <- sf::st_cast(shape_sf_temp2, "POINT", warn = FALSE) %>% sf::st_sf()
+
+    new_shape <- subset(shapes_sf, shape_id == shapeid) %>% 
+      sf::st_segmentize(spatial_resolution) %>%
+      sf::st_cast("LINESTRING") %>%
+      sf::st_cast("POINT", warn = FALSE) %>%
+      sf::st_sf()
+
     spatial_resolution <- units::set_units(spatial_resolution, "m")
     
     # update stops_seq with snap stops to route shape
