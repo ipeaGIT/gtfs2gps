@@ -50,7 +50,7 @@ test_that("gtfs2gps", {
       c("trip_id", "route_type", "id", "shape_pt_lon", "shape_pt_lat",
         "departure_time", "stop_id", "stop_sequence", "dist", "shape_id", "cumdist", "speed", "cumtime")))
 
-    expect(dim(sp_gps)[1] %in% c(20418074, 20418493))
+    expect(dim(sp_gps)[1] %in% c(20418074, 20418493), paste("Wrong dim:", dim(sp_gps)[1]))
     
     expect_true(all(sp_gps$dist > 0))
     expect_true(all(sp_gps$speed > 0))
