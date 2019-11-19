@@ -16,8 +16,10 @@ rcpp_distance_haversine <- function(latFrom, lonFrom, latTo, lonTo, tolerance) {
 #' @param spatial_resolution The spatial resolution of data, which means that from each
 #' point of data it is possible to reach at least one point within data with distance 
 #' equals or less than spatial_resolution.
+#' @param id The id of the data to be shown in case of an error when a given point is
+#' more than [spatial_resolution ^ 4] meters away from the reference matrix.
 #' @export
-cpp_snap_points <- function(data, ref, spatial_resolution) {
-    .Call(`_gtfs2gps_cpp_snap_points`, data, ref, spatial_resolution)
+cpp_snap_points <- function(data, ref, spatial_resolution, id) {
+    .Call(`_gtfs2gps_cpp_snap_points`, data, ref, spatial_resolution, id)
 }
 

@@ -7,12 +7,12 @@ double distanceHaversine(double latf, double lonf, double latt, double lont,
                          double tolerance);
 double toRadians(double deg);
 
-Rcpp::NumericVector cpp_snap_points_level(Rcpp::NumericMatrix& data, Rcpp::NumericMatrix& ref, int spatial_resolution, int level){
+Rcpp::NumericVector cpp_snap_points_level(Rcpp::NumericMatrix& data, Rcpp::NumericMatrix& ref, int spatial_resolution, int level, Rcpp::StringVector id){
   if(level > 4){
     double max_dist = spatial_resolution ^ level; 
 
     std::stringstream text;
-    text << "Could not find a nearest point closer than " << max_dist << "m.";
+    text << "Could not find a nearest point closer than " << max_dist << "m for id '" << id(0) << "'";
     stop(text.str());
   }
 
@@ -43,7 +43,7 @@ Rcpp::NumericVector cpp_snap_points_level(Rcpp::NumericMatrix& data, Rcpp::Numer
   }
   
   if(total_found < nrow){
-    return cpp_snap_points_level(data, ref, spatial_resolution * 2, level + 1);
+    return cpp_snap_points_level(data, ref, spatial_resolution * 2, level + 1, id);
   }
 
   return result_pos;
@@ -60,8 +60,10 @@ Rcpp::NumericVector cpp_snap_points_level(Rcpp::NumericMatrix& data, Rcpp::Numer
 //' @param spatial_resolution The spatial resolution of data, which means that from each
 //' point of data it is possible to reach at least one point within data with distance 
 //' equals or less than spatial_resolution.
+//' @param id The id of the data to be shown in case of an error when a given point is
+//' more than [spatial_resolution ^ 4] meters away from the reference matrix.
 //' @export
 // [[Rcpp::export]]
-Rcpp::NumericVector cpp_snap_points(Rcpp::NumericMatrix& data, Rcpp::NumericMatrix& ref, int spatial_resolution){
-  return cpp_snap_points_level(data, ref, spatial_resolution, 1);
+Rcpp::NumericVector cpp_snap_points(Rcpp::NumericMatrix& data, Rcpp::NumericMatrix& ref, int spatial_resolution, Rcpp::StringVector id){
+  return cpp_snap_points_level(data, ref, spatial_resolution, 1, id);
 }
