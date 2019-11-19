@@ -1,45 +1,43 @@
 update_single <- function(tripid, new_stoptimes, gtfs_data){
-  #' Update new_stoptimes
+  # Update new_stoptimes
   new_stoptimes <- update_dt(tripid, new_stoptimes, gtfs_data)
-  #'
-  # 'Condition for frequency type
+
+  # Condition for frequency type
   if(test_gtfs_freq(gtfs_data) == "frequency"){
     #  Get freq info for that trip
     # tripid <- "148L-10-0"
-    freq_temp <- subset(gtfs_data$frequencies, trip_id== tripid)
+    freq_temp <- subset(gtfs_data$frequencies, trip_id == tripid)
     # number of trips
     #freq_temp[, service_duration := as.numeric(difftime(freq_temp$end_time[1],freq_temp$start_time[1], units="secs")) ]
-    freq_temp[, service_duration := as.numeric(difftime(end_time[1],start_time[1], units="secs")) ]
-    freq_temp[, number_of_departures := ceiling(service_duration/headway_secs) ]
+    freq_temp[, service_duration := as.numeric(difftime(end_time[1], start_time[1], units = "secs"))]
+    freq_temp[, number_of_departures := ceiling(service_duration /headway_secs)]
     
     # get all start times of each period
     starttimes <- freq_temp$start_time #- new_stoptimes$cumtime[newstop_t0[1]-1]
     
     # functions
-    
-    update_newstoptimes <- function(starttimes,freq_temp){
-      update_departure_stoptimes <- function(i,dt_list){ #,dt_list,thisheadway,starttime
+    update_newstoptimes <- function(starttimes, freq_temp){
+      update_departure_stoptimes <- function(i, dt_list){ #,dt_list,thisheadway,starttime
         # Update 1st departure time
         dt_list[[i]][ departure_time == data.table::first(departure_time),
                       departure_time := data.table::as.ITime(starttimes[1])]
         # Updating all other stop times according to travel speed and distances
-        dt_list[[i]][, departure_time :=data.table::as.ITime(round(departure_time[1L]+lag(cumtime,1,0)))]
+        dt_list[[i]][, departure_time := data.table::as.ITime(round(departure_time[1L] + lag(cumtime, 1, 0)))]
         # dt_list[[i]][, departure_time := data.table::as.ITime(departure_time[1L]+
         #                                                         lag(cumtime,1,0))]
-        
+
         # Updating all stop times by adding the headway
-        dt_list[[i]][, departure_time:= data.table::as.ITime(round(departure_time + ((i-1)* thisheadway))) ]
-        
+        dt_list[[i]][, departure_time := data.table::as.ITime(round(departure_time + ((i - 1)* thisheadway)))]
+
         return(dt_list[[i]])
-        
       }
       
       #starttimes <- starttimes[1]
       
       # Get headway of each start_time
-      thisheadway <- subset(freq_temp, start_time== starttimes[1])$headway_secs
-      nmber_of_departures <- subset(freq_temp, start_time== starttimes[1])$number_of_departures
-      
+      thisheadway <- subset(freq_temp, start_time == starttimes[1])$headway_secs
+      nmber_of_departures <- subset(freq_temp, start_time == starttimes[1])$number_of_departures
+
       # list of departures
       
       departure_list <- 1:nmber_of_departures
@@ -49,26 +47,27 @@ update_single <- function(tripid, new_stoptimes, gtfs_data){
       dt_list <- replicate(nmber_of_departures, list(data.table::copy(new_stoptimes)))
       
       # Function to update stoptimes of each departure
-      dt_list <- lapply(departure_list, update_departure_stoptimes,dt_list)
-      
+      dt_list <- lapply(departure_list, update_departure_stoptimes, dt_list)
+
       # Apply function and return the stop times of all departures from that period
-      departure_stoptimes <-  lapply(X=seq_along(dt_list), FUN= update_departure_stoptimes,dt_list) %>% data.table::rbindlist()
-      
-      #departure_stoptimes <-  lapply(X=departure_list, FUN= update_departure_stoptimes) %>% data.table::rbindlist()
+      departure_stoptimes <- lapply(X =seq_along(dt_list), FUN = update_departure_stoptimes,dt_list) %>%
+        data.table::rbindlist()
+
+      #departure_stoptimes <- lapply(X = departure_list, FUN = update_departure_stoptimes) %>% data.table::rbindlist()
       return(departure_stoptimes)
     }
-    new_stoptimes <- lapply(starttimes,update_newstoptimes,freq_temp)%>% data.table::rbindlist()
+
+    new_stoptimes <- lapply(starttimes, update_newstoptimes, freq_temp) %>%
+      data.table::rbindlist()
+
     #departure_stoptimes <- update_newstoptimes_freq(starttime)
     return(new_stoptimes)
   }
+
   return(new_stoptimes)
-  
 }
-#
-#
+
 # UPDATE NEWSTOPTIMES DATA.FRAME
-#
-#
 update_dt <- function(tripid, new_stoptimes, gtfs_data){
   #tripid <- all_tripids[1]
   # add trip_id
@@ -84,7 +83,7 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data){
   new_stoptimes[stoptimes_temp, on = 'stop_sequence', 'departure_time' := i.departure_time]
   
   # get a 'stop_sequence' of the stops which have proper info on 'departure_time'
-  stop_id_ok <- gtfs_data$stop_times[trip_id == tripid & is.na(departure_time) == F,]$stop_sequence
+  stop_id_ok <- gtfs_data$stop_times[trip_id == tripid & is.na(departure_time) == FALSE,]$stop_sequence
   # building id' vector
   #
   # newstop_t0: 'id' in which stop_times intervals STARTS
@@ -92,26 +91,27 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data){
   # speed_valid: range of 'id's in which the speed are valid
   # ranges: 'speed_valid' separated between stops (list)
   newstop_t0 <- which(new_stoptimes$stop_sequence %in% stop_id_ok)
-  newstop_t1 <- data.table::shift(x=newstop_t0,n = 1,fill = NA,type = "lead")
-  speed_valid <- head(newstop_t0,1):(tail(newstop_t0,1)-1)
-  ranges <- lapply(1:(length(newstop_t0)-1), 
+  newstop_t1 <- data.table::shift(x = newstop_t0, n = 1, fill = NA, type = "lead")
+  speed_valid <- head(newstop_t0, 1):(tail(newstop_t0, 1) - 1)
+  ranges <- lapply(1:(length(newstop_t0) - 1),
                    function(i){newstop_t0[i]:newstop_t1[i]})
   # apply function for speed estimation
   #c <- new_stoptimes
-  new_stoptimes[speed_valid,speed:={lapply(ranges, function(x){
-    new_stoptimes[x,][,speed:={
-      dt = data.table::last(departure_time)-data.table::first(departure_time)
-      ds = data.table::last(cumdist)-data.table::first(cumdist)
-      v = 3.6*ds/dt
-      list(v=v)
-    }][-nrow(new_stoptimes[x,]),"speed"] 
+  new_stoptimes[speed_valid,speed := {lapply(ranges, function(x){
+    new_stoptimes[x,][,speed := {
+      dt = data.table::last(departure_time) - data.table::first(departure_time)
+      ds = data.table::last(cumdist) - data.table::first(cumdist)
+      v = 3.6 * ds / dt
+      list(v = v)
+    }][-nrow(new_stoptimes[x,]), "speed"] 
   }) %>% data.table::rbindlist()}]
+
   # Speed info that was missing (either before or after 1st/last stops)
-  new_stoptimes[, speed := ifelse( is.na(speed), mean(speed,na.rm=T), speed) ]
+  new_stoptimes[, speed := ifelse(is.na(speed), mean(speed, na.rm = TRUE), speed) ]
   # Get trip duration in seconds
-  new_stoptimes[, cumtime := cumsum(3.6*dist/speed)]
+  new_stoptimes[, cumtime := cumsum(3.6 * dist / speed)]
   # reorder columns
-  data.table::setcolorder(new_stoptimes, c("trip_id", "route_type", "id", "shape_pt_lon", "shape_pt_lat", "departure_time", "stop_id", "stop_sequence", "dist","cumdist","speed","cumtime"))
+  data.table::setcolorder(new_stoptimes, c("trip_id", "route_type", "id", "shape_pt_lon", "shape_pt_lat", "departure_time", "stop_id", "stop_sequence", "dist", "cumdist", "speed", "cumtime"))
   # distance from trip start to 1st stop
   dist_1st <- new_stoptimes[id == newstop_t0[1]]$cumdist # in m
   # get the depart time from 1st stop
@@ -125,12 +125,9 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data){
   #stop_id_nok <- which(is.na(new_stoptimes$departure_time))
   # update indexes in 'newstoptimes'
   #temp_newdeparture <-  data.table::as.ITime( new_stoptimes$departure_time[1L]+lag(new_stoptimes$cumtime,1,0))
-  new_stoptimes[,departure_time:=data.table::as.ITime(round(departure_time[1L]+lag(cumtime,1,0)))]
-  
+  new_stoptimes[, departure_time := data.table::as.ITime(round(departure_time[1L] + lag(cumtime, 1, 0)))]
+
   new_stoptimes <- new_stoptimes[speed > 0 & cumtime > 0]
   
   return(new_stoptimes)
 }
-
-
-
