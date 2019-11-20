@@ -82,15 +82,12 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, progre
     new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type = "lead"), data.table::shift(shape_pt_lon, type = "lead"), tolerance = 1e10)]
     new_stoptimes <- na.omit(new_stoptimes, cols = "dist")
 
-    ###### PART 2.2 Function recalculate new stop_times for each trip id of each Shape id ------------------------------------
-    new_stoptimes <- lapply(X = all_tripids, FUN = update_single, new_stoptimes, gtfs_data) %>%
-      data.table::rbindlist()
-    
-    #if(test_gtfs_freq(gtfs_data) == "frequency"){
-    #  new_stoptimes <- lapply(X = all_tripids, FUN = update_freq, new_stoptimes, gtfs_data) %>% data.table::rbindlist()
-    #}else{
-    #  new_stoptimes <- lapply(X = all_tripids, FUN = update_dt, new_stoptimes, gtfs_data) %>% data.table::rbindlist()
-    #}
+    ###### PART 2.2 Function recalculate new stop_times for each trip id of each Shape id ------------------------------
+    if(test_gtfs_freq(gtfs_data) == "frequency"){
+      new_stoptimes <- lapply(X = all_tripids, FUN = update_freq, new_stoptimes, gtfs_data) %>% data.table::rbindlist()
+    }else{
+      new_stoptimes <- lapply(X = all_tripids, FUN = update_dt, new_stoptimes, gtfs_data) %>% data.table::rbindlist()
+    }
 
     if(!is.null(filepath)){ # Write object
       data.table::fwrite(x = new_stoptimes,
