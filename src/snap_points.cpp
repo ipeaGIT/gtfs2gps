@@ -8,14 +8,6 @@ double distanceHaversine(double latf, double lonf, double latt, double lont,
 double toRadians(double deg);
 
 Rcpp::NumericVector cpp_snap_points_level(Rcpp::NumericMatrix& data, Rcpp::NumericMatrix& ref, int spatial_resolution, int level, Rcpp::StringVector id){
-  if(level > 4){
-    double max_dist = spatial_resolution ^ level; 
-
-    std::stringstream text;
-    text << "Could not find a nearest point closer than " << max_dist << "m for id '" << id(0) << "'";
-    stop(text.str());
-  }
-
   Rcpp::NumericVector result_pos;
   
   const int nrow = data.nrow();
@@ -43,6 +35,12 @@ Rcpp::NumericVector cpp_snap_points_level(Rcpp::NumericMatrix& data, Rcpp::Numer
   }
   
   if(total_found < nrow){
+    if(level > 3){
+      std::stringstream text;
+      text << "Could not find a nearest point closer than " << spatial_resolution << "m (eight times spatial_resolution) for id '" << id(0) << "'";
+      stop(text.str());
+    }
+    
     return cpp_snap_points_level(data, ref, spatial_resolution * 2, level + 1, id);
   }
 
