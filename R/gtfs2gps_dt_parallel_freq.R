@@ -74,7 +74,7 @@ corefun <- function(shapeid){
     
   # snap stops to route shape
     sf::st_crs(stops_sf) <- sf::st_crs(new_shape)
-    stops_snapped_sf <- cpp_snap_points(stops_sf %>% sf::st_coordinates(), new_shape %>% sf::st_coordinates())
+    stops_snapped_sf <- cpp_snap_points(stops_sf %>% sf::st_coordinates(), new_shape %>% sf::st_coordinates(), 15, all_tripids[1])
     
     
     # update stops_seq lat long with snapped coordinates

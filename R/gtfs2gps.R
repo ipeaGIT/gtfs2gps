@@ -34,7 +34,7 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, progre
     # Skip shape_id IF there is no route_id associated with that shape_id
     if(is.na(routeid)) return(NULL) # nocov
     
-    # identify route type    
+    # identify route type
     routetype <- gtfs_data$routes[route_id == routeid]$route_type
     
     # get all trips linked to that route
@@ -61,7 +61,9 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, progre
     
     # update stops_seq with snap stops to route shape
     stops_seq$ref <- cpp_snap_points(stops_sf %>% sf::st_coordinates(), 
-                                     new_shape %>% sf::st_coordinates(), spatial_resolution)
+                                     new_shape %>% sf::st_coordinates(),
+                                     spatial_resolution,
+                                     all_tripids[1])
 
     ### Start building new stop_times.txt file
 
