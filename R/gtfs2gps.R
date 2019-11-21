@@ -9,9 +9,10 @@
 #' @param filepath Output file path. As default, the output is returned in R.
 #' When this argument is set, each route is saved into a file within filepath,
 #' with the name equals to its id. In this case, no output is returned.
+#' @param cores Number of cores to be used. Default is 1 (no parallel execution).
 #' @param progress Show a progress bar? Default is TRUE.
 #' @export
-gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, progress = TRUE){
+gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores = 1, progress = TRUE){
   ###### PART 1. Load and prepare data inputs ------------------------------------
 
   if(class(gtfs_data) == "character")
@@ -109,13 +110,19 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, progre
 
   # all shape ids
   all_shapeids <- unique(shapes_sf$shape_id)
-  
-  #output <- lapply(X = all_shapeids, FUN = corefun) %>% data.table::rbindlist()
 
-  output <- pbSapply(3, progress, X = all_shapeids, FUN = corefun)
+  if(cores == 1){
+    if(progress) pbapply::pboptions(type = "txt")
 
-  ### Single core
-  # all_shapeids <- all_shapeids[1:3]
-  # output2 <- pbapply::pblapply(X = all_shapeids, FUN=corefun) %>% data.table::rbindlist()
-  return(output)
+    output <- pbapply::pblapply(X = all_shapeids, FUN = corefun) %>% data.table::rbindlist()
+    
+    if(progress) pbapply::pboptions(type = "none")
+  }
+  else
+    output <- pbSapply(3, progress, X = all_shapeids, FUN = corefun)
+
+  if(is.null(filepath))
+    return(output)
+  else
+    return(NULL)
 }

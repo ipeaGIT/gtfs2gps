@@ -31,7 +31,8 @@ Imports:
       doSNOW,
       snow,
       foreach,
-      utils
+      utils,
+      pbapply
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
 LinkingTo: Rcpp

@@ -5,7 +5,7 @@
 \title{Convert GTFS to GPS given a spatial resolution}
 \usage{
 gtfs2gps(gtfs_data, filepath = NULL, spatial_resolution = 15,
-  progress = TRUE)
+  cores = 1, progress = TRUE)
 }
 \arguments{
 \item{gtfs_data}{A path to a GTFS file to be converted to GPS, or a GTFS data
@@ -16,6 +16,8 @@ When this argument is set, each route is saved into a file within filepath,
 with the name equals to its id. In this case, no output is returned.}
 
 \item{spatial_resolution}{The spatial resolution in meters. Default is 15m.}
+
+\item{cores}{Number of cores to be used. Default is 1 (no parallel execution).}
 
 \item{progress}{Show a progress bar? Default is TRUE.}
 }
