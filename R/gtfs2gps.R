@@ -66,7 +66,6 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores 
                                      all_tripids[1])
 
     if(is.null(snapped) | length(snapped) == 0){
-     # warning(paste0(all_tripids[1], ","))
       return(NULL)
     }
       
