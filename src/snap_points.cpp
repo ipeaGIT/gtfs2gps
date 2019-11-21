@@ -38,7 +38,8 @@ Rcpp::NumericVector cpp_snap_points_level(Rcpp::NumericMatrix& data, Rcpp::Numer
     if(level > 3){
       std::stringstream text;
       text << "Could not find a nearest point closer than " << spatial_resolution << "m (eight times spatial_resolution) for id '" << id(0) << "'";
-      stop(text.str());
+      warning(text.str());
+      return NULL;
     }
     
     return cpp_snap_points_level(data, ref, spatial_resolution * 2, level + 1, id);

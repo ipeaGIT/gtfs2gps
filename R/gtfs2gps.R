@@ -59,12 +59,19 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, progre
 
     spatial_resolution <- units::set_units(spatial_resolution, "m")
     
-    # update stops_seq with snap stops to route shape
-    stops_seq$ref <- cpp_snap_points(stops_sf %>% sf::st_coordinates(), 
+    snapped <- cpp_snap_points(stops_sf %>% sf::st_coordinates(), 
                                      new_shape %>% sf::st_coordinates(),
                                      spatial_resolution,
                                      all_tripids[1])
 
+    if(is.null(snapped) | length(snapped) == 0){
+     # warning(paste0(all_tripids[1], ","))
+      return(NULL)
+    }
+      
+    # update stops_seq with snap stops to route shape
+    stops_seq$ref <- snapped
+      
     ### Start building new stop_times.txt file
 
     # get shape points in high resolution
