@@ -9,11 +9,19 @@
 #' @param filepath Output file path. As default, the output is returned in R.
 #' When this argument is set, each route is saved into a file within filepath,
 #' with the name equals to its id. In this case, no output is returned.
+#' @param cores Number of cores to be used. Default is 1 (no parallel execution).
 #' @param progress Show a progress bar? Default is TRUE.
+#' @param continue Argument that can be used only with filepath. When TRUE, it
+#' skips processing the shape identifiers that were already saved into files.
+#' It is useful to continue processing a FTGS file that was stopped by some
+#' reason. Default value is FALSE.
 #' @export
-gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, progress = TRUE){
+gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores = 1, progress = TRUE, continue = FALSE){
   ###### PART 1. Load and prepare data inputs ------------------------------------
 
+  if(continue & is.null(filepath))
+    stop("Cannot use argument 'continue' without passing a 'filepath'.")
+  
   if(class(gtfs_data) == "character")
     gtfs_data <- read_gtfs(gtfszip = gtfs_data)
 
@@ -22,6 +30,12 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, progre
 
   ###### PART 2. Analysing data type ----------------------------------------------
   corefun <- function(shapeid){
+    
+    if(continue){
+      file <- paste0(filepath, "/", shapeid, ".txt")
+      if(file.exists(file)) return(NULL)
+    }
+
     # test
     # all_shapeids <- unique(shapes_sf$shape_id)
     # shapeid <- all_shapeids[1]
@@ -59,12 +73,18 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, progre
 
     spatial_resolution <- units::set_units(spatial_resolution, "m")
     
-    # update stops_seq with snap stops to route shape
-    stops_seq$ref <- cpp_snap_points(stops_sf %>% sf::st_coordinates(), 
+    snapped <- cpp_snap_points(stops_sf %>% sf::st_coordinates(), 
                                      new_shape %>% sf::st_coordinates(),
                                      spatial_resolution,
                                      all_tripids[1])
 
+    if(is.null(snapped) | length(snapped) == 0){
+      return(NULL)
+    }
+      
+    # update stops_seq with snap stops to route shape
+    stops_seq$ref <- snapped
+      
     ### Start building new stop_times.txt file
 
     # get shape points in high resolution
@@ -82,15 +102,12 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, progre
     new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type = "lead"), data.table::shift(shape_pt_lon, type = "lead"), tolerance = 1e10)]
     new_stoptimes <- na.omit(new_stoptimes, cols = "dist")
 
-    ###### PART 2.2 Function recalculate new stop_times for each trip id of each Shape id ------------------------------------
-    new_stoptimes <- lapply(X = all_tripids, FUN = update_single, new_stoptimes, gtfs_data) %>%
-      data.table::rbindlist()
-    
-    #if(test_gtfs_freq(gtfs_data) == "frequency"){
-    #  new_stoptimes <- lapply(X = all_tripids, FUN = update_freq, new_stoptimes, gtfs_data) %>% data.table::rbindlist()
-    #}else{
-    #  new_stoptimes <- lapply(X = all_tripids, FUN = update_dt, new_stoptimes, gtfs_data) %>% data.table::rbindlist()
-    #}
+    ###### PART 2.2 Function recalculate new stop_times for each trip id of each Shape id ------------------------------
+    if(test_gtfs_freq(gtfs_data) == "frequency"){
+      new_stoptimes <- lapply(X = all_tripids, FUN = update_freq, new_stoptimes, gtfs_data) %>% data.table::rbindlist()
+    }else{
+      new_stoptimes <- lapply(X = all_tripids, FUN = update_dt, new_stoptimes, gtfs_data) %>% data.table::rbindlist()
+    }
 
     if(!is.null(filepath)){ # Write object
       data.table::fwrite(x = new_stoptimes,
@@ -105,13 +122,19 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, progre
 
   # all shape ids
   all_shapeids <- unique(shapes_sf$shape_id)
-  
-  #output <- lapply(X = all_shapeids, FUN = corefun) %>% data.table::rbindlist()
 
-  output <- pbSapply(3, progress, X = all_shapeids, FUN = corefun)
+  if(cores == 1){
+    if(progress) pbapply::pboptions(type = "txt")
 
-  ### Single core
-  # all_shapeids <- all_shapeids[1:3]
-  # output2 <- pbapply::pblapply(X = all_shapeids, FUN=corefun) %>% data.table::rbindlist()
-  return(output)
+    output <- pbapply::pblapply(X = all_shapeids, FUN = corefun) %>% data.table::rbindlist()
+    
+    if(progress) pbapply::pboptions(type = "none")
+  }
+  else
+    output <- pbSapply(3, progress, X = all_shapeids, FUN = corefun)
+
+  if(is.null(filepath))
+    return(output)
+  else
+    return(NULL)
 }

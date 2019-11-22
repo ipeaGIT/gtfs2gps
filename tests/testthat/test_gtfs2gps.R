@@ -44,6 +44,8 @@ test_that("gtfs2gps", {
     # run with a larger dataset
     sp <- system.file("extdata/saopaulo.zip", package="gtfs2gps")
 
+    expect_error(gtfs2gps(sp, continue = TRUE), "Cannot use argument 'continue' without passing a 'filepath'.", fixed = TRUE)
+
     sp_gps <- gtfs2gps(sp, progress = FALSE)
 
     expect_true(all(names(sp_gps) %in% 

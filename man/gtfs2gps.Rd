@@ -5,7 +5,7 @@
 \title{Convert GTFS to GPS given a spatial resolution}
 \usage{
 gtfs2gps(gtfs_data, filepath = NULL, spatial_resolution = 15,
-  progress = TRUE)
+  cores = 1, progress = TRUE, continue = FALSE)
 }
 \arguments{
 \item{gtfs_data}{A path to a GTFS file to be converted to GPS, or a GTFS data
@@ -17,7 +17,14 @@ with the name equals to its id. In this case, no output is returned.}
 
 \item{spatial_resolution}{The spatial resolution in meters. Default is 15m.}
 
+\item{cores}{Number of cores to be used. Default is 1 (no parallel execution).}
+
 \item{progress}{Show a progress bar? Default is TRUE.}
+
+\item{continue}{Argument that can be used only with filepath. When TRUE, it
+skips processing the shape identifiers that were already saved into files.
+It is useful to continue processing a FTGS file that was stopped by some
+reason. Default value is FALSE.}
 }
 \description{
 Convert GTFS data to GPS format by sampling points using a
