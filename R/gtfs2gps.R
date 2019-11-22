@@ -11,10 +11,17 @@
 #' with the name equals to its id. In this case, no output is returned.
 #' @param cores Number of cores to be used. Default is 1 (no parallel execution).
 #' @param progress Show a progress bar? Default is TRUE.
+#' @param continue Argument that can be used only with filepath. When TRUE, it
+#' skips processing the shape identifiers that were already saved into files.
+#' It is useful to continue processing a FTGS file that was stopped by some
+#' reason. Default value is FALSE.
 #' @export
-gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores = 1, progress = TRUE){
+gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores = 1, progress = TRUE, continue = FALSE){
   ###### PART 1. Load and prepare data inputs ------------------------------------
 
+  if(continue & is.null(filepath))
+    stop("Cannot use argument 'continue' without passing a 'filepath'.")
+  
   if(class(gtfs_data) == "character")
     gtfs_data <- read_gtfs(gtfszip = gtfs_data)
 
@@ -23,6 +30,12 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores 
 
   ###### PART 2. Analysing data type ----------------------------------------------
   corefun <- function(shapeid){
+    
+    if(continue){
+      file <- paste0(filepath, "/", shapeid, ".txt")
+      if(file.exists(file)) return(NULL)
+    }
+
     # test
     # all_shapeids <- unique(shapes_sf$shape_id)
     # shapeid <- all_shapeids[1]
