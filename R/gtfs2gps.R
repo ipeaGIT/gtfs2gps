@@ -29,8 +29,7 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores 
   shapes_sf <- gtfs_shapes_as_sf(gtfs_data)
 
   ###### PART 2. Analysing data type ----------------------------------------------
-  corefun <- function(shapeid){
-    
+  corefun <- function(shapeid){ 
     if(continue){
       file <- paste0(filepath, "/", shapeid, ".txt")
       if(file.exists(file)) return(NULL)
@@ -57,7 +56,9 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores 
     
     # Get the stops sequence with lat long linked to that route
     # each shape_id only has one stop sequence
-    stops_seq <- gtfs_data$stop_times[trip_id == all_tripids[1], .(stop_id, stop_sequence)] # get stop sequence
+    nstop <- gtfs_data$stop_times[trip_id %in% all_tripids, .N, by ="trip_id"]$N
+    stops_seq <- gtfs_data$stop_times[trip_id == all_tripids[which.max(nstop)], .(stop_id, stop_sequence)]
+    
     stops_seq[gtfs_data$stops, on = "stop_id", c('stop_lat', 'stop_lon') := list(i.stop_lat, i.stop_lon)] # add lat long info
 
     # convert stops to sf
@@ -76,7 +77,7 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores 
     snapped <- cpp_snap_points(stops_sf %>% sf::st_coordinates(), 
                                      new_shape %>% sf::st_coordinates(),
                                      spatial_resolution,
-                                     all_tripids[1])
+                                     all_tripids[which.max(nstop)])
 
     if(is.null(snapped) | length(snapped) == 0){
       return(NULL)
