@@ -46,7 +46,7 @@ test_that("gtfs2gps", {
 
     expect_error(gtfs2gps(sp, continue = TRUE), "Cannot use argument 'continue' without passing a 'filepath'.", fixed = TRUE)
 
-    sp_gps <- gtfs2gps(sp, progress = FALSE)
+    sp_gps <- gtfs2gps(sp, cores = 2, progress = FALSE)
 
     expect_true(all(names(sp_gps) %in% 
       c("trip_id", "route_type", "id", "shape_pt_lon", "shape_pt_lat",
