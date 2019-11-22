@@ -29,8 +29,7 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores 
   shapes_sf <- gtfs_shapes_as_sf(gtfs_data)
 
   ###### PART 2. Analysing data type ----------------------------------------------
-  corefun <- function(shapeid){
-    
+  corefun <- function(shapeid){ 
     if(continue){
       file <- paste0(filepath, "/", shapeid, ".txt")
       if(file.exists(file)) return(NULL)
