@@ -63,3 +63,23 @@ filter_week_days <- function(gtfs_data){
     gtfs_data$calendar[, saturday := 0]
     return(gtfs_data)
 }
+
+#' @title Filter GTFS trips in order to have one trip per shape_id
+#' @description Filter a GTFS data by keeping only one trip per shape_id.
+#' It also removes the unnecessary routes accordingly.
+#' @param gtfs_data A list of data.tables read using gtfs2gps::reag_gtfs().
+#' @export
+filter_single_trip <- function(gtfs_data){
+  gtfs_data$trips <- gtfs_data$trips[!duplicated(gtfs_data$trips$shape_id), ]
+
+  trip_ids <- unique(gtfs_data$trips$trip_id)
+
+  if(!is.null(gtfs_data$frequencies))
+    gtfs_data$frequencies <- subset(gtfs_data$frequencies, trip_id %in% trip_ids)
+
+  route_ids <- unique(gtfs_data$trips$route_id)
+  
+  gtfs_data$routes <- subset(gtfs_data$routes, route_id %in% route_ids)
+  
+  return(gtfs_data)
+}

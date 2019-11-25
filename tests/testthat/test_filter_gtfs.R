@@ -52,3 +52,19 @@ test_that("filter_week_days", {
   expect_equal(sum(subset$calendar$sunday), 0)
   expect_equal(sum(subset$calendar$saturday), 0)
 })
+
+test_that("filter_single_trip", {
+  poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+  
+  expect_equal(dim(poa$trips)[1], 387)
+  expect_equal(dim(poa$shapes)[1], 1265)
+  
+  expect_true(all(poa$trips$shape_id %in% poa$shapes$shape_id))
+
+  subset <- filter_single_trip(poa)
+
+  expect_equal(dim(poa$shapes)[1], 1265)
+  expect_equal(dim(subset$trips)[1], length(unique(poa$shapes$shape_id)))
+})
+
+
