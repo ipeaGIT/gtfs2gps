@@ -1,12 +1,11 @@
 
 #' @title Filter GTFS data by shape ids
-#' @description Filter a GTFS data read using gtfs2gps::read_gtfs(). It gets a set of
-#' shape ids and returns a new GTFS data by removing the other shape ids from the
-#' shapes. It also removes the unnecessary trips, stop_times, stops, and routes
-#' accordingly.
-#' @param gtfs_data A tibble in the tidytransit format.
-#' @param shape_ids A vector of shape_ids belonging to the shapes of the gtfs_data data.
-#' Note that shape_id might be loaded as a string or a number, depending on the available values.
+#' @description Filter a GTFS data by its shape ids. It also removes the
+#' unnecessary trips, stop_times, stops, and routes accordingly.
+#' @param gtfs_data A list of data.tables read using gtfs2gps::reag_gtfs().
+#' @param shape_ids A vector of shape_ids belonging to the shapes of the
+#' gtfs_data data. Note that shape_id might be loaded by gtfs2gps::read_gtfs()
+#' as a string or a number, depending on the available values.
 #' @export
 filter_by_shape_id <- function(gtfs_data, shape_ids){
   gtfs_data$shapes <- subset(gtfs_data$shapes, shape_id %in% shape_ids)
@@ -34,7 +33,7 @@ filter_by_shape_id <- function(gtfs_data, shape_ids){
 #' @description Filter a GTFS data read using gtfs2gps::read_gtfs(). It removes stop_times
 #' with NA values in arrival_time, departure_time, and arrival_time_hms. It also filters
 #' stops and routes accordingly.
-#' @param gtfs_data A tibble in the tidytransit format.
+#' @param gtfs_data A list of data.tables read using gtfs2gps::reag_gtfs().
 #' @export
 filter_valid_stop_times <- function(gtfs_data){
   gtfs_data$stop_times <- subset(gtfs_data$stop_times, !is.na(arrival_time) & !is.na(departure_time))
@@ -53,7 +52,7 @@ filter_valid_stop_times <- function(gtfs_data){
 #' @title Filter GTFS trips operating on week days
 #' @description Filter a GTFS data read using gtfs2gps::read_gtfs(). It removes the
 #' trips operating only saturday or sunday.
-#' @param gtfs_data A tibble in the tidytransit format.
+#' @param gtfs_data A list of data.tables read using gtfs2gps::reag_gtfs().
 #' @export
 filter_week_days <- function(gtfs_data){
     calendar_temp <- subset(gtfs_data$calendar, monday > 0 | tuesday > 0 | wednesday > 0 | thursday > 0 | friday > 0)

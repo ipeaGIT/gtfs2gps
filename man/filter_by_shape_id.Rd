@@ -7,14 +7,13 @@
 filter_by_shape_id(gtfs_data, shape_ids)
 }
 \arguments{
-\item{gtfs_data}{A tibble in the tidytransit format.}
+\item{gtfs_data}{A list of data.tables read using gtfs2gps::reag_gtfs().}
 
-\item{shape_ids}{A vector of shape_ids belonging to the shapes of the gtfs_data data.
-Note that shape_id might be loaded as a string or a number, depending on the available values.}
+\item{shape_ids}{A vector of shape_ids belonging to the shapes of the
+gtfs_data data. Note that shape_id might be loaded by gtfs2gps::read_gtfs()
+as a string or a number, depending on the available values.}
 }
 \description{
-Filter a GTFS data read using gtfs2gps::read_gtfs(). It gets a set of
-shape ids and returns a new GTFS data by removing the other shape ids from the
-shapes. It also removes the unnecessary trips, stop_times, stops, and routes
-accordingly.
+Filter a GTFS data by its shape ids. It also removes the
+unnecessary trips, stop_times, stops, and routes accordingly.
 }
