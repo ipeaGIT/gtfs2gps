@@ -6,7 +6,7 @@ test_that("gtfs2gps", {
     poa_gps <- read_gtfs(poa) %>%
       filter_week_days() %>%
       gtfs2gps(progress = FALSE)
-    
+
     #poa_shape <- read_gtfs(poa) %>% gtfs_shapes_as_sf()
     #plot(poa_shape)
     #poa_gps_shape <- gps_as_sf(poa_gps)
@@ -14,11 +14,13 @@ test_that("gtfs2gps", {
     #write_sf(poa_shape, "poa_shape.shp")
     #write_sf(poa_gps_shape, "poa_gps_shape.shp")
     
-    expect(dim(poa_gps)[1] %in% c(303697, 303851, 309283, 309129), "length of gtfs incorrect")
+    my_dim <- dim(poa_gps)[1]
+    expect(my_dim %in% c(303851, 303697), paste("length of gtfs incorrect:", my_dim))
+
+    my_length <- length(poa_gps$dist[which(!poa_gps$dist < 15)])
+    expect(my_length %in% c(21, 77), paste("incorrect number of distances greater than 15m:", my_length))
     
-    expect(length(poa_gps$dist[which(!poa_gps$dist < 15)]) %in% c(21, 22, 77), "incorrect number of distances greater than 15m")
-    
-    expect_equal(sum(poa_gps$dist), 4066410, 0.001)
+    expect_equal(sum(poa_gps$dist), 4065814, 0.001)
     
     expect_true(all(names(poa_gps) %in% 
       c("trip_id", "route_type", "id", "shape_pt_lon", "shape_pt_lat",
@@ -42,19 +44,25 @@ test_that("gtfs2gps", {
     file.remove(files)
     
     # run with a larger dataset
-    sp <- system.file("extdata/saopaulo.zip", package="gtfs2gps")
-
-    expect_error(gtfs2gps(sp, continue = TRUE), "Cannot use argument 'continue' without passing a 'filepath'.", fixed = TRUE)
-
-    sp_gps <- gtfs2gps(sp, cores = 2, progress = FALSE)
-
-    expect_true(all(names(sp_gps) %in% 
-      c("trip_id", "route_type", "id", "shape_pt_lon", "shape_pt_lat",
-        "departure_time", "stop_id", "stop_sequence", "dist", "shape_id", "cumdist", "speed", "cumtime")))
-
-    expect(dim(sp_gps)[1] %in% c(20418074, 20418493), paste("Wrong dim:", dim(sp_gps)[1]))
-    
-    expect_true(all(sp_gps$dist > 0))
-    expect_true(all(sp_gps$speed > 0))
-    expect_true(all(sp_gps$cumtime > 0))
+    test_sp <- function(){
+      sp <- system.file("extdata/saopaulo.zip", package="gtfs2gps")
+  
+      expect_error(gtfs2gps(sp, continue = TRUE), "Cannot use argument 'continue' without passing a 'filepath'.", fixed = TRUE)
+  
+      sp_gps <- read_gtfs(sp) %>%
+        filter_week_days() %>%
+        filter_single_trip() %>%
+        gtfs2gps(cores = 2, progress = FALSE)
+  
+      expect_true(all(names(sp_gps) %in% 
+        c("trip_id", "route_type", "id", "shape_pt_lon", "shape_pt_lat",
+          "departure_time", "stop_id", "stop_sequence", "dist", "shape_id", "cumdist", "speed", "cumtime")))
+  
+      my_dim <- dim(sp_gps)[1]
+      expect(my_dim %in% c(20418074, 20418493, 19997007), paste("Wrong dim:", my_dim))
+      
+      expect_true(all(sp_gps$dist > 0))
+      expect_true(all(sp_gps$speed > 0))
+      expect_true(all(sp_gps$cumtime > 0))
+    }
 })

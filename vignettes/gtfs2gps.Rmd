@@ -1,7 +1,7 @@
 ---
 title: 'gtfs2gps: Converting GTFS data to GPS format'
 author: "Rafael H. M. Pereira, Pedro R. Andrade, Joao Bazzo"
-date: "`r format('7 November 2019')`"
+date: "`r format('25 November 2019')`"
 urlcolor: blue
 output:
   pdf_document:
@@ -49,9 +49,10 @@ As GTFS data are usually very big, any exploratory analysis has to firstly subse
 \item[filter\_by\_shape\_id():] Filter shapes using given shape ids.
 \item[filter\_valid\_stop\_times():] Return only stop times that have geospatial locations.
 \item[filter\_week\_days():] Remove weekend trips.
+\item[filter\_single\_trip():] Return only one trip per shape\_id.
 \end{description}
 
-These functions subset all the relevant GTFS files in order to remove all the unnecessary rows, keeping the data consistent. The returning values of the three functions is a `data.table`. For example, in the code below we filter only shape ids between 53000 and 53020.
+These functions subset all the relevant GTFS files in order to remove all the unnecessary rows, keeping the data consistent. The returning values of the four functions is a list of `data.table` objects, in the same way of the input data. For example, in the code below we filter only shape ids between 53000 and 53020.
 
 ```{r}
 library(magrittr)
