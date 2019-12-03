@@ -2,21 +2,18 @@
 title: 'gtfs2gps: Converting GTFS data to GPS format'
 author: "Rafael H. M. Pereira, Pedro R. Andrade, Joao Bazzo"
 date: "`r format('25 November 2019')`"
+urlcolor: blue
 output:
   pdf_document:
     fig_caption: yes
     latex_engine: pdflatex
-  word_document: default
   html_document:
     df_print: paged
-abstract: Package `gtfs2gps` has a set of functions to convert GTFS data to GPS format
-  using `data.table`. It also has some functions to subset GTFS data in time and space
-  and to convert both representations to simple feature format.
-urlcolor: blue
+abstract: Package `gtfs2gps` has a set of functions to convert GTFS data to GPS format using `data.table`. It also has some functions to subset GTFS data in time and space and to convert both representations to simple feature format.
 vignette: |
-  %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{colrow: Handling SimU, CR, and LU datas}
+  %\VignetteEncoding{UTF-8}
 ---
 
 # Introduction 
@@ -70,8 +67,8 @@ object.size(sp_small) %>% format(units = "Kb")
 We can then convert both data to simple feature format and plot them.
 
 ```{r}
-sp_sf <- gtfs2gps::gtfs_shapes_as_sf(sp)
-sp_small_sf <- gtfs2gps::gtfs_shapes_as_sf(sp_small)
+sp_sf <- gtfs_shapes_as_sf(sp)
+sp_small_sf <- gtfs_shapes_as_sf(sp_small)
 
 plot(sf::st_geometry(sp_sf))
 plot(sf::st_geometry(sp_small_sf), col = "blue", add = TRUE)
@@ -95,17 +92,6 @@ trip in the GTFS file. See the example as follows.
   sp_gps <- gtfs2gps("sp_small.zip", progress = FALSE)
   sp_gps
 ```
-
-The public transportation stop_id's is usually distributed along the trip, with different values of speed between each other. Therefore, for a given trip, the function `gtfs2gps` considers different ranges of mean speed --- given by the ratio between cumulative distance $S$ and departure time $t$ for a consecutive pair of valid stop_ids ($i$), 
-$$
-Speed_i = \frac{S_{i+1}-S_i}{t_{i+1}-t_i}.
-$$
-Since the beginning of each trip usually starts before the first stop_id, the mean speed cannot be calculated as shown in the previous equation because information on $i$ period does not exist. In this case, the function consider the mean speed for the whole trip. It also happens after the last valid stop_id ($N$) of the trips, where info on $i+1$ also does not exist. 
-
-$$
-Speed_N = Speed_0 = \overline{Speed} = \frac{S_N-S_1}{t_N-t_1}
-$$
-![alt text](https://raw.githubusercontent.com/Joaobazzo/gtfs2gps/master/vignettes/speed.PNG "Logo Title Text 1")
 
 Finally, we can plot the points as shown below.
 As the points are created using a distance of $15m$, it is necessary to zoom in to visually separate them. The following figure shows the points in a bounding box from the first 60 points.
