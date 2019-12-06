@@ -1,5 +1,3 @@
-context("gps_as_sf")
-
 test_that("gps_as_sf", {
   poa <- system.file("extdata/poa.zip", package="gtfs2gps")
   

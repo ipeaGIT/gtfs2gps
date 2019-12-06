@@ -1,5 +1,3 @@
-context("gtfs2gps")
-
 test_that("gtfs2gps", {
     poa <- system.file("extdata/poa.zip", package="gtfs2gps")
 

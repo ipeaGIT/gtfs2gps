@@ -1,5 +1,3 @@
-context("Read")
-
 test_that("read_gtfs", {
     expect_error(read_gtfs("xyz123.zip"), "File 'xyz123.zip' does not exist")
   

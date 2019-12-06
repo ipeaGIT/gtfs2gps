@@ -1,5 +1,3 @@
-context("Filter")
-
 test_that("filter_by_shape_id", {
     poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
 
