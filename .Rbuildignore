@@ -1,6 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-demo2
 prep_data
 tests_joao
 tests_rafa
