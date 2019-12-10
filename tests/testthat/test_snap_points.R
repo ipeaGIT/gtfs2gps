@@ -1,5 +1,3 @@
-context("Snap")
-
 test_that("snap_points", {
   gtfs <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps")) %>%
     filter_by_shape_id("T2-1")

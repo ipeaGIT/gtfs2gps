@@ -1,5 +1,3 @@
-context("Write")
-
 test_that("write_gtfs", {
     poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
 

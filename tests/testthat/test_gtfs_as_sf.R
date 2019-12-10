@@ -1,5 +1,3 @@
-context("gtfs_as_sf")
-
 test_that("gtfs_shape_as_sf", {
     poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
 
