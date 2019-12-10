@@ -3,7 +3,7 @@ test_that("gtfs2gps", {
 
     poa_gps <- read_gtfs(poa) %>%
       filter_week_days() %>%
-      gtfs2gps(progress = FALSE)
+      gtfs2gps()
 
     #poa_shape <- read_gtfs(poa) %>% gtfs_shapes_as_sf()
     #plot(poa_shape)
@@ -29,8 +29,16 @@ test_that("gtfs2gps", {
     expect_true(all(poa_gps$dist > 0))
     expect_true(all(poa_gps$speed > 0))
     expect_true(all(poa_gps$cumtime > 0))
+
     # save into file
-    poa_gps <- gtfs2gps(poa, progress = FALSE, filepath = ".")
+    poa_simple <- read_gtfs(poa) %>%
+      filter_by_shape_id(c("T2-1", "A141-1"))
+
+    poa_gps <- gtfs2gps(poa_simple, progress = FALSE, filepath = ".")
+    expect_null(poa_gps)
+    
+    poa_gps <- gtfs2gps(poa, progress = FALSE, filepath = ".", continue = TRUE)
+    
     expect_null(poa_gps)
     
     files <- list.files(".", pattern = "\\.txt$")
@@ -49,7 +57,7 @@ test_that("gtfs2gps", {
       filter_by_shape_id(52000:52200) %>%
       filter_week_days() %>%
       filter_single_trip() %>%
-      gtfs2gps(cores = 2, progress = FALSE)
+      gtfs2gps(cores = 2, progress = TRUE)
 
     expect_true(all(names(sp_gps) %in% 
       c("trip_id", "route_type", "id", "shape_pt_lon", "shape_pt_lat",

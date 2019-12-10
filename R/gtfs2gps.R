@@ -80,7 +80,7 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores 
                                      all_tripids[which.max(nstop)])
 
     if(is.null(snapped) | length(snapped) == 0){
-      return(NULL)
+      return(NULL) # nocov
     }
       
     # update stops_seq with snap stops to route shape
