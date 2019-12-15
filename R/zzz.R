@@ -4,6 +4,10 @@ utils::globalVariables(c(".", "%>%", ":="))
   # Use GForce Optimisations in data.table operations
   # details > https://jangorecki.gitlab.io/data.cube/library/data.table/html/datatable-optimize.html
   options(datatable.optimize = Inf) # nocov
+  
+  # set number of threads used in data.table to 100% 
+  data.table::setDTthreads(percent = 100) # nocov
+  
 }
 
 #' @importFrom magrittr %>%
