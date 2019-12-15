@@ -13,9 +13,10 @@ write_gtfs(gtfs, file)
 }
 \description{
 Write GTFS stored in memory as a list of data.tables into a zipped GTFS feed.
-This function overwrites the file zip file if it exists.
+This function overwrites the zip file if it exists.
 }
 \examples{
+\donttest{
 library(gtfs2gps)
 
 # read a gtfs.zip to memory
@@ -23,5 +24,5 @@ poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
 
 # write GTFS data into a zip file
 write_gtfs(poa, "mypoa.zip")
-
+}
 }

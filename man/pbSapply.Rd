@@ -9,7 +9,7 @@ pbSapply(slaves, progress, X, FUN, ...)
 \arguments{
 \item{slaves}{Number of slaves.}
 
-\item{progress}{Show progress bar?}
+\item{progress}{Show progress bar}
 
 \item{X}{A vector with the objects to be used as single arguments to FUN.}
 

@@ -2,14 +2,14 @@
 % Please edit documentation in R/gps_as_sf.R
 \name{gps_as_sf}
 \alias{gps_as_sf}
-\title{Convert GPS data to a Simple Feature}
+\title{Convert GPS-like data.table to a Simple Feature object}
 \usage{
 gps_as_sf(gps, crs = 4326)
 }
 \arguments{
-\item{gps}{A data.table with GPS data.}
+\item{gps}{A data.table with timestamp data.}
 
-\item{crs}{A Coordinate Reference System. The default value is 4326.}
+\item{crs}{A Coordinate Reference System. The default value is 4326 (latlong WGS84)}
 }
 \description{
 Convert a GPS data stored in a data.table into a Simple Feature.

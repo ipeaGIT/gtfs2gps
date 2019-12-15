@@ -2,10 +2,16 @@
 % Please edit documentation in R/gtfs2gps.R
 \name{gtfs2gps}
 \alias{gtfs2gps}
-\title{Convert GTFS to GPS given a spatial resolution}
+\title{Convert GTFS to GPS-like data given a spatial resolution}
 \usage{
-gtfs2gps(gtfs_data, filepath = NULL, spatial_resolution = 15,
-  cores = 1, progress = TRUE, continue = FALSE)
+gtfs2gps(
+  gtfs_data,
+  filepath = NULL,
+  spatial_resolution = 15,
+  cores = 1,
+  progress = TRUE,
+  continue = FALSE
+)
 }
 \arguments{
 \item{gtfs_data}{A path to a GTFS file to be converted to GPS, or a GTFS data
@@ -17,13 +23,13 @@ with the name equals to its id. In this case, no output is returned.}
 
 \item{spatial_resolution}{The spatial resolution in meters. Default is 15m.}
 
-\item{cores}{Number of cores to be used. Default is 1 (no parallel execution).}
+\item{cores}{Number of cores to be used. Defaults to 1.}
 
-\item{progress}{Show a progress bar? Default is TRUE.}
+\item{progress}{Show a progress bar. Default is TRUE.}
 
 \item{continue}{Argument that can be used only with filepath. When TRUE, it
 skips processing the shape identifiers that were already saved into files.
-It is useful to continue processing a FTGS file that was stopped by some
+It is useful to continue processing a GTFS file that was stopped for some
 reason. Default value is FALSE.}
 }
 \description{
@@ -31,4 +37,11 @@ Convert GTFS data to GPS format by sampling points using a
 spatial resolution. This function creates additional points in order to
 guarantee that two points in a same trip will have at most a given
 distance, indicated as a spatial resolution.
+}
+\examples{
+\donttest{
+library(gtfs2gps)
+
+poa <- gtfs2gps(system.file("extdata/poa.zip", package="gtfs2gps"))
+}
 }

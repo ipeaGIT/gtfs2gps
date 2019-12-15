@@ -2,7 +2,7 @@
 % Please edit documentation in R/gtfs_as_sf.R
 \name{gtfs_shapes_as_sf}
 \alias{gtfs_shapes_as_sf}
-\title{Convert GTFS shapes to simple feature}
+\title{Convert GTFS shapes to simple feature object}
 \usage{
 gtfs_shapes_as_sf(gtfs, crs = 4326)
 }
@@ -17,7 +17,9 @@ Convert a GTFS shapes data loaded using gtfs2gps::read_gtf()
 into a line simple feature (sf).
 }
 \examples{
+\donttest{
 poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
 poa_sf <- gtfs_shapes_as_sf(poa)
 plot(sf::st_geometry(poa_sf), lwd = 2)
+}
 }
