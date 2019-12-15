@@ -1,31 +1,43 @@
-#' @title Convert GTFS to GPS given a spatial resolution
+#' @title Convert GTFS to GPS-like data given a spatial resolution
+#' 
 #' @description Convert GTFS data to GPS format by sampling points using a
 #' spatial resolution. This function creates additional points in order to
 #' guarantee that two points in a same trip will have at most a given
 #' distance, indicated as a spatial resolution.
+#' 
 #' @param gtfs_data A path to a GTFS file to be converted to GPS, or a GTFS data
 #' represented as a list of data.tables.
 #' @param spatial_resolution The spatial resolution in meters. Default is 15m.
 #' @param filepath Output file path. As default, the output is returned in R.
 #' When this argument is set, each route is saved into a file within filepath,
 #' with the name equals to its id. In this case, no output is returned.
-#' @param cores Number of cores to be used. Default is 1 (no parallel execution).
-#' @param progress Show a progress bar? Default is TRUE.
+#' @param cores Number of cores to be used. Defaults to 1.
+#' @param progress Show a progress bar. Default is TRUE.
 #' @param continue Argument that can be used only with filepath. When TRUE, it
 #' skips processing the shape identifiers that were already saved into files.
-#' It is useful to continue processing a FTGS file that was stopped by some
+#' It is useful to continue processing a GTFS file that was stopped for some
 #' reason. Default value is FALSE.
 #' @export
+#' @examples \donttest{
+#' library(gtfs2gps)
+#'
+#' poa <- gtfs2gps(system.file("extdata/poa.zip", package="gtfs2gps"))
+#' }
+
 gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores = 1, progress = TRUE, continue = FALSE){
   ###### PART 1. Load and prepare data inputs ------------------------------------
 
   if(continue & is.null(filepath))
     stop("Cannot use argument 'continue' without passing a 'filepath'.")
-  
+
+  # Unzipping and reading GTFS.zip file
+  message("Unzipping and reading GTFS.zip file")
   if(class(gtfs_data) == "character")
     gtfs_data <- read_gtfs(gtfszip = gtfs_data)
 
+  
   # Convert all shapes into sf objects
+  message("converting shapes and stops to sf objects")
   shapes_sf <- gtfs_shapes_as_sf(gtfs_data)
 
   ###### PART 2. Analysing data type ----------------------------------------------
