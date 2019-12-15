@@ -136,6 +136,9 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores 
   # all shape ids
   all_shapeids <- unique(shapes_sf$shape_id)
 
+  # processing the data
+  message("Processing the data")
+  
   if(cores == 1){
     if(progress) pbapply::pboptions(type = "txt")
 
