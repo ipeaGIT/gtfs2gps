@@ -1,7 +1,7 @@
 ---
-title: 'gtfs2gps: Converting GTFS data to GPS format'
+title: 'gtfs2gps: Converting GTFS data to GPS-like format'
 author: "Rafael H. M. Pereira, Pedro R. Andrade, Joao Bazzo"
-date: "`r format('25 November 2019')`"
+date: "`r format('15 Decembrt 2019')`"
 output:
   pdf_document:
     fig_caption: yes
@@ -9,9 +9,7 @@ output:
   word_document: default
   html_document:
     df_print: paged
-abstract: Package `gtfs2gps` has a set of functions to convert GTFS data to GPS format
-  using `data.table`. It also has some functions to subset GTFS data in time and space
-  and to convert both representations to simple feature format.
+abstract: Package `gtfs2gps` has a set of functions to convert public transport GTFS data to GPS-like format using `data.table`. It also has some functions to subset GTFS data in time and space and to convert both representations to simple feature format.
 urlcolor: blue
 vignette: |
   %\VignetteEncoding{UTF-8}
@@ -21,7 +19,7 @@ vignette: |
 
 # Introduction 
 
-Package `gtfs2gps` allows users to handle and converting GTFS data using `data.table` format. Before using the package, just install it from GitHub.
+Package `gtfs2gps` allows users to convert public transport GTFS data into a single `data.table` format with GPS-like records. Before using the package, just install it from GitHub.
 
 ```{r, eval = FALSE}
 devtools::install_github("ipeaGIT/gtfs2gps")
@@ -39,14 +37,23 @@ names(sp)
 sp$trips
 ```
 
-Note that not all GTFS files are loaded into R. This function loads only the necessary data to spatially and temporally handle trips and stops, which are:
-agency.txt, calendar.txt, routes.txt, shapes.txt, 
-stop_times.txt, stops.txt, trips.txt, and frequencies.txt (this last one is optional).
-If a given GTFS zipped file does not contain all the required files then `read_gtfs()` will stop with an error.
+Note that not all GTFS files are loaded into R. This function only loads the necessary data to spatially and temporally handle trips and stops, which are:
+- agency.txt
+- calendar.txt
+- routes.txt
+- shapes.txt
+- stop_times.txt
+- stops.txt
+- trips.txt
+- frequencies.txt (this last one is optional).
 
-# Simplifying Data
+If a given GTFS zipped file does not contain all of these required files then `read_gtfs()` will stop with an error.
 
-As GTFS data are usually very big, any exploratory analysis has to firstly subset it in order to speedup the process. There are some functions to filter a GTFS data:
+
+# Subsetting GTFS Data
+
+GTFS data sets can be fairly large for complex public transport networks and, in some cases, users might want to focus on specific transport services at week days/weekends, or on specific trips or routes. The package brings some functions to filter GTFS.zip and speed up the data processing.
+
 
 \begin{description}
 \item[filter\_by\_shape\_id():] Filter shapes using given shape ids.
@@ -60,17 +67,18 @@ These functions subset all the relevant GTFS files in order to remove all the un
 ```{r}
 library(magrittr)
 object.size(sp) %>% format(units = "Kb")
-sp_small <- gtfs2gps::filter_by_shape_id(sp, 53000:53020)
+sp_small <- gtfs2gps::filter_by_shape_id(sp, c(51338, 51956, 51657))
 object.size(sp_small) %>% format(units = "Kb")
 ```
 
-We can then convert both data to simple feature format and plot them.
+We can then easily convert the data to simple feature format and plot them.
 
 ```{r}
-sp_sf <- gtfs2gps::gtfs_shapes_as_sf(sp)
 sp_small_sf <- gtfs2gps::gtfs_shapes_as_sf(sp_small)
-plot(sf::st_geometry(sp_sf))
-plot(sf::st_geometry(sp_small_sf), col = "blue", add = TRUE)
+stops_small_sf <- gtfs2gps::gtfs_stops_as_sf(sp_small)
+
+plot(sf::st_geometry(sp_small_sf))
+plot(sf::st_geometry(stops_sf), pch = 20, col = "red", add = TRUE)
 box()
 ```
 
@@ -80,19 +88,22 @@ After simplifying the data, it is also possible to save it as a new GTFS file us
 write_gtfs(sp_small, "sp_small.zip")
 ```
 
-# Converting to GPS format
+# Converting to GPS-like format
 
-To convert GTFS to GPS format, use `gtfs2gps()`. This
+To convert GTFS to GPS-like format, use the `gtfs2gps()`. This
 function takes a GTFS zipped file as argument and returns a
 `data.table` where each row works as a GPS sample for a given
-trip in the GTFS file. See the example as follows.
+trip in the GTFS file. In summary, this function interpolates
+the space-time position of each vehicle for each trip given 
+its route path and average speed between stops. See the example
+as follows.
 
 ```{r}
-  sp_gps <- gtfs2gps("sp_small.zip", progress = FALSE)
+  sp_gps <- gtfs2gps("sp_small.zip", progress = FALSE, cores = 1)
   sp_gps
 ```
 
-The public transportation stop_id's is usually distributed along the trip, with different values of speed between each other. Therefore, for a given trip, the function `gtfs2gps` considers different ranges of mean speed --- given by the ratio between cumulative distance $S$ and departure time $t$ for a consecutive pair of valid stop_ids ($i$), 
+For a given trip, the function `gtfs2gps` calculates  different ranges of average speed between stops --- given by the ratio between cumulative distance $S$ and departure time $t$ for a consecutive pair of valid stop_ids ($i$), 
 $$
 Speed_i = \frac{S_{i+1}-S_i}{t_{i+1}-t_i}.
 $$
@@ -117,7 +128,7 @@ As the points are created using a distance of $15m$, it is necessary to zoom in 
   box()
 ```
 
-Function `gtfs2gps()` also works with GTFS data that do not have frequency.txt. It automatically recognises the format and then it uses only stop_times.txt to create the GPS data.
+Function `gtfs2gps()` also works with GTFS data that do not have frequency.txt. It automatically recognises the format and then it uses only stop_times.txt to create the GPS-like data.
 
 ```{r}
 poa <- system.file("extdata/poa.zip", package="gtfs2gps")
