@@ -1,16 +1,16 @@
-
 #' @title Read GTFS data into a list of data.tables
 #' @description Read files of a zipped GTFS feed and load them to memory as a list of data.tables.
 #' It will load the following files: "agency.txt", "calendar.txt", "routes.txt", "shapes.txt", 
 #' "stop_times.txt", "stops.txt", "trips.txt", and "frequencies.txt", with
-#' this last one being optional. If some of the mandatory files do not exit,
-#' this function will stop with an error.
+#' this last one being optional. If one of the mandatory files does not exit,
+#' this function will stop with an error message.
 #' @param gtfszip A zipped GTFS data.
 #' @export
-#' @examples
+#' @examples \donttest{
 #' library(gtfs2gps)
 #'
 #' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+#' }
 read_gtfs <- function(gtfszip){
   if(!file.exists(gtfszip))
     stop(paste0("File '", gtfszip, "' does not exist"))

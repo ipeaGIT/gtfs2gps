@@ -1,5 +1,5 @@
-
 #' @title Filter GTFS data by shape ids
+#' 
 #' @description Filter a GTFS data by its shape ids. It also removes the
 #' unnecessary trips, stop_times, stops, and routes accordingly.
 #' @param gtfs_data A list of data.tables read using gtfs2gps::reag_gtfs().
@@ -30,6 +30,7 @@ filter_by_shape_id <- function(gtfs_data, shape_ids){
 }
 
 #' @title Filter GTFS data using valid stop times
+#' 
 #' @description Filter a GTFS data read using gtfs2gps::read_gtfs(). It removes stop_times
 #' with NA values in arrival_time, departure_time, and arrival_time_hms. It also filters
 #' stops and routes accordingly.
@@ -50,6 +51,7 @@ filter_valid_stop_times <- function(gtfs_data){
 }
 
 #' @title Filter GTFS trips operating on week days
+#' 
 #' @description Filter a GTFS data read using gtfs2gps::read_gtfs(). It removes the
 #' trips operating only saturday or sunday.
 #' @param gtfs_data A list of data.tables read using gtfs2gps::reag_gtfs().
@@ -64,6 +66,7 @@ filter_week_days <- function(gtfs_data){
 }
 
 #' @title Filter GTFS trips in order to have one trip per shape_id
+#' 
 #' @description Filter a GTFS data by keeping only one trip per shape_id.
 #' It also removes the unnecessary routes accordingly.
 #' @param gtfs_data A list of data.tables read using gtfs2gps::reag_gtfs().
