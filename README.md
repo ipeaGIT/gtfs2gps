@@ -8,7 +8,7 @@ The core function of the package takes a `GTFS.zip` file and interpolates the sp
 
 ### Installation
 
-Please install gtfs2gps package from GitHub, making sure you have the
+Please install **gtfs2gps** package from GitHub, making sure you have the
 latest version of the other packages it requires:
 
 ``` r
