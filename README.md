@@ -18,7 +18,7 @@ library(gtfs2gps)
 
 Please see our vignette:
 
-* [gtfs2gps: Converting GTFS data to GPS format](https://github.com/ipeaGIT/gtfs2gps/blob/master/vignettes/gtfs2gps.pdf)
+* [gtfs2gps: Converting GTFS data to GPS format](https://github.com/ipeaGIT/gtfs2gps/blob/master/vignettes/intro_to_gtfs2gps.md)
 
 ### Credits
 
