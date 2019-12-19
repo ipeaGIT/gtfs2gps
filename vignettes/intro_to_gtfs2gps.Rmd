@@ -10,13 +10,6 @@ vignette: |
   %\VignetteIndexEntry{colrow: Handling SimU, CR, and LU datas}
 ---
 15 December 2019
-```{r, echo = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = ""
-)
-```
 
 # Introduction 
 
@@ -33,7 +26,7 @@ This function gets a zipped GTFS file and returns a list of `data.table` objects
 
 ```{r}
 library("gtfs2gps")
-sao <- read_gtfs(system.file("extdata/saopaulo.zip", package="gtfs2gps"))
+sao <- read_gtfs(system.file("extdata/saopaulo.zip", package ="gtfs2gps"))
 names(sao)
 sao$trips
 ```
@@ -76,6 +69,7 @@ We can then easily convert the data to simple feature format and plot them.
 ```{r}
 sao_small_shapes_sf <- gtfs2gps::gtfs_shapes_as_sf(sao_small)
 sao_small_stops_sf <- gtfs2gps::gtfs_stops_as_sf(sao_small)
+jpeg
 plot(sf::st_geometry(sao_small_shapes_sf))
 plot(sf::st_geometry(sao_small_stops_sf), pch = 20, col = "red", add = TRUE)
 box()
@@ -106,12 +100,12 @@ To convert GTFS to GPS-like format, use `gtfs2gps()`. This is the core function 
   plot(sf::st_geometry(sao_small_shapes_sf), col = "blue", add = TRUE)
   box()
 ```
-![](https://github.com/ipeaGIT/gtfs2gps/tree/master/man/figures/sao_gps60_sf.jpg)
+![](https://github.com/ipeaGIT/gtfs2gps/blob/master/man/figures/sao_gps60_sf.jpg)
 
 The function `gtfs2gps()` automatically recognises whether the GTFS data brings detailed `stop_times.txt` information or whether it is a `frequency.txt` GTFS file. A sample data of a GTFS with detailed  `stop_times.txt` cab be found below:
 
-```{r poa}
-poa <- system.file("extdata/poa.zip", package="gtfs2gps")
+```{r}
+poa <- system.file("extdata/poa.zip", package ="gtfs2gps")
 poa_gps <- gtfs2gps(poa, progress = FALSE)
 poa_gps_sf <- gps_as_sf(poa_gps)
 poa_sf <- read_gtfs(poa) %>% gtfs_shapes_as_sf()
@@ -119,7 +113,7 @@ plot(sf::st_geometry(poa_gps_sf[1:200,]))
 plot(sf::st_geometry(poa_sf), col = "blue", add = TRUE)
 box()
 ```
-![](https://github.com/Joaobazzo/gps2emission/blob/master/poa.jpg)
+![](https://github.com/ipeaGIT/gtfs2gps/blob/master/man/figures/poa.jpg)
 
 # Methodological note
 
@@ -129,7 +123,7 @@ For a given trip, the function `gtfs2gps` calculates the average speed between e
 
 Since the beginning of each trip usually starts before the first stop_id, the mean speed cannot be calculated as shown in the previous equation because information on $i$ period does not exist. In this case, the function consider the mean speed for the whole trip. It also happens after the last valid stop_id ($N$) of the trips, where info on $i+1$ also does not exist. 
 
-![alt text](https://github.com/ipeaGIT/gtfs2gps/tree/master/man/figures/speed.PNG "Logo Title Text 1")
+![](https://github.com/ipeaGIT/gtfs2gps/tree/master/man/figures/speed.png)
 
 
 # Final remarks
