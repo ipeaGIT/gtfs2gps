@@ -122,15 +122,6 @@ example below.
 
 ``` r
   sao_gps <- gtfs2gps("sao_small.zip", progress = FALSE, cores = 1, spatial_resolution = 15)
-```
-
-    ## Unzipping and reading GTFS.zip file
-
-    ## converting shapes and stops to sf objects
-
-    ## Processing the data
-
-``` r
   head(sao_gps)
 ```
 
@@ -173,15 +164,6 @@ brings detailed `stop_times.txt` information or whether it is a
 ``` r
 poa <- system.file("extdata/poa.zip", package ="gtfs2gps")
 poa_gps <- gtfs2gps(poa, progress = FALSE)
-```
-
-    ## Unzipping and reading GTFS.zip file
-
-    ## converting shapes and stops to sf objects
-
-    ## Processing the data
-
-``` r
 poa_gps_sf <- gps_as_sf(poa_gps)
 poa_sf <- read_gtfs(poa) %>% gtfs_shapes_as_sf()
 plot(sf::st_geometry(poa_gps_sf[1:200,]))
