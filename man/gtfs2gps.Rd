@@ -8,7 +8,7 @@ gtfs2gps(
   gtfs_data,
   filepath = NULL,
   spatial_resolution = 15,
-  cores = 1,
+  cores = NULL,
   progress = TRUE,
   continue = FALSE
 )
