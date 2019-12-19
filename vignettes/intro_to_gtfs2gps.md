@@ -97,42 +97,6 @@ sao_small_shapes_sf <- gtfs2gps::gtfs_shapes_as_sf(sao_small)
 
 ``` r
 sao_small_stops_sf <- gtfs2gps::gtfs_stops_as_sf(sao_small)
-jpeg
-```
-
-    ## function (filename = "Rplot%03d.jpg", width = 480, height = 480, 
-    ##     units = "px", pointsize = 12, quality = 75, bg = "white", 
-    ##     res = NA, family = "sans", restoreConsole = TRUE, type = c("windows", 
-    ##         "cairo"), antialias = c("default", "none", "cleartype", 
-    ##         "gray", "subpixel")) 
-    ## {
-    ##     if (!checkIntFormat(filename)) 
-    ##         stop("invalid 'filename'")
-    ##     g <- .geometry(width, height, units, res)
-    ##     if (match.arg(type) == "cairo") {
-    ##         antialias <- match(match.arg(antialias), aa.cairo)
-    ##         invisible(.External(C_devCairo, filename, 3L, g$width, 
-    ##             g$height, pointsize, bg, res, antialias, quality, 
-    ##             if (nzchar(family)) family else "sans", 300))
-    ##     }
-    ##     else {
-    ##         new <- if (!missing(antialias)) {
-    ##             list(bitmap.aa.win = match.arg(antialias, aa.win))
-    ##         }
-    ##         else list()
-    ##         antialias <- check.options(new = new, envir = .WindowsEnv, 
-    ##             name.opt = ".Windows.Options", reset = FALSE, assign.opt = FALSE)$bitmap.aa.win
-    ##         invisible(.External(C_devga, paste0("jpeg:", quality, 
-    ##             ":", filename), g$width, g$height, pointsize, FALSE, 
-    ##             1L, NA_real_, NA_real_, bg, 1, as.integer(res), NA_integer_, 
-    ##             FALSE, .PSenv, NA, restoreConsole, "", FALSE, TRUE, 
-    ##             family, match(antialias, aa.win)))
-    ##     }
-    ## }
-    ## <bytecode: 0x0000000061270280>
-    ## <environment: namespace:grDevices>
-
-``` r
 plot(sf::st_geometry(sao_small_shapes_sf))
 plot(sf::st_geometry(sao_small_stops_sf), pch = 20, col = "red", add = TRUE)
 box()
