@@ -24,8 +24,8 @@
 #' poa <- gtfs2gps(system.file("extdata/poa.zip", package="gtfs2gps"))
 #' }
 
-gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores = 1, progress = TRUE, continue = FALSE){
-  ###### PART 1. Load and prepare data inputs ------------------------------------
+gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores = NULL, progress = TRUE, continue = FALSE){
+###### PART 1. Load and prepare data inputs ------------------------------------
 
   if(continue & is.null(filepath))
     stop("Cannot use argument 'continue' without passing a 'filepath'.")
@@ -138,8 +138,13 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores 
 
   # processing the data
   message("Processing the data")
+
+  # number of cores to use
+  if(is.null(cores)){ cores <- data.table::getDTthreads() - 1 }
   
   if(cores == 1){
+    
+    message(paste('Using', cores, 'CPU core'))
     if(progress) pbapply::pboptions(type = "txt")
 
     output <- pbapply::pblapply(X = all_shapeids, FUN = corefun) %>% data.table::rbindlist()
@@ -147,6 +152,8 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores 
     if(progress) pbapply::pboptions(type = "none")
   }
   else
+  
+    message(paste('Using', cores, 'CPU cores'))
     output <- pbSapply(cores, progress, X = all_shapeids, FUN = corefun)
 
   if(is.null(filepath))
