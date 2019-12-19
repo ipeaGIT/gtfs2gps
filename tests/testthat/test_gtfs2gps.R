@@ -30,6 +30,13 @@ test_that("gtfs2gps", {
     expect_true(all(poa_gps$speed > 0))
     expect_true(all(poa_gps$cumtime > 0))
 
+    poa_gps_300 <- read_gtfs(poa) %>%
+      filter_week_days() %>%
+      gtfs2gps(spatial_resolution = 300, progress = FALSE)
+    
+    expect_equal(dim(poa_gps_300)[1], 66264)
+    expect(dim(poa_gps_300)[1] < dim(poa_gps)[1], "more spatial_resolution is not decreasing the number of points")
+    
     # save into file
     poa_simple <- read_gtfs(poa) %>%
       filter_by_shape_id(c("T2-1", "A141-1"))
