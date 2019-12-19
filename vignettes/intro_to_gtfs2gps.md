@@ -1,22 +1,3 @@
----
-title: 'gtfs2gps: Converting GTFS data to GPS-like format'
-author: "Rafael H. M. Pereira, Pedro R. Andrade, Joao Bazzo"
-date: "`r format('15 December 2019')`"
-output:
-  html_document:
-    df_print: paged
-  word_document: default
-  pdf_document:
-    fig_caption: yes
-    latex_engine: pdflatex
-abstract: Package `gtfs2gps` has a set of functions to convert public transport GTFS data to GPS-like format using `data.table`. It also has some functions to subset GTFS data in time and space and to convert both representations to simple feature format.
-urlcolor: blue
-vignette: |
-  %\VignetteEncoding{UTF-8}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteIndexEntry{colrow: Handling SimU, CR, and LU datas}
----
-
 # Introduction 
 
 Package `gtfs2gps` allows users to convert public transport GTFS data into a single `data.table` format with GPS-like records, which can then be used in various applications such as running transport simulations or scenario analyses. Before using the package, just install it from GitHub.
@@ -129,14 +110,14 @@ box()
 
 For a given trip, the function `gtfs2gps` calculates the average speed between each pair of stops --- given by the ratio between cumulative network distance $S$ and departure time $t$ for a consecutive pair of valid stop_ids ($i$), 
 $$
-Speed_i = \frac{S_{i+1}-S_i}{t_{i+1}-t_i}.
+\overline{Speed_i} = \frac{S_{i+1}-S_i}{t_{i+1}-t_i}.
 $$
-Since the beginning of each trip usually starts before the first stop_id, the mean speed cannot be calculated as shown in the previous equation because information on $i$ period does not exist. In this case, the function consider the mean speed for the whole trip. It also happens after the last valid stop_id ($N$) of the trips, where info on $i+1$ also does not exist. 
+Since the beginning of each trip usually starts before the first stop_id, the mean speed cannot be calculated as shown in the previous equation, because information on $i$ period does not exist. In this case, the function consider the mean speed for the whole trip. It also happens after the last valid stop_id ($N$) of the trips, where info on $i+1$ also does not exist. 
 
 $$
 Speed_N = Speed_0 = \overline{Speed} = \frac{S_N-S_1}{t_N-t_1}
 $$
-![alt text](https://raw.githubusercontent.com/Joaobazzo/gtfs2gps/master/vignettes/speed.PNG "Logo Title Text 1")
+![alt text](https://github.com/ipeaGIT/gtfs2gps/blob/master/vignettes/speed.png)
 
 
 # Final remarks
