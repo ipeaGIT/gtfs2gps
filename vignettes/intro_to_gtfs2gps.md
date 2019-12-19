@@ -91,11 +91,6 @@ them.
 
 ``` r
 sao_small_shapes_sf <- gtfs2gps::gtfs_shapes_as_sf(sao_small)
-```
-
-    ## Linking to GEOS 3.6.1, GDAL 2.2.3, PROJ 4.9.3
-
-``` r
 sao_small_stops_sf <- gtfs2gps::gtfs_stops_as_sf(sao_small)
 plot(sf::st_geometry(sao_small_shapes_sf))
 plot(sf::st_geometry(sao_small_stops_sf), pch = 20, col = "red", add = TRUE)
