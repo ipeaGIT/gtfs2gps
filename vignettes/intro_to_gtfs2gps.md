@@ -102,7 +102,7 @@ plot(sf::st_geometry(sao_small_stops_sf), pch = 20, col = "red", add = TRUE)
 box()
 ```
 
-![](untitled_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](intro_to_gtfs2gps_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 ![](https://github.com/ipeaGIT/gtfs2gps/tree/master/man/figures/sao_small_shapes_sf.jpg)
 
 After subsetting the data, it is also possible to save it as a new GTFS
@@ -165,7 +165,7 @@ we processed.
   box()
 ```
 
-![](untitled_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](intro_to_gtfs2gps_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 ![](https://github.com/ipeaGIT/gtfs2gps/blob/master/man/figures/sao_gps60_sf.jpg)
 
 The function `gtfs2gps()` automatically recognises whether the GTFS data
@@ -192,7 +192,7 @@ plot(sf::st_geometry(poa_sf), col = "blue", add = TRUE)
 box()
 ```
 
-![](untitled_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](intro_to_gtfs2gps_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 ![](https://github.com/ipeaGIT/gtfs2gps/blob/master/man/figures/poa.jpg)
 
 # Methodological note
