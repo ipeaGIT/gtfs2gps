@@ -102,8 +102,9 @@ plot(sf::st_geometry(sao_small_stops_sf), pch = 20, col = "red", add = TRUE)
 box()
 ```
 
-![](intro_to_gtfs2gps_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
-![](https://github.com/ipeaGIT/gtfs2gps/tree/master/man/figures/sao_small_shapes_sf.jpg)
+![](intro_to_gtfs2gps_files/figure-gfm/sao_small_shapes_sf-1.png)<!-- -->
+
+![](https://github.com/ipeaGIT/gtfs2gps/blob/master/man/figures/sao_small_shapes_sf.jpg)
 
 After subsetting the data, it is also possible to save it as a new GTFS
 file using `write_gtfs()`, as shown below.
@@ -165,8 +166,9 @@ we processed.
   box()
 ```
 
-![](intro_to_gtfs2gps_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
-![](https://github.com/ipeaGIT/gtfs2gps/blob/master/man/figures/sao_gps60_sf.jpg)
+![](intro_to_gtfs2gps_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+![](https://github.com/ipeaGIT/gtfs2gps/blob/master/man/figures/sao_gps60_sf.jpg)<!-- -->
 
 The function `gtfs2gps()` automatically recognises whether the GTFS data
 brings detailed `stop_times.txt` information or whether it is a
@@ -192,26 +194,26 @@ plot(sf::st_geometry(poa_sf), col = "blue", add = TRUE)
 box()
 ```
 
-![](intro_to_gtfs2gps_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](intro_to_gtfs2gps_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 ![](https://github.com/ipeaGIT/gtfs2gps/blob/master/man/figures/poa.jpg)
 
 # Methodological note
 
 For a given trip, the function `gtfs2gps` calculates the average speed
 between each pair of stops — given by the ratio between cumulative
-network distance \(S\) and departure time \(t\) for a consecutive pair
-of valid stop\_ids (\(i\)),
+network distance `S` and departure time `t` for a consecutive pair of
+valid stop\_ids (`i`),
 
 <img src="https://latex.codecogs.com/svg.latex?\Large&space;Speed_i=\frac{S_{i+1}-S_i}{t_{i+1}-t_i}" title="\Large Speed_i = \frac{S_{i+1}-S_i}{t_{i+1}-t_i}" />
 
 Since the beginning of each trip usually starts before the first
 stop\_id, the mean speed cannot be calculated as shown in the previous
-equation because information on \(i\) period does not exist. In this
-case, the function consider the mean speed for the whole trip. It also
-happens after the last valid stop\_id (\(N\)) of the trips, where info
-on \(i+1\) also does not exist.
+equation because information on `i` period does not exist. In this case,
+the function consider the mean speed for the whole trip. It also happens
+after the last valid stop\_id (`N`) of the trips, where info on `i+1`
+also does not exist.
 
-![](https://github.com/ipeaGIT/gtfs2gps/tree/master/man/figures/speed.png)
+![](https://github.com/ipeaGIT/gtfs2gps/blob/master/man/figures/speed.PNG)<!-- -->
 
 # Final remarks
 
