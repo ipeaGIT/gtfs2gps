@@ -152,9 +152,10 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores 
     if(progress) pbapply::pboptions(type = "none")
   }
   else
-  
+  {  
     message(paste('Using', cores, 'CPU cores'))
     output <- pbSapply(cores, progress, X = all_shapeids, FUN = corefun)
+  }
 
   if(is.null(filepath))
     return(output)
