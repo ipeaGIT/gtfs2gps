@@ -35,7 +35,6 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores 
   if(class(gtfs_data) == "character")
     gtfs_data <- read_gtfs(gtfszip = gtfs_data)
 
-  
   # Convert all shapes into sf objects
   message("converting shapes and stops to sf objects")
   shapes_sf <- gtfs_shapes_as_sf(gtfs_data)
@@ -141,9 +140,9 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores 
 
   # number of cores to use
   if(is.null(cores)){ cores <- data.table::getDTthreads() - 1 }
-  
+  if(cores == 0){ cores <- 1 } # nocov
+
   if(cores == 1){
-    
     message(paste('Using', cores, 'CPU core'))
     if(progress) pbapply::pboptions(type = "txt")
 
@@ -152,9 +151,10 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores 
     if(progress) pbapply::pboptions(type = "none")
   }
   else
-  
+  {  
     message(paste('Using', cores, 'CPU cores'))
     output <- pbSapply(cores, progress, X = all_shapeids, FUN = corefun)
+  }
 
   if(is.null(filepath))
     return(output)

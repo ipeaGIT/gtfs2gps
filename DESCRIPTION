@@ -6,6 +6,7 @@ Authors@R: c(person(given="Rafael H. M.", family="Pereira", email="rafa.pereira.
             person(given="Pedro R.", family="Andrade", role="aut", comment = c(ORCID = "0000-0001-8675-4046")),
             person(given="Joao", family="Bazzo", role="aut"),
             person("Ipea - Institue for Applied Economic Research", role = c("cph", "fnd")))
+Maintainer: Pedro R. Andrade <pedro.andrade@inpe.br>
 Date: 2019-11-25
 URL: https://github.com/ipeaGIT/gtfs2gps
 BugReports: https://github.com/ipeaGIT/gtfs2gps/issues 
