@@ -1,16 +1,15 @@
 Type: Package
 Package: gtfs2gps
-Title: Converting public transport data from GTFS format to GPS-like records
+Title: Converting Public Transport Data from GTFS Format to GPS-Like Records
 Version: 1.0-0
-Authors@R: c(person(given="Rafael H. M.", family="Pereira", email="rafa.pereira.br@gmail.com", role=c("aut", "cre"), comment = c(ORCID = "0000-0003-2125-7465")),
-            person(given="Pedro R.", family="Andrade", role="aut", comment = c(ORCID = "0000-0001-8675-4046")),
+Authors@R: c(person(given="Rafael H. M.", family="Pereira", email="rafa.pereira.br@gmail.com", role="aut", comment = c(ORCID = "0000-0003-2125-7465")),
+            person(given="Pedro R.", family="Andrade", email="pedro.andrade@inpe.br", role=c("aut", "cre"), comment = c(ORCID = "0000-0001-8675-4046")),
             person(given="Joao", family="Bazzo", role="aut"),
             person("Ipea - Institue for Applied Economic Research", role = c("cph", "fnd")))
-Maintainer: Pedro R. Andrade <pedro.andrade@inpe.br>
 Date: 2019-11-25
 URL: https://github.com/ipeaGIT/gtfs2gps
 BugReports: https://github.com/ipeaGIT/gtfs2gps/issues 
-Description: Convert public transport GTFS data to GPS-like records in data.table format. It also has some functions to subset GTFS data in time and space and to convert both representations to simple feature format.
+Description: Convert public transport GTFS data to GPS-like records in 'data.table' format. It also has some functions to subset GTFS data in time and space and to convert both representations to simple feature format.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: TRUE
