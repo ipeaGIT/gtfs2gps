@@ -36,7 +36,7 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores 
     gtfs_data <- read_gtfs(gtfszip = gtfs_data)}
 
   # Convert all shapes into sf objects
-  message("converting shapes and stops to sf objects")
+  message("converting shapes to sf objects")
   shapes_sf <- gtfs_shapes_as_sf(gtfs_data)
 
   ###### PART 2. Analysing data type ----------------------------------------------
