@@ -69,7 +69,7 @@ update_freq <- function(tripid, new_stoptimes, gtfs_data){
 # UPDATE NEWSTOPTIMES DATA.FRAME
 update_dt <- function(tripid, new_stoptimes, gtfs_data){
   #message(tripid)
-  #tripid <- all_tripids[1] 124193674   | certo 124193739
+  #tripid <- 126132798 all_tripids[1] 124193674   | certo 124193739
   # add trip_id 
   new_stoptimes[, trip_id := tripid]
   
@@ -86,8 +86,11 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data){
   stop_id_ok <- gtfs_data$stop_times[trip_id == tripid & is.na(departure_time) == FALSE,]$stop_sequence
   
   
+  # create empty vector to store trip_ids with missing data
+  if( match(tripid, all_tripids) == 1){   tripids_missing <- c() }
+
 # ignore trip_id if original departure_time values are missing
-if(is.null(length(stop_id_ok))==T | length(stop_id_ok)==0){ message(paste("Trip_id",tripid, "was ignored due to missing data in original gtfs.zip"))} else{
+if(is.null(length(stop_id_ok))==T | length(stop_id_ok)==0){ tripids_missing <- append(tripids_missing, tripid) } else{
   
   # building id' vector
   #
@@ -135,5 +138,9 @@ if(is.null(length(stop_id_ok))==T | length(stop_id_ok)==0){ message(paste("Trip_
   new_stoptimes <- new_stoptimes[speed > 0 & cumtime > 0]
   
   return(new_stoptimes)
+  
 }
+  # Print message IF this is the last trip_id AND IF there was a missing trip_id
+  if( (match(tripid, all_tripids) == length(all_tripids)) & (length(tripids_missing) > 0) ){message(paste("The following Trip_ids have been ignored due to missing data in original gtfs.zip:", paste(tripids_missing, collapse = ', '))) }
+
 }
