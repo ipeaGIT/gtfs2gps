@@ -31,9 +31,9 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores 
     stop("Cannot use argument 'continue' without passing a 'filepath'.")
 
   # Unzipping and reading GTFS.zip file
-  message("Unzipping and reading GTFS.zip file")
-  if(class(gtfs_data) == "character")
-    gtfs_data <- read_gtfs(gtfszip = gtfs_data)
+  if(class(gtfs_data) == "character"){
+    message("Unzipping and reading GTFS.zip file")
+    gtfs_data <- read_gtfs(gtfszip = gtfs_data)}
 
   # Convert all shapes into sf objects
   message("converting shapes and stops to sf objects")
