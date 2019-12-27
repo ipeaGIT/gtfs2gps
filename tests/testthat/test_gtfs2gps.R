@@ -71,7 +71,7 @@ test_that("gtfs2gps", {
         "departure_time", "stop_id", "stop_sequence", "dist", "shape_id", "cumdist", "speed", "cumtime")))
 
     my_dim <- dim(sp_gps)[1]
-    expect(my_dim %in% c(239344), paste("Wrong dim:", my_dim))
+    expect(my_dim %in% c(239344, 239362), paste("Wrong dim:", my_dim))
     
     expect_true(all(sp_gps$dist > 0))
     expect_true(all(sp_gps$speed > 0))

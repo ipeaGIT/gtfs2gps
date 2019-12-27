@@ -19,6 +19,11 @@ devtools::load_all('.')
 devtools::document(pkg = ".")
 
 
+# calculate Distance between successive points
+new_stoptimes[ , dist := geosphere::distGeo(matrix(c(shape_pt_lon, shape_pt_lat), ncol = 2),
+                                            matrix(c(data.table::shift(shape_pt_lon, type="lead"), data.table::shift(shape_pt_lat, type="lead")), ncol = 2))/1000]
+
+
 ##### INPUT  ------------------------
   # normal
   gtfsn <- './inst/extdata/poa.zip'
@@ -56,6 +61,7 @@ emtu <- "R:/Dropbox/bases_de_dados/GTFS/SP GTFS/GTFS EMTU_20190815.zip"
 p <-   profvis( update_newstoptimes("T2-1@1#2146") )
 
 p <-   profvis( b <- corefun("T2-1") )
+
 
 
 
