@@ -1,6 +1,6 @@
-update_freq <- function(tripid, new_stoptimes, gtfs_data){
+update_freq <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
   # Update new_stoptimes
-  new_stoptimes <- update_dt(tripid, new_stoptimes, gtfs_data)
+  new_stoptimes <- update_dt(tripid, new_stoptimes, gtfs_data, all_tripids)
 
   #  Get freq info for that trip
   # tripid <- "148L-10-0"
@@ -67,9 +67,9 @@ update_freq <- function(tripid, new_stoptimes, gtfs_data){
 
 
 # UPDATE NEWSTOPTIMES DATA.FRAME
-update_dt <- function(tripid, new_stoptimes, gtfs_data){
-  #message(tripid)
-  #tripid <- 126132798 all_tripids[1] 124193674   | certo 124193739
+update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
+  message(tripid)
+  # tripid <- "N102-11-1" all_tripids[1] 124193674   | certo 124193739
   # add trip_id 
   new_stoptimes[, trip_id := tripid]
   
@@ -89,8 +89,8 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data){
   # create empty vector to store trip_ids with missing data
   if( match(tripid, all_tripids) == 1){   tripids_missing <- c() }
 
-# ignore trip_id if original departure_time values are missing
-if(is.null(length(stop_id_ok))==T | length(stop_id_ok)==0){ tripids_missing <- append(tripids_missing, tripid) } else{
+  # ignore trip_id if original departure_time values are missing
+  if(is.null(length(stop_id_ok))==T | length(stop_id_ok)==0){ tripids_missing <- append(tripids_missing, tripid) } else{
   
   # building id' vector
   #
