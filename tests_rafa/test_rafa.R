@@ -8,12 +8,7 @@ library(usethis)
 library(profvis)
 library(mapview)
 library(Rcpp)
-
-
-
-# devtools::install_github("ipeaGIT/gtfs2gps")
 library(gtfs2gps)
-devtools::load_all('.')
 
 # Update documentation
 devtools::document(pkg = ".")
@@ -152,4 +147,71 @@ system("R CMD build gtfs2gps --resave-data") # build tar.gz
 # devtools::check("gtfs2gps")
 system("R CMD check gtfs2gps_1.0.tar.gz")
 system("R CMD check --as-cran gtfs2gps_1.0.tar.gz")
+
+
+
+
+
+
+
+
+
+
+
+
+library(sfheaders)
+
+# system.time( poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps")) )
+
+system.time( poa <- read_gtfs("R:/Dropbox/bases_de_dados/GTFS/Fortaleza/GTFS_fortaleza_20191002.zip"))
+
+
+
+system.time( poa_sf <- gtfs_shapes_as_sf(poa) ) # 8.95 
+
+
+system.time( poa_headers <- gtfs_shapes_as_sf2(poa) ) # 
+
+
+system.time( temp_shapes <- sfheaders::sf_linestring( poa$shapes, linestring_id = "shape_id" ))
+
+
+gtfs_shapes_as_sf2 <- function(gtfs, crs = 4326){
+  temp_shapes <- sfheaders::sf_linestring( poa$shapes, linestring_id = "shape_id" )
+  
+  st_crs(temp_shapes) <- 4326
+  poa_sf$length <- units::set_units(sf::st_length(poa_sf$geometry), "km")
+  }
+
+
+
+
+
+mbm <- microbenchmark::microbenchmark(times = 20,
+                                      
+                                      'dt' = { # files
+                                        poa_sf <- gtfs_shapes_as_sf(poa)                                      },
+                                      
+                                      
+                                      ### GPKG  -------------------------------------
+                                      'sfheaders' = { # files
+                                        sfheaders <- gtfs_shapes_as_sf2(poa) 
+                                      }
+                                      )
+beepr::beep()
+
+ggplot2::autoplot(mbm)
+
+
+
+
+
+
+system.time( s <- gtfs_stops_as_sf(poa, crs = 4326))
+
+
+system.time( sh <- sf_point(poa$stops, x='stop_lon', y='stop_lat') )
+head(sh)
+plot(sh)
+
 

@@ -25,6 +25,7 @@ After loading the package, GTFS data can be read into R by using `read_gtfs()`.
 This function gets a zipped GTFS file and returns a list of `data.table` objects. The returning list contains the data of each GTFS file indexed according to their file names without extension.
 
 ```{r}
+library("data.table")
 library("gtfs2gps")
 sao <- read_gtfs(system.file("extdata/saopaulo.zip", package ="gtfs2gps"))
 names(sao)

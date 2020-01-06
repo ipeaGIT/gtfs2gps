@@ -21,11 +21,12 @@ gtfs_shapes_as_sf <- function(gtfs, crs = 4326){
                           , by = shape_id
                           ]
 
-  sf::st_as_sf(temp_shapes, crs = crs) %>%
-    sf::as_Spatial() %>%
-    sf::st_as_sf() %>%
-    dplyr::mutate(length = sf::st_length(geometry) %>% units::set_units("km"))
+  temp_shapes <- sf::st_as_sf(temp_shapes, crs = crs)
+  setDT(temp_shapes)[, length := sf::st_length(geometry) %>% units::set_units("km") ] 
+  temp_shapes <- sf::st_sf(temp_shapes)
+  return(temp_shapes)
 }
+
 
 #' @title Convert GTFS stops to simple feature object
 #' @description Convert a GTFS stops data loaded using gtfs2gps::read_gtf()
