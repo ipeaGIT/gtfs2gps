@@ -25,6 +25,7 @@ After loading the package, GTFS data can be read into R by using `read_gtfs()`.
 This function gets a zipped GTFS file and returns a list of `data.table` objects. The returning list contains the data of each GTFS file indexed according to their file names without extension.
 
 ```{r}
+library("data.table")
 library("gtfs2gps")
 sao <- read_gtfs(system.file("extdata/saopaulo.zip", package ="gtfs2gps"))
 names(sao)
@@ -111,7 +112,7 @@ The function `gtfs2gps()` automatically recognises whether the GTFS data brings 
 
 ```{r, message = FALSE}
 poa <- system.file("extdata/poa.zip", package ="gtfs2gps")
-poa_gps <- gtfs2gps(poa, progress = FALSE)
+poa_gps <- gtfs2gps(poa, progress = FALSE, cores = 1, spatial_resolution = 15)
 poa_gps_sf <- gps_as_sf(poa_gps)
 poa_sf <- read_gtfs(poa) %>% gtfs_shapes_as_sf()
 plot(sf::st_geometry(poa_gps_sf[1:200,]))

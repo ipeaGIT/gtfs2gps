@@ -1,6 +1,6 @@
-update_freq <- function(tripid, new_stoptimes, gtfs_data){
+update_freq <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
   # Update new_stoptimes
-  new_stoptimes <- update_dt(tripid, new_stoptimes, gtfs_data)
+  new_stoptimes <- update_dt(tripid, new_stoptimes, gtfs_data, all_tripids)
 
   #  Get freq info for that trip
   # tripid <- "148L-10-0"
@@ -62,10 +62,15 @@ update_freq <- function(tripid, new_stoptimes, gtfs_data){
   return(new_stoptimes)
 }
 
+
+
+
+
 # UPDATE NEWSTOPTIMES DATA.FRAME
-update_dt <- function(tripid, new_stoptimes, gtfs_data){
-  #tripid <- all_tripids[1]
-  # add trip_id
+update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
+  message(tripid)
+  # tripid <- "N102-11-1" all_tripids[1] 124193674   | certo 124193739
+  # add trip_id 
   new_stoptimes[, trip_id := tripid]
   
   # add cummulative distance
@@ -79,6 +84,14 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data){
   
   # get a 'stop_sequence' of the stops which have proper info on 'departure_time'
   stop_id_ok <- gtfs_data$stop_times[trip_id == tripid & is.na(departure_time) == FALSE,]$stop_sequence
+  
+  
+  # create empty vector to store trip_ids with missing data
+  if( match(tripid, all_tripids) == 1){   tripids_missing <- c() }
+
+  # ignore trip_id if original departure_time values are missing
+  if(is.null(length(stop_id_ok))==T | length(stop_id_ok)==0){ tripids_missing <- append(tripids_missing, tripid) } else{
+  
   # building id' vector
   #
   # newstop_t0: 'id' in which stop_times intervals STARTS
@@ -125,4 +138,9 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data){
   new_stoptimes <- new_stoptimes[speed > 0 & cumtime > 0]
   
   return(new_stoptimes)
+  
+}
+  # Print message IF this is the last trip_id AND IF there was a missing trip_id
+  if( (match(tripid, all_tripids) == length(all_tripids)) & (length(tripids_missing) > 0) ){message(paste("The following Trip_ids have been ignored due to missing data in original gtfs.zip:", paste(tripids_missing, collapse = ', '))) }
+
 }

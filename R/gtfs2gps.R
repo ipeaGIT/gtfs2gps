@@ -31,13 +31,12 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores 
     stop("Cannot use argument 'continue' without passing a 'filepath'.")
 
   # Unzipping and reading GTFS.zip file
-  message("Unzipping and reading GTFS.zip file")
-  if(class(gtfs_data) == "character")
-    gtfs_data <- read_gtfs(gtfszip = gtfs_data)
+  if(class(gtfs_data) == "character"){
+    message("Unzipping and reading GTFS.zip file")
+    gtfs_data <- read_gtfs(gtfszip = gtfs_data)}
 
-  
   # Convert all shapes into sf objects
-  message("converting shapes and stops to sf objects")
+  message("converting shapes to sf objects")
   shapes_sf <- gtfs_shapes_as_sf(gtfs_data)
 
   ###### PART 2. Analysing data type ----------------------------------------------
@@ -49,7 +48,7 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores 
 
     # test
     # all_shapeids <- unique(shapes_sf$shape_id)
-    # shapeid <- all_shapeids[1]
+    # shapeid <- all_shapeids[2]
 
     ## Select corresponding route, route type, stops and shape of that trip
 
@@ -63,9 +62,8 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores 
     routetype <- gtfs_data$routes[route_id == routeid]$route_type
     
     # get all trips linked to that route
-    all_tripids <- gtfs_data$trips[shape_id == shapeid & route_id == routeid, ]$trip_id %>%
-      unique()
-    
+    all_tripids <- gtfs_data$trips[shape_id == shapeid & route_id == routeid, ]$trip_id %>% unique()
+
     # Get the stops sequence with lat long linked to that route
     # each shape_id only has one stop sequence
     nstop <- gtfs_data$stop_times[trip_id %in% all_tripids, .N, by ="trip_id"]$N
@@ -78,7 +76,7 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores 
 
     spatial_resolution <- units::set_units(spatial_resolution / 1000, "km")
 
-    new_shape <- subset(shapes_sf, shape_id == shapeid) %>% 
+    new_shape <- subset(shapes_sf, shape_id == shapeid) %>%
       sf::st_segmentize(spatial_resolution) %>%
       sf::st_cast("LINESTRING") %>%
       sf::st_cast("POINT", warn = FALSE) %>%
@@ -117,9 +115,9 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores 
 
     ###### PART 2.2 Function recalculate new stop_times for each trip id of each Shape id ------------------------------
     if(test_gtfs_freq(gtfs_data) == "frequency"){
-      new_stoptimes <- lapply(X = all_tripids, FUN = update_freq, new_stoptimes, gtfs_data) %>% data.table::rbindlist()
+      new_stoptimes <- lapply(X = all_tripids, FUN = update_freq, new_stoptimes, gtfs_data, all_tripids) %>% data.table::rbindlist()
     }else{
-      new_stoptimes <- lapply(X = all_tripids, FUN = update_dt, new_stoptimes, gtfs_data) %>% data.table::rbindlist()
+      new_stoptimes <- lapply(X = all_tripids, FUN = update_dt, new_stoptimes, gtfs_data, all_tripids) %>% data.table::rbindlist()
     }
 
     if(!is.null(filepath)){ # Write object
@@ -141,9 +139,9 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores 
 
   # number of cores to use
   if(is.null(cores)){ cores <- data.table::getDTthreads() - 1 }
-  
+  if(cores == 0){ cores <- 1 } # nocov
+
   if(cores == 1){
-    
     message(paste('Using', cores, 'CPU core'))
     if(progress) pbapply::pboptions(type = "txt")
 
@@ -152,9 +150,10 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores 
     if(progress) pbapply::pboptions(type = "none")
   }
   else
-  
+  {  
     message(paste('Using', cores, 'CPU cores'))
     output <- pbSapply(cores, progress, X = all_shapeids, FUN = corefun)
+  }
 
   if(is.null(filepath))
     return(output)

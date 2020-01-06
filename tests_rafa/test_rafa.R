@@ -8,15 +8,15 @@ library(usethis)
 library(profvis)
 library(mapview)
 library(Rcpp)
-
-
-
-# devtools::install_github("ipeaGIT/gtfs2gps")
 library(gtfs2gps)
-devtools::load_all('.')
 
 # Update documentation
 devtools::document(pkg = ".")
+
+
+# calculate Distance between successive points
+new_stoptimes[ , dist := geosphere::distGeo(matrix(c(shape_pt_lon, shape_pt_lat), ncol = 2),
+                                            matrix(c(data.table::shift(shape_pt_lon, type="lead"), data.table::shift(shape_pt_lat, type="lead")), ncol = 2))/1000]
 
 
 ##### INPUT  ------------------------
@@ -56,6 +56,7 @@ emtu <- "R:/Dropbox/bases_de_dados/GTFS/SP GTFS/GTFS EMTU_20190815.zip"
 p <-   profvis( update_newstoptimes("T2-1@1#2146") )
 
 p <-   profvis( b <- corefun("T2-1") )
+
 
 
 
@@ -146,4 +147,112 @@ system("R CMD build gtfs2gps --resave-data") # build tar.gz
 # devtools::check("gtfs2gps")
 system("R CMD check gtfs2gps_1.0.tar.gz")
 system("R CMD check --as-cran gtfs2gps_1.0.tar.gz")
+
+
+
+
+
+
+
+
+
+
+
+
+library(sfheaders)
+
+# system.time( poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps")) )
+
+# system.time( poa <- read_gtfs("R:/Dropbox/bases_de_dados/GTFS/Fortaleza/GTFS_fortaleza_20191002.zip"))
+
+# system.time( poa <- read_gtfs("R:/Dropbox/bases_de_dados/GTFS/Rio GTFS/GTFS Rio feed_20190913.zip"))
+
+# system.time( poa <- read_gtfs("R:/Dropbox/bases_de_dados/GTFS/POA/GTFS POA_20190815.zip"))
+system.time( poa <- read_gtfs("R:/Dropbox/bases_de_dados/GTFS/SP/GTFS EMTU_20171218.zip"))
+
+
+
+system.time( poa_sf <- gtfs_shapes_as_sf(poa) )
+system.time( poa_headers <- test2(poa) ) # 
+system.time( t <- tidytransit::shapes_as_sf(poa$shapes) )
+
+
+
+
+test2 <- function(gtfs, crs = 4326){
+  
+   a <- setDT(gtfs$shapes)[order(shape_id, shape_pt_sequence)]
+  temp_shapes <- sfheaders::sf_linestring( a, linestring_id = "shape_id" )
+  
+  # temp_shapes <- sfheaders::sf_linestring( gtfs$shapes, linestring_id = "shape_id" )
+  
+  # temp_shapes <- sf::st_as_sf(temp_shapes, crs = crs)
+  # setDT(temp_shapes)[, length := sf::st_length(geometry) %>% units::set_units("km") ] 
+  # temp_shapes <- sf::st_sf(temp_shapes)
+  return(temp_shapes)
+}
+
+
+mbm <- microbenchmark::microbenchmark(times = 20,
+                                      
+                                      'dt' = { # files
+                                        poa_sf <- gtfs_shapes_as_sf(poa)
+                                      },
+                                      ### GPKG  -------------------------------------
+                                      'sfheaders' = { # files
+                                        poa_headers <- test(poa)
+                                        }
+                                      )
+
+ggplot2::autoplot(mbm)
+
+
+
+
+
+
+system.time( s <- gtfs_stops_as_sf(poa, crs = 4326))
+
+
+system.time( sh <- sf_point(poa$stops, x='stop_lon', y='stop_lat') )
+head(sh)
+plot(sh)
+==========================================================
+  
+  
+  
+  library(sf)
+library(data.table)
+library(sfheaders)
+library(tidytransit)
+
+
+# load gtfs data
+local_gtfs_path <- system.file("extdata", "google_transit_nyc_subway.zip", package = "tidytransit")
+nyc <- read_gtfs(local_gtfs_path)
+
+
+system.time( t <- tidytransit::shapes_as_sf(nyc$shapes) )
+system.time( g <- myf(nyc$shapes) )
+system.time( h <- sfheaders::sf_linestring( nyc$shapes, linestring_id = "shape_id" ) )
+system.time( h <- test2( nyc, linestring_id = "shape_id" ) )
+
+
+
+myf <- function(shp, crs = 4326){
+  temp_shapes <- setDT(shp)[,
+                            {
+                              geometry <- sf::st_linestring(x = matrix(c(shape_pt_lon, shape_pt_lat), ncol = 2))
+                              geometry <- sf::st_sfc(geometry)
+                              geometry <- sf::st_sf(geometry = geometry)
+                            }
+                            , by = shape_id
+                            ]
+  
+  temp_shapes <- sf::st_as_sf(temp_shapes, crs = crs)
+  return(temp_shapes)
+}
+
+
+
 
