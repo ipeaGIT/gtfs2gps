@@ -94,35 +94,20 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
     
     # building id' vector
     #
-    # newstop_t0: 'id' in which stop_times intervals STARTS
-    # newstop_t1: 'id' in which stop_times intervals ENDS
-    # speed_valid: range of 'id's in which the speed are valid
-    # ranges: 'speed_valid' separated between stops (list)
+    # lim0: 'id' in which stop_times intervals STARTS
+    # lim1: 'id' in which stop_times intervals ENDS
+    # lim_len: length of each constant speed interval
     lim0 <- which(is.na(new_stoptimes$stop_sequence) == FALSE)
     lim1 <- c(tail(lim0,-1) - 1 ,nrow(new_stoptimes)) 
     lim_len <- lim1 - lim0 + 1
-    #speed_valid <- head(newstop_t0, 1):(tail(newstop_t0, 1) - 1)
-    ### 1
-    new_stoptimes$speed_sequence <- rep(1:length(lim0),lim_len)
+    new_stoptimes$speed_sequence <- rep(1:length(lim0),lim_len) # speed_sequence
     # apply function for speed estimation
-    #c <- new_stoptimes
     new_stoptimes <- new_stoptimes[,speed := {
       dt = data.table::last(departure_time) - data.table::first(departure_time)
       ds = data.table::last(cumdist) - data.table::first(cumdist)
       v = 3.6 * ds / dt
       list(v = v)
     },by = speed_sequence]
-    ### 2
-    # new_stoptimes$stop_sequence <- lapply(seq_along(newstop_t1),function(i){
-    #   new_stoptimes[newstop_t0[i]:newstop_t1[i],][,stop_sequence := i]$stop_sequence
-    # }) %>% rbindlist()
-    # 
-    # new_stoptimes <- new_stoptimes[,speed := {
-    #   dt = data.table::last(departure_time) - data.table::first(departure_time)
-    #   ds = data.table::last(cumdist) - data.table::first(cumdist)
-    #   v = 3.6 * ds / dt
-    #   list(v = v)
-    # },by = stop_sequence]
     # Speed info that was missing (either before or after 1st/last stops)
     new_stoptimes[, speed := ifelse(is.na(speed), mean(speed, na.rm = TRUE), speed) ]
     # Get trip duration in seconds
