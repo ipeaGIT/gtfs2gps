@@ -102,12 +102,9 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
     lim_len <- lim1 - lim0 + 1
     new_stoptimes$speed_sequence <- rep(1:length(lim0),lim_len) # speed_sequence
     # apply function for speed estimation
-    new_stoptimes <- new_stoptimes[,speed := {
-      dt = data.table::last(departure_time) - data.table::first(departure_time)
-      ds = data.table::last(cumdist) - data.table::first(cumdist)
-      v = 3.6 * ds / dt
-      list(v = v)
-    },by = speed_sequence]
+    new_stoptimes <- new_stoptimes[, speed := 
+                                     3.6 * (data.table::last(cumdist) - data.table::first(cumdist)) / (data.table::last(departure_time) - data.table::first(departure_time)),
+                                   by = speed_sequence]
     # Speed info that was missing (either before or after 1st/last stops)
     new_stoptimes[, speed := ifelse(is.na(speed), mean(speed, na.rm = TRUE), speed) ]
     # Get trip duration in seconds
