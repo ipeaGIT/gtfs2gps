@@ -45,6 +45,6 @@ gtfs_shapes_as_sf <- function(gtfs, crs = 4326){
 #' }
 gtfs_stops_as_sf <- function(gtfs, crs = 4326){
   temp_stops_sf <- sfheaders::sf_point(gtfs$stops, x = "stop_lon", y="stop_lat", keep = T)
-  st_crs(temp_stops_sf) <- 4326
+  st_crs(temp_stops_sf) <- crs
   return(temp_stops_sf)
 }
