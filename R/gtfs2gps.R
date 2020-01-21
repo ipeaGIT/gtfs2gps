@@ -72,15 +72,17 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores 
     stops_seq[gtfs_data$stops, on = "stop_id", c('stop_lat', 'stop_lon') := list(i.stop_lat, i.stop_lon)] # add lat long info
 
     # convert stops to sf
-    stops_sf <- sf::st_as_sf(stops_seq, coords = c('stop_lon', 'stop_lat'), agr = "identity", crs = sf::st_crs(shapes_sf))
-
+    stops_sf <- sfheaders::sf_point(stops_seq, x = "stop_lon", y="stop_lat", keep = T)
+    st_crs(stops_sf) <- sf::st_crs(shapes_sf)
+    
     spatial_resolution <- units::set_units(spatial_resolution / 1000, "km")
-
+    
+    
     new_shape <- subset(shapes_sf, shape_id == shapeid) %>%
       sf::st_segmentize(spatial_resolution) %>%
-      sf::st_cast("LINESTRING") %>%
-      sf::st_cast("POINT", warn = FALSE) %>%
-      sf::st_sf()
+      # sf::st_cast("LINESTRING") %>%
+      sf::st_cast("POINT", warn = FALSE) # %>% sf::st_sf()
+
 
     spatial_resolution <- units::set_units(spatial_resolution, "m")
     
