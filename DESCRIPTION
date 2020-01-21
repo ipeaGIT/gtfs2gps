@@ -25,6 +25,7 @@ Imports:
       Rcpp,
       units,
       sf,
+      sfheaders,
       sp,
       dplyr,
       lwgeom,
