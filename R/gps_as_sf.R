@@ -5,5 +5,12 @@
 #' @param crs A Coordinate Reference System. The default value is 4326 (latlong WGS84)
 #' @export
 gps_as_sf <- function(gps, crs = 4326){
-  sf::st_as_sf(x = gps, coords = c("shape_pt_lon", "shape_pt_lat"), crs = crs)
+
+  # convert to sf
+  temp_gps <- sfheaders::sf_linestring(gps, x = "shape_pt_lon" , y = "shape_pt_lat", linestring_id = "shape_id")
+  
+  # add projection
+  sf::st_crs(temp_gps) <- crs
+  return(temp_gps)
+  
 }

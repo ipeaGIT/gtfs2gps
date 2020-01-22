@@ -19,7 +19,7 @@ gtfs_shapes_as_sf <- function(gtfs, crs = 4326){
   temp_shapes <- sfheaders::sf_linestring(temp_shapes, x = "shape_pt_lon" , y = "shape_pt_lat", linestring_id = "shape_id")
   
   # add projection
-  st_crs(temp_shapes) <- crs
+  sf::st_crs(temp_shapes) <- crs
   
   # calculate distances
   data.table::setDT(temp_shapes)[, length := sf::st_length(geometry) %>% units::set_units("km") ] 
@@ -45,6 +45,6 @@ gtfs_shapes_as_sf <- function(gtfs, crs = 4326){
 #' }
 gtfs_stops_as_sf <- function(gtfs, crs = 4326){
   temp_stops_sf <- sfheaders::sf_point(gtfs$stops, x = "stop_lon", y="stop_lat", keep = T)
-  st_crs(temp_stops_sf) <- crs
+  sf::st_crs(temp_stops_sf) <- crs
   return(temp_stops_sf)
 }

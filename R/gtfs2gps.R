@@ -73,19 +73,28 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores 
 
     # convert stops to sf
     stops_sf <- sfheaders::sf_point(stops_seq, x = "stop_lon", y="stop_lat", keep = T)
-    st_crs(stops_sf) <- sf::st_crs(shapes_sf)
+    sf::st_crs(stops_sf) <- sf::st_crs(shapes_sf)
     
     spatial_resolution <- units::set_units(spatial_resolution / 1000, "km")
     
-    
+    # # old (slower) version
+    # new_shape <- subset(shapes_sf, shape_id == shapeid) %>%
+    #   sf::st_segmentize(spatial_resolution) %>%
+    #   sf::st_cast("LINESTRING") %>%
+    #   sf::st_cast("POINT", warn = FALSE)  %>% 
+    #   sf::st_sf()
+
+    # new faster verion using sfheaders
     new_shape <- subset(shapes_sf, shape_id == shapeid) %>%
       sf::st_segmentize(spatial_resolution) %>%
-      # sf::st_cast("LINESTRING") %>%
-      sf::st_cast("POINT", warn = FALSE) # %>% sf::st_sf()
+      sfheaders::sf_to_df(fill = T) %>%
+      sfheaders::sf_point( x = "x", y="y", keep = T)
 
-
+  
+    # convert units of spatial resolution to meters
     spatial_resolution <- units::set_units(spatial_resolution, "m")
     
+    # snap stops the nodes of the shape route
     snapped <- cpp_snap_points(stops_sf %>% sf::st_coordinates(), 
                                      new_shape %>% sf::st_coordinates(),
                                      spatial_resolution,
