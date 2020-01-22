@@ -154,41 +154,63 @@ system("R CMD check --as-cran gtfs2gps_1.0.tar.gz")
 
 
 
+# test sfheaders ---------------------------------------
 
 
 
-
-
+library(gtfs2gps)
 library(sfheaders)
+library(data.table)
+library(tidytransit)
 
-# system.time( poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps")) )
+# system.time( poas <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps")) )
 
-# system.time( poa <- read_gtfs("R:/Dropbox/bases_de_dados/GTFS/Fortaleza/GTFS_fortaleza_20191002.zip"))
+ system.time( poa <- read_gtfs("R:/Dropbox/bases_de_dados/GTFS/Fortaleza/GTFS_fortaleza_20191002.zip"))
+ poas <- poas$shapes
+ poa <- poa$shapes
+ 
 
-# system.time( poa <- read_gtfs("R:/Dropbox/bases_de_dados/GTFS/Rio GTFS/GTFS Rio feed_20190913.zip"))
-
-# system.time( poa <- read_gtfs("R:/Dropbox/bases_de_dados/GTFS/POA/GTFS POA_20190815.zip"))
-system.time( poa <- read_gtfs("R:/Dropbox/bases_de_dados/GTFS/SP/GTFS EMTU_20171218.zip"))
-
-
-
-system.time( poa_sf <- gtfs_shapes_as_sf(poa) )
-system.time( poa_headers <- test2(poa) ) # 
-system.time( t <- tidytransit::shapes_as_sf(poa$shapes) )
+ system.time( emtu <- read_gtfs("R:/Dropbox/bases_de_dados/GTFS/SP/GTFS EMTU_20171218.zip"))
+t <- emtu$shapes
 
 
+data.table::fwrite(t, 'shapes_large.csv', row.names = F, col.names = T)
+data.table::fwrite(poa, 'shapes_small.csv',  row.names = F, col.names = T)
+data.table::fwrite(poas, 'shapes_vsmall.csv',  row.names = F, col.names = T)
+
+# read data set
+small_shape <- data.table::fread("https://raw.githubusercontent.com/rafapereirabr/data_dump/master/shapes_small.csv")
 
 
-test2 <- function(gtfs, crs = 4326){
+
+system.time( poa_sf <- gtfs_shapes_as_sf1(t) )
+system.time( poa_headers <- test2(t) )# 
+system.time( t <- tidytransit::shapes_as_sf(t) )
+
+
+ggtfs_shapes_as_sf
+gtfs_shapes_as_sf <- function(shapes){
   
-   a <- setDT(gtfs$shapes)[order(shape_id, shape_pt_sequence)]
+  temp_shapes <- setDT(shapes)[order(shape_id, shape_pt_sequence)]
+  
+  temp_shapes <- setDT(temp_shapes)[,
+                                    {
+                                      geometry <- sf::st_linestring(x = matrix(c(shape_pt_lon, shape_pt_lat), ncol = 2))
+                                      geometry <- sf::st_sfc(geometry)
+                                      geometry <- sf::st_sf(geometry = geometry)
+                                    }
+                                    , by = shape_id
+                                    ]
+    return(temp_shapes)
+}
+
+
+
+
+
+test2 <- function(shapes, crs = 4326){
+   a <- setDT(shapes)[order(shape_id, shape_pt_sequence)]
   temp_shapes <- sfheaders::sf_linestring( a, linestring_id = "shape_id" )
-  
-  # temp_shapes <- sfheaders::sf_linestring( gtfs$shapes, linestring_id = "shape_id" )
-  
-  # temp_shapes <- sf::st_as_sf(temp_shapes, crs = crs)
-  # setDT(temp_shapes)[, length := sf::st_length(geometry) %>% units::set_units("km") ] 
-  # temp_shapes <- sf::st_sf(temp_shapes)
   return(temp_shapes)
 }
 
