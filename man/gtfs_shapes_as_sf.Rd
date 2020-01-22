@@ -18,7 +18,7 @@ into a line simple feature (sf).
 }
 \examples{
 \donttest{
-poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+poa <- read_gtfs(system.file("extdata/saopaulo.zip", package="gtfs2gps"))
 poa_sf <- gtfs_shapes_as_sf(poa)
 plot(sf::st_geometry(poa_sf), lwd = 2)
 }
