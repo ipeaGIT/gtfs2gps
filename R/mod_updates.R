@@ -97,10 +97,12 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
     # lim0: 'id' in which stop_times intervals STARTS
     # lim1: 'id' in which stop_times intervals ENDS
     # lim_len: length of each constant speed interval
-    lim0 <- which(is.na(new_stoptimes$stop_sequence) == FALSE)
+    lim0 <- c(1,which(is.na(new_stoptimes$stop_sequence) == FALSE))
     lim1 <- c(tail(lim0,-1) - 1 ,nrow(new_stoptimes)) 
     lim_len <- lim1 - lim0 + 1
-    new_stoptimes$speed_sequence <- rep(1:length(lim0),lim_len) # speed_sequence
+    if(0 == lim_len[1]){lim_len <- lim_len[-1]}
+    
+    new_stoptimes$speed_sequence <- rep(1:length(lim_len),lim_len) # speed_sequence
     # apply function for speed estimation
     new_stoptimes <- new_stoptimes[, speed := 
                                      3.6 * (data.table::last(cumdist) - data.table::first(cumdist)) / (data.table::last(departure_time) - data.table::first(departure_time)),
