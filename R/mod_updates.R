@@ -92,25 +92,27 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
   # ignore trip_id if original departure_time values are missing
   if(is.null(length(stop_id_ok))==T | length(stop_id_ok)==0){ tripids_missing <- append(tripids_missing, tripid) } else{
     
-    # building id' vector
-    #
+  ### UPDATE speeds
     # lim0: 'id' in which stop_times intervals STARTS
-    # lim1: 'id' in which stop_times intervals ENDS
-    # lim_len: length of each constant speed interval
-    lim0 <- c(1,which(is.na(new_stoptimes$stop_sequence) == FALSE))
-    lim1 <- c(tail(lim0,-1) - 1 ,nrow(new_stoptimes)) 
-    lim_len <- lim1 - lim0 + 1
-    if(0 == lim_len[1]){lim_len <- lim_len[-1]}
+    lim0 <- new_stoptimes[ !is.na(departure_time) & !is.na(stop_id), id]
     
-    new_stoptimes$speed_sequence <- rep(1:length(lim_len),lim_len) # speed_sequence
+    #  function for speed estimation
+    update_speeds <- function(i){
+      a <- lim0[i]
+      b <- lim0[i + 1]
+      new_stoptimes[a:b, speed := 3.6 * (data.table::last(cumdist) - data.table::first(cumdist)) / (data.table::last(departure_time) - data.table::first(departure_time)) ]
+    }
+    
     # apply function for speed estimation
-    new_stoptimes <- new_stoptimes[, speed := 
-                                     3.6 * (data.table::last(cumdist) - data.table::first(cumdist)) / (data.table::last(departure_time) - data.table::first(departure_time)),
-                                   by = speed_sequence]
+    L <- length(lim0)
+    lapply(X=1:(L-1), FUN=update_speeds)
+    
+    
     # Speed info that was missing (either before or after 1st/last stops)
     new_stoptimes[, speed := ifelse(is.na(speed), mean(speed, na.rm = TRUE), speed) ]
     # Get trip duration in seconds
     new_stoptimes[, cumtime := cumsum(3.6 * dist / speed)]
+    
     # reorder columns
     data.table::setcolorder(new_stoptimes, c("trip_id", "route_type", "id", "shape_pt_lon", "shape_pt_lat", "departure_time", "stop_id", "stop_sequence", "dist", "cumdist", "speed", "cumtime"))
     # distance from trip start to 1st stop

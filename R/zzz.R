@@ -25,7 +25,7 @@ if(getRversion() >= "2.15.1") utils::globalVariables(
     'service_id', 'stop_sequence', 'i.stop_lat', 'i.stop_lon', 'i.stop_id',
     'departure_time', 'arrival_time', 'start_time', 'end_time', 'i.stop_sequence',
     'shape_pt_lon', 'shape_pt_lat', 'id', 'cumdist', 'i.departure_time',
-    '.N', 'update_newstoptimes',
+    '.N', 'update_newstoptimes', 'shape_pt_sequence', 'geometry',
     'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday',
     'service_duration', 'headway_secs', 'number_of_departures',
     'cumtime', 'speed', 'lag', 'i'))
