@@ -109,7 +109,7 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
     
     
     # Speed info that was missing (either before or after 1st/last stops)
-    new_stoptimes[, speed := ifelse(is.na(speed), mean(speed, na.rm = TRUE), speed) ]
+    new_stoptimes[, speed := fifelse(is.na(speed), mean(speed, na.rm = TRUE), speed) ]
     # Get trip duration in seconds
     new_stoptimes[, cumtime := cumsum(3.6 * dist / speed)]
     
