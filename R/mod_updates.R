@@ -68,8 +68,10 @@ update_freq <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
 
 # UPDATE NEWSTOPTIMES DATA.FRAME
 update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
-  message(tripid)
-  # tripid <- all_tripids[1] 124193674   | certo 124193739
+
+                    # internal test
+                    # tripid <- all_tripids[1] 124193674   | certo 124193739
+  
   # add trip_id 
   new_stoptimes[, trip_id := tripid]
   
@@ -85,12 +87,11 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
   # get a 'stop_sequence' of the stops which have proper info on 'departure_time'
   stop_id_ok <- gtfs_data$stop_times[trip_id == tripid & is.na(departure_time) == FALSE,]$stop_sequence
   
-  
   # create empty vector to store trip_ids with missing data
   if( match(tripid, all_tripids) == 1){   tripids_missing <- c() }
   
   # ignore trip_id if original departure_time values are missing
-  if(is.null(length(stop_id_ok))==T | length(stop_id_ok)==0){ tripids_missing <- append(tripids_missing, tripid) } else{
+  if(is.null(length(stop_id_ok))==T | length(stop_id_ok)==1 | length(stop_id_ok)==0){ tripids_missing <- append(tripids_missing, tripid) } else{
     
   ### UPDATE speeds
     # lim0: 'id' in which stop_times intervals STARTS
