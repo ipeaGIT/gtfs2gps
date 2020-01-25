@@ -146,7 +146,7 @@ system("R CMD build gtfs2gps --resave-data") # build tar.gz
 # Check package errors
 # devtools::check("gtfs2gps")
 system("R CMD check gtfs2gps_1.0.tar.gz")
-system("R CMD check --as-cran gtfs2gps_1.0.tar.gz")
+system("R CMD check --as-cran gtfs2gps_1.0-0.tar.gz")
 
 
 
