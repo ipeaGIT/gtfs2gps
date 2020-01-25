@@ -11,13 +11,19 @@
 #' library(gtfs2gps)
 #'
 #' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
-#' poa_f <- filter_day_period(poa, start = "10:00", end = "19:00")
+#' poa_f <- filter_day_period(poa, period_start = "10:00", period_end = "19:00")
 #' }
+#' 
+filter_day_period <- function(gps, period_start=NULL, period_end=NULL){
+  
+if(is.null(period_start)){ period_start <- "00:00:01"}
+if(is.null(period_end)){ period_end <- "23:59:59"}
 
-filter_day_period <- function(gps, start = "07:00", end = "09:00"){
+if(is.na(as.ITime(period_start))){ stop( paste0("Error: Invalid period_start input") ) }
+if(is.na(as.ITime(period_end))){ stop( paste0("Error: Invalid period_end input") ) }
   
   # 1) filter stop times
-  gps$stop_times <- gps$stop_times[ data.table::between(departure_time, as.ITime(start), as.ITime(end)) , ]
+  gps$stop_times <- gps$stop_times[ data.table::between(departure_time, as.ITime(period_start), as.ITime(period_end)), ]
   
   # unique stops and trips
   unique_stops <- unique(gps$stop_times$stop_id)
