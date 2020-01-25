@@ -18,7 +18,7 @@ pbSapply(slaves, progress, X, FUN, ...)
 \item{...}{Other arguments passed to FUN after a value from X.}
 }
 \description{
-Process a function in paralell using doSNOW.
+Process a function in parallel using doSNOW.
 This function is based on the function presented in
 https://stackoverflow.com/questions/38199631/parsapply-and-progress-bar.
 }
