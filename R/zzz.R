@@ -12,7 +12,7 @@ utils::globalVariables(c(".", "%>%", ":="))
 
 #' @importFrom magrittr %>%
 #' @importFrom foreach %dopar% foreach
-#' @importFrom data.table := %between%
+#' @importFrom data.table := %between% fifelse
 #' @importFrom stats na.omit
 #' @importFrom utils head tail
 #' @importFrom stats lag na.omit
