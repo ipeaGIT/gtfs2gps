@@ -1,5 +1,5 @@
 #' @title Process a function in parallel
-#' @description Process a function in paralell using doSNOW.
+#' @description Process a function in parallel using doSNOW.
 #' This function is based on the function presented in
 #' https://stackoverflow.com/questions/38199631/parsapply-and-progress-bar.
 #' @param slaves Number of slaves.
