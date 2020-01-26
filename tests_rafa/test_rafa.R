@@ -56,8 +56,9 @@ emtu <- "R:/Dropbox/bases_de_dados/GTFS/SP GTFS/GTFS EMTU_20190815.zip"
   
 #  ERROR in shapeid 52936
   
-
+  library(covr)
   
+  function_coverage(fun=gtfs2gps::filter_day_period, test_file("tests/testthat/test_filter_day_period.R"))
   
   
   
@@ -158,132 +159,6 @@ system("R CMD build gtfs2gps --resave-data") # build tar.gz
 system("R CMD check gtfs2gps_1.0.tar.gz")
 system("R CMD check --as-cran gtfs2gps_1.0-0.tar.gz")
 
-
-
-
-
-
-
-# test sfheaders ---------------------------------------
-
-
-
-library(gtfs2gps)
-library(sfheaders)
-library(data.table)
-library(tidytransit)
-
-# system.time( poas <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps")) )
-
- system.time( poa <- read_gtfs("R:/Dropbox/bases_de_dados/GTFS/Fortaleza/GTFS_fortaleza_20191002.zip"))
- poas <- poas$shapes
- poa <- poa$shapes
- 
-
- system.time( emtu <- read_gtfs("R:/Dropbox/bases_de_dados/GTFS/SP/GTFS EMTU_20171218.zip"))
-t <- emtu$shapes
-
-
-data.table::fwrite(t, 'shapes_large.csv', row.names = F, col.names = T)
-data.table::fwrite(poa, 'shapes_small.csv',  row.names = F, col.names = T)
-data.table::fwrite(poas, 'shapes_vsmall.csv',  row.names = F, col.names = T)
-
-# read data set
-small_shape <- data.table::fread("https://raw.githubusercontent.com/rafapereirabr/data_dump/master/shapes_small.csv")
-
-
-
-system.time( poa_sf <- gtfs_shapes_as_sf1(t) )
-system.time( poa_headers <- test2(t) )# 
-system.time( t <- tidytransit::shapes_as_sf(t) )
-
-
-ggtfs_shapes_as_sf
-gtfs_shapes_as_sf <- function(shapes){
-  
-  temp_shapes <- setDT(shapes)[order(shape_id, shape_pt_sequence)]
-  
-  temp_shapes <- setDT(temp_shapes)[,
-                                    {
-                                      geometry <- sf::st_linestring(x = matrix(c(shape_pt_lon, shape_pt_lat), ncol = 2))
-                                      geometry <- sf::st_sfc(geometry)
-                                      geometry <- sf::st_sf(geometry = geometry)
-                                    }
-                                    , by = shape_id
-                                    ]
-    return(temp_shapes)
-}
-
-
-
-
-
-test2 <- function(shapes, crs = 4326){
-   a <- setDT(shapes)[order(shape_id, shape_pt_sequence)]
-  temp_shapes <- sfheaders::sf_linestring( a, linestring_id = "shape_id" )
-  return(temp_shapes)
-}
-
-
-mbm <- microbenchmark::microbenchmark(times = 20,
-                                      
-                                      'dt' = { # files
-                                        poa_sf <- gtfs_shapes_as_sf(poa)
-                                      },
-                                      ### GPKG  -------------------------------------
-                                      'sfheaders' = { # files
-                                        poa_headers <- test(poa)
-                                        }
-                                      )
-
-ggplot2::autoplot(mbm)
-
-
-
-
-
-
-system.time( s <- gtfs_stops_as_sf(poa, crs = 4326))
-
-
-system.time( sh <- sf_point(poa$stops, x='stop_lon', y='stop_lat') )
-head(sh)
-plot(sh)
-==========================================================
-  
-  
-  
-  library(sf)
-library(data.table)
-library(sfheaders)
-library(tidytransit)
-
-
-# load gtfs data
-local_gtfs_path <- system.file("extdata", "google_transit_nyc_subway.zip", package = "tidytransit")
-nyc <- read_gtfs(local_gtfs_path)
-
-
-system.time( t <- tidytransit::shapes_as_sf(nyc$shapes) )
-system.time( g <- myf(nyc$shapes) )
-system.time( h <- sfheaders::sf_linestring( nyc$shapes, linestring_id = "shape_id" ) )
-system.time( h <- test2( nyc, linestring_id = "shape_id" ) )
-
-
-
-myf <- function(shp, crs = 4326){
-  temp_shapes <- setDT(shp)[,
-                            {
-                              geometry <- sf::st_linestring(x = matrix(c(shape_pt_lon, shape_pt_lat), ncol = 2))
-                              geometry <- sf::st_sfc(geometry)
-                              geometry <- sf::st_sf(geometry = geometry)
-                            }
-                            , by = shape_id
-                            ]
-  
-  temp_shapes <- sf::st_as_sf(temp_shapes, crs = crs)
-  return(temp_shapes)
-}
 
 
 
