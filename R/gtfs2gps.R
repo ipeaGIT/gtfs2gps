@@ -49,7 +49,8 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 15, cores = NULL, progress 
     # test
     # all_shapeids <- unique(shapes_sf$shape_id)
     # shapeid <- all_shapeids[2]
-
+    #message(shapeid)
+    
     ## Select corresponding route, route type, stops and shape of that trip
 
     # identify route id

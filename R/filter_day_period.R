@@ -23,7 +23,7 @@ if(is.na(as.ITime(period_start))){ stop( paste0("Error: Invalid period_start inp
 if(is.na(as.ITime(period_end))){ stop( paste0("Error: Invalid period_end input") ) }
   
   # 1) filter stop times
-  gps$stop_times <- gps$stop_times[ data.table::between(departure_time, as.ITime(period_start), as.ITime(period_end)), ]
+  gps$stop_times <- gps$stop_times[ data.table::between(departure_time, data.table::as.ITime(period_start), data.table::as.ITime(period_end)), ]
   
   # unique stops and trips
   unique_stops <- unique(gps$stop_times$stop_id)

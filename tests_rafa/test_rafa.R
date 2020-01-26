@@ -5,6 +5,7 @@ library(future.apply)
 library(roxygen2)
 library(devtools)
 library(usethis)
+library(testthat)
 library(profvis)
 library(mapview)
 library(Rcpp)
@@ -22,9 +23,10 @@ new_stoptimes[ , dist := geosphere::distGeo(matrix(c(shape_pt_lon, shape_pt_lat)
 poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
 
 
-poa1 <- filter_day_period(poa, period_start = "10:00", period_end = "12:00")
+poa1 <- filter_day_period(poa, period_start = "10:00", period_end = "18:00")
 
-poa2 <- gtfs2gps(poa1)
+poa2 <- gtfs2gps(poa1, cores=1)
+
 
 
 ##### INPUT  ------------------------
