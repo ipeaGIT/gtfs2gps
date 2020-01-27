@@ -65,4 +65,10 @@ test_that("filter_single_trip", {
   expect_equal(dim(subset$trips)[1], length(unique(poa$shapes$shape_id)))
 })
 
-
+test_that("filter_by_agency_id", {
+  poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+  
+  result <- filter_by_agency_id(poa, poa$agency$agency_id)
+  expect_equal(dim(result$trips)[1], 387)
+  expect_equal(dim(result$shapes)[1], 1265)
+})
