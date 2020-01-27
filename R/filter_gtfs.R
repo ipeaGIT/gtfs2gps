@@ -29,6 +29,47 @@ filter_by_shape_id <- function(gtfs_data, shape_ids){
   return(gtfs_data)
 }
 
+#' @title Filter GTFS data by agency ids
+#' 
+#' @description Filter a GTFS data by its agency ids. It also removes the
+#' unnecessary routes, trips, frequencies, stop_times, calendars, shapes, and
+#' stops accordingly.
+#' @param gtfs_data A list of data.tables read using gtfs2gps::reag_gtfs().
+#' @param agency_ids A vector of strings belonging to the agencies of the
+#' gtfs_data data.
+#' @export
+filter_by_agency_id <- function(gtfs_data, agency_ids){
+  gtfs_data$agency <- subset(gtfs_data$agency, agency_id %in% agency_ids)
+  gtfs_data$routes <- subset(gtfs_data$routes, agency_id %in% agency_ids)
+  
+  route_ids <- unique(gtfs_data$routes$route_id)
+  
+  gtfs_data$trips <- subset(gtfs_data$trips, route_id %in% route_ids)
+  
+  trip_ids <- unique(gtfs_data$trips$trip_id)
+  
+  if(!is.null(gtfs_data$frequencies))
+    gtfs_data$frequencies <- subset(gtfs_data$frequencies, trip_id %in% trip_ids)
+  
+  gtfs_data$stop_times <- subset(gtfs_data$stop_times, trip_id %in% trip_ids)
+  
+  gtfs_data$calendar
+  
+  service_ids <- unique(gtfs_data$trips$service_id)
+  
+  gtfs_data$calendar <- subset(gtfs_data$calendar, service_id %in% service_ids)
+  
+  shapes_ids <- unique(gtfs_data$trips$shape_id)
+  
+  gtfs_data$shapes <- subset(gtfs_data$shapes, shape_id %in% shapes_ids)
+  
+  stop_ids <- unique(gtfs_data$stop_times$stop_id)
+  
+  gtfs_data$stops <- subset(gtfs_data$stops, stop_id %in% stop_ids)
+  
+  return(gtfs_data)
+}
+
 #' @title Filter GTFS data using valid stop times
 #' 
 #' @description Filter a GTFS data read using gtfs2gps::read_gtfs(). It removes stop_times
