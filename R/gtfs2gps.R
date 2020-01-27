@@ -24,7 +24,7 @@
 #' poa <- gtfs2gps(system.file("extdata/poa.zip", package="gtfs2gps"))
 #' }
 
-gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores = NULL, progress = TRUE, continue = FALSE){
+gtfs2gps <- function(gtfs_data, spatial_resolution = 15, cores = NULL, progress = TRUE, filepath = NULL, continue = FALSE){
 ###### PART 1. Load and prepare data inputs ------------------------------------
 
   if(continue & is.null(filepath))
@@ -49,7 +49,8 @@ gtfs2gps <- function(gtfs_data, filepath = NULL, spatial_resolution = 15, cores 
     # test
     # all_shapeids <- unique(shapes_sf$shape_id)
     # shapeid <- all_shapeids[2]
-
+    #message(shapeid)
+    
     ## Select corresponding route, route type, stops and shape of that trip
 
     # identify route id
