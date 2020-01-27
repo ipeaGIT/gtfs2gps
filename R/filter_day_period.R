@@ -13,14 +13,12 @@
 #' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gtfs"))
 #' poa_f <- filter_day_period(poa, period_start = "10:00", period_end = "19:00")
 #' }
-#' 
 filter_day_period <- function(gtfs, period_start=NULL, period_end=NULL){
-  
-if(is.null(period_start)){ period_start <- "00:00:01"}
-if(is.null(period_end)){ period_end <- "23:59:59"}
+  if(is.null(period_start)){ period_start <- "00:00:01"}
+  if(is.null(period_end)){ period_end <- "23:59:59"}
 
-if(is.na(data.table::as.ITime(period_start))){ stop( paste0("Error: Invalid period_start input") ) }
-if(is.na(data.table::as.ITime(period_end))){ stop( paste0("Error: Invalid period_end input") ) }
+  if(is.na(data.table::as.ITime(period_start))){ stop( paste0("Error: Invalid period_start input") ) }
+  if(is.na(data.table::as.ITime(period_end))){ stop( paste0("Error: Invalid period_end input") ) }
   
   # 1) filter stop times
   gtfs$stop_times <- gtfs$stop_times[ data.table::between(departure_time, data.table::as.ITime(period_start), data.table::as.ITime(period_end)), ]
