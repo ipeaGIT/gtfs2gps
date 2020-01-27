@@ -1,5 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^travis\.yml$
 prep_data
 tests_joao
 tests_rafa
