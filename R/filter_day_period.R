@@ -8,7 +8,7 @@
 #' @param period_end A string of type "hh:mm" indicating the end of the period (defaults to "09:00")
 #' @export
 #' @examples \donttest{
-#' library(gtfs2gtfs)
+#' library(gtfs2gps)
 #'
 #' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gtfs"))
 #' poa_f <- filter_day_period(poa, period_start = "10:00", period_end = "19:00")
