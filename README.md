@@ -1,6 +1,8 @@
 # gtfs2gps
 
 [![Travis-CI Build Status](https://travis-ci.org/ipeaGIT/gtfs2gps.svg?branch=master)](https://travis-ci.org/ipeaGIT/gtfs2gps)
+[![DOI](https://zenodo.org/badge/203697230.svg)](https://zenodo.org/badge/latestdoi/203697230)
+
 
 ### Converting public transport data from GTFS format to GPS-like records
 
