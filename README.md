@@ -34,4 +34,7 @@ Please see our vignette:
 
 The **gtfs2gps** package is developed by a team at the Institute for Applied Economic Research (Ipea) with collaboration from the National Institute for Space Research (INPE), both from Brazil. You can cite this package as:
 
-* Pereira, R.H.M.; Andrade, P.R.; Bazzo, J. (2019) gtfs2gps: Converting GTFS data to GPS format. GitHub repository - https://github.com/ipeaGIT/gtfs2gps.
+* Pereira, R.H.M.; Andrade, P.R.; Bazzo, J. (2019) gtfs2gps: Converting GTFS data to GPS format. Zenodo https://zenodo.org/badge/latestdoi/203697230.
+
+
+
