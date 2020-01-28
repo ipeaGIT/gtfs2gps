@@ -18,7 +18,8 @@ Depends:
 Suggests:
     rmarkdown,
     knitr,
-    testthat
+    testthat,
+    dplyr
 Imports:
       data.table,
       magrittr,
@@ -26,8 +27,6 @@ Imports:
       units,
       sf,
       sfheaders,
-      sp,
-      dplyr,
       lwgeom,
       doSNOW,
       snow,

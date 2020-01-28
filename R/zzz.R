@@ -16,6 +16,8 @@ utils::globalVariables(c(".", "%>%", ":="))
 #' @importFrom stats na.omit
 #' @importFrom utils head tail
 #' @importFrom stats lag na.omit
+#' @importFrom Rcpp compileAttributes
+#' @importFrom lwgeom st_make_valid
 #' @useDynLib gtfs2gps, .registration = TRUE
 NULL
 
