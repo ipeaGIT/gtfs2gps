@@ -1,5 +1,7 @@
 # gtfs2gps
 
+[![Travis-CI Build Status](https://travis-ci.org/ipeaGIT/gtfs2gps.svg?branch=master)](https://travis-ci.org/ipeaGIT/gtfs2gps)
+
 ### Converting public transport data from GTFS format to GPS-like records
 
 **gtfs2gps** is an R package that converts public transportation data in GTFS format to GPS-like records in a `data.frame`/`data.table`, which can then be used in various applications such as running transport simulations or scenario analyses. 
