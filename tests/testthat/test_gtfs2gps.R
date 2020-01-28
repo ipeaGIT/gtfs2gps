@@ -16,7 +16,7 @@ test_that("gtfs2gps", {
     expect(my_dim %in% c(303851, 303697), paste("length of gtfs incorrect:", my_dim))
 
     my_length <- length(poa_gps$dist[which(!poa_gps$dist < 15)])
-    expect(my_length %in% c(21, 77), paste("incorrect number of distances greater than 15m:", my_length))
+    expect(my_length %in% c(21, 77, 98), paste("incorrect number of distances greater than 15m:", my_length))
     
     expect_equal(sum(poa_gps$dist), 4065814, 0.001)
     
