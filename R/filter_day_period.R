@@ -26,7 +26,7 @@ filter_day_period <- function(gtfs, period_start=NULL, period_end=NULL){
   # 1) filter stop times
   gtfs$stop_times <- gtfs$stop_times[ data.table::between(departure_time, data.table::as.ITime(period_start), data.table::as.ITime(period_end)), ]
   
-  # unique stops and trips
+  # Remaining unique stops and trips
   unique_stops <- unique(gtfs$stop_times$stop_id)
   unique_trips <- unique(gtfs$stop_times$trip_id)
   

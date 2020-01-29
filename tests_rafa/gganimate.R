@@ -25,8 +25,7 @@ spo_gtfs_f <- gtfs2gps::filter_day_period(spo_gtfs, period_start = "07:00:", per
 spo_gps <- gtfs2gps(spo_gtfs_f, spatial_resolution = 15, progress = T, cores = 1 )
 
 
-
-
+spo_gtfs$trips[ trip_id =="8700-21-0"]
 
 
 # get static network as sf object
