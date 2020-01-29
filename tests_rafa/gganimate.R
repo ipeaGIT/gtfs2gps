@@ -22,7 +22,7 @@ spo_gtfs <- gtfs2gps::read_gtfs(spo_zip)
 spo_gtfs_f <- gtfs2gps::filter_day_period(spo_gtfs, period_start = "07:00:", period_end = "07:30")
   
 # Convert GTFS data into a data.table with GPS-like records
-spo_gps <- gtfs2gps2(spo_gtfs_f, spatial_resolution = 15, progress = T, cores = 1 )
+spo_gps <- gtfs2gps(spo_gtfs_f, spatial_resolution = 15, progress = T, cores = 1 )
 
 
 

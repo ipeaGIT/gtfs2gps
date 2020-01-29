@@ -21,7 +21,10 @@ Updates a GTFS feed filtering only the routes, shapes, trips, stops,
 \donttest{
 library(gtfs2gps)
 
-poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gtfs"))
+# read gtfs data
+poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+
+# filter gtfs data
 poa_f <- filter_day_period(poa, period_start = "10:00", period_end = "19:00")
 }
 }

@@ -10,7 +10,10 @@
 #' @examples \donttest{
 #' library(gtfs2gps)
 #'
-#' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gtfs"))
+#' # read gtfs data
+#' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+#' 
+#' # filter gtfs data
 #' poa_f <- filter_day_period(poa, period_start = "10:00", period_end = "19:00")
 #' }
 filter_day_period <- function(gtfs, period_start=NULL, period_end=NULL){
@@ -28,7 +31,7 @@ filter_day_period <- function(gtfs, period_start=NULL, period_end=NULL){
   unique_trips <- unique(gtfs$stop_times$trip_id)
   
   # 2) filter STOPS and TRIPS
-  gtfs$stops <- gtfs$stops[ stop_id %in% stop_id ]
+  gtfs$stops <- gtfs$stops[ stop_id %in% unique_stops ]
   gtfs$trips <- gtfs$trips[ trip_id %in% unique_trips ]
   
   # unique values
