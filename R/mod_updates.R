@@ -3,7 +3,7 @@ update_freq <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
   new_stoptimes <- update_dt(tripid, new_stoptimes, gtfs_data, all_tripids)
   
   #  Get freq info for that trip
-  # tripid <- "148L-10-0"
+  # tripid <- "8700-21-0"
   freq_temp <- subset(gtfs_data$frequencies, trip_id == tripid)
   # number of trips
   #freq_temp[, service_duration := as.numeric(difftime(freq_temp$end_time[1],freq_temp$start_time[1], units="secs")) ]
@@ -72,7 +72,7 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
                     # internal test
                     # tripid <- "176-1@1#1800" all_tripids[1]
   
-  message(tripid)
+  # message(tripid)
   # add trip_id 
   new_stoptimes[, trip_id := tripid]
   
@@ -92,7 +92,10 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
   if( match(tripid, all_tripids) == 1 | length(stop_id_ok) < 2){   tripids_missing <- c() }
   
   # ignore trip_id if original departure_time values are missing
-  if(is.null(length(stop_id_ok))==T | length(stop_id_ok)==1 | length(stop_id_ok)==0){ tripids_missing <- append(tripids_missing, tripid) } else{
+  if(is.null(length(stop_id_ok))==T | length(stop_id_ok)==1 | length(stop_id_ok)==0){ 
+    tripids_missing <- append(tripids_missing, tripid)
+    return(NULL)
+    } else{
     
   ### UPDATE speeds
     # lim0: 'id' in which stop_times intervals STARTS

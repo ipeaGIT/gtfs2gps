@@ -49,7 +49,7 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 15, cores = NULL, progress 
     # test
     # all_shapeids <- unique(shapes_sf$shape_id)
     # shapeid <- all_shapeids[2]
-    #message(shapeid)
+    # message(shapeid)
     
     ## Select corresponding route, route type, stops and shape of that trip
 
@@ -68,8 +68,12 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 15, cores = NULL, progress 
     # Get the stops sequence with lat long linked to that route
     # each shape_id only has one stop sequence
     nstop <- gtfs_data$stop_times[trip_id %in% all_tripids, .N, by ="trip_id"]$N
-    stops_seq <- gtfs_data$stop_times[trip_id == all_tripids[which.max(nstop)], .(stop_id, stop_sequence)]
     
+    # If there is less than two valid stops/departure times, jump this shape_id
+    if ( nstop < 2) {   return(NULL) }
+    
+    # check stop sequence
+    stops_seq <- gtfs_data$stop_times[trip_id == all_tripids[which.max(nstop)], .(stop_id, stop_sequence)]
     stops_seq[gtfs_data$stops, on = "stop_id", c('stop_lat', 'stop_lon') := list(i.stop_lat, i.stop_lon)] # add lat long info
 
     # convert stops to sf
@@ -108,6 +112,8 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 15, cores = NULL, progress 
     # update stops_seq with snap stops to route shape
     stops_seq$ref <- snapped
       
+  
+    
     ### Start building new stop_times.txt file
 
     # get shape points in high resolution
@@ -120,6 +126,7 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 15, cores = NULL, progress 
     ## Add stops to new_stoptimes  
     new_stoptimes[stops_seq$ref, "stop_id"] <- stops_seq$stop_id
     new_stoptimes[stops_seq$ref, "stop_sequence"] <- stops_seq$stop_sequence
+
 
     # calculate Distance between successive points
     new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type = "lead"), data.table::shift(shape_pt_lon, type = "lead"), tolerance = 1e10)]
