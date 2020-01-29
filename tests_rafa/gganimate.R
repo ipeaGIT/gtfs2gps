@@ -19,8 +19,9 @@ spo_zip <- system.file("extdata/saopaulo.zip", package="gtfs2gps" )
 spo_gtfs <- gtfs2gps::read_gtfs(spo_zip)
 
 # subset time interval
-spo_gtfs_f <- gtfs2gps::filter_day_period(spo_gtfs, period_start = "07:00:", period_end = "08:30")
+spo_gtfs_f <- gtfs2gps::filter_day_period(spo_gtfs, period_start = "07:00:", period_end = "08:50")
   
+
 # Convert GTFS data into a data.table with GPS-like records
 spo_gps <- gtfs2gps(spo_gtfs_f, spatial_resolution = 15, progress = T, cores = 1 )
 

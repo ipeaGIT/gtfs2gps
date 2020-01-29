@@ -14,7 +14,7 @@
 #' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
 #' 
 #' # filter gtfs data
-#' poa_f <- filter_day_period(poa, period_start = "10:00", period_end = "19:00")
+#' poa_f <- filter_day_period(poa, period_start = "10:00", period_end = "10:20")
 #' }
 filter_day_period <- function(gtfs, period_start=NULL, period_end=NULL){
   if(is.null(period_start)){ period_start <- "00:00:01"}
@@ -23,9 +23,22 @@ filter_day_period <- function(gtfs, period_start=NULL, period_end=NULL){
   if(is.na(data.table::as.ITime(period_start))){ stop( paste0("Error: Invalid period_start input") ) }
   if(is.na(data.table::as.ITime(period_end))){ stop( paste0("Error: Invalid period_end input") ) }
   
+  
+  
   # 1) filter stop times
   gtfs$stop_times <- gtfs$stop_times[ data.table::between(departure_time, data.table::as.ITime(period_start), data.table::as.ITime(period_end)), ]
   
+  # Update frequencies
+  if(test_gtfs_freq(gtfs) == "frequency"){
+    
+    if((data.table::as.ITime(period_end) - data.table::as.ITime(period_start)) < data.table::as.ITime("01:00")){
+      stop(paste0('Using a frequency-based GTFS. Please input time period of one hour or longer'))
+    } else {
+      gtfs$frequencies <- gtfs$frequencies[ data.table::as.ITime(start_time) >= data.table::as.ITime(period_start) & data.table::as.ITime(end_time) <= data.table::as.ITime(period_end) ] 
+    }
+  }
+  # as.POSIXct(paste('2020-01-29', '10:45:00')) %>% as.numeric()
+
   # Remaining unique stops and trips
   unique_stops <- unique(gtfs$stop_times$stop_id)
   unique_trips <- unique(gtfs$stop_times$trip_id)

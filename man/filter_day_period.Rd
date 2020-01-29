@@ -25,6 +25,6 @@ library(gtfs2gps)
 poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
 
 # filter gtfs data
-poa_f <- filter_day_period(poa, period_start = "10:00", period_end = "19:00")
+poa_f <- filter_day_period(poa, period_start = "10:00", period_end = "10:20")
 }
 }

@@ -101,15 +101,15 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 15, cores = NULL, progress 
                                      new_shape %>% sf::st_coordinates(),
                                      spatial_resolution,
                                      all_tripids[which.max(nstop)])
-
-    # If there is less than two valid stops, jump this shape_id
-    if(is.null(snapped) | length(snapped) == 0 | which.max(nstop) < 2 ){
-      return(NULL) # nocov
-    }
+    
+    # Skip shape_id IF there are no snnaped stops
+    if(is.null(snapped) | length(snapped) == 0 ){ return(NULL) } # nocov
       
+    # If there is less than two valid stops, jump this shape_id
+    if( min(nstop) < 2){ return(NULL) } # nocov
+
     # Skip shape_id IF there is no route_id associated with that shape_id
     if(is.na(routeid)) return(NULL) # nocov
-    
     
     # update stops_seq with snap stops to route shape
     stops_seq$ref <- snapped
