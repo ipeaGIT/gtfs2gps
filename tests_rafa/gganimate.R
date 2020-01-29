@@ -13,11 +13,21 @@ gc(reset = T)
 # local GTFS.zip
 spo_zip <- system.file("extdata/saopaulo.zip", package="gtfs2gps" )
 
-# Convert GTFS data into a data.table with GPS-like records
-spo_gps <- gtfs2gps(spo_zip, spatial_resolution = 15, progress = T )
+ # spo_zip <- system.file("extdata/poa.zip", package="gtfs2gps")
+
+# read gtfs
+spo_gtfs <- gtfs2gps::read_gtfs(spo_zip)
 
 # subset time interval
-dt <- spo_gps[ between(departure_time, lower = as.ITime("07:00:00"), upper = as.ITime("07:30:00")) ]
+spo_gtfs_f <- gtfs2gps::filter_day_period(spo_gtfs, period_start = "07:00:", period_end = "07:30")
+  
+# Convert GTFS data into a data.table with GPS-like records
+spo_gps <- gtfs2gps2(spo_gtfs_f, spatial_resolution = 15, progress = T, cores = 1 )
+
+
+
+
+
 
 # get static network as sf object
 spo_sf <- read_gtfs(spo_zip) %>% gtfs_shapes_as_sf()
