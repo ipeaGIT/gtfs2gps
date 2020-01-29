@@ -56,8 +56,6 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 15, cores = NULL, progress 
     # identify route id
     routeid <- gtfs_data$trips[shape_id == shapeid]$route_id[1]
     
-    # Skip shape_id IF there is no route_id associated with that shape_id
-    if(is.na(routeid)) return(NULL) # nocov
     
     # identify route type
     routetype <- gtfs_data$routes[route_id == routeid]$route_type
@@ -65,12 +63,11 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 15, cores = NULL, progress 
     # get all trips linked to that route
     all_tripids <- gtfs_data$trips[shape_id == shapeid & route_id == routeid, ]$trip_id %>% unique()
 
-    # Get the stops sequence with lat long linked to that route
-    # each shape_id only has one stop sequence
+    # nstop = number of valid stops in each trip_id
     nstop <- gtfs_data$stop_times[trip_id %in% all_tripids, .N, by ="trip_id"]$N
     
-    # If there is less than two valid stops/departure times, jump this shape_id
-    if ( nstop < 2) {   return(NULL) }
+    # Get the stops sequence with lat long linked to that route
+    # each shape_id only has one stop sequence
     
     # check stop sequence
     stops_seq <- gtfs_data$stop_times[trip_id == all_tripids[which.max(nstop)], .(stop_id, stop_sequence)]
@@ -105,10 +102,15 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 15, cores = NULL, progress 
                                      spatial_resolution,
                                      all_tripids[which.max(nstop)])
 
-    if(is.null(snapped) | length(snapped) == 0){
+    # If there is less than two valid stops, jump this shape_id
+    if(is.null(snapped) | length(snapped) == 0 | which.max(nstop) < 2 ){
       return(NULL) # nocov
     }
       
+    # Skip shape_id IF there is no route_id associated with that shape_id
+    if(is.na(routeid)) return(NULL) # nocov
+    
+    
     # update stops_seq with snap stops to route shape
     stops_seq$ref <- snapped
       
@@ -178,4 +180,6 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 15, cores = NULL, progress 
     return(output)
   else
     return(NULL)
-}
+  }
+
+  
