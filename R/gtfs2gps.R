@@ -170,7 +170,7 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 15, parallel = T, progress 
     message(paste('Using', cores, 'CPU cores'))
     
     message("Processing the data")
-    output <-  furrr::future_map( .x = all_shapeids, .f = corefun, .progress = T, .options = furrr::future_options(packages=c('data.table', 'sf', 'magrittr', 'Rcpp', 'sfheaders', 'units'))) %>% data.table::rbindlist()
+    output <-  furrr::future_map( .x = all_shapeids, .f = corefun, .progress = progress, .options = furrr::future_options(packages=c('data.table', 'sf', 'magrittr', 'Rcpp', 'sfheaders', 'units'))) %>% data.table::rbindlist()
   }
 
   if(is.null(filepath))
