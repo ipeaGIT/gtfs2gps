@@ -162,7 +162,7 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 15, parallel = T, progress 
   }
   else
   {  
-    message("Preparing multiprocess")
+    # message("Preparing multiprocess")
     future::plan(future::multiprocess)
     
     # number of cores to use
