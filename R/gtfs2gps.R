@@ -24,7 +24,7 @@
 #' poa <- gtfs2gps(system.file("extdata/poa.zip", package="gtfs2gps"))
 #' }
 
-gtfs2gps <- function(gtfs_data, spatial_resolution = 15, cores = NULL, progress = TRUE, filepath = NULL, continue = FALSE){
+gtfs2gps <- function(gtfs_data=poa, spatial_resolution = 15, parallel = T, progress = TRUE, filepath = NULL, continue = FALSE){
 ###### PART 1. Load and prepare data inputs ------------------------------------
 
   if(continue & is.null(filepath))
@@ -77,14 +77,9 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 15, cores = NULL, progress 
     stops_sf <- sfheaders::sf_point(stops_seq, x = "stop_lon", y="stop_lat", keep = T)
     sf::st_crs(stops_sf) <- sf::st_crs(shapes_sf)
     
+    spatial_resolution=15
     spatial_resolution <- units::set_units(spatial_resolution / 1000, "km")
     
-    # # old (slower) version
-    # new_shape <- subset(shapes_sf, shape_id == shapeid) %>%
-    #   sf::st_segmentize(spatial_resolution) %>%
-    #   sf::st_cast("LINESTRING") %>%
-    #   sf::st_cast("POINT", warn = FALSE)  %>% 
-    #   sf::st_sf()
 
     # new faster verion using sfheaders
     new_shape <- subset(shapes_sf, shape_id == shapeid) %>%
@@ -155,25 +150,28 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 15, cores = NULL, progress 
   # all shape ids
   all_shapeids <- unique(shapes_sf$shape_id)
 
-  # processing the data
-  message("Processing the data")
 
-  # number of cores to use
-  if(is.null(cores)){ cores <- data.table::getDTthreads() - 1 }
-  if(cores == 0){ cores <- 1 } # nocov
 
-  if(cores == 1){
-    message(paste('Using', cores, 'CPU core'))
+  if(parallel == F){
+    message(paste('Using 1 CPU core'))
     if(progress) pbapply::pboptions(type = "txt")
 
+    message("Processing the data")
     output <- pbapply::pblapply(X = all_shapeids, FUN = corefun) %>% data.table::rbindlist()
     
     if(progress) pbapply::pboptions(type = "none")
   }
   else
   {  
+    message("Preparing multiprocess")
+    future::plan(future::multiprocess)
+    
+    # number of cores to use
+    cores <- data.table::getDTthreads() - 1
     message(paste('Using', cores, 'CPU cores'))
-    output <- pbSapply(cores, progress, X = all_shapeids, FUN = corefun)
+    
+    message("Processing the data")
+    output <-  furrr::future_map( .x = all_shapeids, .f = corefun, .progress = T, .options = future_options(packages=c('data.table', 'sf', 'magrittr', 'Rcpp', 'sfheaders', 'units'))) %>% data.table::rbindlist()
   }
 
   if(is.null(filepath))

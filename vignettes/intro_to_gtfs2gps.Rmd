@@ -90,7 +90,7 @@ write_gtfs(sao_small, "sao_small.zip")
 To convert GTFS to GPS-like format, use `gtfs2gps()`. This is the core function of the package. It takes a GTFS zipped file as an input and returns a `data.table` where each row represents a 'GPS-like' data point for every trip in the GTFS file. In summary, this function interpolates the space-time position of each vehicle in each trip considering the network distance and average speed between stops. The function samples the timestamp of each vehicle every $15m$ by default, but the user can set a different value in the `spatial_resolution` argument. See the example below.
 
 ```{r, message = FALSE}
-  sao_gps <- gtfs2gps("sao_small.zip", progress = FALSE, cores = 1, spatial_resolution = 15)
+  sao_gps <- gtfs2gps("sao_small.zip", progress = FALSE, parallel = F, spatial_resolution = 15)
   head(sao_gps)
 ```
  The following figure maps the first 100 data points of the sample data we processed.
@@ -112,7 +112,7 @@ The function `gtfs2gps()` automatically recognizes whether the GTFS data brings 
 
 ```{r, message = FALSE}
 poa <- system.file("extdata/poa.zip", package ="gtfs2gps")
-poa_gps <- gtfs2gps(poa, progress = FALSE, cores = 1, spatial_resolution = 15)
+poa_gps <- gtfs2gps(poa, progress = FALSE, parallel = F, spatial_resolution = 15)
 poa_gps_sf <- gps_as_sf(poa_gps)
 poa_sf <- read_gtfs(poa) %>% gtfs_shapes_as_sf()
 plot(sf::st_geometry(poa_gps_sf[1:200,]))

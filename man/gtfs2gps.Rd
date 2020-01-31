@@ -5,9 +5,9 @@
 \title{Convert GTFS to GPS-like data given a spatial resolution}
 \usage{
 gtfs2gps(
-  gtfs_data,
+  gtfs_data = poa,
   spatial_resolution = 15,
-  cores = NULL,
+  parallel = T,
   progress = TRUE,
   filepath = NULL,
   continue = FALSE
@@ -19,8 +19,6 @@ represented as a list of data.tables.}
 
 \item{spatial_resolution}{The spatial resolution in meters. Default is 15m.}
 
-\item{cores}{Number of cores to be used. Defaults to 1.}
-
 \item{progress}{Show a progress bar. Default is TRUE.}
 
 \item{filepath}{Output file path. As default, the output is returned in R.
@@ -31,6 +29,8 @@ with the name equals to its id. In this case, no output is returned.}
 skips processing the shape identifiers that were already saved into files.
 It is useful to continue processing a GTFS file that was stopped for some
 reason. Default value is FALSE.}
+
+\item{cores}{Number of cores to be used. Defaults to 1.}
 }
 \description{
 Convert GTFS data to GPS format by sampling points using a
