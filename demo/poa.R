@@ -15,7 +15,7 @@ plot(sf::st_geometry(poa_shp))
 plot(sf::st_geometry(poa_stops), col = "blue", add = TRUE)
 box()
 
-gps <- gtfs2gps(poa, cores = 2)
+gps <- gtfs2gps(poa, parallel = T)
 
 gps_sf <- gps_as_sf(gps) %>%
   dplyr::filter(trip_id == "T2-1@1#520")

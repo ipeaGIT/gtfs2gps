@@ -19,6 +19,8 @@ represented as a list of data.tables.}
 
 \item{spatial_resolution}{The spatial resolution in meters. Default is 15m.}
 
+\item{parallel}{Decides whether the function should run in parallel. Defaults to TRUE.}
+
 \item{progress}{Show a progress bar. Default is TRUE.}
 
 \item{filepath}{Output file path. As default, the output is returned in R.
@@ -29,8 +31,6 @@ with the name equals to its id. In this case, no output is returned.}
 skips processing the shape identifiers that were already saved into files.
 It is useful to continue processing a GTFS file that was stopped for some
 reason. Default value is FALSE.}
-
-\item{cores}{Number of cores to be used. Defaults to 1.}
 }
 \description{
 Convert GTFS data to GPS format by sampling points using a

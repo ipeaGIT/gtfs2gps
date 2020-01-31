@@ -11,7 +11,7 @@ fortaleza <- filter_by_shape_id(fortaleza, ids[1:2])
 
 for_small_sf <- gtfs_shapes_as_sf(fortaleza)
 
-for_gps <- gtfs2gps(fortaleza, cores = 2)
+for_gps <- gtfs2gps(fortaleza, parallel = T)
 
 for_gps_sf <- gps_as_sf(for_gps)
 for_gps_small <- for_gps[1:60, ]

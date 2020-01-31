@@ -8,11 +8,11 @@
 #' @param gtfs_data A path to a GTFS file to be converted to GPS, or a GTFS data
 #' represented as a list of data.tables.
 #' @param spatial_resolution The spatial resolution in meters. Default is 15m.
+#' @param parallel Decides whether the function should run in parallel. Defaults to TRUE.
+#' @param progress Show a progress bar. Default is TRUE.
 #' @param filepath Output file path. As default, the output is returned in R.
 #' When this argument is set, each route is saved into a file within filepath,
 #' with the name equals to its id. In this case, no output is returned.
-#' @param cores Number of cores to be used. Defaults to 1.
-#' @param progress Show a progress bar. Default is TRUE.
 #' @param continue Argument that can be used only with filepath. When TRUE, it
 #' skips processing the shape identifiers that were already saved into files.
 #' It is useful to continue processing a GTFS file that was stopped for some
@@ -171,7 +171,7 @@ gtfs2gps <- function(gtfs_data=poa, spatial_resolution = 15, parallel = T, progr
     message(paste('Using', cores, 'CPU cores'))
     
     message("Processing the data")
-    output <-  furrr::future_map( .x = all_shapeids, .f = corefun, .progress = T, .options = future_options(packages=c('data.table', 'sf', 'magrittr', 'Rcpp', 'sfheaders', 'units'))) %>% data.table::rbindlist()
+    output <-  furrr::future_map( .x = all_shapeids, .f = corefun, .progress = T, .options = furrr::future_options(packages=c('data.table', 'sf', 'magrittr', 'Rcpp', 'sfheaders', 'units'))) %>% data.table::rbindlist()
   }
 
   if(is.null(filepath))
