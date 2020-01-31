@@ -24,7 +24,7 @@
 #' poa <- gtfs2gps(system.file("extdata/poa.zip", package="gtfs2gps"))
 #' }
 
-gtfs2gps <- function(gtfs_data=poa, spatial_resolution = 15, parallel = T, progress = TRUE, filepath = NULL, continue = FALSE){
+gtfs2gps <- function(gtfs_data, spatial_resolution = 15, parallel = T, progress = TRUE, filepath = NULL, continue = FALSE){
 ###### PART 1. Load and prepare data inputs ------------------------------------
 
   if(continue & is.null(filepath))
