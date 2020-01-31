@@ -9,6 +9,9 @@
 #' represented as a list of data.tables.
 #' @param spatial_resolution The spatial resolution in meters. Default is 15m.
 #' @param parallel Decides whether the function should run in parallel. Defaults to TRUE.
+#' @param strategy Name of evaluation function to use in future parallel processing. Defaults to 
+#' "multiprocess", i.e. if multicore evaluation is supported, that will be used, otherwise
+#'  multisession evaluation will be used. Fore details, check ?future::plan().
 #' @param progress Show a progress bar. Default is TRUE.
 #' @param filepath Output file path. As default, the output is returned in R.
 #' When this argument is set, each route is saved into a file within filepath,
@@ -24,7 +27,7 @@
 #' poa <- gtfs2gps(system.file("extdata/poa.zip", package="gtfs2gps"))
 #' }
 
-gtfs2gps <- function(gtfs_data, spatial_resolution = 15, parallel = T, progress = TRUE, filepath = NULL, continue = FALSE){
+gtfs2gps <- function(gtfs_data, spatial_resolution = 15, parallel = F, strategy = 'multiprocess', progress = TRUE, filepath = NULL, continue = FALSE){
 ###### PART 1. Load and prepare data inputs ------------------------------------
 
   if(continue & is.null(filepath))
@@ -162,10 +165,10 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 15, parallel = T, progress 
   }
   else
   {  
-    # message("Preparing multiprocess")
-    future::plan(future::multiprocess)
+    # message("Preparing parallelization")
+    future::plan(strategy)
     
-    # number of cores to use
+    # number of cores
     cores <- data.table::getDTthreads() - 1
     message(paste('Using', cores, 'CPU cores'))
     

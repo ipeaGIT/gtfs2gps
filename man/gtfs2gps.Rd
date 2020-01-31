@@ -7,7 +7,8 @@
 gtfs2gps(
   gtfs_data,
   spatial_resolution = 15,
-  parallel = T,
+  parallel = F,
+  strategy = "multiprocess",
   progress = TRUE,
   filepath = NULL,
   continue = FALSE
@@ -20,6 +21,10 @@ represented as a list of data.tables.}
 \item{spatial_resolution}{The spatial resolution in meters. Default is 15m.}
 
 \item{parallel}{Decides whether the function should run in parallel. Defaults to TRUE.}
+
+\item{strategy}{Name of evaluation function to use in future parallel processing. Defaults to 
+"multiprocess", i.e. if multicore evaluation is supported, that will be used, otherwise
+ multisession evaluation will be used. Fore details, check ?future::plan().}
 
 \item{progress}{Show a progress bar. Default is TRUE.}
 
