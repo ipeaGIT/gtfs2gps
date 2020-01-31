@@ -5,7 +5,7 @@
 \title{Convert GTFS to GPS-like data given a spatial resolution}
 \usage{
 gtfs2gps(
-  gtfs_data = poa,
+  gtfs_data,
   spatial_resolution = 15,
   parallel = T,
   progress = TRUE,

@@ -77,7 +77,6 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 15, parallel = T, progress 
     stops_sf <- sfheaders::sf_point(stops_seq, x = "stop_lon", y="stop_lat", keep = T)
     sf::st_crs(stops_sf) <- sf::st_crs(shapes_sf)
     
-    spatial_resolution=15
     spatial_resolution <- units::set_units(spatial_resolution / 1000, "km")
     
 
