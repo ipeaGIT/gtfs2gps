@@ -64,7 +64,7 @@ test_that("gtfs2gps", {
       filter_by_shape_id(52000:52200) %>%
       filter_week_days() %>%
       filter_single_trip() %>%
-      gtfs2gps(parallel = T, progress = TRUE)
+      gtfs2gps(parallel = F, progress = TRUE)
 
     expect_true(all(names(sp_gps) %in% 
       c("trip_id", "route_type", "id", "shape_pt_lon", "shape_pt_lat",
