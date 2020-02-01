@@ -7,30 +7,35 @@ library(ggthemes)
 library(sf)
 gc(reset = T)
 
+
+Sys.setenv(TZ= Sys.timezone() )
+
+
  
 ###### Prepare data  ------------------
 
 # local GTFS.zip
-spo_zip <- system.file("extdata/saopaulo.zip", package="gtfs2gps" )
-
- # spo_zip <- system.file("extdata/poa.zip", package="gtfs2gps")
+gtfs_zip <- system.file("extdata/fortaleza.zip", package="gtfs2gps" )
 
 # read gtfs
-spo_gtfs <- gtfs2gps::read_gtfs(spo_zip)
+gtfs_dt <- gtfs2gps::read_gtfs(gtfs_zip)
 
-# subset time interval
-spo_gtfs_f <- gtfs2gps::filter_day_period(spo_gtfs, period_start = "07:00:", period_end = "08:50")
+# read gtfs
+gtfs_dt <- gtfs2gps::filter_week_days(gtfs_dt)
+
+
+# # subset time interval
+# spo_gtfs_f <- gtfs2gps::filter_day_period(spo_gtfs, period_start = "07:00:", period_end = "08:50")
   
+# get network as sf object
+shapes_sf <- gtfs_shapes_as_sf(gtfs_dt)
 
 # Convert GTFS data into a data.table with GPS-like records
-spo_gps <- gtfs2gps(spo_gtfs_f, spatial_resolution = 15, progress = T, cores = 1 )
+gps_dt <- gtfs2gps(gtfs_dt, spatial_resolution = 15, progress = T, parallel = T )
 
+# subset time interval
+gps_dt <- gps_dt[ between(departure_time, as.ITime("07:00:"), as.ITime("07:30"))]
 
-spo_gtfs$trips[ trip_id =="8700-21-0"]
-
-
-# get static network as sf object
-spo_sf <- read_gtfs(spo_zip) %>% gtfs_shapes_as_sf()
 
 
 
@@ -38,7 +43,7 @@ spo_sf <- read_gtfs(spo_zip) %>% gtfs_shapes_as_sf()
 
 ###### Static plot ------------------
 
-# plot static shape
+# static plot: routes
 
 ggplot() + 
   geom_sf(data=spo_sf, color='red') +
@@ -50,13 +55,13 @@ ggplot() +
 ###### .gif plot ------------------
 
 anim <- ggplot() +
-          geom_sf(data=spo_sf, color='gray90', size=0.01) +
-          geom_point(data = dt, aes(x = shape_pt_lon, y=shape_pt_lat, colour = trip_id), size=1.5, alpha = 0.6, show.legend = FALSE) +
+          geom_sf(data=shapes_sf, color='gray90', size=0.01) +
+          geom_point(data = gps_dt, aes(x = shape_pt_lon, y=shape_pt_lat, colour = trip_id), size=1.5, alpha = 0.6, show.legend = FALSE) +
           scale_color_viridis_d() +
           
           # gganimate specificatons
           labs(title = 'Time: {frame_time}') +
-          transition_time(as.POSIXct(departure_time)+7200) +
+          transition_time(as.POSIXct(departure_time)) +
           shadow_wake(wake_length = 0.015, alpha = FALSE) +
           ease_aes('linear') +
           theme_map()
@@ -64,7 +69,7 @@ anim <- ggplot() +
 
 
 # save gif
-anim_save(animation = anim, "./tests_rafa/gif_spo_point_22fps.gif", fps = 22)
+anim_save(animation = anim, "./tests_rafa/gif_spo_10fps_2for.gif", fps = 10)
 
 
 # animate(anim, duration = 8, fps = 20, width = 400, height = 400, renderer = gifski_renderer()) %>%
