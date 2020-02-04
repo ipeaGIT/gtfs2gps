@@ -13,10 +13,10 @@ test_that("gtfs2gps", {
     #write_sf(poa_gps_shape, "poa_gps_shape.shp")
     
     my_dim <- dim(poa_gps)[1]
-    expect(my_dim %in% c(303851, 303697), paste("length of gtfs incorrect:", my_dim))
+    expect_equal(my_dim, 386708)
 
     my_length <- length(poa_gps$dist[which(!poa_gps$dist < 15)])
-    expect(my_length %in% c(21, 77, 98), paste("incorrect number of distances greater than 15m:", my_length))
+    expect_equal(my_length, 0)
     
     expect_equal(sum(poa_gps$dist), 4065814, 0.001)
     
@@ -71,8 +71,8 @@ test_that("gtfs2gps", {
         "departure_time", "stop_id", "stop_sequence", "dist", "shape_id", "cumdist", "speed", "cumtime")))
 
     my_dim <- dim(sp_gps)[1]
-    expect(my_dim %in% c(239344, 239362), paste("Wrong dim:", my_dim))
-    
+    expect_equal(my_dim, 286838)
+
     expect_true(all(sp_gps$dist > 0))
     expect_true(all(sp_gps$speed > 0))
     expect_true(all(sp_gps$cumtime > 0))
