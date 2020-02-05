@@ -76,9 +76,6 @@ plot(sf::st_geometry(sao_small_stops_sf), pch = 20, col = "red", add = TRUE)
 box()
 ```
 
-![](https://github.com/ipeaGIT/gtfs2gps/blob/master/man/figures/sao_small_shapes_sf.jpg)
-
-
 After subsetting the data, it is also possible to save it as a new GTFS file using `write_gtfs()`, as shown below.
 
 ```{r, message = FALSE}
