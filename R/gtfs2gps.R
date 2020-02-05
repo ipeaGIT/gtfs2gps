@@ -35,11 +35,11 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 15, parallel = F, strategy 
 
   # Unzipping and reading GTFS.zip file
   if(class(gtfs_data) == "character"){
-    message("Unzipping and reading GTFS.zip file")
+    message(paste("Unzipping and reading", basename(gtfs_data)))
     gtfs_data <- read_gtfs(gtfszip = gtfs_data)}
 
   # Convert all shapes into sf objects
-  message("converting shapes to sf objects")
+  message("Converting shapes to sf objects")
   shapes_sf <- gtfs_shapes_as_sf(gtfs_data)
 
   ###### PART 2. Analysing data type ----------------------------------------------
@@ -82,7 +82,6 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 15, parallel = F, strategy 
     
     spatial_resolution <- units::set_units(spatial_resolution / 1000, "km")
     
-
     # new faster verion using sfheaders
     new_shape <- subset(shapes_sf, shape_id == shapeid) %>%
       sf::st_segmentize(spatial_resolution) %>%
