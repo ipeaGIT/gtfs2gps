@@ -6,7 +6,7 @@
 #' @export
 gps_as_sf <- function(gps, crs = 4326){
   # convert to sf
-  temp_gps <- sfheaders::sf_multipoint(gps, x = "shape_pt_lon" , y = "shape_pt_lat", multipoint_id = "shape_id")
+  temp_gps <- sfheaders::sf_multipoint(gps, x = "shape_pt_lon" , y = "shape_pt_lat", multipoint_id = "shape_id", keep = T)
   
   # add projection
   sf::st_crs(temp_gps) <- crs
