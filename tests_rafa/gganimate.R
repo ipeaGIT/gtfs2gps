@@ -5,6 +5,8 @@ library(gganimate)
 library(data.table)
 library(ggthemes)
 library(sf)
+library(viridis)
+
 gc(reset = T)
 
 
@@ -15,7 +17,7 @@ Sys.setenv(TZ= Sys.timezone() )
 ###### Prepare data  ------------------
 
 # local GTFS.zip
-gtfs_zip <- system.file("extdata/fortaleza.zip", package="gtfs2gps" )
+gtfs_zip <- system.file("extdata/saopaulo.zip", package="gtfs2gps" )
 
 # read gtfs
 gtfs_dt <- gtfs2gps::read_gtfs(gtfs_zip)
@@ -46,7 +48,7 @@ gps_dt <- gps_dt[ between(departure_time, as.ITime("07:00:"), as.ITime("07:30"))
 # static plot: routes
 
 ggplot() + 
-  geom_sf(data=spo_sf, color='red') +
+  geom_sf(data=shapes_sf, color='red') +
   coord_sf() 
 
 
@@ -56,8 +58,8 @@ ggplot() +
 
 anim <- ggplot() +
           geom_sf(data=shapes_sf, color='gray90', size=0.01) +
-          geom_point(data = gps_dt, aes(x = shape_pt_lon, y=shape_pt_lat, colour = trip_id), size=1.5, alpha = 0.6, show.legend = FALSE) +
-          scale_color_viridis_d() +
+          geom_point(data = gps_dt, aes(x = shape_pt_lon, y=shape_pt_lat, colour = speed), size=1.5, alpha = 0.6, show.legend = FALSE) +
+          scale_colour_viridis() +
           
           # gganimate specificatons
           labs(title = 'Time: {frame_time}') +
@@ -69,7 +71,7 @@ anim <- ggplot() +
 
 
 # save gif
-anim_save(animation = anim, "./tests_rafa/gif_spo_10fps_2for.gif", fps = 10)
+anim_save(animation = anim, "./tests_rafa/gif_spo_fps22_speed.gif", fps = 22)
 
 
 # animate(anim, duration = 8, fps = 20, width = 400, height = 400, renderer = gifski_renderer()) %>%

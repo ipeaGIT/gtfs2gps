@@ -9,3 +9,4 @@ src/*.o
 /src/tmp.def
 vignettes/*.zip
 /tests/test_ig.txt
+*.gif
