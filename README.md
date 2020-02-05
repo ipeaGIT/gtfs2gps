@@ -2,6 +2,7 @@
 
 [![CRAN/METACRAN Version](https://www.r-pkg.org/badges/version/gtfs2gps)](https://CRAN.R-project.org/package=gtfs2gps)
 [![Travis-CI Build Status](https://travis-ci.org/ipeaGIT/gtfs2gps.svg?branch=master)](https://travis-ci.org/ipeaGIT/gtfs2gps)
+[![Codecov test coverage](https://codecov.io/gh/ipeaGIT/gtfs2gps/branch/master/graph/badge.svg)](https://codecov.io/gh/ipeaGIT/gtfs2gps?branch=master)
 [![DOI](https://zenodo.org/badge/203697230.svg)](https://zenodo.org/badge/latestdoi/203697230)
 
 ### Converting public transport data from GTFS format to GPS-like records
