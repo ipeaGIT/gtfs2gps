@@ -4,12 +4,12 @@
 \alias{write_gtfs}
 \title{Write GTFS data into a zip file}
 \usage{
-write_gtfs(gtfs, file)
+write_gtfs(gtfs, zipfile)
 }
 \arguments{
 \item{gtfs}{A GTFS data set stored in memory as a list of data.tables/data.frames.}
 
-\item{file}{A character string naming .zip file.}
+\item{zipfile}{The pathname of a .zip file to be saved with the GTFS data.}
 }
 \description{
 Write GTFS stored in memory as a list of data.tables into a zipped GTFS feed.
