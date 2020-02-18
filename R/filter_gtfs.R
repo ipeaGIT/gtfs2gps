@@ -7,6 +7,10 @@
 #' gtfs_data data. Note that shape_id might be loaded by gtfs2gps::read_gtfs()
 #' as a string or a number, depending on the available values.
 #' @export
+#' @examples
+#' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+#' 
+#' subset <- filter_by_shape_id(poa, c("A141-1", "T2-1"))
 filter_by_shape_id <- function(gtfs_data, shape_ids){
   gtfs_data$shapes <- subset(gtfs_data$shapes, shape_id %in% shape_ids)
   gtfs_data$trips <- subset(gtfs_data$trips, shape_id %in% shape_ids)
@@ -38,6 +42,10 @@ filter_by_shape_id <- function(gtfs_data, shape_ids){
 #' @param agency_ids A vector of strings belonging to the agencies of the
 #' gtfs_data data.
 #' @export
+#' @examples
+#' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+#'
+#' result <- filter_by_agency_id(poa, "EPTC")
 filter_by_agency_id <- function(gtfs_data, agency_ids){
   gtfs_data$agency <- subset(gtfs_data$agency, agency_id %in% agency_ids)
   gtfs_data$routes <- subset(gtfs_data$routes, agency_id %in% agency_ids)
@@ -77,6 +85,10 @@ filter_by_agency_id <- function(gtfs_data, agency_ids){
 #' stops and routes accordingly.
 #' @param gtfs_data A list of data.tables read using gtfs2gps::reag_gtfs().
 #' @export
+#' @examples
+#' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+#' 
+#' subset <- filter_valid_stop_times(poa)
 filter_valid_stop_times <- function(gtfs_data){
   gtfs_data$stop_times <- subset(gtfs_data$stop_times, !is.na(arrival_time) & !is.na(departure_time))
 
@@ -97,6 +109,10 @@ filter_valid_stop_times <- function(gtfs_data){
 #' trips operating only saturday or sunday.
 #' @param gtfs_data A list of data.tables read using gtfs2gps::reag_gtfs().
 #' @export
+#' @examples
+#' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+#' 
+#' subset <- filter_week_days(poa)
 filter_week_days <- function(gtfs_data){
     calendar_temp <- subset(gtfs_data$calendar, monday > 0 | tuesday > 0 | wednesday > 0 | thursday > 0 | friday > 0)
     serviceids <- calendar_temp$service_id
@@ -112,6 +128,10 @@ filter_week_days <- function(gtfs_data){
 #' It also removes the unnecessary routes accordingly.
 #' @param gtfs_data A list of data.tables read using gtfs2gps::reag_gtfs().
 #' @export
+#' @examples
+#' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+#' 
+#' subset <- filter_single_trip(poa)
 filter_single_trip <- function(gtfs_data){
   gtfs_data$trips <- gtfs_data$trips[!duplicated(gtfs_data$trips$shape_id), ]
 

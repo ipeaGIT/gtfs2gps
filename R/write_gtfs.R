@@ -2,17 +2,16 @@
 #' @description Write GTFS stored in memory as a list of data.tables into a zipped GTFS feed.
 #' This function overwrites the zip file if it exists.
 #' @param gtfs A GTFS data set stored in memory as a list of data.tables/data.frames.
-#' @param file A .zip file name.
+#' @param file A character string naming the file path to a .zip file.
 #' @export
-#' @examples \donttest{
+#' @examples
 #' library(gtfs2gps)
 #'
 #' # read a gtfs.zip to memory
 #' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
 #' 
 #' # write GTFS data into a zip file
-#' write_gtfs(poa, "mypoa.zip")
-#' }
+#' write_gtfs(poa, paste0(tempdir(), "/mypoa.zip"))
 write_gtfs <- function(gtfs, file){
   tempd <- file.path(tempdir(), "gtfsdir") # create tempr dir to save GTFS unzipped files
   unlink(normalizePath(paste0(tempd, "/", dir(tempd)), mustWork = FALSE), recursive = TRUE) # clean tempfiles in that dir

@@ -7,7 +7,7 @@
 #' @param period_start A string of type "hh:mm" indicating start of the period (defaults to "06:00")
 #' @param period_end A string of type "hh:mm" indicating the end of the period (defaults to "09:00")
 #' @export
-#' @examples \donttest{
+#' @examples
 #' library(gtfs2gps)
 #'
 #' # read gtfs data
@@ -15,7 +15,6 @@
 #' 
 #' # filter gtfs data
 #' poa_f <- filter_day_period(poa, period_start = "10:00", period_end = "10:20")
-#' }
 filter_day_period <- function(gtfs, period_start=NULL, period_end=NULL){
   if(is.null(period_start)){ period_start <- "00:00:01"}
   if(is.null(period_end)){ period_end <- "23:59:59"}

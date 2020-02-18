@@ -17,7 +17,6 @@ Test whether a GTFS feed is frequency based or whether it
 presents detailed time table for all routes and trip ids.
 }
 \examples{
-\donttest{
 library(gtfs2gps)
 
 # read a gtfs.zip to memory
@@ -25,5 +24,4 @@ poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
 
 # Test whether a GTFS feed is frequency based
 test_gtfs_freq(poa)
-}
 }

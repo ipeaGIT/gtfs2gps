@@ -44,9 +44,11 @@ guarantee that two points in a same trip will have at most a given
 distance, indicated as a spatial resolution.
 }
 \examples{
-\donttest{
 library(gtfs2gps)
+library(dplyr)
+poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+subset <- filter_by_shape_id(poa, c("A141-1", "T2-1")) \%>\%
+  filter_single_trip()
 
-poa <- gtfs2gps(system.file("extdata/poa.zip", package="gtfs2gps"))
-}
+poa_gps <- gtfs2gps(subset)
 }
