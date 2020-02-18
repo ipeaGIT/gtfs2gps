@@ -24,12 +24,6 @@ write_gtfs <- function(gtfs, file){
   if(!is.null(gtfs$trips))       data.table::fwrite(gtfs$trips,       paste0(tempd, "/trips.txt"))
   if(!is.null(gtfs$calendar))    data.table::fwrite(gtfs$calendar,    paste0(tempd, "/calendar.txt"))
   if(!is.null(gtfs$frequencies)) data.table::fwrite(gtfs$frequencies, paste0(tempd, "/frequencies.txt"))
-  
-  currentDir <- getwd()
-  setwd(tempd)
 
-  utils::zip(zipfile = "result.zip", files = list.files("."), flags = "-r9Xq")
-
-  setwd(currentDir)
-  invisible(file.copy(paste0(tempd, "/result.zip"), file, overwrite = TRUE))
+  utils::zip(zipfile = zipfile, files = list.files(tempd, full.names = TRUE), flags = "-jr9Xq")
 }
