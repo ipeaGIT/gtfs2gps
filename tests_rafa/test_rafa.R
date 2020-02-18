@@ -46,19 +46,16 @@ emtu <- "R:/Dropbox/bases_de_dados/GTFS/SP GTFS/GTFS EMTU_20190815.zip"
   system.time(  normfreq <- gtfs2gps_dt_parallel(gtfsf) ) # 130.50 secs
   
   
-##### TESTS freq fun ------------------------
+##### Coverage ------------------------
 
     
- system.time( f <- gtfs2gps_dt_freq2(gtfsf) ) # 156.50 
-  
-  
-  
   
 #  ERROR in shapeid 52936
   
   library(covr)
   
   function_coverage(fun=gtfs2gps::filter_day_period, test_file("tests/testthat/test_filter_day_period.R"))
+  function_coverage(fun=gtfs2gps::test_gtfs_freq, test_file("./tests/testthat/test_test_gtfs_freq.R"))
   
   
   
