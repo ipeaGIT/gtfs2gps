@@ -13,3 +13,8 @@ filter_week_days(gtfs_data)
 Filter a GTFS data read using gtfs2gps::read_gtfs(). It removes the
 trips operating only saturday or sunday.
 }
+\examples{
+poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+
+subset <- filter_week_days(poa)
+}

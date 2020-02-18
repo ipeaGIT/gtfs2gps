@@ -13,3 +13,8 @@ filter_single_trip(gtfs_data)
 Filter a GTFS data by keeping only one trip per shape_id.
 It also removes the unnecessary routes accordingly.
 }
+\examples{
+poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+
+subset <- filter_single_trip(poa)
+}

@@ -21,12 +21,14 @@
 #' It is useful to continue processing a GTFS file that was stopped for some
 #' reason. Default value is FALSE.
 #' @export
-#' @examples \donttest{
+#' @examples
 #' library(gtfs2gps)
-#'
-#' poa <- gtfs2gps(system.file("extdata/poa.zip", package="gtfs2gps"))
-#' }
-
+#' library(dplyr)
+#' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+#' subset <- filter_by_shape_id(poa, c("A141-1", "T2-1")) %>%
+#'   filter_single_trip()
+#' 
+#' poa_gps <- gtfs2gps(subset)
 gtfs2gps <- function(gtfs_data, spatial_resolution = 15, parallel = F, strategy = 'multiprocess', progress = TRUE, filepath = NULL, continue = FALSE){
 ###### PART 1. Load and prepare data inputs ------------------------------------
 

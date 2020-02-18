@@ -6,11 +6,10 @@
 #' this function will stop with an error message.
 #' @param gtfszip A zipped GTFS data.
 #' @export
-#' @examples \donttest{
+#' @examples
 #' library(gtfs2gps)
 #'
-#' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
-#' }
+#' poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
 read_gtfs <- function(gtfszip){
   if(!file.exists(gtfszip))
     stop(paste0("File '", gtfszip, "' does not exist"))

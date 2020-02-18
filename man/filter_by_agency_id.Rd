@@ -17,3 +17,8 @@ Filter a GTFS data by its agency ids. It also removes the
 unnecessary routes, trips, frequencies, stop_times, calendars, shapes, and
 stops accordingly.
 }
+\examples{
+poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+
+result <- filter_by_agency_id(poa, "EPTC")
+}

@@ -17,11 +17,9 @@ Convert a GTFS stops data loaded using gtfs2gps::read_gtf()
 into a point simple feature (sf).
 }
 \examples{
-\donttest{
 poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
 poa_shapes <- gtfs_shapes_as_sf(poa)
 poa_stops <- gtfs_stops_as_sf(poa)
 plot(sf::st_geometry(poa_shapes), lwd = 2)
 plot(sf::st_geometry(poa_stops), pch = 20, col ="blue", add = TRUE)
-}
 }
