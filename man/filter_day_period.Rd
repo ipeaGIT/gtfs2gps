@@ -21,10 +21,8 @@ Updates a GTFS feed filtering only the routes, shapes, trips, stops,
  agencies and services that are active within a given period of the day.
 }
 \examples{
-library(gtfs2gps)
-
 # read gtfs data
-poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
 
 # filter gtfs data
 poa_f <- filter_day_period(poa, period_start = "10:00", period_end = "10:20")

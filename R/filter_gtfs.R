@@ -9,9 +9,9 @@
 #' @return A filtered GTFS data. 
 #' @export
 #' @examples
-#' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+#' poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
 #' 
-#' subset <- filter_by_shape_id(poa, c("A141-1", "T2-1"))
+#' subset <- filter_by_shape_id(poa, "T2-1")
 filter_by_shape_id <- function(gtfs_data, shape_ids){
   gtfs_data$shapes <- subset(gtfs_data$shapes, shape_id %in% shape_ids)
   gtfs_data$trips <- subset(gtfs_data$trips, shape_id %in% shape_ids)
@@ -45,7 +45,7 @@ filter_by_shape_id <- function(gtfs_data, shape_ids){
 #' @return A filtered GTFS data. 
 #' @export
 #' @examples
-#' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+#' poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
 #'
 #' result <- filter_by_agency_id(poa, "EPTC")
 filter_by_agency_id <- function(gtfs_data, agency_ids){
@@ -89,7 +89,7 @@ filter_by_agency_id <- function(gtfs_data, agency_ids){
 #' @return A filtered GTFS data. 
 #' @export
 #' @examples
-#' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+#' poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
 #' 
 #' subset <- filter_valid_stop_times(poa)
 filter_valid_stop_times <- function(gtfs_data){
@@ -114,7 +114,7 @@ filter_valid_stop_times <- function(gtfs_data){
 #' @return A filtered GTFS data. 
 #' @export
 #' @examples
-#' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+#' poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
 #' 
 #' subset <- filter_week_days(poa)
 filter_week_days <- function(gtfs_data){
@@ -134,7 +134,7 @@ filter_week_days <- function(gtfs_data){
 #' @return A filtered GTFS data. 
 #' @export
 #' @examples
-#' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+#' poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
 #' 
 #' subset <- filter_single_trip(poa)
 filter_single_trip <- function(gtfs_data){

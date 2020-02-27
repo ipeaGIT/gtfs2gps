@@ -18,12 +18,12 @@ A simple feature (sf) object.
 Convert a GPS data stored in a data.table into a Simple Feature.
 }
 \examples{
-library(gtfs2gps)
 library(dplyr)
 
-fortaleza <- read_gtfs(system.file("extdata/fortaleza.zip", package="gtfs2gps"))
-ids <- fortaleza$shapes$shape_id \%>\% unique()
-fortaleza <- filter_by_shape_id(fortaleza, ids[1])
-for_gps <- gtfs2gps(fortaleza)
-for_gps_sf <- gps_as_sf(for_gps)
+poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
+subset <- filter_by_shape_id(poa, "T2-1") \%>\%
+  filter_single_trip()
+
+poa_gps <- gtfs2gps(subset)
+poa_gps_sf <- gps_as_sf(poa_gps)
 }

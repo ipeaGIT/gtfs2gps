@@ -20,7 +20,5 @@ this last one being optional. If one of the mandatory files does not exit,
 this function will stop with an error message.
 }
 \examples{
-library(gtfs2gps)
-
 poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
 }

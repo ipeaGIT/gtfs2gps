@@ -8,8 +8,6 @@
 #' @return A list of data.tables, where each index represents the respective GTFS file name.
 #' @export
 #' @examples
-#' library(gtfs2gps)
-#'
 #' poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
 read_gtfs <- function(gtfszip){
   if(!file.exists(gtfszip))

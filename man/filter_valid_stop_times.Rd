@@ -18,7 +18,7 @@ with NA values in arrival_time, departure_time, and arrival_time_hms. It also fi
 stops and routes accordingly.
 }
 \examples{
-poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
 
 subset <- filter_valid_stop_times(poa)
 }
