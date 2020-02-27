@@ -1,6 +1,6 @@
 
 
-gtfs2gps_dt_freq2 <- function(gtfszip, week_days=T){
+gtfs2gps_dt_freq2 <- function(gtfszip, week_days = TRUE){
 
 
 ###### PART 1. Load and prepare data inputs ------------------------------------
@@ -8,20 +8,16 @@ gtfs2gps_dt_freq2 <- function(gtfszip, week_days=T){
 # Read GTFS data
 gtfs_data <- read_gtfs(gtfszip = gtfszip)
 
-
 # Filter trips keep only services operating on week days
-  if( week_days==T ){
+  if( week_days == TRUE ){
     gtfs_data <- filter_week_days(gtfs_data) 
   }
-
-  
   
 # Convert all shapes into sf object
 shapes_sf <- gtfs_shapes_as_sf(gtfs_data)
 
   # all shape ids
   all_shapeids <- unique(shapes_sf$shape_id)
-  
   
   # # Progress bar start
   # total <- length(all_shapeids)

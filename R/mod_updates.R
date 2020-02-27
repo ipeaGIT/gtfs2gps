@@ -92,7 +92,7 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
   if( match(tripid, all_tripids) == 1 | length(stop_id_ok) < 2){   tripids_missing <- c() }
   
   # ignore trip_id if original departure_time values are missing
-  if(is.null(length(stop_id_ok))==T | length(stop_id_ok)==1 | length(stop_id_ok)==0){ 
+  if(is.null(length(stop_id_ok)) == TRUE | length(stop_id_ok) == 1 | length(stop_id_ok) == 0){ 
     tripids_missing <- append(tripids_missing, tripid)
     return(NULL)
     } else{
