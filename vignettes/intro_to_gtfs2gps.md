@@ -121,7 +121,7 @@ set a different value in the `spatial_resolution` argument. See the
 example below.
 
 ``` r
-  sao_gps <- gtfs2gps("sao_small.zip", progress = FALSE, parallel = F, spatial_resolution = 15)
+  sao_gps <- gtfs2gps("sao_small.zip", progress = FALSE, parallel = FALSE, spatial_resolution = 15)
   head(sao_gps)
 ```
 
@@ -163,7 +163,7 @@ brings detailed `stop_times.txt` information or whether it is a
 
 ``` r
 poa <- system.file("extdata/poa.zip", package ="gtfs2gps")
-poa_gps <- gtfs2gps(poa, progress = FALSE, parallel = F, spatial_resolution = 15)
+poa_gps <- gtfs2gps(poa, progress = FALSE, parallel = FALSE, spatial_resolution = 15)
 poa_gps_sf <- gps_as_sf(poa_gps)
 poa_sf <- read_gtfs(poa) %>% gtfs_shapes_as_sf()
 plot(sf::st_geometry(poa_gps_sf[1:200,]))

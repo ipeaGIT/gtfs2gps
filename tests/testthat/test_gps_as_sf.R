@@ -1,7 +1,7 @@
 test_that("gps_as_sf", {
   poa <- system.file("extdata/poa.zip", package="gtfs2gps")
   
-  poa_gps_sf <- gps_as_sf(gtfs2gps(poa, parallel = F, progress = FALSE))
+  poa_gps_sf <- gps_as_sf(gtfs2gps(poa, parallel = FALSE, progress = FALSE))
   
   expect_true(is(poa_gps_sf, "sf"))
 })

@@ -7,7 +7,7 @@ library(ggthemes)
 library(sf)
 library(viridis)
 
-gc(reset = T)
+gc(reset = TRUE)
 
 
 Sys.setenv(TZ= Sys.timezone() )
@@ -33,7 +33,7 @@ gtfs_dt <- gtfs2gps::filter_week_days(gtfs_dt)
 shapes_sf <- gtfs_shapes_as_sf(gtfs_dt)
 
 # Convert GTFS data into a data.table with GPS-like records
-gps_dt <- gtfs2gps(gtfs_dt, spatial_resolution = 15, progress = T, parallel = T )
+gps_dt <- gtfs2gps(gtfs_dt, spatial_resolution = 15, progress = TRUE, parallel = TRUE )
 
 # subset time interval
 gps_dt <- gps_dt[ between(departure_time, as.ITime("07:00:"), as.ITime("07:30"))]

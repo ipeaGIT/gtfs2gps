@@ -271,7 +271,7 @@ update_newstoptimes_freq <- function(starttime){
   
   # clean memory
   rm(shape_stoptimes)
-  gc(reset = T)
+  gc(reset = TRUE)
   
 }
   

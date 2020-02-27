@@ -130,20 +130,19 @@
     # add cummulative distance
     new_stoptimes[, cumdist := cumsum(dist)]
     stoptimes_temp <- gtfs_data$stop_times[trip_id == tripid]
-    stop_id_ok <- gtfs_data$stop_times[trip_id == tripid & is.na(departure_time) == F,]$stop_sequence
-    stop_id_nok <- gtfs_data$stop_times[trip_id == tripid & is.na(departure_time) == T,]$stop_sequence
+    stop_id_ok <- gtfs_data$stop_times[trip_id == tripid & is.na(departure_time) == FALSE,]$stop_sequence
+    stop_id_nok <- gtfs_data$stop_times[trip_id == tripid & is.na(departure_time) == TRUE,]$stop_sequence
     
-    interp_index_ok <- which(is.na(new_stoptimes$stop_id)==F)
+    interp_index_ok <- which(is.na(new_stoptimes$stop_id)==FALSE)
     for(i in 1:length(stop_id_ok)){
       dt <- difftime(stoptimes_temp$arrival_time[stop_id_ok[i+1]],
                      stoptimes_temp$departure_time[stop_id_ok[i]])
       ds <- new_stoptimes[stop_sequence==stop_id_ok[i+1],"cumdist"]-
         new_stoptimes[stop_sequence==stop_id_ok[i],"cumdist"]
-      mean_speed <- ds/(as.numeric(dt)*60) *3.6
-       
-        
+      mean_speed <- ds / (as.numeric(dt) * 60) * 3.6
+
     }
-    jstop_id <- which(is.na(new_stoptimes$stop_id)==F)
+    jstop_id <- which(is.na(new_stoptimes$stop_id) == FALSE)
     ldt_stopid <- 
     tripid <- all_tripids[1]
     jstoptimes_temp <- gtfs_data$stop_times[trip_id == tripid]

@@ -103,7 +103,7 @@ corefun <- function(shapeid){
     new_stoptimes$stop_sequence[which(!is.na(new_stoptimes$stop_sequence))][1] <- 1 
     
     # alternative to duplicate repeated stops
-    new_stoptimes <- merge(x=new_stoptimes, y=stops_seq, by.x= "shape_pt_lat", by.y="stop_lat",  all.x = T)
+    new_stoptimes <- merge(x=new_stoptimes, y=stops_seq, by.x= "shape_pt_lat", by.y="stop_lat",  all.x = TRUE)
     new_stoptimes <- setDT(new_stoptimes[order(id)])
     
     ###check if everything is Ok
