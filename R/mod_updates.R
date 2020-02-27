@@ -21,11 +21,11 @@ update_freq <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
                     departure_time := data.table::as.ITime(starttimes[1])]
       # Updating all other stop times according to travel speed and distances
       dt_list[[i]][, departure_time := data.table::as.ITime(round(departure_time[1L] + lag(cumtime, 1, 0)))]
-      # dt_list[[i]][, departure_time := data.table::as.ITime(departure_time[1L]+
+      # dt_list[[i]][, departure_time := data.table::as.ITime(departure_time[1L] +
       #                                                         lag(cumtime,1,0))]
       
       # Updating all stop times by adding the headway
-      dt_list[[i]][, departure_time := data.table::as.ITime(round(departure_time + ((i - 1)* thisheadway)))]
+      dt_list[[i]][, departure_time := data.table::as.ITime(round(departure_time + ((i - 1) * thisheadway)))]
       
       return(dt_list[[i]])
     }
@@ -89,15 +89,15 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
   stop_id_ok <- gtfs_data$stop_times[trip_id == tripid & is.na(departure_time) == FALSE,]$stop_sequence
   
   # create empty vector to store trip_ids with missing data and less than two valid departure times
-  if( match(tripid, all_tripids) == 1 | length(stop_id_ok) < 2){   tripids_missing <- c() }
-  
+  if( match(tripid, all_tripids) == 1 | length(stop_id_ok) < 2){ tripids_missing <- c() }
+
   # ignore trip_id if original departure_time values are missing
   if(is.null(length(stop_id_ok)) == TRUE | length(stop_id_ok) == 1 | length(stop_id_ok) == 0){ 
     tripids_missing <- append(tripids_missing, tripid)
     return(NULL)
     } else{
     
-  ### UPDATE speeds
+    ### UPDATE speeds
     # lim0: 'id' in which stop_times intervals STARTS
     lim0 <- new_stoptimes[ !is.na(departure_time) & !is.na(stop_id), id]
     
@@ -111,8 +111,7 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
     # apply function for speed estimation
     L <- length(lim0)
     lapply(X=1:(L-1), FUN=update_speeds)
-    
-    
+
     # Speed info that was missing (either before or after 1st/last stops)
     new_stoptimes[, speed := data.table::fifelse(is.na(speed), mean(speed, na.rm = TRUE), speed) ]
     # Get trip duration in seconds
@@ -138,9 +137,8 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
     new_stoptimes <- new_stoptimes[speed > 0 & cumtime > 0]
     
     return(new_stoptimes)
-    
   }
+
   # Print message IF this is the last trip_id AND IF there was a missing trip_id
-  if( (match(tripid, all_tripids) == length(all_tripids)) & (length(tripids_missing) > 0) ){message(paste("The following Trip_ids have been ignored due to missing data in original gtfs.zip:", paste(tripids_missing, collapse = ', '))) }
-  
+  if( (match(tripid, all_tripids) == length(all_tripids)) & (length(tripids_missing) > 0) ){message(paste("The following trip_ids have been ignored due to missing data in original gtfs.zip:", paste(tripids_missing, collapse = ', '))) }
 }
