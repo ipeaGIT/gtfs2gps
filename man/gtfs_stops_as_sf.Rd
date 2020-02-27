@@ -12,14 +12,17 @@ gtfs_stops_as_sf(gtfs, crs = 4326)
 \item{crs}{The coordinate reference system represented as an EPSG code.
 The default value is 4326 (latlong WGS84)}
 }
+\value{
+A simple feature (sf) object.
+}
 \description{
 Convert a GTFS stops data loaded using gtfs2gps::read_gtf()
 into a point simple feature (sf).
 }
 \examples{
-poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
 poa_shapes <- gtfs_shapes_as_sf(poa)
 poa_stops <- gtfs_stops_as_sf(poa)
-plot(sf::st_geometry(poa_shapes), lwd = 2)
-plot(sf::st_geometry(poa_stops), pch = 20, col ="blue", add = TRUE)
+# plot(sf::st_geometry(poa_shapes), lwd = 2)
+# plot(sf::st_geometry(poa_stops), pch = 20, col = "blue", add = TRUE)
 }

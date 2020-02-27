@@ -13,12 +13,15 @@ filter_by_shape_id(gtfs_data, shape_ids)
 gtfs_data data. Note that shape_id might be loaded by gtfs2gps::read_gtfs()
 as a string or a number, depending on the available values.}
 }
+\value{
+A filtered GTFS data.
+}
 \description{
 Filter a GTFS data by its shape ids. It also removes the
 unnecessary trips, stop_times, stops, and routes accordingly.
 }
 \examples{
-poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
 
-subset <- filter_by_shape_id(poa, c("A141-1", "T2-1"))
+subset <- filter_by_shape_id(poa, "T2-1")
 }

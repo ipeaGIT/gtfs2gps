@@ -21,7 +21,10 @@ equals or less than spatial_resolution.}
 \item{id}{The id of the data to be shown in case of an error when a given point is
 more than [spatial_resolution ^ 4] meters away from the reference matrix.}
 }
+\value{
+A data.frame with the snapped points.
+}
 \description{
 Snap a set of points to the closest points available in another set
-of points. The result is a data.frame.
+of points.
 }

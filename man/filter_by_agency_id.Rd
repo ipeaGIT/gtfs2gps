@@ -12,13 +12,16 @@ filter_by_agency_id(gtfs_data, agency_ids)
 \item{agency_ids}{A vector of strings belonging to the agencies of the
 gtfs_data data.}
 }
+\value{
+A filtered GTFS data.
+}
 \description{
 Filter a GTFS data by its agency ids. It also removes the
 unnecessary routes, trips, frequencies, stop_times, calendars, shapes, and
 stops accordingly.
 }
 \examples{
-poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
 
 result <- filter_by_agency_id(poa, "EPTC")
 }

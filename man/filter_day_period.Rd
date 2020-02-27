@@ -13,15 +13,16 @@ filter_day_period(gtfs, period_start = NULL, period_end = NULL)
 
 \item{period_end}{A string of type "hh:mm" indicating the end of the period (defaults to "09:00")}
 }
+\value{
+A filtered GTFS data.
+}
 \description{
 Updates a GTFS feed filtering only the routes, shapes, trips, stops,
  agencies and services that are active within a given period of the day.
 }
 \examples{
-library(gtfs2gps)
-
 # read gtfs data
-poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
 
 # filter gtfs data
 poa_f <- filter_day_period(poa, period_start = "10:00", period_end = "10:20")

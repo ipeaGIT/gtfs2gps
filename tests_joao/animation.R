@@ -8,16 +8,16 @@ library(sf)
 library(gtfs2gps)
 
 # poa <- system.file("extdata/poa.zip", package="gtfs2gps" )
-# poa15 <- gtfs2gps(poa, progress = T, spatial_resolution = 15)
-# poa30 <- gtfs2gps(poa, progress = T, spatial_resolution = 30)
-# poa60 <- gtfs2gps(poa, progress = T, spatial_resolution = 60)
+# poa15 <- gtfs2gps(poa, progress = TRUE, spatial_resolution = 15)
+# poa30 <- gtfs2gps(poa, progress = TRUE, spatial_resolution = 30)
+# poa60 <- gtfs2gps(poa, progress = TRUE, spatial_resolution = 60)
 
 # nrow(poa15) == nrow(poa30) 
 # nrow(poa30) == nrow(poa60)
 
 # Generate GPS-like data
 spo <- system.file("extdata/saopaulo.zip", package ="gtfs2gps" )
-system.time(spo_gps60 <- gtfs2gps(spo, spatial_resolution = 60, progress = T, cores = getDTthreads()))
+system.time(spo_gps60 <- gtfs2gps(spo, spatial_resolution = 60, progress = TRUE, cores = getDTthreads()))
 table(spo_gps60$trip_id)
 
 # # get static network

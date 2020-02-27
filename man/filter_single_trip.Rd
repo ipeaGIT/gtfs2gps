@@ -9,12 +9,15 @@ filter_single_trip(gtfs_data)
 \arguments{
 \item{gtfs_data}{A list of data.tables read using gtfs2gps::reag_gtfs().}
 }
+\value{
+A filtered GTFS data.
+}
 \description{
 Filter a GTFS data by keeping only one trip per shape_id.
 It also removes the unnecessary routes accordingly.
 }
 \examples{
-poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
 
 subset <- filter_single_trip(poa)
 }

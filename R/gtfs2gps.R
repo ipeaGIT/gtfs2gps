@@ -20,16 +20,16 @@
 #' skips processing the shape identifiers that were already saved into files.
 #' It is useful to continue processing a GTFS file that was stopped for some
 #' reason. Default value is FALSE.
+#' @return A data.table, where each row represents a GPS point.
 #' @export
 #' @examples
-#' library(gtfs2gps)
 #' library(dplyr)
 #' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
-#' subset <- filter_by_shape_id(poa, c("A141-1", "T2-1")) %>%
+#' subset <- filter_by_shape_id(poa, "T2-1") %>%
 #'   filter_single_trip()
 #' 
 #' poa_gps <- gtfs2gps(subset)
-gtfs2gps <- function(gtfs_data, spatial_resolution = 15, parallel = F, strategy = 'multiprocess', progress = TRUE, filepath = NULL, continue = FALSE){
+gtfs2gps <- function(gtfs_data, spatial_resolution = 15, parallel = FALSE, strategy = 'multiprocess', progress = TRUE, filepath = NULL, continue = FALSE){
 ###### PART 1. Load and prepare data inputs ------------------------------------
 
   if(continue & is.null(filepath))
@@ -79,7 +79,7 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 15, parallel = F, strategy 
     stops_seq[gtfs_data$stops, on = "stop_id", c('stop_lat', 'stop_lon') := list(i.stop_lat, i.stop_lon)] # add lat long info
 
     # convert stops to sf
-    stops_sf <- sfheaders::sf_point(stops_seq, x = "stop_lon", y="stop_lat", keep = T)
+    stops_sf <- sfheaders::sf_point(stops_seq, x = "stop_lon", y = "stop_lat", keep = TRUE)
     sf::st_crs(stops_sf) <- sf::st_crs(shapes_sf)
     
     spatial_resolution <- units::set_units(spatial_resolution / 1000, "km")
@@ -87,10 +87,9 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 15, parallel = F, strategy 
     # new faster verion using sfheaders
     new_shape <- subset(shapes_sf, shape_id == shapeid) %>%
       sf::st_segmentize(spatial_resolution) %>%
-      sfheaders::sf_to_df(fill = T) %>%
-      sfheaders::sf_point( x = "x", y="y", keep = T)
+      sfheaders::sf_to_df(fill = TRUE) %>%
+      sfheaders::sf_point(x = "x", y = "y", keep = TRUE)
 
-  
     # convert units of spatial resolution to meters
     spatial_resolution <- units::set_units(spatial_resolution, "m")
     
@@ -153,9 +152,7 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 15, parallel = F, strategy 
   # all shape ids
   all_shapeids <- unique(shapes_sf$shape_id)
 
-
-
-  if(parallel == F){
+  if(parallel == FALSE){
     message(paste('Using 1 CPU core'))
     if(progress) pbapply::pboptions(type = "txt")
 
