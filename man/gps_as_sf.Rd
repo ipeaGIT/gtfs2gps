@@ -14,3 +14,13 @@ gps_as_sf(gps, crs = 4326)
 \description{
 Convert a GPS data stored in a data.table into a Simple Feature.
 }
+\examples{
+library(gtfs2gps)
+library(dplyr)
+
+fortaleza <- read_gtfs(system.file("extdata/fortaleza.zip", package="gtfs2gps"))
+ids <- fortaleza$shapes$shape_id \%>\% unique()
+fortaleza <- filter_by_shape_id(fortaleza, ids[1])
+for_gps <- gtfs2gps(fortaleza)
+for_gps_sf <- gps_as_sf(for_gps)
+}
