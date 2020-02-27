@@ -11,6 +11,9 @@ write_gtfs(gtfs, zipfile)
 
 \item{zipfile}{The pathname of a .zip file to be saved with the GTFS data.}
 }
+\value{
+The status value returned by the external zip command, invisibly.
+}
 \description{
 Write GTFS stored in memory as a list of data.tables into a zipped GTFS feed.
 This function overwrites the zip file if it exists.

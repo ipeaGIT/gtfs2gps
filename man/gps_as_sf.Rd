@@ -11,6 +11,9 @@ gps_as_sf(gps, crs = 4326)
 
 \item{crs}{A Coordinate Reference System. The default value is 4326 (latlong WGS84)}
 }
+\value{
+A simple feature (sf) object.
+}
 \description{
 Convert a GPS data stored in a data.table into a Simple Feature.
 }

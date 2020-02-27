@@ -12,6 +12,9 @@ gtfs_stops_as_sf(gtfs, crs = 4326)
 \item{crs}{The coordinate reference system represented as an EPSG code.
 The default value is 4326 (latlong WGS84)}
 }
+\value{
+A simple feature (sf) object.
+}
 \description{
 Convert a GTFS stops data loaded using gtfs2gps::read_gtf()
 into a point simple feature (sf).

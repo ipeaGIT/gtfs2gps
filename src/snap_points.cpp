@@ -50,7 +50,7 @@ Rcpp::NumericVector cpp_snap_points_level(Rcpp::NumericMatrix& data, Rcpp::Numer
 
 //' @title Snap points to the closest points from another set
 //' @description Snap a set of points to the closest points available in another set
-//' of points. The result is a data.frame.
+//' of points.
 //' @param data A set of points to be snapped (a matrix). The result will have  
 //' the same number of rows of this argument. Each row will return the respective
 //' snapped point.
@@ -61,6 +61,7 @@ Rcpp::NumericVector cpp_snap_points_level(Rcpp::NumericMatrix& data, Rcpp::Numer
 //' equals or less than spatial_resolution.
 //' @param id The id of the data to be shown in case of an error when a given point is
 //' more than [spatial_resolution ^ 4] meters away from the reference matrix.
+//' @return A data.frame with the snapped points.
 //' @export
 // [[Rcpp::export]]
 Rcpp::NumericVector cpp_snap_points(Rcpp::NumericMatrix& data, Rcpp::NumericMatrix& ref, int spatial_resolution, Rcpp::StringVector id){

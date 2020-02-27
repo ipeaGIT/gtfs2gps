@@ -13,6 +13,9 @@ filter_day_period(gtfs, period_start = NULL, period_end = NULL)
 
 \item{period_end}{A string of type "hh:mm" indicating the end of the period (defaults to "09:00")}
 }
+\value{
+A filtered GTFS data.
+}
 \description{
 Updates a GTFS feed filtering only the routes, shapes, trips, stops,
  agencies and services that are active within a given period of the day.

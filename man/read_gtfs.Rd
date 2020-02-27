@@ -9,6 +9,9 @@ read_gtfs(gtfszip)
 \arguments{
 \item{gtfszip}{A zipped GTFS data.}
 }
+\value{
+A list of data.tables, where each index represents the respective GTFS file name.
+}
 \description{
 Read files of a zipped GTFS feed and load them to memory as a list of data.tables.
 It will load the following files: "agency.txt", "calendar.txt", "shapes.txt", "routes.txt", "shapes.txt", 

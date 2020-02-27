@@ -5,6 +5,7 @@
 #' this last one being optional. If one of the mandatory files does not exit,
 #' this function will stop with an error message.
 #' @param gtfszip A zipped GTFS data.
+#' @return A list of data.tables, where each index represents the respective GTFS file name.
 #' @export
 #' @examples
 #' library(gtfs2gps)

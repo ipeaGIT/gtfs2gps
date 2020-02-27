@@ -3,6 +3,7 @@
 #' This function overwrites the zip file if it exists.
 #' @param gtfs A GTFS data set stored in memory as a list of data.tables/data.frames.
 #' @param zipfile The pathname of a .zip file to be saved with the GTFS data.
+#' @return The status value returned by the external zip command, invisibly.
 #' @export
 #' @examples
 #' library(gtfs2gps)

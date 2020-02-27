@@ -6,6 +6,7 @@
 #' @param gtfs A GTFS data.
 #' @param period_start A string of type "hh:mm" indicating start of the period (defaults to "06:00")
 #' @param period_end A string of type "hh:mm" indicating the end of the period (defaults to "09:00")
+#' @return A filtered GTFS data. 
 #' @export
 #' @examples
 #' library(gtfs2gps)

@@ -37,6 +37,9 @@ skips processing the shape identifiers that were already saved into files.
 It is useful to continue processing a GTFS file that was stopped for some
 reason. Default value is FALSE.}
 }
+\value{
+A data.table, where each row represents a GPS point.
+}
 \description{
 Convert GTFS data to GPS format by sampling points using a
 spatial resolution. This function creates additional points in order to

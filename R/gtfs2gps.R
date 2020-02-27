@@ -20,6 +20,7 @@
 #' skips processing the shape identifiers that were already saved into files.
 #' It is useful to continue processing a GTFS file that was stopped for some
 #' reason. Default value is FALSE.
+#' @return A data.table, where each row represents a GPS point.
 #' @export
 #' @examples
 #' library(gtfs2gps)

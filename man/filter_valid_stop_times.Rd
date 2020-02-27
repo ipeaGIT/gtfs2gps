@@ -9,6 +9,9 @@ filter_valid_stop_times(gtfs_data)
 \arguments{
 \item{gtfs_data}{A list of data.tables read using gtfs2gps::reag_gtfs().}
 }
+\value{
+A filtered GTFS data.
+}
 \description{
 Filter a GTFS data read using gtfs2gps::read_gtfs(). It removes stop_times
 with NA values in arrival_time, departure_time, and arrival_time_hms. It also filters

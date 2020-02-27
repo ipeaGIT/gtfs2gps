@@ -62,10 +62,6 @@ update_freq <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
   return(new_stoptimes)
 }
 
-
-
-
-
 # UPDATE NEWSTOPTIMES DATA.FRAME
 update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
 
