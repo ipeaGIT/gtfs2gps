@@ -29,7 +29,6 @@ filter_day_period <- function(gtfs, period_start = "00:00:01", period_end = "23:
       gtfs$frequencies <- gtfs$frequencies[ data.table::as.ITime(start_time) >= data.table::as.ITime(period_start) & data.table::as.ITime(end_time) <= data.table::as.ITime(period_end) ] 
     }
   }
-  # as.POSIXct(paste('2020-01-29', '10:45:00')) %>% as.numeric()
 
   # Remaining unique stops and trips
   unique_stops <- unique(gtfs$stop_times$stop_id)
