@@ -4,14 +4,14 @@
 \alias{filter_day_period}
 \title{Filter GTFS data within a period of the day}
 \usage{
-filter_day_period(gtfs, period_start = NULL, period_end = NULL)
+filter_day_period(gtfs, period_start = "00:00:01", period_end = "23:59:59")
 }
 \arguments{
 \item{gtfs}{A GTFS data.}
 
-\item{period_start}{A string of type "hh:mm" indicating start of the period (defaults to "06:00")}
+\item{period_start}{A string of type "hh:mm" indicating start of the period (defaults to "00:00:01")}
 
-\item{period_end}{A string of type "hh:mm" indicating the end of the period (defaults to "09:00")}
+\item{period_end}{A string of type "hh:mm" indicating the end of the period (defaults to "23:59:59")}
 }
 \value{
 A filtered GTFS data.

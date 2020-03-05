@@ -19,6 +19,8 @@ gps_as_sf <- function(gps, crs = 4326){
   temp_gps <- sfheaders::sf_multipoint(gps, x = "shape_pt_lon", y = "shape_pt_lat",
                                        multipoint_id = "shape_id", keep = TRUE)
 
+  temp_gps<- temp_gps[, -duplicated(names(temp_gps))]
+
   # add projection
   sf::st_crs(temp_gps) <- crs
   return(temp_gps)
