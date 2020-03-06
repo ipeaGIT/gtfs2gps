@@ -5,6 +5,7 @@
 #' @param gtfs A GTFS data.
 #' @param crs The coordinate reference system represented as an EPSG code.
 #' The default value is 4326 (latlong WGS84)
+#' @return A simple feature (sf) object.
 #' @export
 #' @examples
 #' poa <- read_gtfs(system.file("extdata/saopaulo.zip", package = "gtfs2gps"))
