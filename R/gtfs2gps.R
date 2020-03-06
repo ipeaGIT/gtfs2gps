@@ -70,7 +70,7 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 15, parallel = FALSE, strat
 
     # nstop = number of valid stops in each trip_id
     nstop <- gtfs_data$stop_times[trip_id %in% all_tripids, .N, by ="trip_id"]$N
-    
+
     # Get the stops sequence with lat long linked to that route
     # each shape_id only has one stop sequence
     
@@ -101,17 +101,15 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 15, parallel = FALSE, strat
     
     # Skip shape_id IF there are no snnaped stops
     if(is.null(snapped) | length(snapped) == 0 ){ return(NULL) } # nocov
-      
+
     # If there is less than two valid stops, jump this shape_id
-    if( min(nstop) < 2){ return(NULL) } # nocov
+    if(min(nstop) < 2){ return(NULL) } # nocov
 
     # Skip shape_id IF there is no route_id associated with that shape_id
     if(is.na(routeid)) return(NULL) # nocov
     
     # update stops_seq with snap stops to route shape
     stops_seq$ref <- snapped
-      
-  
     
     ### Start building new stop_times.txt file
 
@@ -178,6 +176,6 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 15, parallel = FALSE, strat
     return(output)
   else
     return(NULL)
-  }
+}
 
   
