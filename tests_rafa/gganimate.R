@@ -6,7 +6,7 @@ library(data.table)
 library(ggthemes)
 library(sf)
 library(viridis)
-
+library(sfheaders)
 gc(reset = TRUE)
 
 
@@ -26,22 +26,26 @@ gtfs_dt <- gtfs2gps::read_gtfs(gtfs_zip)
 gtfs_dt <- gtfs2gps::filter_week_days(gtfs_dt)
 
 
-# # # subset time interval
-# gtfs_dt <- gtfs2gps::filter_day_period(gtfs_dt, period_start = "07:00:", period_end = "10:00")
-  
+# # # # # subset time interval
+# gtfs_dt <- gtfs2gps::filter_day_period(gtfs_dt, period_start = "07:00:", period_end = "08:01")
+#   
 # get transport network as sf object
 shapes_sf <- gtfs_shapes_as_sf(gtfs_dt)
 
 # Convert GTFS data into a data.table with GPS-like records
-gps_dt <- gtfs2gps(gtfs_dt, spatial_resolution = 30, progress = T, parallel = T )
+gps_dt_depois <- gtfs2gps(gtfs_dt, spatial_resolution = 30, progress = T, parallel = T )
 head(gps_dt)
 
 # subset time interval
-gps_dt2 <- gps_dt[ between(departure_time, as.ITime("07:00:"), as.ITime("07:30"))]
+gps_dt2 <- gps_dt_depois[ between(departure_time, as.ITime("07:00:"), as.ITime("08:01"))]
 gps_dt2 <- gps_dt2[speed < 20 , ]
 
+    # # sort data
+    # gps_dt2 <- gps_dt2[order(shape_id, trip_id, departure_time, id)]
+
+
 # Convert "GPS" points into sf
-gps_sf <- sfheaders::sf_multipoint(gps_dt2, x = "shape_pt_lon" , y = "shape_pt_lat", multipoint_id = "shape_id", keep = T)
+gps_sf <- sfheaders::sf_point(gps_dt2, x = "shape_pt_lon" , y = "shape_pt_lat", keep = T)
 sf::st_crs(gps_sf) <- 4326
 
 # gps_sf <- gps_as_sf(gps_dt)
@@ -54,22 +58,24 @@ head(gps_sf)
 
 
 # read map tile
-map_tiles <- readr::read_rds("L:/Proj_acess_oport/data/map_tiles_crop/ceramic/map_tile_crop_ceramic_spo.rds")
-
+map_tiles <- readr::read_rds("L:/Proj_acess_oport/data/maptiles_crop/2019/mapbox/maptile_crop_mapbox_spo_2019.rds")
+                              
 
 ###### Static plot ------------------
 
 # static plot: routes
 
 ggplot() +
-  geom_raster(data = map_tiles, aes(x, y, fill = hex), alpha = 1) +
-  geom_sf(data= st_transform(shapes_sf, 3857), color='red') +
+ # geom_raster(data = map_tiles, aes(x, y, fill = hex), alpha = 1) +
+  # geom_sf(data= st_transform(shapes_sf, 3857), color='red') +
 # theme(legend.position = "none") +
-  scale_fill_identity() +
-  coord_sf() 
+  
+  geom_point(data = gps_dt, aes(x = shape_pt_lon, y=shape_pt_lat, colour = shape_id), size=1.5, alpha = 0.6, show.legend = FALSE) +
+# scale_fill_identity() +
+ # coord_sf() 
 
 
-
+coord_sf(xlim = c(-46.6, -46.5),ylim = c(-23.6, -23.5))
 
 
 
@@ -101,17 +107,16 @@ beepr::beep()
 
 
 
-
-
+gps_sf_utm <- st_transform(gps_sf, 3857)
+gps_dt_utm <- sfheaders::sf_to_df( gps_sf_utm, fill = TRUE )
 
 ###### .gif tile ------------------
 
-anim <- ggplot() +
+anim <- 
+  ggplot() +
   geom_raster(data = map_tiles, aes(x, y, fill = hex), alpha = 1) +
   scale_fill_identity() +
-  
-  geom_sf(data=st_transform(shapes_sf, 3857), color='gray90', size=0.01) +
-  geom_sf(data = st_transform(gps_sf, 3857), aes(colour = speed), size=1.5, alpha = 0.6, show.legend = FALSE) +
+  geom_point(data = gps_dt_utm, aes(x = x, y=y, colour = shape_id), size=1.5, alpha = 0.6, show.legend = FALSE) +
   scale_colour_viridis() +
   
   # gganimate specificatons
@@ -119,7 +124,8 @@ anim <- ggplot() +
   transition_time(as.POSIXct(departure_time)) +
   shadow_wake(wake_length = 0.015, alpha = FALSE) +
   ease_aes('linear') +
-  theme_map()
+  theme_map() + 
+  coord_equal()
 
 
 
