@@ -4,25 +4,28 @@
 \alias{write_gtfs}
 \title{Write GTFS data into a zip file}
 \usage{
-write_gtfs(gtfs, file)
+write_gtfs(gtfs, zipfile)
 }
 \arguments{
 \item{gtfs}{A GTFS data set stored in memory as a list of data.tables/data.frames.}
 
-\item{file}{A .zip file name.}
+\item{zipfile}{The pathname of a .zip file to be saved with the GTFS data.}
+}
+\value{
+The status value returned by the external zip command, invisibly.
 }
 \description{
 Write GTFS stored in memory as a list of data.tables into a zipped GTFS feed.
 This function overwrites the zip file if it exists.
 }
 \examples{
-\donttest{
-library(gtfs2gps)
+library(dplyr)
 
 # read a gtfs.zip to memory
-poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps")) \%>\%
+  filter_by_shape_id("T2-1") \%>\%
+  filter_single_trip()
 
 # write GTFS data into a zip file
-write_gtfs(poa, "mypoa.zip")
-}
+write_gtfs(poa, paste0(tempdir(), "/mypoa.zip"))
 }

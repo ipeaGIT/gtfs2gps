@@ -144,12 +144,12 @@ setwd("..")
 
 
 # Install package
-# devtools::install("gtfs2gps", build_vignettes = T)
+# devtools::install("gtfs2gps", build_vignettes = TRUE)
 # system("R CMD INSTALL --build gtfs2gps")
 
 # build binary
 system("R CMD build gtfs2gps --resave-data") # build tar.gz
-# devtools::build(pkg = "gtfs2gps", path=".", binary = T, manual=T)
+# devtools::build(pkg = "gtfs2gps", path=".", binary = TRUE, manual=TRUE)
 
 # Check package errors
 # devtools::check("gtfs2gps")

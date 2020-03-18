@@ -7,7 +7,7 @@ library(ggthemes)
 library(sf)
 library(viridis)
 
-gc(reset = T)
+gc(reset = TRUE)
 
 
 Sys.setenv(TZ= Sys.timezone(location = T) )

@@ -7,7 +7,7 @@
 gtfs2gps(
   gtfs_data,
   spatial_resolution = 15,
-  parallel = F,
+  parallel = FALSE,
   strategy = "multiprocess",
   progress = TRUE,
   filepath = NULL,
@@ -37,6 +37,9 @@ skips processing the shape identifiers that were already saved into files.
 It is useful to continue processing a GTFS file that was stopped for some
 reason. Default value is FALSE.}
 }
+\value{
+A data.table, where each row represents a GPS point.
+}
 \description{
 Convert GTFS data to GPS format by sampling points using a
 spatial resolution. This function creates additional points in order to
@@ -44,9 +47,10 @@ guarantee that two points in a same trip will have at most a given
 distance, indicated as a spatial resolution.
 }
 \examples{
-\donttest{
-library(gtfs2gps)
+library(dplyr)
+poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+subset <- filter_by_shape_id(poa, "T2-1") \%>\%
+  filter_single_trip()
 
-poa <- gtfs2gps(system.file("extdata/poa.zip", package="gtfs2gps"))
-}
+poa_gps <- gtfs2gps(subset)
 }

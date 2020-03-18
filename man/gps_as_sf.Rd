@@ -11,6 +11,19 @@ gps_as_sf(gps, crs = 4326)
 
 \item{crs}{A Coordinate Reference System. The default value is 4326 (latlong WGS84)}
 }
+\value{
+A simple feature (sf) object.
+}
 \description{
 Convert a GPS data stored in a data.table into a Simple Feature.
+}
+\examples{
+library(dplyr)
+
+poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
+subset <- filter_by_shape_id(poa, "T2-1") \%>\%
+  filter_single_trip()
+
+poa_gps <- gtfs2gps(subset)
+poa_gps_sf <- gps_as_sf(poa_gps)
 }

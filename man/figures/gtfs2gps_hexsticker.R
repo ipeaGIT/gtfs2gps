@@ -66,6 +66,6 @@ sticker( img_address,
         s_x=1, s_y=.8, s_width=.6, s_height=.6, # ggplot image size and position
         h_fill="#009a9a", h_color="#006767", h_size=2, # hexagon #283748 
         
-        spotlight=T, l_x=20, l_y=4, l_width=2, l_height=2,
+        spotlight=TRUE, l_x=20, l_y=4, l_width=2, l_height=2,
         filename="./man/figures/gtfs2gps_logo.png", dpi=300)  # output name and resolution
 
