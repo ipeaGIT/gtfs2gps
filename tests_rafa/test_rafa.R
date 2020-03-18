@@ -58,7 +58,7 @@ emtu <- "R:/Dropbox/bases_de_dados/GTFS/SP GTFS/GTFS EMTU_20190815.zip"
   function_coverage(fun=gtfs2gps::test_gtfs_freq, test_file("./tests/testthat/test_test_gtfs_freq.R"))
   
   
-  
+  covr::package_coverage(path = ".", type = "tests")
   
 ##### Profiling function ------------------------
 p <-   profvis( update_newstoptimes("T2-1@1#2146") )
