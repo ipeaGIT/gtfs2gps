@@ -14,11 +14,10 @@ The core function of the package takes a `GTFS.zip` file and interpolates the sp
 
 ### Installation
 
-Please install **gtfs2gps** package from GitHub, making sure you have the
-latest version of the other packages it requires:
+Please install **gtfs2gps** package from CRAN to get the stable version.
 
 ``` r
-devtools::install_github("ipeaGIT/gtfs2gps")
+install.packages("gtfs2gps")
 library(gtfs2gps)
 ```
 
