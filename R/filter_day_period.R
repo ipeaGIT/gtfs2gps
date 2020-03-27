@@ -4,40 +4,31 @@
 #'  agencies and services that are active within a given period of the day.
 #' 
 #' @param gtfs A GTFS data.
-#' @param period_start A string of type "hh:mm" indicating start of the period (defaults to "06:00")
-#' @param period_end A string of type "hh:mm" indicating the end of the period (defaults to "09:00")
+#' @param period_start A string of type "hh:mm" indicating start of the period (defaults to "00:00:01")
+#' @param period_end A string of type "hh:mm" indicating the end of the period (defaults to "23:59:59")
+#' @return A filtered GTFS data. 
 #' @export
-#' @examples \donttest{
-#' library(gtfs2gps)
-#'
+#' @examples
 #' # read gtfs data
-#' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+#' poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
 #' 
 #' # filter gtfs data
 #' poa_f <- filter_day_period(poa, period_start = "10:00", period_end = "10:20")
-#' }
-filter_day_period <- function(gtfs, period_start=NULL, period_end=NULL){
-  if(is.null(period_start)){ period_start <- "00:00:01"}
-  if(is.null(period_end)){ period_end <- "23:59:59"}
+filter_day_period <- function(gtfs, period_start = "00:00:01", period_end = "23:59:59"){
+  if(is.na(data.table::as.ITime(period_start))){ stop("Error: Invalid period_start input") }
+  if(is.na(data.table::as.ITime(period_end))){ stop("Error: Invalid period_end input") }
 
-  if(is.na(data.table::as.ITime(period_start))){ stop( paste0("Error: Invalid period_start input") ) }
-  if(is.na(data.table::as.ITime(period_end))){ stop( paste0("Error: Invalid period_end input") ) }
-  
-  
-  
   # 1) filter stop times
   gtfs$stop_times <- gtfs$stop_times[ data.table::between(departure_time, data.table::as.ITime(period_start), data.table::as.ITime(period_end)), ]
   
   # Update frequencies
   if(test_gtfs_freq(gtfs) == "frequency"){
-    
     if((data.table::as.ITime(period_end) - data.table::as.ITime(period_start)) < data.table::as.ITime("01:00")){
-      stop(paste0('Using a frequency-based GTFS. Please input time period of one hour or longer'))
+      stop("Using a frequency-based GTFS. Please input time period of one hour or longer")
     } else {
       gtfs$frequencies <- gtfs$frequencies[ data.table::as.ITime(start_time) >= data.table::as.ITime(period_start) & data.table::as.ITime(end_time) <= data.table::as.ITime(period_end) ] 
     }
   }
-  # as.POSIXct(paste('2020-01-29', '10:45:00')) %>% as.numeric()
 
   # Remaining unique stops and trips
   unique_stops <- unique(gtfs$stop_times$stop_id)

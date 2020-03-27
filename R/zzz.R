@@ -14,7 +14,7 @@ utils::globalVariables(c(".", "%>%", ":="))
 #' @importFrom data.table := %between% fifelse
 #' @importFrom stats na.omit
 #' @importFrom utils head tail
-#' @importFrom stats lag na.omit
+#' @importFrom stats na.omit
 #' @importFrom Rcpp compileAttributes
 #' @importFrom lwgeom st_make_valid
 #' @useDynLib gtfs2gps, .registration = TRUE
@@ -29,4 +29,4 @@ if(getRversion() >= "2.15.1") utils::globalVariables(
     '.N', 'update_newstoptimes', 'shape_pt_sequence', 'geometry',
     'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday',
     'service_duration', 'headway_secs', 'number_of_departures',
-    'cumtime', 'speed', 'lag', 'i'))
+    'cumtime', 'speed', 'i'))

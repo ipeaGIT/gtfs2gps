@@ -46,22 +46,19 @@ emtu <- "R:/Dropbox/bases_de_dados/GTFS/SP GTFS/GTFS EMTU_20190815.zip"
   system.time(  normfreq <- gtfs2gps_dt_parallel(gtfsf) ) # 130.50 secs
   
   
-##### TESTS freq fun ------------------------
+##### Coverage ------------------------
 
     
- system.time( f <- gtfs2gps_dt_freq2(gtfsf) ) # 156.50 
-  
-  
-  
   
 #  ERROR in shapeid 52936
   
   library(covr)
   
   function_coverage(fun=gtfs2gps::filter_day_period, test_file("tests/testthat/test_filter_day_period.R"))
+  function_coverage(fun=gtfs2gps::test_gtfs_freq, test_file("./tests/testthat/test_test_gtfs_freq.R"))
   
   
-  
+  covr::package_coverage(path = ".", type = "tests")
   
 ##### Profiling function ------------------------
 p <-   profvis( update_newstoptimes("T2-1@1#2146") )
@@ -147,12 +144,12 @@ setwd("..")
 
 
 # Install package
-# devtools::install("gtfs2gps", build_vignettes = T)
+# devtools::install("gtfs2gps", build_vignettes = TRUE)
 # system("R CMD INSTALL --build gtfs2gps")
 
 # build binary
 system("R CMD build gtfs2gps --resave-data") # build tar.gz
-# devtools::build(pkg = "gtfs2gps", path=".", binary = T, manual=T)
+# devtools::build(pkg = "gtfs2gps", path=".", binary = TRUE, manual=TRUE)
 
 # Check package errors
 # devtools::check("gtfs2gps")

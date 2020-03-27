@@ -12,14 +12,14 @@ gtfs_shapes_as_sf(gtfs, crs = 4326)
 \item{crs}{The coordinate reference system represented as an EPSG code.
 The default value is 4326 (latlong WGS84)}
 }
+\value{
+A simple feature (sf) object.
+}
 \description{
 Convert a GTFS shapes data loaded using gtfs2gps::read_gtf()
 into a line simple feature (sf).
 }
 \examples{
-\donttest{
-poa <- read_gtfs(system.file("extdata/saopaulo.zip", package="gtfs2gps"))
+poa <- read_gtfs(system.file("extdata/saopaulo.zip", package = "gtfs2gps"))
 poa_sf <- gtfs_shapes_as_sf(poa)
-plot(sf::st_geometry(poa_sf), lwd = 2)
-}
 }

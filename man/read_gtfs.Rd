@@ -9,6 +9,9 @@ read_gtfs(gtfszip)
 \arguments{
 \item{gtfszip}{A zipped GTFS data.}
 }
+\value{
+A list of data.tables, where each index represents the respective GTFS file name.
+}
 \description{
 Read files of a zipped GTFS feed and load them to memory as a list of data.tables.
 It will load the following files: "agency.txt", "calendar.txt", "shapes.txt", "routes.txt", "shapes.txt", 
@@ -17,9 +20,5 @@ this last one being optional. If one of the mandatory files does not exit,
 this function will stop with an error message.
 }
 \examples{
-\donttest{
-library(gtfs2gps)
-
-poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
-}
+poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
 }
