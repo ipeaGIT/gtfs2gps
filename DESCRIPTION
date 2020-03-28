@@ -14,7 +14,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: TRUE
 Depends:
-    R (>= 3.5.2)
+    R (>= 3.5)
 Suggests:
     rmarkdown,
     knitr,
