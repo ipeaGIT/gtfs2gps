@@ -1,6 +1,7 @@
 # gtfs2gps
 
 [![CRAN/METACRAN Version](https://www.r-pkg.org/badges/version/gtfs2gps)](https://CRAN.R-project.org/package=gtfs2gps)
+[![CRAN/METACRAN Total downloads](http://cranlogs.r-pkg.org/badges/grand-total/gtfs2gps?color=blue)](https://CRAN.R-project.org/package=gtfs2gps)
 [![Travis-CI Build Status](https://travis-ci.org/ipeaGIT/gtfs2gps.svg?branch=master)](https://travis-ci.org/ipeaGIT/gtfs2gps)
 [![Codecov test coverage](https://codecov.io/gh/ipeaGIT/gtfs2gps/branch/master/graph/badge.svg)](https://codecov.io/gh/ipeaGIT/gtfs2gps?branch=master)
 [![DOI](https://zenodo.org/badge/203697230.svg)](https://zenodo.org/badge/latestdoi/203697230)
@@ -13,11 +14,10 @@ The core function of the package takes a `GTFS.zip` file and interpolates the sp
 
 ### Installation
 
-Please install **gtfs2gps** package from GitHub, making sure you have the
-latest version of the other packages it requires:
+Please install **gtfs2gps** package from CRAN to get the stable version.
 
 ``` r
-devtools::install_github("ipeaGIT/gtfs2gps")
+install.packages("gtfs2gps")
 library(gtfs2gps)
 ```
 
