@@ -9,7 +9,7 @@ vignette: |
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{colrow: Handling SimU, CR, and LU datas}
 ---
-15 December 2019
+27 March 2020
 
 # Introduction 
 
@@ -118,7 +118,7 @@ box()
 
 For a given trip, the function `gtfs2gps` calculates the average speed between each pair of stops --- given by the ratio between cumulative network distance `S` and departure time `t` for a consecutive pair of valid stop_ids (`i`), 
 
-<img src="https://latex.codecogs.com/svg.latex?\Large&space;Speed_i=\frac{S_{i+1}-S_i}{t_{i+1}-t_i}" title="\Large Speed_i = \frac{S_{i+1}-S_i}{t_{i+1}-t_i}" />
+$$Large Speed_i = \frac{S_{i+1}-S_i}{t_{i+1}-t_i}$$
 
 Since the beginning of each trip usually starts before the first stop_id, the mean speed cannot be calculated as shown in the previous equation because information on `i` period does not exist. In this case, the function consider the mean speed for the whole trip. It also happens after the last valid stop_id (`N`) of the trips, where info on `i+1` also does not exist. 
 
