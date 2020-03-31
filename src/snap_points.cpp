@@ -19,13 +19,12 @@ Rcpp::NumericVector cpp_snap_points_level(Rcpp::NumericMatrix& data, Rcpp::Numer
     const double y = data[i + nrow];
     double dist = spatial_resolution + 1;
 
-    if(ref_i + 1 < ref_nrow){
+    if(ref_i + 1 < ref_nrow && ref_i + 1 + ref_nrow < ref.length()){
       do {
         ref_i++;
         const double ref_x = ref[ref_i];
         const double ref_y = ref[ref_i + ref_nrow];
         
-  
         dist = distanceHaversine(toRadians(y), toRadians(x), toRadians(ref_y), toRadians(ref_x), 1);
       } while (dist > spatial_resolution && ref_i + 1 < ref_nrow);
     }
