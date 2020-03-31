@@ -73,6 +73,12 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
   # add cummulative distance
   new_stoptimes[, cumdist := cumsum(dist)]
 
+  # subset original stoptimes to get original travel_times btwn stops
+  stoptimes_temp <- gtfs_data$stop_times[trip_id == tripid]
+  
+  # add departure_time based on stop sequence
+  new_stoptimes[stoptimes_temp, on = 'stop_sequence', 'departure_time' := i.departure_time]
+
   # get a 'stop_sequence' of the stops which have proper info on 'departure_time'
   stop_id_ok <- gtfs_data$stop_times[trip_id == tripid & is.na(departure_time) == FALSE,]$stop_sequence
   
