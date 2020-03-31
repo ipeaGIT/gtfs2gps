@@ -13,28 +13,29 @@ Rcpp::NumericVector cpp_snap_points_level(Rcpp::NumericMatrix& data, Rcpp::Numer
   const int nrow = data.nrow();
   const int ref_nrow = ref.nrow();
   int ref_i = -1;
-  int total_found = 0;
-  
+
   for(int i = 0; i < nrow; i++){
     const double x = data[i];
     const double y = data[i + nrow];
-    double dist;
-    
-    do {
-      ref_i++;
-      const double ref_x = ref[ref_i];
-      const double ref_y = ref[ref_i + ref_nrow];
-      
-      dist = distanceHaversine(toRadians(y), toRadians(x), toRadians(ref_y), toRadians(ref_x), 1);
-    } while (dist > spatial_resolution && ref_i < ref_nrow);
-    
-    if(ref_i < ref_nrow){
+    double dist = spatial_resolution + 1;
+
+    if(ref_i + 1 < ref_nrow){
+      do {
+        ref_i++;
+        const double ref_x = ref[ref_i];
+        const double ref_y = ref[ref_i + ref_nrow];
+        
+  
+        dist = distanceHaversine(toRadians(y), toRadians(x), toRadians(ref_y), toRadians(ref_x), 1);
+      } while (dist > spatial_resolution && ref_i + 1 < ref_nrow);
+    }
+
+    if(dist <= spatial_resolution){
       result_pos.push_back(ref_i + 1);
-      total_found++;
     }
   }
-  
-  if(total_found < nrow){
+
+  if(result_pos.length() < nrow){
     if(level > 3){
       std::stringstream text;
       text << "Could not find a nearest point closer than " << spatial_resolution << "m (eight times spatial_resolution) for id '" << id(0) << "' - ignoring it";
