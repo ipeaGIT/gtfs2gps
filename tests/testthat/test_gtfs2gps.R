@@ -13,12 +13,12 @@ test_that("gtfs2gps", {
     #write_sf(poa_gps_shape, "poa_gps_shape.shp")
     
     my_dim <- dim(poa_gps)[1]
-    expect_equal(my_dim, 393495)
+    expect_equal(my_dim, 386708)
 
     my_length <- length(poa_gps$dist[which(!poa_gps$dist < 15)])
     expect_equal(my_length, 0)
     
-    expect_equal(sum(poa_gps$dist), 4138798, 0.001)
+    expect_equal(sum(poa_gps$dist), 4065236, 0.001)
     
     expect_true(all(names(poa_gps) %in% 
       c("trip_id", "route_type", "id", "shape_pt_lon", "shape_pt_lat",
@@ -34,7 +34,7 @@ test_that("gtfs2gps", {
       filter_week_days() %>%
       gtfs2gps(spatial_resolution = 300, parallel = FALSE, progress = FALSE)
     
-    expect_equal(dim(poa_gps_300)[1], 67377)
+    expect_equal(dim(poa_gps_300)[1], 66264)
     expect(dim(poa_gps_300)[1] < dim(poa_gps)[1], "more spatial_resolution is not decreasing the number of points")
     
     # save into file
