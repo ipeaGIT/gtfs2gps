@@ -7,7 +7,7 @@
 #' 
 #' @param gtfs_data A path to a GTFS file to be converted to GPS, or a GTFS data
 #' represented as a list of data.tables.
-#' @param spatial_resolution The spatial resolution in meters. Default is 15m.
+#' @param spatial_resolution The spatial resolution in meters. Default is 50m.
 #' @param parallel Decides whether the function should run in parallel. Defaults to TRUE.
 #' @param strategy Name of evaluation function to use in future parallel processing. Defaults to 
 #' "multiprocess", i.e. if multicore evaluation is supported, that will be used, otherwise
@@ -29,7 +29,7 @@
 #'   filter_single_trip()
 #' 
 #' poa_gps <- gtfs2gps(subset)
-gtfs2gps <- function(gtfs_data, spatial_resolution = 15, parallel = FALSE, strategy = 'multiprocess', progress = TRUE, filepath = NULL, continue = FALSE){
+gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strategy = 'multiprocess', progress = TRUE, filepath = NULL, continue = FALSE){
 ###### PART 1. Load and prepare data inputs ------------------------------------
 
   if(continue & is.null(filepath))

@@ -13,9 +13,9 @@ test_that("gtfs2gps", {
     #write_sf(poa_gps_shape, "poa_gps_shape.shp")
     
     my_dim <- dim(poa_gps)[1]
-    expect_equal(my_dim, 386708)
+    expect_equal(my_dim, 125718)
 
-    my_length <- length(poa_gps$dist[which(!poa_gps$dist < 15)])
+    my_length <- length(poa_gps$dist[which(!poa_gps$dist < 50)])
     expect_equal(my_length, 0)
     
     expect_equal(sum(poa_gps$dist), 4065236, 0.001)
@@ -64,7 +64,7 @@ test_that("gtfs2gps", {
       filter_by_shape_id(52000:52200) %>%
       filter_week_days() %>%
       filter_single_trip() %>%
-      gtfs2gps(parallel = FALSE, progress = TRUE)
+      gtfs2gps(parallel = FALSE, progress = TRUE, spatial_resolution = 15)
 
     expect_true(all(names(sp_gps) %in% 
       c("trip_id", "route_type", "id", "shape_pt_lon", "shape_pt_lat",
