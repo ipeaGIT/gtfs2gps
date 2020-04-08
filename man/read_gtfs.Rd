@@ -4,10 +4,13 @@
 \alias{read_gtfs}
 \title{Read GTFS data into a list of data.tables}
 \usage{
-read_gtfs(gtfszip)
+read_gtfs(gtfszip, remove_invalid = TRUE)
 }
 \arguments{
 \item{gtfszip}{A zipped GTFS data.}
+
+\item{remove_invalid}{Remove all the invalid objects after subsetting the data?
+The default value is TRUE.}
 }
 \value{
 A list of data.tables, where each index represents the respective GTFS file name.

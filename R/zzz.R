@@ -13,7 +13,7 @@ utils::globalVariables(c(".", "%>%", ":="))
 #' @importFrom magrittr %>%
 #' @importFrom data.table := %between% fifelse
 #' @importFrom stats na.omit
-#' @importFrom utils head tail
+#' @importFrom utils head tail object.size
 #' @importFrom stats na.omit
 #' @importFrom Rcpp compileAttributes
 #' @importFrom lwgeom st_make_valid

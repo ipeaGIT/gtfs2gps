@@ -4,10 +4,13 @@
 \alias{filter_single_trip}
 \title{Filter GTFS trips in order to have one trip per shape_id}
 \usage{
-filter_single_trip(gtfs_data)
+filter_single_trip(gtfs_data, remove_invalid = TRUE)
 }
 \arguments{
 \item{gtfs_data}{A list of data.tables read using gtfs2gps::reag_gtfs().}
+
+\item{remove_invalid}{Remove all the invalid objects after subsetting the data?
+The default value is TRUE.}
 }
 \value{
 A filtered GTFS data.
