@@ -36,7 +36,7 @@ remove_invalid <- function(gtfs_data){
   gtfs_data$shapes <- subset(gtfs_data$shapes, shape_id %in% shape_ids)
   
   # trips-frequencies relation (trip_id)
-  if(!is.null(gtfs_data$frequencies)){
+  if(test_gtfs_freq(gtfs_data) == 'frequency'){
     trip_ids <- intersect(gtfs_data$trips$trip_id, gtfs_data$frequencies$trip_id)
 
     gtfs_data$trips       <- subset(gtfs_data$trips,       trip_id %in% trip_ids)
