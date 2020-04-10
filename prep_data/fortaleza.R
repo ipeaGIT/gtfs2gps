@@ -12,7 +12,7 @@ gtfs_shapes_as_sf(gtfs) %>%
 
 unique(gtfs$shapes$shape_id)
 
-shape_ids <- paste0("shape", 800:900, "-I")
+shape_ids <- paste0("shape", c(800:822, 825:854, 856:900), "-I")
 
 new_gtfs <- filter_by_shape_id(gtfs, shape_ids)
 
