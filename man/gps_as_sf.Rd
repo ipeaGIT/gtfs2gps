@@ -9,7 +9,7 @@ gps_as_sf(gps, crs = 4326)
 \arguments{
 \item{gps}{A data.table with timestamp data.}
 
-\item{crs}{A Coordinate Reference System. The default value is 4326 (latlong WGS84)}
+\item{crs}{A Coordinate Reference System. The default value is 4326 (latlong WGS84).}
 }
 \value{
 A simple feature (sf) object.
