@@ -6,7 +6,7 @@
 \usage{
 gtfs2gps(
   gtfs_data,
-  spatial_resolution = 15,
+  spatial_resolution = 50,
   parallel = FALSE,
   strategy = "multiprocess",
   progress = TRUE,
@@ -18,7 +18,7 @@ gtfs2gps(
 \item{gtfs_data}{A path to a GTFS file to be converted to GPS, or a GTFS data
 represented as a list of data.tables.}
 
-\item{spatial_resolution}{The spatial resolution in meters. Default is 15m.}
+\item{spatial_resolution}{The spatial resolution in meters. Default is 50m.}
 
 \item{parallel}{Decides whether the function should run in parallel. Defaults to TRUE.}
 

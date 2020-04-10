@@ -5,11 +5,13 @@
 #' this last one being optional. If one of the mandatory files does not exit,
 #' this function will stop with an error message.
 #' @param gtfszip A zipped GTFS data.
+#' @param remove_invalid Remove all the invalid objects after subsetting the data?
+#' The default value is TRUE.
 #' @return A list of data.tables, where each index represents the respective GTFS file name.
 #' @export
 #' @examples
 #' poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
-read_gtfs <- function(gtfszip){
+read_gtfs <- function(gtfszip, remove_invalid = TRUE){
   if(!file.exists(gtfszip))
     stop(paste0("File '", gtfszip, "' does not exist"))
 
@@ -42,6 +44,8 @@ read_gtfs <- function(gtfszip){
     result$frequencies[, start_time := data.table::as.ITime(mysub(start_time), format = "%H:%M:%OS")]
     result$frequencies[, end_time := data.table::as.ITime(mysub(end_time), format = "%H:%M:%OS")]
   }
+
+  if(remove_invalid){result <- gtfs2gps::remove_invalid(result)}
   
   return(result)
 }
