@@ -28,9 +28,12 @@ Imports:
       Rcpp,
       units,
       sf,
+      sp,
+      rgdal,
       sfheaders,
       lwgeom,
       utils,
+      raster,
       pbapply
 RoxygenNote: 7.0.2
 VignetteBuilder: knitr
