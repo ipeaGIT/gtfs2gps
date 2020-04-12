@@ -16,7 +16,7 @@ utils::globalVariables(c(".", "%>%", ":="))
 #' @importFrom utils head tail object.size
 #' @importFrom stats na.omit
 #' @importFrom Rcpp compileAttributes
-#' @importFrom lwgeom st_make_valid
+#' @importFrom lwgeom st_geod_length
 #' @useDynLib gtfs2gps, .registration = TRUE
 NULL
 
