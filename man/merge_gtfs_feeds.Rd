@@ -23,5 +23,4 @@ poa <- system.file("extdata/poa.zip", package = "gtfs2gps")
 gtfs_list <- list(spo, poa)
 
 new_gtfs <- merge_gtfs_feeds(gtfs_list)
-
 }
