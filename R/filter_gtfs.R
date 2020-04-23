@@ -8,20 +8,25 @@
 #' and trips-calendar relation (service_id),
 #' recursively, until GTFS data does not reduce its size anymore.
 #' @param gtfs_data A list of data.tables read using gtfs2gps::reag_gtfs().
+#' @param only_essential Remove only the essential files? The essential files are all but 
+#' agency and calendar. Default is TRUE, which means that agency-routes and trips-calendar relations
+#' will not be processed as restrictions to remove objects.
 #' @return A subset of the input GTFS data. 
 #' @export
 #' @examples
 #' poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"), remove_invalid = FALSE)
 #' 
 #' subset <- remove_invalid(poa)
-remove_invalid <- function(gtfs_data){
+remove_invalid <- function(gtfs_data, only_essential = TRUE){
   size <- object.size(gtfs_data)
 
   # agency-routes relation (agency_id)
-  agency_ids <- intersect(gtfs_data$agency$agency_id, gtfs_data$routes$agency_id)
-  
-  gtfs_data$agency <- subset(gtfs_data$agency, agency_id %in% agency_ids)
-  gtfs_data$routes <- subset(gtfs_data$routes, agency_id %in% agency_ids)
+  if(!only_essential){
+    agency_ids <- intersect(gtfs_data$agency$agency_id, gtfs_data$routes$agency_id)
+    
+    gtfs_data$agency <- subset(gtfs_data$agency, agency_id %in% agency_ids)
+    gtfs_data$routes <- subset(gtfs_data$routes, agency_id %in% agency_ids)
+  }
 
   # routes-trips relation (route_id)
   route_ids <- intersect(gtfs_data$routes$route_id, gtfs_data$trips$route_id)
@@ -56,15 +61,17 @@ remove_invalid <- function(gtfs_data){
   gtfs_data$stops      <- subset(gtfs_data$stops,      stop_id %in% stop_ids)
 
   # trips-calendar relation (service_id)
-  service_ids <- intersect(gtfs_data$trips$service_id, gtfs_data$calendar$service_id)
+  if(!only_essential){
+    service_ids <- intersect(gtfs_data$trips$service_id, gtfs_data$calendar$service_id)
   
-  gtfs_data$trips    <- subset(gtfs_data$trips,    service_id %in% service_ids)
-  gtfs_data$calendar <- subset(gtfs_data$calendar, service_id %in% service_ids)
-  
+    gtfs_data$trips    <- subset(gtfs_data$trips,    service_id %in% service_ids)
+    gtfs_data$calendar <- subset(gtfs_data$calendar, service_id %in% service_ids)
+  }
+
   newsize <- object.size(gtfs_data)
-  
+
   # if the size is reduced (some objects were removed), it is necessary to run again
-  if(newsize < size) return(remove_invalid(gtfs_data))
+  if(newsize < size) return(remove_invalid(gtfs_data, only_essential))
   
   return(gtfs_data)
 }
