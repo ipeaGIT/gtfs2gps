@@ -7,7 +7,6 @@ utils::globalVariables(c(".", "%>%", ":="))
   
   # set number of threads used in data.table to 100% 
   data.table::setDTthreads(percent = 100) # nocov
-  
 }
 
 #' @importFrom magrittr %>%
@@ -17,6 +16,7 @@ utils::globalVariables(c(".", "%>%", ":="))
 #' @importFrom stats na.omit
 #' @importFrom Rcpp compileAttributes
 #' @importFrom lwgeom st_geod_length
+#' @importFrom rgdal readOGR
 #' @useDynLib gtfs2gps, .registration = TRUE
 NULL
 
