@@ -14,15 +14,15 @@
 #' new_gtfs <- merge_gtfs_feeds(gtfs_list)
 merge_gtfs_feeds <- function(gtfs_list){
   
-# read all fees separately
+  # read all fees separately
   all_feeds <- lapply(gtfs_list, read_gtfs)
-
+  
   # separate 1st feed
   new_gtfs <- all_feeds[[2]]
-
+  
   # function to extract elements in a series of lists
   extract_list_element <- function(i, element){ all_feeds[[i]][[element]] }
-
+  
   ## piling up
   
   # 1/8 agency
@@ -48,6 +48,6 @@ merge_gtfs_feeds <- function(gtfs_list){
   
   # 8/8 frequencies
   new_gtfs$frequencies <- lapply(X = 1:length(all_feeds), FUN = extract_list_element, 'frequencies') %>% data.table::rbindlist(fill =TRUE)
-  
+
   return(new_gtfs)
 }

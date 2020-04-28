@@ -125,7 +125,8 @@ remove_invalid <- function(gtfs_data, only_essential = TRUE, prompt_invalid = FA
 filter_by_shape_id <- function(gtfs_data, shape_ids, remove_invalid = TRUE){
   gtfs_data$shapes <- subset(gtfs_data$shapes, shape_id %in% shape_ids)
   gtfs_data$trips <- subset(gtfs_data$trips, shape_id %in% shape_ids)
-  
+  gtfs_data$stop_times <- subset(gtfs_data$stop_times,trip_id %in% unique(gtfs_data$trips$trip_id))
+  gtfs_data$stops <- subset(gtfs_data$stops,stop_id %in% unique(gtfs_data$stop_times$stop_id))
   if(remove_invalid){gtfs_data <- gtfs2gps::remove_invalid(gtfs_data)}
 
   return(gtfs_data)
