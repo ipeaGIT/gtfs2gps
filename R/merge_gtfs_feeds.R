@@ -12,45 +12,42 @@
 #' gtfs_list <- list(spo, poa)
 #' 
 #' new_gtfs <- merge_gtfs_feeds(gtfs_list)
-#' 
-
 merge_gtfs_feeds <- function(gtfs_list){
   
-# read all fees separately
+  # read all fees separately
   all_feeds <- lapply(gtfs_list, read_gtfs)
-
+  
   # separate 1st feed
   new_gtfs <- all_feeds[[2]]
-
+  
   # function to extract elements in a series of lists
   extract_list_element <- function(i, element){ all_feeds[[i]][[element]] }
-
-
+  
   ## piling up
   
   # 1/8 agency
-  new_gtfs$agency <- lapply(X=1:length(all_feeds), FUN = extract_list_element, 'agency') %>% data.table::rbindlist(fill=T)
+  new_gtfs$agency <- lapply(X=1:length(all_feeds), FUN = extract_list_element, 'agency') %>% data.table::rbindlist(fill = TRUE)
   
   # 2/8 routes
-  new_gtfs$routes <- lapply(X=1:length(all_feeds), FUN = extract_list_element, 'routes') %>% data.table::rbindlist(fill=T)
+  new_gtfs$routes <- lapply(X = 1:length(all_feeds), FUN = extract_list_element, 'routes') %>% data.table::rbindlist(fill = TRUE)
   
   # 3/8 stops
-  new_gtfs$stops <- lapply(X=1:length(all_feeds), FUN = extract_list_element, 'stops') %>% data.table::rbindlist(fill=T)
+  new_gtfs$stops <- lapply(X = 1:length(all_feeds), FUN = extract_list_element, 'stops') %>% data.table::rbindlist(fill = TRUE)
   
   # 4/8 stop_times
-  new_gtfs$stop_times <- lapply(X=1:length(all_feeds), FUN = extract_list_element, 'stop_times') %>% data.table::rbindlist(fill=T)
+  new_gtfs$stop_times <- lapply(X = 1:length(all_feeds), FUN = extract_list_element, 'stop_times') %>% data.table::rbindlist(fill = TRUE)
   
   # 5/8 shapes
-  new_gtfs$shapes <- lapply(X=1:length(all_feeds), FUN = extract_list_element, 'shapes') %>% data.table::rbindlist(fill=T)
+  new_gtfs$shapes <- lapply(X = 1:length(all_feeds), FUN = extract_list_element, 'shapes') %>% data.table::rbindlist(fill = TRUE)
   
   # 6/8 trips
-  new_gtfs$trips <- lapply(X=1:length(all_feeds), FUN = extract_list_element, 'trips') %>% data.table::rbindlist(fill=T)
+  new_gtfs$trips <- lapply(X = 1:length(all_feeds), FUN = extract_list_element, 'trips') %>% data.table::rbindlist(fill = TRUE)
   
   # 7/8 calendar
-  new_gtfs$calendar <- lapply(X=1:length(all_feeds), FUN = extract_list_element, 'calendar') %>% data.table::rbindlist(fill=T)
+  new_gtfs$calendar <- lapply(X = 1:length(all_feeds), FUN = extract_list_element, 'calendar') %>% data.table::rbindlist(fill = TRUE)
   
   # 8/8 frequencies
-  new_gtfs$frequencies <- lapply(X=1:length(all_feeds), FUN = extract_list_element, 'frequencies') %>% data.table::rbindlist(fill=T)
-  
+  new_gtfs$frequencies <- lapply(X = 1:length(all_feeds), FUN = extract_list_element, 'frequencies') %>% data.table::rbindlist(fill =TRUE)
+
   return(new_gtfs)
 }

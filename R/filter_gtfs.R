@@ -8,63 +8,99 @@
 #' and trips-calendar relation (service_id),
 #' recursively, until GTFS data does not reduce its size anymore.
 #' @param gtfs_data A list of data.tables read using gtfs2gps::reag_gtfs().
+#' @param only_essential Remove only the essential files? The essential files are all but 
+#' agency and calendar. Default is TRUE, which means that agency-routes and trips-calendar relations
+#' will not be processed as restrictions to remove objects.
+#' @param prompt_invalid Show the invalid objects. Default is FALSE.
 #' @return A subset of the input GTFS data. 
 #' @export
 #' @examples
 #' poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"), remove_invalid = FALSE)
-#' 
+#' object.size(poa)
 #' subset <- remove_invalid(poa)
-remove_invalid <- function(gtfs_data){
-  size <- object.size(gtfs_data)
-
-  # agency-routes relation (agency_id)
-  agency_ids <- intersect(gtfs_data$agency$agency_id, gtfs_data$routes$agency_id)
-  
-  gtfs_data$agency <- subset(gtfs_data$agency, agency_id %in% agency_ids)
-  gtfs_data$routes <- subset(gtfs_data$routes, agency_id %in% agency_ids)
-
-  # routes-trips relation (route_id)
-  route_ids <- intersect(gtfs_data$routes$route_id, gtfs_data$trips$route_id)
-
-  gtfs_data$routes <- subset(gtfs_data$routes, route_id %in% route_ids)
-  gtfs_data$trips  <- subset(gtfs_data$trips,  route_id %in% route_ids)
-
-  # trips-shapes relation (shape_id)
-  shape_ids <- intersect(gtfs_data$trips$shape_id, gtfs_data$shapes$shape_id)
-  
-  gtfs_data$trips  <- subset(gtfs_data$trips,  shape_id %in% shape_ids)
-  gtfs_data$shapes <- subset(gtfs_data$shapes, shape_id %in% shape_ids)
-  
-  # trips-frequencies relation (trip_id)
-  if(test_gtfs_freq(gtfs_data) == 'frequency'){
-    trip_ids <- intersect(gtfs_data$trips$trip_id, gtfs_data$frequencies$trip_id)
-
-    gtfs_data$trips       <- subset(gtfs_data$trips,       trip_id %in% trip_ids)
-    gtfs_data$frequencies <- subset(gtfs_data$frequencies, trip_id %in% trip_ids)
-  }
-  
-  # trips-stop_times relation (trip_id)
-  trip_ids <- intersect(gtfs_data$trips$trip_id, gtfs_data$stop_times$trip_id)
-  
-  gtfs_data$trips      <- subset(gtfs_data$trips,      trip_id %in% trip_ids)
-  gtfs_data$stop_times <- subset(gtfs_data$stop_times, trip_id %in% trip_ids)
-  
-  # stop_times-stops relation (stop_id)
-  stop_ids <- intersect(gtfs_data$stop_times$stop_id, gtfs_data$stops$stop_id)
-
-  gtfs_data$stop_times <- subset(gtfs_data$stop_times, stop_id %in% stop_ids)
-  gtfs_data$stops      <- subset(gtfs_data$stops,      stop_id %in% stop_ids)
-
-  # trips-calendar relation (service_id)
-  service_ids <- intersect(gtfs_data$trips$service_id, gtfs_data$calendar$service_id)
-  
-  gtfs_data$trips    <- subset(gtfs_data$trips,    service_id %in% service_ids)
-  gtfs_data$calendar <- subset(gtfs_data$calendar, service_id %in% service_ids)
-  
+#' object.size(subset)
+remove_invalid <- function(gtfs_data, only_essential = TRUE, prompt_invalid = FALSE){
   newsize <- object.size(gtfs_data)
+  size <- newsize + 1
   
-  # if the size is reduced (some objects were removed), it is necessary to run again
-  if(newsize < size) return(remove_invalid(gtfs_data))
+  removed <- list(
+    agency_ids = c(),
+    route_ids = c(),
+    shape_ids = c(),
+    trip_ids = c(),
+    stop_ids = c(),
+    service_ids = c()
+  )
+  
+  while(newsize < size){
+    size <- newsize
+    
+    # agency-routes relation (agency_id)
+    if(!only_essential){
+      agency_ids <- intersect(gtfs_data$agency$agency_id, gtfs_data$routes$agency_id)
+      removed$agency_ids <- c(removed$agency_ids, setdiff(gtfs_data$agency$agency_id, gtfs_data$routes$agency_id))
+
+      gtfs_data$agency <- subset(gtfs_data$agency, agency_id %in% agency_ids)
+      gtfs_data$routes <- subset(gtfs_data$routes, agency_id %in% agency_ids)
+    }
+  
+    # routes-trips relation (route_id)
+    route_ids <- intersect(gtfs_data$routes$route_id, gtfs_data$trips$route_id)
+    removed$route_ids <- c(removed$route_ids, setdiff(gtfs_data$routes$route_id, gtfs_data$trips$route_id))
+
+    gtfs_data$routes <- subset(gtfs_data$routes, route_id %in% route_ids)
+    gtfs_data$trips  <- subset(gtfs_data$trips,  route_id %in% route_ids)
+  
+    # trips-shapes relation (shape_id)
+    shape_ids <- intersect(gtfs_data$trips$shape_id, gtfs_data$shapes$shape_id)
+    removed$shape_ids <- c(removed$shape_ids, setdiff(gtfs_data$trips$shape_id, gtfs_data$shapes$shape_id))
+
+    gtfs_data$trips  <- subset(gtfs_data$trips,  shape_id %in% shape_ids)
+    gtfs_data$shapes <- subset(gtfs_data$shapes, shape_id %in% shape_ids)
+    
+    # trips-frequencies relation (trip_id)
+    if(test_gtfs_freq(gtfs_data) == 'frequency'){
+      trip_ids <- intersect(gtfs_data$trips$trip_id, gtfs_data$frequencies$trip_id)
+      removed$trip_ids <- c(removed$trip_ids, setdiff(gtfs_data$trips$trip_id, gtfs_data$frequencies$trip_id))
+
+      gtfs_data$trips       <- subset(gtfs_data$trips,       trip_id %in% trip_ids)
+      gtfs_data$frequencies <- subset(gtfs_data$frequencies, trip_id %in% trip_ids)
+    }
+    
+    # trips-stop_times relation (trip_id)
+    trip_ids <- intersect(gtfs_data$trips$trip_id, gtfs_data$stop_times$trip_id)
+    removed$trip_ids <- c(removed$trip_ids, setdiff(gtfs_data$trips$trip_id, gtfs_data$stop_times$trip_id))
+
+    gtfs_data$trips      <- subset(gtfs_data$trips,      trip_id %in% trip_ids)
+    gtfs_data$stop_times <- subset(gtfs_data$stop_times, trip_id %in% trip_ids)
+    
+    # stop_times-stops relation (stop_id)
+    stop_ids <- intersect(gtfs_data$stop_times$stop_id, gtfs_data$stops$stop_id)
+    removed$stop_ids <- c(removed$stop_ids, setdiff(gtfs_data$stop_times$stop_id, gtfs_data$stops$stop_id))
+
+    gtfs_data$stop_times <- subset(gtfs_data$stop_times, stop_id %in% stop_ids)
+    gtfs_data$stops      <- subset(gtfs_data$stops,      stop_id %in% stop_ids)
+  
+    # trips-calendar relation (service_id)
+    if(!only_essential){
+      service_ids <- intersect(gtfs_data$trips$service_id, gtfs_data$calendar$service_id)
+      removed$service_ids <- c(removed$service_ids, setdiff(gtfs_data$trips$service_id, gtfs_data$calendar$service_id))
+
+      gtfs_data$trips    <- subset(gtfs_data$trips,    service_id %in% service_ids)
+      gtfs_data$calendar <- subset(gtfs_data$calendar, service_id %in% service_ids)
+    }
+  
+    newsize <- object.size(gtfs_data)
+  }
+
+  if(prompt_invalid){
+    for(element in names(removed)){
+      len <- length(removed[[element]])
+      
+      if(len > 0)
+        message(paste(len, element, "removed:", paste0(removed[[element]], collapse = ", ")))
+    }
+  }
   
   return(gtfs_data)
 }
