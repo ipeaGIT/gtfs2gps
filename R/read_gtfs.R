@@ -33,13 +33,17 @@ read_gtfs <- function(gtfszip, remove_invalid = TRUE){
   if("calendar.txt"    %in% unzippedfiles){result$calendar    <- data.table::fread(paste0(tempd,"/calendar.txt"),    encoding="UTF-8")}  else{stop("File calendar.txt is missing")}
   if("frequencies.txt" %in% unzippedfiles){result$frequencies <- data.table::fread(paste0(tempd,"/frequencies.txt"), encoding="UTF-8")}
 
-  mysub <- function(value) sub("^24:", "00:", value)
-
-  if(!is.null(result$stop_times)){
-    result$stop_times[, departure_time := data.table::as.ITime(mysub(departure_time), format = "%H:%M:%OS")]
-    result$stop_times[, arrival_time := data.table::as.ITime(mysub(arrival_time), format ="%H:%M:%OS")]
-  }
+  if(is.null(result$shapes))     stop("shapes.txt is empty in the GTFS file")
+  if(is.null(result$trips))      stop("trips.txt is empty in the GTFS file")
+  if(is.null(result$stops))      stop("stops.txt is empty in the GTFS file")
+  if(is.null(result$stop_times)) stop("stop_times.txt is empty in the GTFS file")
+  if(is.null(result$routes))     stop("routes.txt is empty in the GTFS file")
   
+  mysub <- function(value) sub("^24:", "00:", value)
+    
+  result$stop_times[, departure_time := data.table::as.ITime(mysub(departure_time), format = "%H:%M:%OS")]
+  result$stop_times[, arrival_time := data.table::as.ITime(mysub(arrival_time), format ="%H:%M:%OS")]
+
   if(!is.null(result$frequencies)){
     result$frequencies[, start_time := data.table::as.ITime(mysub(start_time), format = "%H:%M:%OS")]
     result$frequencies[, end_time := data.table::as.ITime(mysub(end_time), format = "%H:%M:%OS")]

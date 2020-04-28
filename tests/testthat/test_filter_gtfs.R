@@ -72,3 +72,15 @@ test_that("filter_by_agency_id", {
   expect_equal(dim(result$trips)[1], 387)
   expect_equal(dim(result$shapes)[1], 1265)
 })
+
+test_that("remove_invalid", {
+  poa <- read_gtfs(system.file("extdata/fortaleza.zip", package="gtfs2gps"), remove_invalid = FALSE)
+  
+  poa$shapes <- poa$shapes[-(1:500),]
+  poa$stops <- poa$stops[-(1:30),]
+  
+  poa2 <- remove_invalid(poa, prompt_invalid = TRUE)
+  
+  expect_equal(as.numeric(object.size(poa)), 2354776)
+  expect_equal(as.numeric(object.size(poa2)), 1514888)
+})

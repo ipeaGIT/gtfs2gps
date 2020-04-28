@@ -4,10 +4,16 @@
 \alias{remove_invalid}
 \title{Remove invalid objects from GTFS data}
 \usage{
-remove_invalid(gtfs_data)
+remove_invalid(gtfs_data, only_essential = TRUE, prompt_invalid = FALSE)
 }
 \arguments{
 \item{gtfs_data}{A list of data.tables read using gtfs2gps::reag_gtfs().}
+
+\item{only_essential}{Remove only the essential files? The essential files are all but 
+agency and calendar. Default is TRUE, which means that agency-routes and trips-calendar relations
+will not be processed as restrictions to remove objects.}
+
+\item{prompt_invalid}{Show the invalid objects. Default is FALSE.}
 }
 \value{
 A subset of the input GTFS data.
@@ -22,6 +28,7 @@ recursively, until GTFS data does not reduce its size anymore.
 }
 \examples{
 poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"), remove_invalid = FALSE)
-
+object.size(poa)
 subset <- remove_invalid(poa)
+object.size(subset)
 }
