@@ -1,11 +1,12 @@
-#' @title Converts a GPS-like data.table to a MultiLineString Simple Feature (sf) object
+#' @title Converts a GPS-like data.table to a LineString Simple Feature (sf) object
 #'
-#' @description Every interval of GPS data points of constant speed for each trip_id is
-#'  converted into a linestring segment.
+#' @description Every interval of GPS data points between stops for each trip_id is
+#'  converted into a linestring segment. The output assumes constant average speed 
+#'  between consecutice stops
 #'
-#' @param input_file A data.table with timestamp data.
+#' @param gps A data.table with timestamp data.
 #' @param crs A Coordinate Reference System. The default value is 4326 (latlong WGS84).
-#' @return A simple feature (sf) object with MultiLineString data.
+#' @return A simple feature (sf) object with LineString data.
 #' 
 #' @export
 #' @examples \donttest{
@@ -18,22 +19,18 @@
 #'   filter_single_trip()
 #' 
 #' poa_gps <- gtfs2gps(poa_subset)
-#' poa_gps_sf <- gps2sf_linestring(poa_gps)
+#' 
+#' poa_gps_sf <- gps_as_sflinestring(poa_gps)
 #' plot(poa_gps_sf$geometry)
-#'}
+#' }
 #'
-gps2sf_linestring  <- function(input_file, crs = 4326){
+#'
+gps_as_sflinestring  <- function(gps, crs = 4326){
   
-  # input_file <- poa_gps
-  
-  if(is.character(input_file)){
-    dt <- data.table::fread(input_file)} else {
-    dt <- input_file
+  if(is.character(gps)){
+    dt <- data.table::fread(gps)} else {
+    dt <- gps
   }
-  
-  
-  ### iteration over all trip_id's
-  
   
   # create new row ids
   dt[, id := .I]
@@ -79,87 +76,22 @@ gps2sf_linestring  <- function(input_file, crs = 4326){
   
 
  
-  #### 1/2 solucao sfheaders puro
-    
-  tictoc::tic()
-  gps_sf2 <- sfheaders::sf_linestring(obj=dt2, 
+  ## convert to linestring
+  gps_sf <- sfheaders::sf_linestring(obj=dt2, 
                                               x='shape_pt_lon',
                                               y='shape_pt_lat',
                                               linestring_id = 'grp',
                                               keep=TRUE) %>% sf::st_set_crs( crs )
   
   
-  gps_sf2 <- sf::st_make_valid(gps_sf2)
+  gps_sf <- sf::st_make_valid(gps_sf)
   
-  gps_sf2$departure_time <- data.table::as.ITime(gps_sf2$departure_time)
-  gps_sf2$dist <- sf::st_length(gps_sf2$geometry)
-  gps_sf2 <- gps_sf2[as.numeric(gps_sf2$dist) > 0,]
-  gps_sf2$grp <- NULL
-  gps_sf2$grp <- NULL
-  
-  
-  
-  tictoc::toc()
-  
-  
-  
-  #### 2/2 solucao function
-  
-  tictoc::tic()
-  # function to convert to multilnestring
-  flines <- function(long,lat){
-    exp <- matrix(c(long,lat),ncol = 2) %>% sfheaders::sf_linestring()
-    return(exp$geometry)
-  }
-  
-  gps_sf <- dt2[,geometry := list(flines(shape_pt_lon,shape_pt_lat)),by = grp][, .SD[1], by = grp ] %>% 
-    sf::st_as_sf() %>% sf::st_set_crs( crs )
-  
-  #dt3$geometry <- sf::st_sf(geometry = geom,crs = 4326)
-  # as.Itime
+  # edit columns
   gps_sf$departure_time <- data.table::as.ITime(gps_sf$departure_time)
   gps_sf$dist <- sf::st_length(gps_sf$geometry)
   gps_sf <- gps_sf[as.numeric(gps_sf$dist) > 0,]
   gps_sf$grp <- NULL
-  gps_sf$id <- NULL
-  gps_sf$shape_pt_lat <- NULL
-  gps_sf$shape_pt_lon <- NULL
-  
-  tictoc::toc()
-
+  gps_sf$grp <- NULL
   
   return(gps_sf)
 }
-
-
-# 
-# setdiff(names(gps_sf), names(gps_sf2))
-# setdiff(names(gps_sf2), names(gps_sf))
-# 
-# setcolorder(gps_sf, names(gps_sf2))
-# 
-# identical(gps_sf, gps_sf2)
-# 
-# 
-# identical(gps_sf$trip_id, gps_sf2$trip_id)
-# identical(gps_sf$route_type, gps_sf2$route_type)
-# identical(gps_sf$departure_time, gps_sf2$departure_time)
-# identical(gps_sf$stop_id, gps_sf2$stop_id)
-# identical(gps_sf$stop_sequence, gps_sf2$stop_sequence)
-# identical(gps_sf$dist, gps_sf2$dist)
-# identical(gps_sf$interval_id, gps_sf2$interval_id)
-# identical(gps_sf$geometry, gps_sf2$geometry)
-# 
-# st_crs(gps_sf) == st_crs(gps_sf2)
-# 
-# 
-# library(ggplot2)
-# 
-# 
-# ggplot() + geom_sf(data=dt2, aes(color=as.factor(speed)))
-# 
-# 
-# dt3 <- copy(dt2)
-# 
-# identical(dt2, dt3)
-

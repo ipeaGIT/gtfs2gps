@@ -84,3 +84,4 @@ test_that("remove_invalid", {
   expect_equal(as.numeric(object.size(poa)), 2354776)
   expect_equal(as.numeric(object.size(poa2)), 1514888)
 })
+
