@@ -81,6 +81,6 @@ test_that("remove_invalid", {
   
   poa2 <- remove_invalid(poa, prompt_invalid = TRUE)
   
-  expect_equal(as.numeric(object.size(poa)), 2354776)
-  expect_equal(as.numeric(object.size(poa2)), 1514888)
+  expect_equal(length(poa$stops$stop_id), 179)
+  expect_equal(length(poa2$stops$stop_id), 152)
 })
