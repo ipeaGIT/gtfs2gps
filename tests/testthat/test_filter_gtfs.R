@@ -84,3 +84,4 @@ test_that("remove_invalid", {
   expect_equal(length(poa$stops$stop_id), 179)
   expect_equal(length(poa2$stops$stop_id), 152)
 })
+

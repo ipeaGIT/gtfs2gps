@@ -52,11 +52,14 @@ emtu <- "R:/Dropbox/bases_de_dados/GTFS/SP GTFS/GTFS EMTU_20190815.zip"
   
 #  ERROR in shapeid 52936
   
+  library(gtfs2gps)
   library(covr)
+  library(testthat)
   
   function_coverage(fun=gtfs2gps::filter_day_period, test_file("tests/testthat/test_filter_day_period.R"))
   function_coverage(fun=gtfs2gps::test_gtfs_freq, test_file("./tests/testthat/test_test_gtfs_freq.R"))
-  
+  function_coverage(fun=gtfs2gps::gps_as_sflinestring, test_file("./tests/testthat/test_gps_as_sflinestring.R"))
+  function_coverage(fun=gtfs2gps::gps_as_sfpoints, test_file("./tests/testthat/test_gps_as_sfpoints.R"))
   
   covr::package_coverage(path = ".", type = "tests")
   
@@ -138,14 +141,12 @@ usethis::use_build_ignore("crosswalk_pre.R")
 
 
 
+### CMD Check ----------------
+# Check package errors
+Sys.setenv(NOT_CRAN = "false")
+devtools::check(pkg = ".",  cran = TRUE)
+beepr::beep()
 
-setwd("R:/Dropbox/git_projects/gtfs2gps")
-setwd("..")
-
-
-# Install package
-# devtools::install("gtfs2gps", build_vignettes = TRUE)
-# system("R CMD INSTALL --build gtfs2gps")
 
 # build binary
 system("R CMD build gtfs2gps --resave-data") # build tar.gz

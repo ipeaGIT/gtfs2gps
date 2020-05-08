@@ -13,7 +13,7 @@ scenario analyses. Before using the package, just install it from
 GitHub.
 
 ``` r
-devtools::install_github("ipeaGIT/gtfs2gps")
+install.packages("gtfs2gps")
 ```
 
 # Loading data
