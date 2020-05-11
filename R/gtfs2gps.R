@@ -31,14 +31,22 @@
 #' poa_gps <- gtfs2gps(subset)
 gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strategy = 'multiprocess', progress = TRUE, filepath = NULL, continue = FALSE){
 ###### PART 1. Load and prepare data inputs ------------------------------------
-
   if(continue & is.null(filepath))
     stop("Cannot use argument 'continue' without passing a 'filepath'.")
-
+  
   # Unzipping and reading GTFS.zip file
   if(class(gtfs_data) == "character"){
     message(paste("Unzipping and reading", basename(gtfs_data)))
-    gtfs_data <- read_gtfs(gtfszip = gtfs_data)}
+    gtfs_data <- read_gtfs(gtfszip = gtfs_data)
+  }
+  
+  gtfs_data$stop_times[, departure_time := as.numeric(departure_time)]
+  gtfs_data$stop_times[, arrival_time := as.numeric(arrival_time)]
+  
+  if(!is.null(gtfs_data$frequencies)){
+    gtfs_data$frequencies[, start_time := as.numeric(start_time)]
+    gtfs_data$frequencies[, end_time := as.numeric(end_time)]
+  }
 
   # Convert all shapes into sf objects
   message("Converting shapes to sf objects")
@@ -140,6 +148,8 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
       new_stoptimes <- lapply(X = all_tripids, FUN = update_dt, new_stoptimes, gtfs_data, all_tripids) %>% data.table::rbindlist()
     }
 
+    new_stoptimes[,departure_time:= data.table::as.ITime(departure_time)]
+    
     if(!is.null(filepath)){ # Write object
       data.table::fwrite(x = new_stoptimes,
              file = paste0(filepath, "/", shapeid, ".txt"))
