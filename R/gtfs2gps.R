@@ -148,7 +148,7 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
       new_stoptimes <- lapply(X = all_tripids, FUN = update_dt, new_stoptimes, gtfs_data, all_tripids) %>% data.table::rbindlist()
     }
 
-    new_stoptimes[,departure_time:= data.table::as.ITime(departure_time)]
+    new_stoptimes[, departure_time:= data.table::as.ITime(departure_time)]
     
     if(!is.null(filepath)){ # Write object
       data.table::fwrite(x = new_stoptimes,

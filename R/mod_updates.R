@@ -20,7 +20,7 @@ update_freq <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
                     departure_time := starttimes[1]]
       # Updating all other stop times according to travel speed and distances
       dt_list[[i]][, departure_time := round(departure_time[1L] + stats::lag(cumtime, 1, 0))]
-      # dt_list[[i]][, departure_time := eparture_time[1L] +
+      # dt_list[[i]][, departure_time := departure_time[1L] +
       #                                                         stats::lag(cumtime,1,0)]
       
       # Updating all stop times by adding the headway
