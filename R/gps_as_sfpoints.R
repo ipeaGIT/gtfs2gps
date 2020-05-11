@@ -6,8 +6,7 @@
 #' @param crs A Coordinate Reference System. The default value is 4326 (latlong WGS84).
 #' @return A simple feature (sf) object with point data.
 #' @export
-#' @examples \donttest{
-#' 
+#' @examples
 #' library(gtfs2gps)
 #' library(dplyr)
 #' 
@@ -24,8 +23,6 @@
 #' 
 #' for_gps <- append_height(for_gps, srtmfile)
 #' for_gps_sf_points <- gps_as_sfpoints(for_gps) # with height
-#' }
-#' 
 gps_as_sfpoints <- function(gps, crs = 4326){
   if(is.null(gps$height))
     temp_gps <- sfheaders::sf_point(gps, x = "shape_pt_lon", y = "shape_pt_lat", keep = TRUE)

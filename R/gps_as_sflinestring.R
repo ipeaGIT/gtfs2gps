@@ -7,7 +7,6 @@
 #' @param gps A data.table with timestamp data.
 #' @param crs A Coordinate Reference System. The default value is 4326 (latlong WGS84).
 #' @return A simple feature (sf) object with LineString data.
-#' 
 #' @export
 #' @examples
 #' library(gtfs2gps)
@@ -20,7 +19,6 @@
 #' poa_gps <- gtfs2gps(poa_subset)
 #' 
 #' poa_gps_sf <- gps_as_sflinestring(poa_gps)
-#' }
 gps_as_sflinestring  <- function(gps, crs = 4326){
   if(is.character(gps)){
     dt <- data.table::fread(gps)
