@@ -85,3 +85,20 @@ test_that("remove_invalid", {
   expect_equal(length(poa2$stops$stop_id), 152)
 })
 
+test_that("filter_by_route_id", {
+  poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+  
+  subset <- filter_by_route_id(poa, "T2")
+  
+  expect_equal(dim(subset$trips)[1], 196)
+  expect_equal(dim(subset$shapes)[1], 239)
+})
+
+test_that("filter_by_route_type", {
+  poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+  
+  subset <- filter_by_route_type(poa, 3)
+  
+  expect_equal(dim(subset$trips)[1], dim(poa$trips)[1])
+  expect_equal(dim(subset$shapes)[1], dim(poa$shapes)[1])
+})

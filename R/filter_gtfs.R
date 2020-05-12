@@ -109,7 +109,6 @@ remove_invalid <- function(gtfs_data, only_essential = TRUE, prompt_invalid = FA
   return(gtfs_data)
 }
 
-
 #' @title Filter GTFS data by shape ids
 #' 
 #' @description Filter a GTFS data by its shape ids. It also removes the
@@ -253,3 +252,70 @@ filter_single_trip <- function(gtfs_data){
   return(gtfs_data)
 }
 
+
+#' @title Filter GTFS data by route type
+#' 
+#' @description Filter a GTFS data by route type. It also removes the
+#' unnecessary trips, shapes, stop_times, stops, and frequencies, accordingly.
+#' @param gtfs_data A list of data.tables read using gtfs2gps::reag_gtfs().
+#' @param route_types A vector of route_types belonging to the routes of the
+#' gtfs_data data.
+#' @return A filtered GTFS data. 
+#' @export
+#' @examples
+#' poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
+#' 
+#' subset <- filter_by_route_type(poa, 3)
+filter_by_route_type <- function(gtfs_data, route_types) {
+  gtfs_data$routes <- subset(gtfs_data$routes, route_type %in% route_types)
+
+  route_ids <- unique(gtfs_data$routes$route_id)
+  gtfs_data$trips <- subset(gtfs_data$trips, route_id %in% route_ids) 
+
+  shape_ids <- unique(gtfs_data$trips$shape_id)
+  gtfs_data$shapes <- subset(gtfs_data$shapes, shape_id %in% shape_ids)
+    
+  trip_ids <- unique(gtfs_data$trips$trip_id)
+  gtfs_data$stop_times <- subset(gtfs_data$stop_times, trip_id %in% trip_ids)
+
+  if(!is.null(gtfs_data$frequencies))
+    gtfs_data$frequencies <- subset(gtfs_data$frequencies, trip_id %in% trip_ids)
+  
+  stop_ids <- unique(gtfs_data$stop_times$stop_id)
+  gtfs_data$stops <- subset(gtfs_data$stops, stop_id %in% stop_ids)
+  
+  return(gtfs_data)
+}
+
+#' @title Filter GTFS data by route ids
+#' 
+#' @description Filter a GTFS data by its route ids, subsetting routes
+#' and trops. It also removes the
+#' unnecessary shapes, trips, frequencies, and stops, accordingly.
+#' @param gtfs_data A list of data.tables read using gtfs2gps::reag_gtfs().
+#' @param route_ids A vector of route_ids belonging to the routes and trips of the
+#' gtfs_data data.
+#' @return A filtered GTFS data. 
+#' @export
+#' @examples
+#' poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
+#' 
+#' subset <- filter_by_route_id(poa, "T2")
+filter_by_route_id <- function(gtfs_data, route_ids) {
+  gtfs_data$routes <- subset(gtfs_data$routes, route_id %in% route_ids)
+  gtfs_data$trips <- subset(gtfs_data$trips, route_id %in% route_ids) 
+
+  shape_ids <- unique(gtfs_data$trips$shape_id)
+  gtfs_data$shapes <- subset(gtfs_data$shapes, shape_id %in% shape_ids)
+    
+  trip_ids <- unique(gtfs_data$trips$trip_id)
+  gtfs_data$stop_times <- subset(gtfs_data$stop_times, trip_id %in% trip_ids)
+  
+  if(!is.null(gtfs_data$frequencies))
+    gtfs_data$frequencies <- subset(gtfs_data$frequencies, trip_id %in% trip_ids)
+  
+  stop_ids <- unique(gtfs_data$stop_times$stop_id)
+  gtfs_data$stops <- subset(gtfs_data$stops, stop_id %in% stop_ids)
+  
+  return(gtfs_data)
+}
