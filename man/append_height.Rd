@@ -25,7 +25,8 @@ srtmfile <- system.file("extdata/fortaleza-srtm.tif", package = "gtfs2gps")
 
 gtfs <- read_gtfs(fortaleza) \%>\%
   filter_week_days() \%>\%
-  filter_single_trip()
+  filter_single_trip() \%>\%
+  remove_invalid()
 
 fortaleza_gps <- gtfs2gps(gtfs, progress = FALSE) \%>\% append_height(srtmfile)
 }

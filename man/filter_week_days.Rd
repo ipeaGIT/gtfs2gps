@@ -4,13 +4,10 @@
 \alias{filter_week_days}
 \title{Filter GTFS trips operating on week days}
 \usage{
-filter_week_days(gtfs_data, remove_invalid = TRUE)
+filter_week_days(gtfs_data)
 }
 \arguments{
 \item{gtfs_data}{A list of data.tables read using gtfs2gps::reag_gtfs().}
-
-\item{remove_invalid}{Remove all the invalid objects after subsetting the data?
-The default value is TRUE.}
 }
 \value{
 A filtered GTFS data.

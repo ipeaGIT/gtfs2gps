@@ -19,15 +19,19 @@ will not be processed as restrictions to remove objects.}
 A subset of the input GTFS data.
 }
 \description{
-Remove all invalid (and therefore unnecessary) objects from GTFS data. That is,
+Remove all objects from GTFS data that are not used in all relations
+that they are required to be. That is,
 agency-routes relation (agency_id), routes-trips relation (route_id), 
 trips-shapes relation (shape_id), trips-frequencies relation (trip_id),
 trips-stop_times relation (trip_id), stop_times-stops relation (stop_id),
 and trips-calendar relation (service_id),
-recursively, until GTFS data does not reduce its size anymore.
+recursively, until GTFS data does not reduce its size anymore. For example,
+if one agency_id belongs to routes but not to agency will be removed. This might
+cause one cascade removal of objects in other relations that originally
+did not have any inconsistency.
 }
 \examples{
-poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"), remove_invalid = FALSE)
+poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
 object.size(poa)
 subset <- remove_invalid(poa)
 object.size(subset)

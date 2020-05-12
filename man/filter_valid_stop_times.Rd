@@ -4,13 +4,10 @@
 \alias{filter_valid_stop_times}
 \title{Filter GTFS data using valid stop times}
 \usage{
-filter_valid_stop_times(gtfs_data, remove_invalid = TRUE)
+filter_valid_stop_times(gtfs_data)
 }
 \arguments{
 \item{gtfs_data}{A list of data.tables read using gtfs2gps::reag_gtfs().}
-
-\item{remove_invalid}{Remove all the invalid objects after subsetting the data?
-The default value is TRUE.}
 }
 \value{
 A filtered GTFS data.

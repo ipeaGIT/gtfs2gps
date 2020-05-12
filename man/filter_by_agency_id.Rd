@@ -4,16 +4,13 @@
 \alias{filter_by_agency_id}
 \title{Filter GTFS data by agency ids}
 \usage{
-filter_by_agency_id(gtfs_data, agency_ids, remove_invalid = TRUE)
+filter_by_agency_id(gtfs_data, agency_ids)
 }
 \arguments{
 \item{gtfs_data}{A list of data.tables read using gtfs2gps::reag_gtfs().}
 
 \item{agency_ids}{A vector of strings belonging to the agencies of the
 gtfs_data data.}
-
-\item{remove_invalid}{Remove all the invalid objects after subsetting the data?
-The default value is TRUE.}
 }
 \value{
 A filtered GTFS data.

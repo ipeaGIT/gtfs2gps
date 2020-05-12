@@ -74,8 +74,8 @@ test_that("filter_by_agency_id", {
 })
 
 test_that("remove_invalid", {
-  poa <- read_gtfs(system.file("extdata/fortaleza.zip", package="gtfs2gps"), remove_invalid = FALSE)
-  
+  poa <- read_gtfs(system.file("extdata/fortaleza.zip", package="gtfs2gps"))
+
   poa$shapes <- poa$shapes[-(1:500),]
   poa$stops <- poa$stops[-(1:30),]
   
