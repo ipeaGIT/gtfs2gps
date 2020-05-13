@@ -17,11 +17,9 @@ A simple feature (sf) object with LineString data.
 \description{
 Every interval of GPS data points between stops for each trip_id is
  converted into a linestring segment. The output assumes constant average speed 
- between consecutice stops
+ between consecutive stops.
 }
 \examples{
-\donttest{
-
 library(gtfs2gps)
 library(dplyr)
 
@@ -32,8 +30,4 @@ poa_subset <- filter_by_shape_id(poa, c("T2-1", "A141-1")) \%>\%
 poa_gps <- gtfs2gps(poa_subset)
 
 poa_gps_sf <- gps_as_sflinestring(poa_gps)
-plot(poa_gps_sf$geometry)
-}
-
-
 }

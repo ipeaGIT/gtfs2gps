@@ -18,8 +18,6 @@ A simple feature (sf) object with point data.
 Convert a GPS data stored in a data.table into Simple Feature points.
 }
 \examples{
-\donttest{
-
 library(gtfs2gps)
 library(dplyr)
 
@@ -36,6 +34,4 @@ for_gps_sf_points <- gps_as_sfpoints(for_gps) # without height
 
 for_gps <- append_height(for_gps, srtmfile)
 for_gps_sf_points <- gps_as_sfpoints(for_gps) # with height
-}
-
 }

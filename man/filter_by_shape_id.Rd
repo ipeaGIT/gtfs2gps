@@ -4,7 +4,7 @@
 \alias{filter_by_shape_id}
 \title{Filter GTFS data by shape ids}
 \usage{
-filter_by_shape_id(gtfs_data, shape_ids, remove_invalid = TRUE)
+filter_by_shape_id(gtfs_data, shape_ids)
 }
 \arguments{
 \item{gtfs_data}{A list of data.tables read using gtfs2gps::reag_gtfs().}
@@ -12,9 +12,6 @@ filter_by_shape_id(gtfs_data, shape_ids, remove_invalid = TRUE)
 \item{shape_ids}{A vector of shape_ids belonging to the shapes of the
 gtfs_data data. Note that shape_id might be loaded by gtfs2gps::read_gtfs()
 as a string or a number, depending on the available values.}
-
-\item{remove_invalid}{Remove all the invalid objects after subsetting the data?
-The default value is TRUE.}
 }
 \value{
 A filtered GTFS data.

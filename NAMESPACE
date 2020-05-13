@@ -3,6 +3,8 @@
 export(append_height)
 export(cpp_snap_points)
 export(filter_by_agency_id)
+export(filter_by_route_id)
+export(filter_by_route_type)
 export(filter_by_shape_id)
 export(filter_day_period)
 export(filter_single_trip)

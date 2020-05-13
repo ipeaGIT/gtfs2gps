@@ -29,4 +29,5 @@ if(getRversion() >= "2.15.1") utils::globalVariables(
     '.N', 'update_newstoptimes', 'shape_pt_sequence', 'geometry',
     'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday',
     'service_duration', 'headway_secs', 'number_of_departures',
-    'cumtime', 'speed', 'i'))
+    'cumtime', 'speed', 'i', 'route_type',
+    '.I', 'interval_id', 'i.interval', '.SD', 'grp', '.GRP'))
