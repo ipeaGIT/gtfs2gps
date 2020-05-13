@@ -86,19 +86,26 @@ test_that("remove_invalid", {
 })
 
 test_that("filter_by_route_id", {
-  poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+  warsaw <- read_gtfs(system.file("extdata/warsaw.zip", package="gtfs2gps"))
+
+  expect_equal(dim(warsaw$trips)[1], 56)
+  expect_equal(dim(warsaw$shapes)[1], 3075)
+    
+  subset <- filter_by_route_id(warsaw, c("15", "175"))
+
+  expect(all(subset$routes$route_id %in% c("15", "175")), "invalid route_ids")
   
-  subset <- filter_by_route_id(poa, "T2")
-  
-  expect_equal(dim(subset$trips)[1], 196)
-  expect_equal(dim(subset$shapes)[1], 239)
+  expect_equal(dim(subset$trips)[1], 48)
+  expect_equal(dim(subset$shapes)[1], 1370)
 })
 
 test_that("filter_by_route_type", {
-  poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
-  
-  subset <- filter_by_route_type(poa, 3)
-  
-  expect_equal(dim(subset$trips)[1], dim(poa$trips)[1])
-  expect_equal(dim(subset$shapes)[1], dim(poa$shapes)[1])
+  warsaw <- read_gtfs(system.file("extdata/warsaw.zip", package="gtfs2gps"))
+
+  subset <- filter_by_route_type(warsaw, c(0, 3))
+
+  expect(all(subset$routes$route_type %in% c(0, 3)), "invalid route_types")
+    
+  expect_equal(dim(subset$trips)[1], 48)
+  expect_equal(dim(subset$shapes)[1], 1370)
 })

@@ -252,20 +252,21 @@ filter_single_trip <- function(gtfs_data){
   return(gtfs_data)
 }
 
-
-#' @title Filter GTFS data by route type
+#' @title Filter GTFS data by transport mode  (route type)
 #' 
-#' @description Filter a GTFS data by route type. It also removes the
-#' unnecessary trips, shapes, stop_times, stops, and frequencies, accordingly.
+#' @description Filter a GTFS data by transport mode (coded in the column route_type 
+#' in routes.txt). It also removes the  unnecessary trips, stop_times, shapes, 
+#' frequencies (if exist in a feed), and stops accordingly.
 #' @param gtfs_data A list of data.tables read using gtfs2gps::reag_gtfs().
-#' @param route_types A vector of route_types belonging to the routes of the
-#' gtfs_data data.
+#' @param route_types A vector of route types belonging to the routes of the
+#' gtfs_data data. Note that route_type might be loaded by gtfs2gps::read_gtfs()
+#' as a string or a number, depending on the available values.
 #' @return A filtered GTFS data. 
 #' @export
 #' @examples
-#' poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
+#' warsaw <- read_gtfs(system.file("extdata/warsaw.zip", package="gtfs2gps"))
 #' 
-#' subset <- filter_by_route_type(poa, 3)
+#' subset <- filter_by_route_type(warsaw, c(0, 3))
 filter_by_route_type <- function(gtfs_data, route_types) {
   gtfs_data$routes <- subset(gtfs_data$routes, route_type %in% route_types)
 
@@ -290,17 +291,19 @@ filter_by_route_type <- function(gtfs_data, route_types) {
 #' @title Filter GTFS data by route ids
 #' 
 #' @description Filter a GTFS data by its route ids, subsetting routes
-#' and trops. It also removes the
-#' unnecessary shapes, trips, frequencies, and stops, accordingly.
+#' and trips. It also removes the
+#' unnecessary stop_times, shapes, frequencies (if exist in a feed), 
+#' and stops accordingly.
 #' @param gtfs_data A list of data.tables read using gtfs2gps::reag_gtfs().
-#' @param route_ids A vector of route_ids belonging to the routes and trips of the
-#' gtfs_data data.
+#' @param route_ids A vector of route ids belonging to the routes of the
+#' gtfs_data data. Note that route_id might be loaded by gtfs2gps::read_gtfs()
+#' as a string or a number, depending on the available values.
 #' @return A filtered GTFS data. 
 #' @export
 #' @examples
-#' poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
+#' warsaw <- read_gtfs(system.file("extdata/warsaw.zip", package="gtfs2gps"))
 #' 
-#' subset <- filter_by_route_id(poa, "T2")
+#' subset <- filter_by_route_id(warsaw, c("15", "175"))
 filter_by_route_id <- function(gtfs_data, route_ids) {
   gtfs_data$routes <- subset(gtfs_data$routes, route_id %in% route_ids)
   gtfs_data$trips <- subset(gtfs_data$trips, route_id %in% route_ids) 

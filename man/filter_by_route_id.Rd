@@ -9,19 +9,21 @@ filter_by_route_id(gtfs_data, route_ids)
 \arguments{
 \item{gtfs_data}{A list of data.tables read using gtfs2gps::reag_gtfs().}
 
-\item{route_ids}{A vector of route_ids belonging to the routes and trips of the
-gtfs_data data.}
+\item{route_ids}{A vector of route ids belonging to the routes of the
+gtfs_data data. Note that route_id might be loaded by gtfs2gps::read_gtfs()
+as a string or a number, depending on the available values.}
 }
 \value{
 A filtered GTFS data.
 }
 \description{
 Filter a GTFS data by its route ids, subsetting routes
-and trops. It also removes the
-unnecessary shapes, trips, frequencies, and stops, accordingly.
+and trips. It also removes the
+unnecessary stop_times, shapes, frequencies (if exist in a feed), 
+and stops accordingly.
 }
 \examples{
-poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
+warsaw <- read_gtfs(system.file("extdata/warsaw.zip", package="gtfs2gps"))
 
-subset <- filter_by_route_id(poa, "T2")
+subset <- filter_by_route_id(warsaw, c("15", "175"))
 }
