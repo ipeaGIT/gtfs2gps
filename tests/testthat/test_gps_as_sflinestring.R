@@ -1,6 +1,5 @@
 
 test_that("gps_as_sflinestring", {
-  
   fortaleza <- read_gtfs(system.file("extdata/fortaleza.zip", package = "gtfs2gps"))
 
   subset <- fortaleza %>%
@@ -10,10 +9,10 @@ test_that("gps_as_sflinestring", {
   
   for_gps <- gtfs2gps(subset)
 
-  for_gps_sf_points <- gps_as_sflinestring(for_gps)
+  for_gps_sf_lines <- gps_as_sflinestring(for_gps)
   
-  expect_true(is(for_gps_sf_points, "sf"))
+  expect_true(is(for_gps_sf_lines, "sf"))
 
-  expect_equal(for_gps_sf_points$stop_id[1], 2649)
-  
+  expect_equal(dim(for_gps_sf_lines)[1], 39)
+  expect_equal(for_gps_sf_lines$stop_id[1], 2649)
 })

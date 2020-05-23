@@ -39,8 +39,8 @@ gps_as_sflinestring  <- function(gps, crs = 4326){
   id1 <- c(id0[-1], nrow(dt))
 
   # create a data table grouping ids by unique intervals
-    # # Here we create a data.table indicating what are all the point ids in each interval
-    list_ids <- lapply(seq_along(id0), function(i){data.table::data.table(interval = i, id = (id0[i]:id1[i]))}) %>%
+  # # Here we create a data.table indicating what are all the point ids in each interval
+  list_ids <- lapply(seq_along(id0), function(i){data.table::data.table(interval = i, id = (id0[i]:id1[i]))}) %>%
       data.table::rbindlist()
     
   # add interval code to GPS
@@ -53,7 +53,7 @@ gps_as_sflinestring  <- function(gps, crs = 4326){
   dt1 <- dt[, .SD[1], by = .(trip_id, interval_id)]
   
   # reorder columns
-  dt1 <- data.table::setcolorder(dt1,names(dt))
+  dt1 <- data.table::setcolorder(dt1, names(dt))
   
   # recode their  unique id's so they fall and the end of each interval 
   dt1[, c("id", "interval_id") := list(id - 0.1, interval_id - 1)] 
@@ -63,22 +63,24 @@ gps_as_sflinestring  <- function(gps, crs = 4326){
   
   # create unique id for each unique combinarion of interval_id & trip_id
   dt2[, grp := .GRP, by = .(interval_id, trip_id)]
- 
+
+  dt2[, .N, by = grp] # number of observations in each grp
+  
+  moreThanOne <- which(as.vector(table(dt2$grp)) != 1)
+  
+  dt2 <- dt2[grp %in% moreThanOne, ]
+
   ## convert to linestring
   gps_sf <- sfheaders::sf_linestring(obj = dt2, 
                                               x = 'shape_pt_lon',
                                               y = 'shape_pt_lat',
                                               linestring_id = 'grp',
                                               keep = TRUE) %>% sf::st_set_crs(crs)
-  
-  gps_sf <- sf::st_make_valid(gps_sf)
-  
+
   # edit columns
   gps_sf$departure_time <- data.table::as.ITime(gps_sf$departure_time)
   gps_sf$dist <- sf::st_length(gps_sf$geometry)
-  gps_sf <- gps_sf[as.numeric(gps_sf$dist) > 0, ]
   gps_sf$grp <- NULL
-  gps_sf$grp <- NULL
-  
+
   return(gps_sf)
 }
