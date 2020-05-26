@@ -16,8 +16,8 @@ test_gtfs_freq <- function(gtfs){
   # No (it might have an empty frequencies.txt file)
   if(is.null(gtfs$frequencies) == TRUE){ return("simple")
   } else { 
-    if(is.null(dim(gtfs$frequencies)[1]) | dim(gtfs$frequencies)[1] == 0 ){ return("simple") 
-    } else if( dim(gtfs$frequencies)[1] > 0) {
+    if(is.null(dim(gtfs$frequencies)[1]) | dim(gtfs$frequencies)[1] == 0){ return("simple") 
+    } else if(dim(gtfs$frequencies)[1] > 0) {
       return("frequency")}
   }
 }
