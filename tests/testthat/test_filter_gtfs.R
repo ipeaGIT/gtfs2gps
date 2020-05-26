@@ -71,6 +71,12 @@ test_that("filter_by_agency_id", {
   result <- filter_by_agency_id(poa, "EPTC")
   expect_equal(dim(result$trips)[1], 387)
   expect_equal(dim(result$shapes)[1], 1265)
+  
+  sp <- read_gtfs(system.file("extdata/saopaulo.zip", package="gtfs2gps"))
+
+  result <- filter_by_agency_id(sp, 1)
+  expect_equal(dim(result$trips)[1], 233)
+  expect_equal(dim(result$shapes)[1], 94386)
 })
 
 test_that("remove_invalid", {
@@ -101,6 +107,15 @@ test_that("filter_by_route_id", {
   
   expect_equal(dim(subset$trips)[1], 48)
   expect_equal(dim(subset$shapes)[1], 1370)
+  
+  sp <- read_gtfs(system.file("extdata/saopaulo.zip", package="gtfs2gps"))
+
+  subset <- filter_by_route_id(sp, "N131-11")
+  
+  expect(all(subset$routes$route_id %in% "N131-11"), "invalid route_ids")
+  
+  expect_equal(dim(subset$trips)[1], 1)
+  expect_equal(dim(subset$shapes)[1], 758)
 })
 
 test_that("filter_by_route_type", {
@@ -112,4 +127,15 @@ test_that("filter_by_route_type", {
     
   expect_equal(dim(subset$trips)[1], 48)
   expect_equal(dim(subset$shapes)[1], 1370)
+  
+  sp <- read_gtfs(system.file("extdata/saopaulo.zip", package="gtfs2gps"))
+  
+  sp$routes$route_type[1] <- 1
+
+  subset <- filter_by_route_type(sp, 1)
+  
+  expect(all(subset$routes$route_type %in% 1), "invalid route_types")
+  
+  expect_equal(dim(subset$trips)[1], 1)
+  expect_equal(dim(subset$shapes)[1], 583)
 })

@@ -40,5 +40,20 @@ test_that("read_gtfs", {
 
     file.remove("myfile.zip")
     file.remove(files)
+
+    empty_files <- c("routes.txt", "stops.txt", "stop_times.txt", "shapes.txt", "trips.txt")
+
+    for(i in 1:length(empty_files)){
+      unzip("poa.zip")
+      if(file.exists("myfile.zip")) file.remove("myfile.zip")
+      file.remove(empty_files[i])
+      file.create(empty_files[i])
+      zip("myfile.zip", files, flags = "-q")
+
+      expect_error(read_gtfs("myfile.zip"), paste(empty_files[i], "is empty in the GTFS file"))
+    }
+    
+    file.remove("myfile.zip")
+    file.remove(files)
     file.remove("poa.zip")
 })

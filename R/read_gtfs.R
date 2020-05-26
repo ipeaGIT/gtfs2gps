@@ -21,21 +21,23 @@ read_gtfs <- function(gtfszip){
 
   result <- list()
 
-  # read files to memory
-  if("agency.txt"      %in% unzippedfiles){result$agency      <- data.table::fread(paste0(tempd,"/agency.txt"),      encoding="UTF-8")}  else{stop("File agency.txt is missing")}
-  if("routes.txt"      %in% unzippedfiles){result$routes      <- data.table::fread(paste0(tempd,"/routes.txt"),      encoding="UTF-8")}  else{stop("File routes.txt is missing")}
-  if("stops.txt"       %in% unzippedfiles){result$stops       <- data.table::fread(paste0(tempd,"/stops.txt"),       encoding="UTF-8")}  else{stop("File stops.txt is missing")}
-  if("stop_times.txt"  %in% unzippedfiles){result$stop_times  <- data.table::fread(paste0(tempd,"/stop_times.txt"),  encoding="UTF-8")}  else{stop("File stop_times.txt is missing")}
-  if("shapes.txt"      %in% unzippedfiles){result$shapes      <- data.table::fread(paste0(tempd,"/shapes.txt"),      encoding="UTF-8")}  else{stop("File shapes.txt is missing")}
-  if("trips.txt"       %in% unzippedfiles){result$trips       <- data.table::fread(paste0(tempd,"/trips.txt"),       encoding="UTF-8")}  else{stop("File trips.txt is missing")}
-  if("calendar.txt"    %in% unzippedfiles){result$calendar    <- data.table::fread(paste0(tempd,"/calendar.txt"),    encoding="UTF-8")}  else{stop("File calendar.txt is missing")}
-  if("frequencies.txt" %in% unzippedfiles){result$frequencies <- data.table::fread(paste0(tempd,"/frequencies.txt"), encoding="UTF-8")}
+  myread <- function(file) suppressWarnings(data.table::fread(paste0(tempd, "/", file), encoding = "UTF-8"))
 
-  if(is.null(result$shapes))     stop("shapes.txt is empty in the GTFS file")
-  if(is.null(result$trips))      stop("trips.txt is empty in the GTFS file")
-  if(is.null(result$stops))      stop("stops.txt is empty in the GTFS file")
-  if(is.null(result$stop_times)) stop("stop_times.txt is empty in the GTFS file")
-  if(is.null(result$routes))     stop("routes.txt is empty in the GTFS file")
+  # read files to memory
+  if("agency.txt"      %in% unzippedfiles){result$agency      <- myread("agency.txt")}     else{stop("File agency.txt is missing")}
+  if("routes.txt"      %in% unzippedfiles){result$routes      <- myread("routes.txt")}     else{stop("File routes.txt is missing")}
+  if("stops.txt"       %in% unzippedfiles){result$stops       <- myread("stops.txt")}      else{stop("File stops.txt is missing")}
+  if("stop_times.txt"  %in% unzippedfiles){result$stop_times  <- myread("stop_times.txt")} else{stop("File stop_times.txt is missing")}
+  if("shapes.txt"      %in% unzippedfiles){result$shapes      <- myread("shapes.txt")}     else{stop("File shapes.txt is missing")}
+  if("trips.txt"       %in% unzippedfiles){result$trips       <- myread("trips.txt")}      else{stop("File trips.txt is missing")}
+  if("calendar.txt"    %in% unzippedfiles){result$calendar    <- myread("calendar.txt")}   else{stop("File calendar.txt is missing")}
+  if("frequencies.txt" %in% unzippedfiles){result$frequencies <- myread("frequencies.txt")}
+
+  if(is.null(result$shapes)     || dim(result$shapes)[1] == 0)     stop("shapes.txt is empty in the GTFS file")
+  if(is.null(result$trips)      || dim(result$trips)[1] == 0)      stop("trips.txt is empty in the GTFS file")
+  if(is.null(result$stops)      || dim(result$stops)[1] == 0)      stop("stops.txt is empty in the GTFS file")
+  if(is.null(result$stop_times) || dim(result$stop_times)[1] == 0) stop("stop_times.txt is empty in the GTFS file")
+  if(is.null(result$routes)     || dim(result$routes)[1] == 0)     stop("routes.txt is empty in the GTFS file")
   
   mysub <- function(value) sub("^24:", "00:", value)
     
