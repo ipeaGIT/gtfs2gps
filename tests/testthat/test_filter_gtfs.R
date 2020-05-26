@@ -74,15 +74,19 @@ test_that("filter_by_agency_id", {
 })
 
 test_that("remove_invalid", {
-  poa <- read_gtfs(system.file("extdata/fortaleza.zip", package="gtfs2gps"))
+  sp <- read_gtfs(system.file("extdata/saopaulo.zip", package="gtfs2gps"))
 
-  poa$shapes <- poa$shapes[-(1:500),]
-  poa$stops <- poa$stops[-(1:30),]
+  sp$shapes <- sp$shapes[-(1:80000),]
+  sp$agency$agency_id <- 2
   
-  poa2 <- remove_invalid(poa, prompt_invalid = TRUE)
+  sp2 <- remove_invalid(sp, prompt_invalid = TRUE)
   
-  expect_equal(length(poa$stops$stop_id), 179)
-  expect_equal(length(poa2$stops$stop_id), 152)
+  expect_equal(length(sp$stops$stop_id), 6117)
+  expect_equal(length(sp2$stops$stop_id), 1340)
+  
+  sp3 <- remove_invalid(sp, only_essential = FALSE)
+  
+  expect_equal(length(sp3$stops$stop_id), 0)
 })
 
 test_that("filter_by_route_id", {
