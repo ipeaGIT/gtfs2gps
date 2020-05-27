@@ -2,9 +2,14 @@ update_freq <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
   # Update new_stoptimes
   new_stoptimes <- update_dt(tripid, new_stoptimes, gtfs_data, all_tripids)
   
+  if(is.null(gtfs_data$frequencies)) return(new_stoptimes)
+  
   #  Get freq info for that trip
   # tripid <- "8700-21-0"
   freq_temp <- subset(gtfs_data$frequencies, trip_id == tripid)
+  
+  if(dim(freq_temp)[1] == 0) return(new_stoptimes)
+  
   # number of trips
   freq_temp[, service_duration := end_time[1] - start_time[1]]
   freq_temp[, number_of_departures := ceiling(service_duration / headway_secs)]

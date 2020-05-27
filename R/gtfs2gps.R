@@ -142,11 +142,7 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
     if(length(which(!is.na(new_stoptimes$stop_sequence))) < 2){ return(NULL) } # nocov
 
     ###### PART 2.2 Function recalculate new stop_times for each trip id of each Shape id ------------------------------
-    if(test_gtfs_freq(gtfs_data) == "frequency"){
-      new_stoptimes <- lapply(X = all_tripids, FUN = update_freq, new_stoptimes, gtfs_data, all_tripids) %>% data.table::rbindlist()
-    }else{
-      new_stoptimes <- lapply(X = all_tripids, FUN = update_dt, new_stoptimes, gtfs_data, all_tripids) %>% data.table::rbindlist()
-    }
+    new_stoptimes <- lapply(X = all_tripids, FUN = update_freq, new_stoptimes, gtfs_data, all_tripids) %>% data.table::rbindlist()
 
     new_stoptimes[, departure_time:= data.table::as.ITime(departure_time)]
     
