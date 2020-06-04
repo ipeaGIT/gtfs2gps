@@ -8,7 +8,8 @@
 #' @param gtfs_data A path to a GTFS file to be converted to GPS, or a GTFS data
 #' represented as a list of data.tables.
 #' @param spatial_resolution The spatial resolution in meters. Default is 50m.
-#' @param parallel Decides whether the function should run in parallel. Defaults to TRUE.
+#' @param parallel Decides whether the function should run in parallel. Defaults to FALSE.
+#' When TRUE, it will use all cores available minus one.
 #' @param strategy Name of evaluation function to use in future parallel processing. Defaults to 
 #' "multiprocess", i.e. if multicore evaluation is supported, that will be used, otherwise
 #'  multisession evaluation will be used. Fore details, check ?future::plan().
@@ -20,7 +21,9 @@
 #' skips processing the shape identifiers that were already saved into files.
 #' It is useful to continue processing a GTFS file that was stopped for some
 #' reason. Default value is FALSE.
-#' @return A data.table, where each row represents a GPS point.
+#' @return A data.table, where each row represents a GPS point. The following columns are
+#' returned (units of measurement in parenthesis): dist and cumdist (meters), cumtime (seconds),
+#' shape_pt_lon and shape_pt_lat (degrees), speed (km/h), departure_time (hh:mm:ss), .
 #' @export
 #' @examples
 #' library(dplyr)
@@ -68,8 +71,7 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
 
     # identify route id
     routeid <- gtfs_data$trips[shape_id == shapeid]$route_id[1]
-    
-    
+
     # identify route type
     routetype <- gtfs_data$routes[route_id == routeid]$route_type
     
@@ -108,10 +110,10 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
                                      all_tripids[which.max(nstop)])
     
     # Skip shape_id IF there are no snnaped stops
-    if(is.null(snapped) | length(snapped) == 0 ){ return(NULL) } # nocov
+    if(is.null(snapped) | length(snapped) == 0 ) return(NULL) # nocov
 
     # If there is less than two valid stops, jump this shape_id
-    if(min(nstop) < 2){ return(NULL) } # nocov
+    if(min(nstop) < 2) return(NULL) # nocov
 
     # Skip shape_id IF there is no route_id associated with that shape_id
     if(is.na(routeid)) return(NULL) # nocov
@@ -137,15 +139,15 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
     new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type = "lead"), data.table::shift(shape_pt_lon, type = "lead"), tolerance = 1e10)]
     new_stoptimes <- na.omit(new_stoptimes, cols = "dist")
 
-    if(dim(new_stoptimes)[1] < 2){ return(NULL) } # nocov
-    
-    if(length(which(!is.na(new_stoptimes$stop_sequence))) < 2){ return(NULL) } # nocov
+    if(dim(new_stoptimes)[1] < 2) return(NULL) # nocov
+
+    if(length(which(!is.na(new_stoptimes$stop_sequence))) < 2) return(NULL) # nocov
 
     ###### PART 2.2 Function recalculate new stop_times for each trip id of each Shape id ------------------------------
     new_stoptimes <- lapply(X = all_tripids, FUN = update_freq, new_stoptimes, gtfs_data, all_tripids) %>% data.table::rbindlist()
 
     new_stoptimes[, departure_time:= data.table::as.ITime(departure_time)]
-    
+
     if(!is.null(filepath)){ # Write object
       data.table::fwrite(x = new_stoptimes,
              file = paste0(filepath, "/", shapeid, ".txt"))

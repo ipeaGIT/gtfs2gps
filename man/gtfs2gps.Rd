@@ -20,7 +20,8 @@ represented as a list of data.tables.}
 
 \item{spatial_resolution}{The spatial resolution in meters. Default is 50m.}
 
-\item{parallel}{Decides whether the function should run in parallel. Defaults to TRUE.}
+\item{parallel}{Decides whether the function should run in parallel. Defaults to FALSE.
+When TRUE, it will use all cores available minus one.}
 
 \item{strategy}{Name of evaluation function to use in future parallel processing. Defaults to 
 "multiprocess", i.e. if multicore evaluation is supported, that will be used, otherwise
@@ -38,7 +39,9 @@ It is useful to continue processing a GTFS file that was stopped for some
 reason. Default value is FALSE.}
 }
 \value{
-A data.table, where each row represents a GPS point.
+A data.table, where each row represents a GPS point. The following columns are
+returned (units of measurement in parenthesis): dist and cumdist (meters), cumtime (seconds),
+shape_pt_lon and shape_pt_lat (degrees), speed (km/h), departure_time (hh:mm:ss), .
 }
 \description{
 Convert GTFS data to GPS format by sampling points using a
