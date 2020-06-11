@@ -151,6 +151,11 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
     ###### PART 2.2 Function recalculate new stop_times for each trip id of each Shape id ------------------------------
     new_stoptimes <- lapply(X = all_tripids, FUN = update_freq, new_stoptimes, gtfs_data, all_tripids) %>% data.table::rbindlist()
 
+    if(is.null(new_stoptimes$departure_time)){
+      warning(paste0("Shape '", shapeid, "' has no departure_time. Ignoring it."),  call. = FALSE)
+      return(NULL)
+    }
+    
     new_stoptimes[, departure_time:= data.table::as.ITime(departure_time)]
 
     if(!is.null(filepath)){ # Write object
