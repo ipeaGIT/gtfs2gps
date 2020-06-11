@@ -40,7 +40,7 @@ remove_invalid <- function(gtfs_data, only_essential = TRUE, prompt_invalid = FA
     size <- newsize
     
     # agency-routes relation (agency_id)
-    if(!only_essential){
+    if(!only_essential && !is.null(gtfs_data$agency)){
       agency_ids <- intersect(gtfs_data$agency$agency_id, gtfs_data$routes$agency_id)
       removed$agency_ids <- c(removed$agency_ids, setdiff(gtfs_data$agency$agency_id, gtfs_data$routes$agency_id))
 
@@ -86,7 +86,7 @@ remove_invalid <- function(gtfs_data, only_essential = TRUE, prompt_invalid = FA
     gtfs_data$stops      <- subset(gtfs_data$stops,      stop_id %in% stop_ids)
   
     # trips-calendar relation (service_id)
-    if(!only_essential){
+    if(!only_essential & !is.null(gtfs_data$calendar)){
       service_ids <- intersect(gtfs_data$trips$service_id, gtfs_data$calendar$service_id)
       removed$service_ids <- c(removed$service_ids, setdiff(gtfs_data$trips$service_id, gtfs_data$calendar$service_id))
 
@@ -157,6 +157,8 @@ filter_by_shape_id <- function(gtfs_data, shape_ids){
 #'
 #' result <- filter_by_agency_id(poa, "EPTC")
 filter_by_agency_id <- function(gtfs_data, agency_ids){
+  if(is.null(gtfs_data$agency)) stop("GTFS data does not have agency")
+
   gtfs_data$agency <- subset(gtfs_data$agency, agency_id %in% agency_ids)
   gtfs_data$routes <- subset(gtfs_data$routes, agency_id %in% agency_ids)
 
@@ -171,7 +173,9 @@ filter_by_agency_id <- function(gtfs_data, agency_ids){
   gtfs_data$stop_times <- subset(gtfs_data$stop_times, trip_id %in% trip_ids)
   
   service_ids <- unique(gtfs_data$trips$service_id)
-  gtfs_data$calendar <- subset(gtfs_data$calendar, service_id %in% service_ids)
+  
+  if(!is.null(gtfs_data$calendar))
+    gtfs_data$calendar <- subset(gtfs_data$calendar, service_id %in% service_ids)
   
   shapes_ids <- unique(gtfs_data$trips$shape_id)
   gtfs_data$shapes <- subset(gtfs_data$shapes, shape_id %in% shapes_ids)
@@ -218,13 +222,14 @@ filter_valid_stop_times <- function(gtfs_data){
 #' 
 #' subset <- filter_week_days(poa)
 filter_week_days <- function(gtfs_data){
-    calendar_temp <- subset(gtfs_data$calendar, monday > 0 | tuesday > 0 | wednesday > 0 | thursday > 0 | friday > 0)
-    serviceids <- calendar_temp$service_id
-    gtfs_data$trips <- subset(gtfs_data$trips, service_id %in% serviceids)
-    gtfs_data$calendar[, sunday := 0]
-    gtfs_data$calendar[, saturday := 0]
-    
-    return(gtfs_data)
+  if(is.null(gtfs_data$calendar)) stop("GTFS data does not have calendar")
+  calendar_temp <- subset(gtfs_data$calendar, monday > 0 | tuesday > 0 | wednesday > 0 | thursday > 0 | friday > 0)
+  serviceids <- calendar_temp$service_id
+  gtfs_data$trips <- subset(gtfs_data$trips, service_id %in% serviceids)
+  gtfs_data$calendar[, sunday := 0]
+  gtfs_data$calendar[, saturday := 0]
+  
+  return(gtfs_data)
 }
 
 #' @title Filter GTFS trips in order to have one trip per shape_id
