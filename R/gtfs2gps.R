@@ -84,6 +84,11 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
     # Get the stops sequence with lat long linked to that route
     # each shape_id only has one stop sequence
     
+    if(length(nstop) == 0){
+      warning(paste0("Shape '", shapeid, "' has zero stops. Ignoring it."),  call. = FALSE)
+      return(NULL)
+    }
+    
     # check stop sequence
     stops_seq <- gtfs_data$stop_times[trip_id == all_tripids[which.max(nstop)], .(stop_id, stop_sequence, departure_time)]
     stops_seq[gtfs_data$stops, on = "stop_id", c('stop_lat', 'stop_lon') := list(i.stop_lat, i.stop_lon)] # add lat long info
