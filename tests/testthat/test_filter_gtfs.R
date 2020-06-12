@@ -49,6 +49,10 @@ test_that("filter_week_days", {
   expect_equal(dim(subset$trips)[1], 194)
   expect_equal(sum(subset$calendar$sunday), 0)
   expect_equal(sum(subset$calendar$saturday), 0)
+  
+  poa$calendar <- NULL
+  
+  expect_error(filter_week_days(poa), "GTFS data does not have calendar")
 })
 
 test_that("filter_single_trip", {
@@ -77,6 +81,10 @@ test_that("filter_by_agency_id", {
   result <- filter_by_agency_id(sp, 1)
   expect_equal(dim(result$trips)[1], 233)
   expect_equal(dim(result$shapes)[1], 94386)
+  
+  sp$agency <- NULL
+
+  expect_error(filter_by_agency_id(sp, "abc"), "GTFS data does not have agency")
 })
 
 test_that("remove_invalid", {
