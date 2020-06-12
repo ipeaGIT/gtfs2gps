@@ -7,7 +7,7 @@ urlcolor: blue
 vignette: |
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteIndexEntry{colrow: Handling SimU, CR, and LU datas}
+  %\VignetteIndexEntry{gtfs2gps}
 ---
 27 March 2020
 

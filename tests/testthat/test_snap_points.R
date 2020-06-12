@@ -18,7 +18,7 @@ test_that("snap_points", {
   expect_equal(result, 1)
 
   expect_warning(cpp_snap_points(stops %>% sf::st_coordinates(), matrix(2, 1), res, "abc"),
-               "Could not find a nearest point closer than 120m (eight times spatial_resolution) for id 'abc' - ignoring it",
+               "Could not find a nearest point closer than 120m (eight times spatial_resolution) for stop 'abc'. Ignoring it.",
                fixed = TRUE)
 
   # complete test
