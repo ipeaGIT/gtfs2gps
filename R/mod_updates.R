@@ -39,7 +39,11 @@ update_freq <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
     # Get headway of each start_time
     thisheadway <- subset(freq_temp, start_time == starttimes[1])$headway_secs
     nmber_of_departures <- subset(freq_temp, start_time == starttimes[1])$number_of_departures
-    
+
+    if(length(nmber_of_departures) == 0 || is.na(nmber_of_departures)){
+      warning(paste0("Trip '", tripid, "' has zero departures. Ignoring it."),  call. = FALSE) # nocov
+      return(NULL)
+    }
     # list of departures
     
     departure_list <- 1:nmber_of_departures
