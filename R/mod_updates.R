@@ -44,8 +44,10 @@ update_freq <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
       warning(paste0("Trip '", tripid, "' has zero departures. Ignoring it."),  call. = FALSE) # nocov
       return(NULL)
     }
+
+    if(nmber_of_departures < 0) nmber_of_departures <- -nmber_of_departures
+      
     # list of departures
-    
     departure_list <- 1:nmber_of_departures
     
     # # Replicate one new_stop_times for each departure  
