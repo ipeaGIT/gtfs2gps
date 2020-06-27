@@ -30,9 +30,10 @@ test_that("read_gtfs", {
 
     unzip("poa.zip")
 
-    files <- c("routes.txt", "stops.txt", "stop_times.txt", "shapes.txt", "trips.txt", "calendar.txt", "agency.txt")
+    # the last three will be ignored in the tests but need to be removed
+    files <- c("stops.txt", "stop_times.txt", "shapes.txt", "trips.txt", "calendar.txt", "agency.txt", "routes.txt")
 
-    for(i in 1:(length(files)-2)){
+    for(i in 1:(length(files) - 3)){
       if(file.exists("myfile.zip")) file.remove("myfile.zip")
       zip("myfile.zip", files[-i], flags = "-q")
       expect_error(read_gtfs("myfile.zip"), paste("File", files[i], "is missing"))
@@ -41,7 +42,7 @@ test_that("read_gtfs", {
     file.remove("myfile.zip")
     file.remove(files)
 
-    empty_files <- c("routes.txt", "stops.txt", "stop_times.txt", "shapes.txt", "trips.txt")
+    empty_files <- c("stops.txt", "stop_times.txt", "shapes.txt", "trips.txt")
 
     for(i in 1:length(empty_files)){
       unzip("poa.zip")

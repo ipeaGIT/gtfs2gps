@@ -71,9 +71,6 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
 
     # identify route id
     routeid <- gtfs_data$trips[shape_id == shapeid]$route_id[1]
-
-    # identify route type
-    routetype <- gtfs_data$routes[route_id == routeid]$route_type
     
     # get all trips linked to that route
     all_tripids <- gtfs_data$trips[shape_id == shapeid & route_id == routeid, ]$trip_id %>% unique()
@@ -140,10 +137,15 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
     # get shape points in high resolution
     new_stoptimes <- data.table::data.table(shape_id = new_shape$shape_id[1],
                                             id = 1:nrow(new_shape),
-                                            route_type = routetype,
                                             shape_pt_lon = sf::st_coordinates(new_shape)[,1],
                                             shape_pt_lat = sf::st_coordinates(new_shape)[,2])
     
+    # identify route type
+    if(!is.null(gtfs_data$routes)){
+      routetype <- gtfs_data$routes[route_id == routeid]$route_type
+      new_stoptimes[stops_seq$ref, "route_type"] <- routetype
+    }
+
     ## Add stops to new_stoptimes  
     new_stoptimes[stops_seq$ref, "stop_id"] <- stops_seq$stop_id
     new_stoptimes[stops_seq$ref, "stop_sequence"] <- stops_seq$stop_sequence

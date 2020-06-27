@@ -10,7 +10,8 @@ remove_invalid(gtfs_data, only_essential = TRUE, prompt_invalid = FALSE)
 \item{gtfs_data}{A list of data.tables read using gtfs2gps::reag_gtfs().}
 
 \item{only_essential}{Remove only the essential files? The essential files are all but 
-agency and calendar. Default is TRUE, which means that agency-routes and trips-calendar relations
+agency, calendar, and routes. Default is TRUE, which means that agency-routes,
+routes-trips, and trips-calendar relations
 will not be processed as restrictions to remove objects.}
 
 \item{prompt_invalid}{Show the invalid objects. Default is FALSE.}
