@@ -200,15 +200,17 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
   }
   else
   {  
-    # message("Preparing parallelization")
-    future::plan(strategy)
-    
     # number of cores
     cores <- data.table::getDTthreads() - 1
     message(paste('Using', cores, 'CPU cores'))
     
+    future::plan(strategy, workers = cores)
+    
     message("Processing the data")
-    output <-  furrr::future_map( .x = all_shapeids, .f = corefun, .progress = progress, .options = furrr::future_options(packages=c('data.table', 'sf', 'magrittr', 'Rcpp', 'sfheaders', 'units'))) %>% data.table::rbindlist()
+    output <- furrr::future_map(.x = all_shapeids, .f = corefun, .progress = progress, 
+      .options = furrr::future_options(
+        packages = c('data.table', 'sf', 'magrittr', 'Rcpp', 'sfheaders', 'units'))) %>% 
+      data.table::rbindlist()
   }
 
   if(is.null(filepath))
