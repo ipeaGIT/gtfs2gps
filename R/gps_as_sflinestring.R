@@ -61,8 +61,8 @@ gps_as_sflinestring  <- function(gps, crs = 4326){
   # add extra points in valid_id's of the GPS data
   dt2 <- data.table::rbindlist(list(dt, dt1))[order(id)]
   
-  # create unique id for each unique combinarion of interval_id & trip_id
-  dt2[, grp := .GRP, by = .(interval_id, trip_id)]
+  # create unique id for each unique combination of interval_id & trip_id & trip_number
+  dt2[, grp := .GRP, by = .(interval_id, trip_id, trip_number)]
 
   dt2[, .N, by = grp] # number of observations in each grp
   
