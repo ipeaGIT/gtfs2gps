@@ -19,9 +19,11 @@ test_that("gtfs2gps", {
     expect_equal(my_length, 0)
     
     expect_equal(sum(poa_gps$dist), 4065236, 0.001)
-    
+
+    expect_true(all(poa_gps$trip_number == 1))
+        
     expect_true(all(names(poa_gps) %in% 
-      c("trip_id", "route_type", "id", "shape_pt_lon", "shape_pt_lat",
+      c("trip_id", "route_type", "id", "shape_pt_lon", "shape_pt_lat", "trip_number",
         "departure_time", "stop_id", "stop_sequence", "dist", "shape_id", "cumdist", "speed", "cumtime")))
     
     expect_true(all(!is.na(poa_gps$dist)))
@@ -67,9 +69,11 @@ test_that("gtfs2gps", {
       gtfs2gps(parallel = FALSE, progress = TRUE, spatial_resolution = 15)
 
     expect_true(all(names(sp_gps) %in% 
-      c("trip_id", "route_type", "id", "shape_pt_lon", "shape_pt_lat",
+      c("trip_id", "route_type", "id", "shape_pt_lon", "shape_pt_lat", "trip_number",
         "departure_time", "stop_id", "stop_sequence", "dist", "shape_id", "cumdist", "speed", "cumtime")))
 
+    expect_true(all(sp_gps$trip_number %in% 1:4))
+    
     my_dim <- dim(sp_gps)[1]
     expect_equal(my_dim, 286838)
 
