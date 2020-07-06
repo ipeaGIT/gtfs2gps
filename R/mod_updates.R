@@ -1,6 +1,12 @@
 update_freq <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
   # Update new_stoptimes
   new_stoptimes <- update_dt(tripid, new_stoptimes, gtfs_data, all_tripids)
+
+  if(is.null(new_stoptimes)){
+    warning(paste0("Could not create stop times for trip '", tripid, "'. Ignoring it."),  call. = FALSE) # nocov
+    return(NULL) # nocov
+  }
+
   new_stoptimes[, "trip_number"] <- 1
   
   if(is.null(gtfs_data$frequencies)) return(new_stoptimes)
