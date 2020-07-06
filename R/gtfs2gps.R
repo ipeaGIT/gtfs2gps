@@ -205,7 +205,7 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
   else
   {  
     # number of cores
-    cores <- data.table::getDTthreads() - 1
+    cores <- future::availableCores() - 1
     message(paste('Using', cores, 'CPU cores'))
     
     future::plan(strategy, workers = cores)
