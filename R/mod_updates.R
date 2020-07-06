@@ -18,7 +18,7 @@ update_freq <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
   if(dim(freq_temp)[1] == 0) return(new_stoptimes)
   
   # number of trips
-  freq_temp[, service_duration := end_time[1] - start_time[1]]
+  freq_temp[, service_duration := abs(end_time[1] - start_time[1])]
   freq_temp[, number_of_departures := ceiling(service_duration / headway_secs)]
   
   # get all start times of each period
@@ -52,7 +52,7 @@ update_freq <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
       return(NULL)
     }
 
-    if(nmber_of_departures < 0) nmber_of_departures <- -nmber_of_departures
+#    if(nmber_of_departures < 0) nmber_of_departures <- -nmber_of_departures
       
     # list of departures
     departure_list <- 1:nmber_of_departures
