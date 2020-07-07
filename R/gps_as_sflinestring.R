@@ -50,13 +50,13 @@ gps_as_sflinestring  <- function(gps, crs = 4326){
   ## So we we need to duplicate each stop to make sure every interval has a unique start and end point  
   
   # get unique valid stops (extra spatial points)
-  dt1 <- dt[, .SD[1], by = .(trip_id, interval_id)]
+  dt1 <- dt[, .SD[1], by = .(trip_id, interval_id, trip_number)]
   
   # reorder columns
   dt1 <- data.table::setcolorder(dt1, names(dt))
   
   # recode their unique id's so they fall and the end of each interval 
-  dt1[, c("id", "interval_id") := list(id - 0.1, interval_id - 1)] 
+  dt1[, c("id", "interval_id","trip_number") := list(id - 0.1, interval_id - 1,trip_number - 0.1)] 
   
   # add extra points in valid_id's of the GPS data
   dt2 <- data.table::rbindlist(list(dt, dt1))[order(id)]
