@@ -1,8 +1,8 @@
 #' @title Read GTFS data into a list of data.tables
 #' @description Read files of a zipped GTFS feed and load them to memory as a list of data.tables.
-#' It will load the following files: "agency.txt", "calendar.txt", "shapes.txt", "routes.txt", "shapes.txt", 
-#' "stop_times.txt", "stops.txt", "trips.txt", and "frequencies.txt", with
-#' this last one being optional. If one of the mandatory files does not exit,
+#' It will load the following files: "shapes.txt", "stop_times.txt", "stops.txt", "trips.txt",
+#' "agency.txt", "calendar.txt", "routes.txt", and "frequencies.txt", with
+#' this last four being optional. If one of the mandatory files does not exit,
 #' this function will stop with an error message.
 #' @param gtfszip A zipped GTFS data.
 #' @return A list of data.tables, where each index represents the respective GTFS file name.
@@ -25,7 +25,7 @@ read_gtfs <- function(gtfszip){
 
   # read files to memory
   if("agency.txt"      %in% unzippedfiles){result$agency      <- myread("agency.txt")}
-  if("routes.txt"      %in% unzippedfiles){result$routes      <- myread("routes.txt")}     else{stop("File routes.txt is missing")}
+  if("routes.txt"      %in% unzippedfiles){result$routes      <- myread("routes.txt")}
   if("stops.txt"       %in% unzippedfiles){result$stops       <- myread("stops.txt")}      else{stop("File stops.txt is missing")}
   if("stop_times.txt"  %in% unzippedfiles){result$stop_times  <- myread("stop_times.txt")} else{stop("File stop_times.txt is missing")}
   if("shapes.txt"      %in% unzippedfiles){result$shapes      <- myread("shapes.txt")}     else{stop("File shapes.txt is missing")}
@@ -37,8 +37,7 @@ read_gtfs <- function(gtfszip){
   if(is.null(result$trips)      || dim(result$trips)[1] == 0)      stop("trips.txt is empty in the GTFS file")
   if(is.null(result$stops)      || dim(result$stops)[1] == 0)      stop("stops.txt is empty in the GTFS file")
   if(is.null(result$stop_times) || dim(result$stop_times)[1] == 0) stop("stop_times.txt is empty in the GTFS file")
-  if(is.null(result$routes)     || dim(result$routes)[1] == 0)     stop("routes.txt is empty in the GTFS file")
-  
+
   mysub <- function(value) sub("^24:", "00:", value)
     
   result$stop_times[, departure_time := data.table::as.ITime(mysub(departure_time), format = "%H:%M:%OS")]

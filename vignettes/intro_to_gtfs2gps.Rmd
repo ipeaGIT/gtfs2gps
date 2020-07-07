@@ -9,7 +9,7 @@ vignette: |
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{gtfs2gps}
 ---
-27 March 2020
+06 July 2020
 
 # Introduction 
 
@@ -33,29 +33,24 @@ sao$trips
 ```
 
 Note that not all GTFS files are loaded into R. This function only loads the necessary data to spatially and temporally handle trips and stops, which are:
-- agency.txt
-- calendar.txt
-- routes.txt
-- shapes.txt
-- stop_times.txt
-- stops.txt
-- trips.txt
-- frequencies.txt (this last one is optional).
-
+"shapes.txt", "stop_times.txt", "stops.txt", "trips.txt",
+"agency.txt", "calendar.txt", "routes.txt", and "frequencies.txt", with
+this last four being optional.
 If a given GTFS zipped file does not contain all of these required files then `read_gtfs()` will stop with an error.
-
 
 # Subsetting GTFS Data
 
 GTFS data sets can be fairly large for complex public transport networks and, in some cases, users might want to focus on specific transport services at week days/weekends, or on specific trips or routes. The package brings some functions to filter GTFS.zip and speed up the data processing.
 
-
-\begin{description}
-\item[filter\_by\_shape\_id():] Filter shapes using given shape ids.
-\item[filter\_valid\_stop\_times():] Return only stop times that have geospatial locations.
-\item[filter\_week\_days():] Remove weekend trips.
-\item[filter\_single\_trip():] Return only one trip per shape\_id.
-\end{description}
+* **filter_by_shape_id():** Filter shapes using given shape ids.
+* **filter_by_agency_id():**  Filter routes using given agency ids.
+* **filter_valid_stop_times():** Return only stop times that have geospatial locations.
+* **filter_week_days():** Remove weekend trips.
+* **filter_single_trip():** Return only one trip per shape_id.
+* **filter_by_route_type():** Filter by transport mode.
+* **filter_by_route_id():** Filter routes and trips by route id.
+* **filter_day_period():** Filter according to a time interval.
+* **remove_invalid():** Remove all inconsistent data, checking all relations.
 
 These functions subset all the relevant GTFS files in order to remove all the unnecessary rows, keeping the data consistent. The returning values of the four functions is a list of `data.table` objects, in the same way of the input data. For example, in the code below we filter only shape ids between 53000 and 53020.
 
@@ -75,7 +70,6 @@ plot(sf::st_geometry(sao_small_shapes_sf))
 plot(sf::st_geometry(sao_small_stops_sf), pch = 20, col = "red", add = TRUE)
 box()
 ```
-
 
 After subsetting the data, it is also possible to save it as a new GTFS file using `write_gtfs()`, as shown below.
 
@@ -128,7 +122,7 @@ For a given trip, the function `gtfs2gps` calculates the average speed between e
 
 $$Large Speed_i = \frac{S_{i+1}-S_i}{t_{i+1}-t_i}$$
 
-Since the beginning of each trip usually starts before the first stop_id, the mean speed cannot be calculated as shown in the previous equation because information on `i` period does not exist. In this case, the function consider the mean speed for the whole trip. It also happens after the last valid stop_id (`N`) of the trips, where info on `i+1` also does not exist. 
+Since the beginning of each trip usually starts before the first stop_id, the mean speed cannot be calculated as shown in the previous equation because information on `i` period does not exist. In this case, the function consider the mean speed for the whole trip. It also happens after the last valid stop_id (`N`) of the trips, where info on `i + 1` also does not exist. 
 
 ```{r speed, echo = FALSE, message = FALSE}
 knitr::include_graphics("https://github.com/ipeaGIT/gtfs2gps/blob/master/man/figures/speed.PNG")

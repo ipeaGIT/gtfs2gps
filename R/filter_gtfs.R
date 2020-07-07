@@ -13,7 +13,8 @@
 #' did not have any inconsistency.
 #' @param gtfs_data A list of data.tables read using gtfs2gps::reag_gtfs().
 #' @param only_essential Remove only the essential files? The essential files are all but 
-#' agency and calendar. Default is TRUE, which means that agency-routes and trips-calendar relations
+#' agency, calendar, and routes. Default is TRUE, which means that agency-routes,
+#' routes-trips, and trips-calendar relations
 #' will not be processed as restrictions to remove objects.
 #' @param prompt_invalid Show the invalid objects. Default is FALSE.
 #' @return A subset of the input GTFS data. 
@@ -40,7 +41,7 @@ remove_invalid <- function(gtfs_data, only_essential = TRUE, prompt_invalid = FA
     size <- newsize
     
     # agency-routes relation (agency_id)
-    if(!only_essential && !is.null(gtfs_data$agency)){
+    if(!only_essential && !is.null(gtfs_data$agency) && !is.null(gtfs_data$routes)){
       agency_ids <- intersect(gtfs_data$agency$agency_id, gtfs_data$routes$agency_id)
       removed$agency_ids <- c(removed$agency_ids, setdiff(gtfs_data$agency$agency_id, gtfs_data$routes$agency_id))
 
@@ -49,12 +50,14 @@ remove_invalid <- function(gtfs_data, only_essential = TRUE, prompt_invalid = FA
     }
   
     # routes-trips relation (route_id)
-    route_ids <- intersect(gtfs_data$routes$route_id, gtfs_data$trips$route_id)
-    removed$route_ids <- c(removed$route_ids, setdiff(gtfs_data$routes$route_id, gtfs_data$trips$route_id))
-
-    gtfs_data$routes <- subset(gtfs_data$routes, route_id %in% route_ids)
-    gtfs_data$trips  <- subset(gtfs_data$trips,  route_id %in% route_ids)
+    if(!only_essential && !is.null(gtfs_data$routes)){
+      route_ids <- intersect(gtfs_data$routes$route_id, gtfs_data$trips$route_id)
+      removed$route_ids <- c(removed$route_ids, setdiff(gtfs_data$routes$route_id, gtfs_data$trips$route_id))
   
+      gtfs_data$routes <- subset(gtfs_data$routes, route_id %in% route_ids)
+      gtfs_data$trips  <- subset(gtfs_data$trips,  route_id %in% route_ids)
+    }
+
     # trips-shapes relation (shape_id)
     shape_ids <- intersect(gtfs_data$trips$shape_id, gtfs_data$shapes$shape_id)
     removed$shape_ids <- c(removed$shape_ids, setdiff(gtfs_data$trips$shape_id, gtfs_data$shapes$shape_id))
@@ -136,9 +139,11 @@ filter_by_shape_id <- function(gtfs_data, shape_ids){
   stop_ids <- unique(gtfs_data$stop_times$stop_id)
   gtfs_data$stops <- subset(gtfs_data$stops, stop_id %in% stop_ids)
   
-  route_ids <- unique(gtfs_data$trips$route_id)
-  gtfs_data$routes <- subset(gtfs_data$routes, route_id %in% route_ids)  
-
+  if(!is.null(gtfs_data$routes)){
+    route_ids <- unique(gtfs_data$trips$route_id)
+    gtfs_data$routes <- subset(gtfs_data$routes, route_id %in% route_ids)  
+  }
+  
   return(gtfs_data)
 }
 
@@ -158,6 +163,7 @@ filter_by_shape_id <- function(gtfs_data, shape_ids){
 #' result <- filter_by_agency_id(poa, "EPTC")
 filter_by_agency_id <- function(gtfs_data, agency_ids){
   if(is.null(gtfs_data$agency)) stop("GTFS data does not have agency")
+  if(is.null(gtfs_data$routes)) stop("GTFS data does not have routes")
 
   gtfs_data$agency <- subset(gtfs_data$agency, agency_id %in% agency_ids)
   gtfs_data$routes <- subset(gtfs_data$routes, agency_id %in% agency_ids)
@@ -204,8 +210,10 @@ filter_valid_stop_times <- function(gtfs_data){
   stop_ids <- unique(gtfs_data$stop_times$stop_id)
   gtfs_data$stops <- subset(gtfs_data$stops, stop_id %in% stop_ids)
   
-  route_ids <- unique(gtfs_data$trips$route_id)
-  gtfs_data$routes <- subset(gtfs_data$routes, route_id %in% route_ids)
+  if(!is.null(gtfs_data$routes)){
+    route_ids <- unique(gtfs_data$trips$route_id)
+    gtfs_data$routes <- subset(gtfs_data$routes, route_id %in% route_ids)
+  }
 
   return(gtfs_data)
 }
@@ -250,9 +258,11 @@ filter_single_trip <- function(gtfs_data){
     trip_ids <- unique(gtfs_data$trips$trip_id)
     gtfs_data$frequencies <- subset(gtfs_data$frequencies, trip_id %in% trip_ids)
   }
-    
-  route_ids <- unique(gtfs_data$trips$route_id)
-  gtfs_data$routes <- subset(gtfs_data$routes, route_id %in% route_ids)
+  
+  if(!is.null(gtfs_data$routes)){
+    route_ids <- unique(gtfs_data$trips$route_id)
+    gtfs_data$routes <- subset(gtfs_data$routes, route_id %in% route_ids)
+  }
 
   return(gtfs_data)
 }
@@ -273,6 +283,8 @@ filter_single_trip <- function(gtfs_data){
 #' 
 #' subset <- filter_by_route_type(warsaw, c(0, 3))
 filter_by_route_type <- function(gtfs_data, route_types) {
+  if(is.null(gtfs_data$routes)) stop("GTFS data does not have routes")
+
   gtfs_data$routes <- subset(gtfs_data$routes, route_type %in% route_types)
 
   route_ids <- unique(gtfs_data$routes$route_id)
@@ -310,6 +322,8 @@ filter_by_route_type <- function(gtfs_data, route_types) {
 #' 
 #' subset <- filter_by_route_id(warsaw, c("15", "175"))
 filter_by_route_id <- function(gtfs_data, route_ids) {
+  if(is.null(gtfs_data$routes)) stop("GTFS data does not have routes")
+
   gtfs_data$routes <- subset(gtfs_data$routes, route_id %in% route_ids)
   gtfs_data$trips <- subset(gtfs_data$trips, route_id %in% route_ids) 
 

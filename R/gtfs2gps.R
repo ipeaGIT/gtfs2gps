@@ -71,9 +71,6 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
 
     # identify route id
     routeid <- gtfs_data$trips[shape_id == shapeid]$route_id[1]
-
-    # identify route type
-    routetype <- gtfs_data$routes[route_id == routeid]$route_type
     
     # get all trips linked to that route
     all_tripids <- gtfs_data$trips[shape_id == shapeid & route_id == routeid, ]$trip_id %>% unique()
@@ -140,10 +137,15 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
     # get shape points in high resolution
     new_stoptimes <- data.table::data.table(shape_id = new_shape$shape_id[1],
                                             id = 1:nrow(new_shape),
-                                            route_type = routetype,
                                             shape_pt_lon = sf::st_coordinates(new_shape)[,1],
                                             shape_pt_lat = sf::st_coordinates(new_shape)[,2])
     
+    # identify route type
+    if(!is.null(gtfs_data$routes)){
+      routetype <- gtfs_data$routes[route_id == routeid]$route_type
+      new_stoptimes[stops_seq$ref, "route_type"] <- routetype
+    }
+
     ## Add stops to new_stoptimes  
     new_stoptimes[stops_seq$ref, "stop_id"] <- stops_seq$stop_id
     new_stoptimes[stops_seq$ref, "stop_sequence"] <- stops_seq$stop_sequence
@@ -171,8 +173,12 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
       return(NULL)  # nocov
     }
     
-    new_stoptimes[, departure_time:= data.table::as.ITime(departure_time)]
+    new_stoptimes[, departure_time := data.table::as.ITime(departure_time)]
 
+    data.table::setcolorder(new_stoptimes, c("id", "shape_id", "trip_id", "trip_number", "route_type", 
+      "shape_pt_lon", "shape_pt_lat", "departure_time", "stop_id", "stop_sequence", "dist", "cumdist",
+      "cumtime", "speed"))
+    
     if(!is.null(filepath)){ # Write object
       data.table::fwrite(x = new_stoptimes,
              file = paste0(filepath, "/", shapeid, ".txt"))
@@ -198,15 +204,17 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
   }
   else
   {  
-    # message("Preparing parallelization")
-    future::plan(strategy)
-    
     # number of cores
-    cores <- data.table::getDTthreads() - 1
+    cores <- future::availableCores() - 1
     message(paste('Using', cores, 'CPU cores'))
     
+    future::plan(strategy, workers = cores)
+    
     message("Processing the data")
-    output <-  furrr::future_map( .x = all_shapeids, .f = corefun, .progress = progress, .options = furrr::future_options(packages=c('data.table', 'sf', 'magrittr', 'Rcpp', 'sfheaders', 'units'))) %>% data.table::rbindlist()
+    output <- furrr::future_map(.x = all_shapeids, .f = corefun, .progress = progress, 
+      .options = furrr::future_options(
+        packages = c('data.table', 'sf', 'magrittr', 'Rcpp', 'sfheaders', 'units'))) %>% 
+      data.table::rbindlist()
   }
 
   if(is.null(filepath))
