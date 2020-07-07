@@ -2,7 +2,7 @@
 #' @title Simplify shapes of a GTFS file
 #'
 #' @description Remove points from the shapes of a GTFS file in order to
-#' reduce its size. It uses Douglas-Peucker algotithm internally.
+#' reduce its size. It uses Douglas-Peucker algorithm internally.
 #'
 #' @param gtfs_data A list of data.tables read using gtfs2gps::reag_gtfs().
 #' @param tol Numerical tolerance value to be used by the Douglas-Peuker algorithm.
