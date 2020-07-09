@@ -55,8 +55,8 @@ gps_as_sflinestring  <- function(gps, crs = 4326){
   # reorder columns
   dt1 <- data.table::setcolorder(dt1, names(dt))
   
-  # recode their unique id's so they fall and the end of each interval 
-  dt1[, c("id", "interval_id","trip_number") := list(id - 0.1, interval_id - 1,trip_number - 0.1)] 
+  # recode their unique id's so they fall and the end of each interval
+  dt1[, c("id", "interval_id", "trip_number") := list(id - 0.1, interval_id - 1, trip_number - 0.1)] 
   
   # add extra points in valid_id's of the GPS data
   dt2 <- data.table::rbindlist(list(dt, dt1))[order(id)]

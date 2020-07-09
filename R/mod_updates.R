@@ -9,7 +9,7 @@ update_freq <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
 
   new_stoptimes[, "trip_number"] <- 1
   
-  if(is.null(gtfs_data$frequencies)) return(new_stoptimes)
+  if(is.null(gtfs_data$frequencies)) return(new_stoptimes) # nocov
   
   #  Get freq info for that trip
   # tripid <- "8700-21-0"
@@ -49,7 +49,7 @@ update_freq <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
 
     if(length(nmber_of_departures) == 0 || is.na(nmber_of_departures)){
       warning(paste0("Trip '", tripid, "' has zero departures. Ignoring it."),  call. = FALSE) # nocov
-      return(NULL)
+      return(NULL) # nocov
     }
 
 #    if(nmber_of_departures < 0) nmber_of_departures <- -nmber_of_departures
@@ -105,7 +105,7 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
   # ignore trip_id if original departure_time values are missing
   if(is.null(length(stop_id_ok)) == TRUE | length(stop_id_ok) == 1 | length(stop_id_ok) == 0){ 
     tripids_missing <- append(tripids_missing, tripid)
-    return(NULL)
+    return(NULL) # nocov
     } else{
     
     ### UPDATE speeds
