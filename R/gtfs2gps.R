@@ -143,7 +143,7 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
     # identify route type
     if(!is.null(gtfs_data$routes)){
       routetype <- gtfs_data$routes[route_id == routeid]$route_type
-      new_stoptimes[stops_seq$ref, "route_type"] <- routetype
+      new_stoptimes[, "route_type"] <- routetype
     }
 
     ## Add stops to new_stoptimes  
