@@ -37,6 +37,8 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
   if(continue & is.null(filepath))
     stop("Cannot use argument 'continue' without passing a 'filepath'.")
   
+  original_gtfs_data_arg <- deparse(substitute(gtfs_data))
+  
   # Unzipping and reading GTFS.zip file
   if(class(gtfs_data) == "character"){
     message(paste("Unzipping and reading", basename(gtfs_data)))
@@ -56,7 +58,7 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
   shapes_sf <- gtfs_shapes_as_sf(gtfs_data)
 
   ###### PART 2. Analysing data type ----------------------------------------------
-  corefun <- function(shapeid){ 
+  corefun <- function(shapeid){
     if(continue){
       file <- paste0(filepath, "/", shapeid, ".txt")
       if(file.exists(file)) return(NULL)
@@ -190,6 +192,17 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
 
   ###### PART 3. Apply Core function in parallel to all shape ids------------------------------------
 
+  badShapes <- c()
+  
+  tryCorefun <- function(shapeid){
+    result <- NULL
+    tryCatch({result <- corefun(shapeid)}, error = function(msg) {
+      badShapes <<- c(badShapes, shapeid) # nocov
+    })
+
+    return(result)
+  }
+
   # all shape ids
   all_shapeids <- unique(shapes_sf$shape_id)
 
@@ -198,7 +211,7 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
     if(progress) pbapply::pboptions(type = "txt")
 
     message("Processing the data")
-    output <- pbapply::pblapply(X = all_shapeids, FUN = corefun) %>% data.table::rbindlist()
+    output <- pbapply::pblapply(X = all_shapeids, FUN = tryCorefun) %>% data.table::rbindlist()
     
     if(progress) pbapply::pboptions(type = "none")
   }
@@ -211,10 +224,29 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
     future::plan(strategy, workers = cores)
     
     message("Processing the data")
-    output <- furrr::future_map(.x = all_shapeids, .f = corefun, .progress = progress, 
+    output <- furrr::future_map(.x = all_shapeids, .f = tryCorefun, .progress = progress, 
       .options = furrr::future_options(
         packages = c('data.table', 'sf', 'magrittr', 'Rcpp', 'sfheaders', 'units'))) %>% 
       data.table::rbindlist()
+  }
+
+  if(length(badShapes) > 0){
+    if(original_gtfs_data_arg == ".") original_gtfs_data_arg <- "<your gtfs data>" # nocov
+    
+    message(paste0("Some internal bug occurred while processing gtfs data.\n", # nocov
+                   "Please give us a feedback by creating a GitHub issue\n", # nocov
+                   "(https://github.com/ipeaGIT/gtfs2gps/issues/new)\n"), # nocov
+                   "and attaching a subset of your data created from the\n", # nocov
+                   "code below:\n", # nocov
+                   "################################################") # nocov
+    
+    ids <- paste0("ids <- c('", paste(badShapes, collapse = "', '"), "')") # nocov
+    code1 <- paste0("data <- gtfs2gps::filter_by_shape_id(", original_gtfs_data_arg, ", ids)") # nocov
+    code2 <- "gtfs2gps::write_gtfs(data, 'shapes_with_error.zip')" # nocov
+    
+    message(paste(ids, code1, code2, sep = "\n")) # nocov
+    message("################################################") # nocov
+    message("The other shapeids were properly processed.")
   }
 
   if(is.null(filepath))
