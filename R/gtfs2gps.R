@@ -246,7 +246,7 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
     
     message(paste(ids, code1, code2, sep = "\n")) # nocov
     message("################################################") # nocov
-    message("The other shapeids were properly processed.")
+    message("The other shapeids were properly processed.") # nocov
   }
 
   if(is.null(filepath))
