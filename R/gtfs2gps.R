@@ -78,7 +78,7 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
     all_tripids <- gtfs_data$trips[shape_id == shapeid & route_id == routeid, ]$trip_id %>% unique()
 
     # nstop = number of valid stops in each trip_id
-    nstop <- gtfs_data$stop_times[trip_id %in% all_tripids, .N, by ="trip_id"]$N
+    nstop <- gtfs_data$stop_times[trip_id %chin% all_tripids, .N, by ="trip_id"]$N
 
     # Get the stops sequence with lat long linked to that route
     # each shape_id only has one stop sequence

@@ -35,8 +35,8 @@ filter_day_period <- function(gtfs, period_start = "00:00:01", period_end = "23:
   unique_trips <- unique(gtfs$stop_times$trip_id)
   
   # 2) filter STOPS and TRIPS
-  gtfs$stops <- gtfs$stops[ stop_id %in% unique_stops ]
-  gtfs$trips <- gtfs$trips[ trip_id %in% unique_trips ]
+  gtfs$stops <- gtfs$stops[ stop_id %chin% unique_stops ]
+  gtfs$trips <- gtfs$trips[ trip_id %chin% unique_trips ]
   
   # unique values
   unique_routes <- unique(gtfs$trips$route_id)
@@ -44,12 +44,12 @@ filter_day_period <- function(gtfs, period_start = "00:00:01", period_end = "23:
   unique_services <- unique(gtfs$trips$service_id)
   
   # 3) filter ROUTES and SHAPES and SERVICES
-  gtfs$routes <- gtfs$routes[ route_id %in% unique_routes ]
-  gtfs$shapes <- gtfs$shapes[ shape_id %in% unique_shapes ]
-  gtfs$calendar <- gtfs$calendar[ service_id %in% unique_services ]
+  gtfs$routes <- gtfs$routes[ route_id %chin% unique_routes ]
+  gtfs$shapes <- gtfs$shapes[ shape_id %chin% unique_shapes ]
+  gtfs$calendar <- gtfs$calendar[ service_id %chin% unique_services ]
   
   # 4) filter AGENCY
-  gtfs$agency <- gtfs$agency[ agency_id %in% unique(gtfs$routes$agency_id),]
+  gtfs$agency <- gtfs$agency[ agency_id %chin% unique(gtfs$routes$agency_id),]
   
   # return fun output
   return(gtfs)

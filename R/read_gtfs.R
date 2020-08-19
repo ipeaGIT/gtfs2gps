@@ -24,14 +24,14 @@ read_gtfs <- function(gtfszip){
   myread <- function(file) suppressWarnings(data.table::fread(paste0(tempd, "/", file), encoding = "UTF-8"))
 
   # read files to memory
-  if("agency.txt"      %in% unzippedfiles){result$agency      <- myread("agency.txt")}
-  if("routes.txt"      %in% unzippedfiles){result$routes      <- myread("routes.txt")}
-  if("stops.txt"       %in% unzippedfiles){result$stops       <- myread("stops.txt")}      else{stop("File stops.txt is missing")}
-  if("stop_times.txt"  %in% unzippedfiles){result$stop_times  <- myread("stop_times.txt")} else{stop("File stop_times.txt is missing")}
-  if("shapes.txt"      %in% unzippedfiles){result$shapes      <- myread("shapes.txt")}     else{stop("File shapes.txt is missing")}
-  if("trips.txt"       %in% unzippedfiles){result$trips       <- myread("trips.txt")}      else{stop("File trips.txt is missing")}
-  if("calendar.txt"    %in% unzippedfiles){result$calendar    <- myread("calendar.txt")}
-  if("frequencies.txt" %in% unzippedfiles){result$frequencies <- myread("frequencies.txt")}
+  if("agency.txt"      %chin% unzippedfiles){result$agency      <- myread("agency.txt")}
+  if("routes.txt"      %chin% unzippedfiles){result$routes      <- myread("routes.txt")}
+  if("stops.txt"       %chin% unzippedfiles){result$stops       <- myread("stops.txt")}      else{stop("File stops.txt is missing")}
+  if("stop_times.txt"  %chin% unzippedfiles){result$stop_times  <- myread("stop_times.txt")} else{stop("File stop_times.txt is missing")}
+  if("shapes.txt"      %chin% unzippedfiles){result$shapes      <- myread("shapes.txt")}     else{stop("File shapes.txt is missing")}
+  if("trips.txt"       %chin% unzippedfiles){result$trips       <- myread("trips.txt")}      else{stop("File trips.txt is missing")}
+  if("calendar.txt"    %chin% unzippedfiles){result$calendar    <- myread("calendar.txt")}
+  if("frequencies.txt" %chin% unzippedfiles){result$frequencies <- myread("frequencies.txt")}
 
   if(is.null(result$shapes)     || dim(result$shapes)[1] == 0)     stop("shapes.txt is empty in the GTFS file")
   if(is.null(result$trips)      || dim(result$trips)[1] == 0)      stop("trips.txt is empty in the GTFS file")
