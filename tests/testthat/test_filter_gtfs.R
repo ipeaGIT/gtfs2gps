@@ -93,7 +93,7 @@ test_that("remove_invalid", {
   sp <- read_gtfs(system.file("extdata/saopaulo.zip", package="gtfs2gps"))
 
   sp$shapes <- sp$shapes[-(1:80000),]
-  sp$agency$agency_id <- 2
+  sp$agency$agency_id <- 'test'
   
   sp2 <- remove_invalid(sp, prompt_invalid = TRUE)
   
@@ -155,3 +155,4 @@ test_that("filter_by_route_type", {
   sp$routes <- NULL
   expect_error(filter_by_agency_id(sp, "abc"), "GTFS data does not have routes")
 })
+

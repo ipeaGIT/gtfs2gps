@@ -45,8 +45,8 @@ remove_invalid <- function(gtfs_data, only_essential = TRUE, prompt_invalid = FA
       agency_ids <- intersect(gtfs_data$agency$agency_id, gtfs_data$routes$agency_id)
       removed$agency_ids <- c(removed$agency_ids, setdiff(gtfs_data$agency$agency_id, gtfs_data$routes$agency_id))
 
-      gtfs_data$agency <- subset(gtfs_data$agency, agency_id %chin% agency_ids)
-      gtfs_data$routes <- subset(gtfs_data$routes, agency_id %chin% agency_ids)
+      gtfs_data$agency <- subset(gtfs_data$agency, agency_id %in% agency_ids)
+      gtfs_data$routes <- subset(gtfs_data$routes, agency_id %in% agency_ids)
     }
   
     # routes-trips relation (route_id)
@@ -54,16 +54,16 @@ remove_invalid <- function(gtfs_data, only_essential = TRUE, prompt_invalid = FA
       route_ids <- intersect(gtfs_data$routes$route_id, gtfs_data$trips$route_id)
       removed$route_ids <- c(removed$route_ids, setdiff(gtfs_data$routes$route_id, gtfs_data$trips$route_id))
   
-      gtfs_data$routes <- subset(gtfs_data$routes, route_id %chin% route_ids)
-      gtfs_data$trips  <- subset(gtfs_data$trips,  route_id %chin% route_ids)
+      gtfs_data$routes <- subset(gtfs_data$routes, route_id %in% route_ids)
+      gtfs_data$trips  <- subset(gtfs_data$trips,  route_id %in% route_ids)
     }
 
     # trips-shapes relation (shape_id)
     shape_ids <- intersect(gtfs_data$trips$shape_id, gtfs_data$shapes$shape_id)
     removed$shape_ids <- c(removed$shape_ids, setdiff(gtfs_data$trips$shape_id, gtfs_data$shapes$shape_id))
 
-    gtfs_data$trips  <- subset(gtfs_data$trips,  shape_id %chin% shape_ids)
-    gtfs_data$shapes <- subset(gtfs_data$shapes, shape_id %chin% shape_ids)
+    gtfs_data$trips  <- subset(gtfs_data$trips,  shape_id %in% shape_ids)
+    gtfs_data$shapes <- subset(gtfs_data$shapes, shape_id %in% shape_ids)
     
     # trips-frequencies relation (trip_id)
     if(test_gtfs_freq(gtfs_data) == 'frequency'){
@@ -127,8 +127,8 @@ remove_invalid <- function(gtfs_data, only_essential = TRUE, prompt_invalid = FA
 #' 
 #' subset <- filter_by_shape_id(poa, "T2-1")
 filter_by_shape_id <- function(gtfs_data, shape_ids){
-  gtfs_data$shapes <- subset(gtfs_data$shapes, shape_id %chin% shape_ids)
-  gtfs_data$trips <- subset(gtfs_data$trips, shape_id %chin% shape_ids)
+  gtfs_data$shapes <- subset(gtfs_data$shapes, shape_id %in% shape_ids)
+  gtfs_data$trips <- subset(gtfs_data$trips, shape_id %in% shape_ids)
 
   trip_ids <- unique(gtfs_data$trips$trip_id)
   gtfs_data$stop_times <- subset(gtfs_data$stop_times, trip_id %chin% trip_ids)
@@ -137,11 +137,11 @@ filter_by_shape_id <- function(gtfs_data, shape_ids){
     gtfs_data$frequencies <- subset(gtfs_data$frequencies, trip_id %chin% trip_ids)
   
   stop_ids <- unique(gtfs_data$stop_times$stop_id)
-  gtfs_data$stops <- subset(gtfs_data$stops, stop_id %chin% stop_ids)
+  gtfs_data$stops <- subset(gtfs_data$stops, stop_id %in% stop_ids)
   
   if(!is.null(gtfs_data$routes)){
     route_ids <- unique(gtfs_data$trips$route_id)
-    gtfs_data$routes <- subset(gtfs_data$routes, route_id %chin% route_ids)  
+    gtfs_data$routes <- subset(gtfs_data$routes, route_id %in% route_ids)  
   }
   
   return(gtfs_data)
@@ -165,11 +165,11 @@ filter_by_agency_id <- function(gtfs_data, agency_ids){
   if(is.null(gtfs_data$agency)) stop("GTFS data does not have agency")
   if(is.null(gtfs_data$routes)) stop("GTFS data does not have routes")
 
-  gtfs_data$agency <- subset(gtfs_data$agency, agency_id %chin% agency_ids)
-  gtfs_data$routes <- subset(gtfs_data$routes, agency_id %chin% agency_ids)
+  gtfs_data$agency <- subset(gtfs_data$agency, agency_id %in% agency_ids)
+  gtfs_data$routes <- subset(gtfs_data$routes, agency_id %in% agency_ids)
 
   route_ids <- unique(gtfs_data$routes$route_id)
-  gtfs_data$trips <- subset(gtfs_data$trips, route_id %chin% route_ids)
+  gtfs_data$trips <- subset(gtfs_data$trips, route_id %in% route_ids)
   
   trip_ids <- unique(gtfs_data$trips$trip_id)
   
@@ -184,10 +184,10 @@ filter_by_agency_id <- function(gtfs_data, agency_ids){
     gtfs_data$calendar <- subset(gtfs_data$calendar, service_id %chin% service_ids)
   
   shapes_ids <- unique(gtfs_data$trips$shape_id)
-  gtfs_data$shapes <- subset(gtfs_data$shapes, shape_id %chin% shapes_ids)
+  gtfs_data$shapes <- subset(gtfs_data$shapes, shape_id %in% shapes_ids)
   
   stop_ids <- unique(gtfs_data$stop_times$stop_id)
-  gtfs_data$stops <- subset(gtfs_data$stops, stop_id %chin% stop_ids)
+  gtfs_data$stops <- subset(gtfs_data$stops, stop_id %in% stop_ids)
   
   return(gtfs_data)
 }
@@ -208,11 +208,11 @@ filter_valid_stop_times <- function(gtfs_data){
   gtfs_data$stop_times <- subset(gtfs_data$stop_times, !is.na(arrival_time) & !is.na(departure_time))
 
   stop_ids <- unique(gtfs_data$stop_times$stop_id)
-  gtfs_data$stops <- subset(gtfs_data$stops, stop_id %chin% stop_ids)
+  gtfs_data$stops <- subset(gtfs_data$stops, stop_id %in% stop_ids)
   
   if(!is.null(gtfs_data$routes)){
     route_ids <- unique(gtfs_data$trips$route_id)
-    gtfs_data$routes <- subset(gtfs_data$routes, route_id %chin% route_ids)
+    gtfs_data$routes <- subset(gtfs_data$routes, route_id %in% route_ids)
   }
 
   return(gtfs_data)
@@ -233,7 +233,7 @@ filter_week_days <- function(gtfs_data){
   if(is.null(gtfs_data$calendar)) stop("GTFS data does not have calendar")
   calendar_temp <- subset(gtfs_data$calendar, monday > 0 | tuesday > 0 | wednesday > 0 | thursday > 0 | friday > 0)
   serviceids <- calendar_temp$service_id
-  gtfs_data$trips <- subset(gtfs_data$trips, service_id %chin% serviceids)
+  gtfs_data$trips <- subset(gtfs_data$trips, service_id %in% serviceids)
   gtfs_data$calendar[, sunday := 0]
   gtfs_data$calendar[, saturday := 0]
   
@@ -261,7 +261,7 @@ filter_single_trip <- function(gtfs_data){
   
   if(!is.null(gtfs_data$routes)){
     route_ids <- unique(gtfs_data$trips$route_id)
-    gtfs_data$routes <- subset(gtfs_data$routes, route_id %chin% route_ids)
+    gtfs_data$routes <- subset(gtfs_data$routes, route_id %in% route_ids)
   }
 
   return(gtfs_data)
@@ -285,13 +285,13 @@ filter_single_trip <- function(gtfs_data){
 filter_by_route_type <- function(gtfs_data, route_types) {
   if(is.null(gtfs_data$routes)) stop("GTFS data does not have routes")
 
-  gtfs_data$routes <- subset(gtfs_data$routes, route_type %chin% route_types)
+  gtfs_data$routes <- subset(gtfs_data$routes, route_type %in% route_types)
 
   route_ids <- unique(gtfs_data$routes$route_id)
-  gtfs_data$trips <- subset(gtfs_data$trips, route_id %chin% route_ids) 
+  gtfs_data$trips <- subset(gtfs_data$trips, route_id %in% route_ids) 
 
   shape_ids <- unique(gtfs_data$trips$shape_id)
-  gtfs_data$shapes <- subset(gtfs_data$shapes, shape_id %chin% shape_ids)
+  gtfs_data$shapes <- subset(gtfs_data$shapes, shape_id %in% shape_ids)
     
   trip_ids <- unique(gtfs_data$trips$trip_id)
   gtfs_data$stop_times <- subset(gtfs_data$stop_times, trip_id %chin% trip_ids)
@@ -300,7 +300,7 @@ filter_by_route_type <- function(gtfs_data, route_types) {
     gtfs_data$frequencies <- subset(gtfs_data$frequencies, trip_id %chin% trip_ids)
   
   stop_ids <- unique(gtfs_data$stop_times$stop_id)
-  gtfs_data$stops <- subset(gtfs_data$stops, stop_id %chin% stop_ids)
+  gtfs_data$stops <- subset(gtfs_data$stops, stop_id %in% stop_ids)
   
   return(gtfs_data)
 }
@@ -324,11 +324,11 @@ filter_by_route_type <- function(gtfs_data, route_types) {
 filter_by_route_id <- function(gtfs_data, route_ids) {
   if(is.null(gtfs_data$routes)) stop("GTFS data does not have routes")
 
-  gtfs_data$routes <- subset(gtfs_data$routes, route_id %chin% route_ids)
-  gtfs_data$trips <- subset(gtfs_data$trips, route_id %chin% route_ids) 
+  gtfs_data$routes <- subset(gtfs_data$routes, route_id %in% route_ids)
+  gtfs_data$trips <- subset(gtfs_data$trips, route_id %in% route_ids) 
 
   shape_ids <- unique(gtfs_data$trips$shape_id)
-  gtfs_data$shapes <- subset(gtfs_data$shapes, shape_id %chin% shape_ids)
+  gtfs_data$shapes <- subset(gtfs_data$shapes, shape_id %in% shape_ids)
     
   trip_ids <- unique(gtfs_data$trips$trip_id)
   gtfs_data$stop_times <- subset(gtfs_data$stop_times, trip_id %chin% trip_ids)
@@ -337,7 +337,7 @@ filter_by_route_id <- function(gtfs_data, route_ids) {
     gtfs_data$frequencies <- subset(gtfs_data$frequencies, trip_id %chin% trip_ids)
   
   stop_ids <- unique(gtfs_data$stop_times$stop_id)
-  gtfs_data$stops <- subset(gtfs_data$stops, stop_id %chin% stop_ids)
+  gtfs_data$stops <- subset(gtfs_data$stops, stop_id %in% stop_ids)
   
   return(gtfs_data)
 }

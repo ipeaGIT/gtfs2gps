@@ -10,7 +10,7 @@ utils::globalVariables(c(".", "%>%", ":="))
 }
 
 #' @importFrom magrittr %>%
-#' @importFrom data.table := %between% fifelse
+#' @importFrom data.table := %between% fifelse %chin%
 #' @importFrom stats na.omit
 #' @importFrom utils head tail object.size
 #' @importFrom stats na.omit
