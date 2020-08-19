@@ -35,7 +35,8 @@ Imports:
       sfheaders,
       lwgeom,
       raster,
-      pbapply
-RoxygenNote: 7.1.0
+      pbapply,
+      progressr
+RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 LinkingTo: Rcpp

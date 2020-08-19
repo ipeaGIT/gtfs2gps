@@ -1,7 +1,10 @@
+gtfs2gps: Converting GTFS data to GPS-like format
+================
+Rafael H. M. Pereira, Pedro R. Andrade, Joao Bazzo
+
 06 July 2020
 
-Introduction
-============
+# Introduction
 
 Package `gtfs2gps` allows users to convert public transport GTFS data
 into a single `data.table` format with GPS-like records, which can then
@@ -9,25 +12,30 @@ be used in various applications such as running transport simulations or
 scenario analyses. Before using the package, just install it from
 GitHub.
 
-    install.packages("gtfs2gps")
+``` r
+install.packages("gtfs2gps")
+```
 
-Loading data
-============
+# Loading data
 
 After loading the package, GTFS data can be read into R by using
 `read_gtfs()`. This function gets a zipped GTFS file and returns a list
 of `data.table` objects. The returning list contains the data of each
 GTFS file indexed according to their file names without extension.
 
-    library("data.table")
-    library("gtfs2gps")
-    sao <- read_gtfs(system.file("extdata/saopaulo.zip", package ="gtfs2gps"))
-    names(sao)
+``` r
+library("data.table")
+library("gtfs2gps")
+sao <- read_gtfs(system.file("extdata/saopaulo.zip", package ="gtfs2gps"))
+names(sao)
+```
 
     ## [1] "agency"      "routes"      "stops"       "stop_times"  "shapes"     
     ## [6] "trips"       "calendar"    "frequencies"
 
-    sao$trips
+``` r
+sao$trips
+```
 
     ##      route_id service_id   trip_id    trip_headsign direction_id shape_id
     ##   1:  121G-10        USD 121G-10-0   Metrô Tucuruvi            0    52421
@@ -45,13 +53,12 @@ GTFS file indexed according to their file names without extension.
 Note that not all GTFS files are loaded into R. This function only loads
 the necessary data to spatially and temporally handle trips and stops,
 which are: “shapes.txt”, “stop\_times.txt”, “stops.txt”, “trips.txt”,
-“agency.txt”, “calendar.txt”, “routes.txt”, and “frequencies.txt”, with
-this last four being optional. If a given GTFS zipped file does not
+“agency.txt”, “calendar.txt”, “routes.txt”, and “frequencies.txt”,
+with this last four being optional. If a given GTFS zipped file does not
 contain all of these required files then `read_gtfs()` will stop with an
 error.
 
-Subsetting GTFS Data
-====================
+# Subsetting GTFS Data
 
 GTFS data sets can be fairly large for complex public transport networks
 and, in some cases, users might want to focus on specific transport
@@ -59,16 +66,16 @@ services at week days/weekends, or on specific trips or routes. The
 package brings some functions to filter GTFS.zip and speed up the data
 processing.
 
--   **filter\_by\_shape\_id():** Filter shapes using given shape ids.
--   **filter\_by\_agency\_id():** Filter routes using given agency ids.
--   **filter\_valid\_stop\_times():** Return only stop times that have
+  - **filter\_by\_shape\_id():** Filter shapes using given shape ids.
+  - **filter\_by\_agency\_id():** Filter routes using given agency ids.
+  - **filter\_valid\_stop\_times():** Return only stop times that have
     geospatial locations.
--   **filter\_week\_days():** Remove weekend trips.
--   **filter\_single\_trip():** Return only one trip per shape\_id.
--   **filter\_by\_route\_type():** Filter by transport mode.
--   **filter\_by\_route\_id():** Filter routes and trips by route id.
--   **filter\_day\_period():** Filter according to a time interval.
--   **remove\_invalid():** Remove all inconsistent data, checking all
+  - **filter\_week\_days():** Remove weekend trips.
+  - **filter\_single\_trip():** Return only one trip per shape\_id.
+  - **filter\_by\_route\_type():** Filter by transport mode.
+  - **filter\_by\_route\_id():** Filter routes and trips by route id.
+  - **filter\_day\_period():** Filter according to a time interval.
+  - **remove\_invalid():** Remove all inconsistent data, checking all
     relations.
 
 These functions subset all the relevant GTFS files in order to remove
@@ -77,34 +84,41 @@ values of the four functions is a list of `data.table` objects, in the
 same way of the input data. For example, in the code below we filter
 only shape ids between 53000 and 53020.
 
-    library(magrittr)
-    object.size(sao) %>% format(units = "Kb")
+``` r
+library(magrittr)
+object.size(sao) %>% format(units = "Kb")
+```
 
     ## [1] "6227.2 Kb"
 
-    sao_small <- gtfs2gps::filter_by_shape_id(sao, c(51338, 51956, 51657))
-    object.size(sao_small) %>% format(units = "Kb")
+``` r
+sao_small <- gtfs2gps::filter_by_shape_id(sao, c(51338, 51956, 51657))
+object.size(sao_small) %>% format(units = "Kb")
+```
 
     ## [1] "105.8 Kb"
 
 We can then easily convert the data to simple feature format and plot
 them.
 
-    sao_small_shapes_sf <- gtfs2gps::gtfs_shapes_as_sf(sao_small)
-    sao_small_stops_sf <- gtfs2gps::gtfs_stops_as_sf(sao_small)
-    plot(sf::st_geometry(sao_small_shapes_sf))
-    plot(sf::st_geometry(sao_small_stops_sf), pch = 20, col = "red", add = TRUE)
-    box()
+``` r
+sao_small_shapes_sf <- gtfs2gps::gtfs_shapes_as_sf(sao_small)
+sao_small_stops_sf <- gtfs2gps::gtfs_stops_as_sf(sao_small)
+plot(sf::st_geometry(sao_small_shapes_sf))
+plot(sf::st_geometry(sao_small_stops_sf), pch = 20, col = "red", add = TRUE)
+box()
+```
 
-![](C:/Users/pedro/AppData/Local/Temp/RtmpQ5iuLn/preview-9b28579a57fb.dir/intro_to_gtfs2gps_files/figure-markdown_strict/sao_small_shapes_sf-1.png)
+![](C:/Users/pedro/AppData/Local/Temp/RtmpcZbTEQ/preview-5a1870246f4f.dir/intro_to_gtfs2gps_files/figure-gfm/sao_small_shapes_sf-1.png)<!-- -->
 
 After subsetting the data, it is also possible to save it as a new GTFS
 file using `write_gtfs()`, as shown below.
 
-    write_gtfs(sao_small, "sao_small.zip")
+``` r
+write_gtfs(sao_small, "sao_small.zip")
+```
 
-Converting to GPS-like format
-=============================
+# Converting to GPS-like format
 
 To convert GTFS to GPS-like format, use `gtfs2gps()`. This is the core
 function of the package. It takes a GTFS zipped file as an input and
@@ -112,12 +126,14 @@ returns a `data.table` where each row represents a ‘GPS-like’ data point
 for every trip in the GTFS file. In summary, this function interpolates
 the space-time position of each vehicle in each trip considering the
 network distance and average speed between stops. The function samples
-the timestamp of each vehicle every 15*m* by default, but the user can
+the timestamp of each vehicle every \(15m\) by default, but the user can
 set a different value in the `spatial_resolution` argument. See the
 example below.
 
-      sao_gps <- gtfs2gps("sao_small.zip", progress = FALSE, parallel = FALSE, spatial_resolution = 50)
-      head(sao_gps)
+``` r
+  sao_gps <- gtfs2gps("sao_small.zip", progress = FALSE, parallel = FALSE, spatial_resolution = 50)
+  head(sao_gps)
+```
 
     ##    id shape_id   trip_id trip_number route_type shape_pt_lon shape_pt_lat
     ## 1:  1    51338 5010-10-0           1          3    -46.63120    -23.66268
@@ -138,47 +154,50 @@ The following figure maps the first 100 data points of the sample data
 we processed. They can be converted to `simple feature` points or
 linestring.
 
-      sao_gps60 <- sao_gps[1:100, ]
-      
-      # points
-      sao_gps60_sfpoints <- gps_as_sfpoints(sao_gps60)
-      
-      # linestring
-      sao_gps60_sflinestring <- gps_as_sflinestring(sao_gps60)
+``` r
+  sao_gps60 <- sao_gps[1:100, ]
+  
+  # points
+  sao_gps60_sfpoints <- gps_as_sfpoints(sao_gps60)
+  
+  # linestring
+  sao_gps60_sflinestring <- gps_as_sflinestring(sao_gps60)
 
-      # plot
-      plot(sf::st_geometry(sao_gps60_sfpoints), pch = 20)
-      plot(sf::st_geometry(sao_gps60_sflinestring), col = "blue", add = TRUE)
-      box()
+  # plot
+  plot(sf::st_geometry(sao_gps60_sfpoints), pch = 20)
+  plot(sf::st_geometry(sao_gps60_sflinestring), col = "blue", add = TRUE)
+  box()
+```
 
-![](C:/Users/pedro/AppData/Local/Temp/RtmpQ5iuLn/preview-9b28579a57fb.dir/intro_to_gtfs2gps_files/figure-markdown_strict/unnamed-chunk-6-1.png)
+![](C:/Users/pedro/AppData/Local/Temp/RtmpcZbTEQ/preview-5a1870246f4f.dir/intro_to_gtfs2gps_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
 The function `gtfs2gps()` automatically recognizes whether the GTFS data
 brings detailed `stop_times.txt` information or whether it is a
 `frequency.txt` GTFS file. A sample data of a GTFS with detailed
 `stop_times.txt` cab be found below:
 
-    poa <- system.file("extdata/poa.zip", package ="gtfs2gps")
+``` r
+poa <- system.file("extdata/poa.zip", package ="gtfs2gps")
 
-    poa_gps <- gtfs2gps(poa, progress = FALSE, parallel = FALSE, spatial_resolution = 50)
+poa_gps <- gtfs2gps(poa, progress = FALSE, parallel = FALSE, spatial_resolution = 50)
 
-    poa_gps_sflinestrig <- gps_as_sfpoints(poa_gps)
+poa_gps_sflinestrig <- gps_as_sfpoints(poa_gps)
 
-    plot(sf::st_geometry(poa_gps_sflinestrig[1:200,]))
+plot(sf::st_geometry(poa_gps_sflinestrig[1:200,]))
 
-    box()
+box()
+```
 
-![](C:/Users/pedro/AppData/Local/Temp/RtmpQ5iuLn/preview-9b28579a57fb.dir/intro_to_gtfs2gps_files/figure-markdown_strict/unnamed-chunk-7-1.png)
+![](C:/Users/pedro/AppData/Local/Temp/RtmpcZbTEQ/preview-5a1870246f4f.dir/intro_to_gtfs2gps_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
-Methodological note
-===================
+# Methodological note
 
 For a given trip, the function `gtfs2gps` calculates the average speed
 between each pair of consecutive stops — given by the ratio between
 cumulative network distance `S` and departure time `t` for a consecutive
 pair of valid stop\_ids (`i`),
 
-$$Large Speed\_i = \\frac{S\_{i+1}-S\_i}{t\_{i+1}-t\_i}$$
+\[Large Speed_i = \frac{S_{i+1}-S_i}{t_{i+1}-t_i}\]
 
 Since the beginning of each trip usually starts before the first
 stop\_id, the mean speed cannot be calculated as shown in the previous
@@ -187,10 +206,9 @@ the function consider the mean speed for the whole trip. It also happens
 after the last valid stop\_id (`N`) of the trips, where info on `i + 1`
 also does not exist.
 
-![](https://github.com/ipeaGIT/gtfs2gps/blob/master/man/figures/speed.PNG)
+![](https://github.com/ipeaGIT/gtfs2gps/blob/master/man/figures/speed.PNG)<!-- -->
 
-Final remarks
-=============
+# Final remarks
 
 If you have any suggestions or want to report an error, please visit the
 GitHub page of the package [here](https://github.com/ipeaGIT/gtfs2gps).

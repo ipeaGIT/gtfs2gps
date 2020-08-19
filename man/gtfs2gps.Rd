@@ -9,7 +9,6 @@ gtfs2gps(
   spatial_resolution = 50,
   parallel = FALSE,
   strategy = "multiprocess",
-  progress = TRUE,
   filepath = NULL,
   continue = FALSE
 )
@@ -26,8 +25,6 @@ When TRUE, it will use all cores available minus one.}
 \item{strategy}{Name of evaluation function to use in future parallel processing. Defaults to 
 "multiprocess", i.e. if multicore evaluation is supported, that will be used, otherwise
  multisession evaluation will be used. Fore details, check ?future::plan().}
-
-\item{progress}{Show a progress bar. Default is TRUE.}
 
 \item{filepath}{Output file path. As default, the output is returned in R.
 When this argument is set, each route is saved into a file within filepath,
@@ -47,7 +44,8 @@ shape_pt_lon and shape_pt_lat (degrees), speed (km/h), departure_time (hh:mm:ss)
 Convert GTFS data to GPS format by sampling points using a
 spatial resolution. This function creates additional points in order to
 guarantee that two points in a same trip will have at most a given
-distance, indicated as a spatial resolution.
+distance, indicated as a spatial resolution. This function uses progressr
+internally to show progress bars.
 }
 \examples{
 library(dplyr)
