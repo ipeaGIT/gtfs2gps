@@ -15,7 +15,7 @@
 #'   filter_single_trip() %>%
 #'   remove_invalid()
 #' 
-#' fortaleza_gps <- gtfs2gps(gtfs, progress = FALSE) %>% append_height(srtmfile)
+#' fortaleza_gps <- gtfs2gps(gtfs) %>% append_height(srtmfile)
 append_height <- function(gps, heightfile){
   f_gps <- gps
 

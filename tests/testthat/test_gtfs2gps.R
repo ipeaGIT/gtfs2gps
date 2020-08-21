@@ -34,7 +34,7 @@ test_that("gtfs2gps", {
 
     poa_gps_300 <- read_gtfs(poa) %>%
       filter_week_days() %>%
-      gtfs2gps(spatial_resolution = 300, parallel = FALSE, progress = FALSE)
+      gtfs2gps(spatial_resolution = 300, parallel = FALSE)
     
     expect_equal(dim(poa_gps_300)[1], 66264)
     expect(dim(poa_gps_300)[1] < dim(poa_gps)[1], "more spatial_resolution is not decreasing the number of points")
@@ -43,10 +43,10 @@ test_that("gtfs2gps", {
     poa_simple <- read_gtfs(poa) %>%
       filter_by_shape_id(c("T2-1", "A141-1"))
 
-    poa_gps <- gtfs2gps(poa_simple, parallel = FALSE, progress = FALSE, filepath = ".")
+    poa_gps <- gtfs2gps(poa_simple, parallel = FALSE, filepath = ".")
     expect_null(poa_gps)
     
-    poa_gps <- gtfs2gps(poa, parallel = FALSE, progress = FALSE, filepath = ".", continue = TRUE)
+    poa_gps <- gtfs2gps(poa, parallel = FALSE, filepath = ".", continue = TRUE)
     
     expect_null(poa_gps)
     
@@ -66,7 +66,7 @@ test_that("gtfs2gps", {
       filter_by_shape_id(52000:52200) %>%
       filter_week_days() %>%
       filter_single_trip() %>%
-      gtfs2gps(parallel = TRUE, progress = TRUE, spatial_resolution = 15)
+      gtfs2gps(parallel = TRUE, spatial_resolution = 15)
 
     expect_true(all(names(sp_gps) %in% 
       c("trip_id", "route_type", "id", "shape_pt_lon", "shape_pt_lat", "trip_number",

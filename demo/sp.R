@@ -10,7 +10,7 @@ sp_small <- gtfs2gps::filter_by_shape_id(sp, 53000:53020)
 
 sp_small_sf <- gtfs_shapes_as_sf(sp_small)
 
-sp_gps <- gtfs2gps(sp_small, parallel = TRUE, progress = FALSE)
+sp_gps <- gtfs2gps(sp_small, parallel = TRUE)
 sp_gps
 
 sp_gps_sf <- gps_as_sf(sp_gps)
