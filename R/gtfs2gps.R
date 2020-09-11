@@ -258,8 +258,14 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
     message("The other shapeids were properly processed.") # nocov
   }
 
-  if(is.null(filepath))
+  if(is.null(filepath)){
+    output$speed <- units::set_units(output$speed, "km/h")
+    output$dist <- units::set_units(output$dist, "m")
+    output$cumdist <- units::set_units(output$cumdist, "m")
+    output$cumtime <- units::set_units(output$cumtime, "s")
+    
     return(output)
+  }
   else
     return(NULL)
 }
