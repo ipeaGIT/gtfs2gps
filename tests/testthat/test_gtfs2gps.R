@@ -15,7 +15,7 @@ test_that("gtfs2gps", {
     my_dim <- dim(poa_gps)[1]
     expect_equal(my_dim, 125718)
 
-    my_length <- length(poa_gps$dist[which(!poa_gps$dist < 50)])
+    my_length <- length(poa_gps$dist[which(!poa_gps$dist < units::set_units(50, "m"))])
     expect_equal(my_length, 0)
     
     expect_equal(sum(poa_gps$dist), 4065236, 0.001)
@@ -28,9 +28,10 @@ test_that("gtfs2gps", {
     
     expect_true(all(!is.na(poa_gps$dist)))
 
-    expect_true(all(poa_gps$dist > 0))
-    expect_true(all(poa_gps$speed > 0))
-    expect_true(all(poa_gps$cumtime > 0))
+    expect_true(all(poa_gps$dist > units::set_units(0, "m")))
+    expect_true(all(poa_gps$cumdist > units::set_units(0, "m")))
+    expect_true(all(poa_gps$speed > units::set_units(0, "km/h")))
+    expect_true(all(poa_gps$cumtime > units::set_units(0, "s")))
 
     poa_gps_300 <- read_gtfs(poa) %>%
       filter_week_days() %>%
@@ -77,7 +78,8 @@ test_that("gtfs2gps", {
     my_dim <- dim(sp_gps)[1]
     expect_equal(my_dim, 286838)
 
-    expect_true(all(sp_gps$dist > 0))
-    expect_true(all(sp_gps$speed > 0))
-    expect_true(all(sp_gps$cumtime > 0))
+    expect_true(all(sp_gps$dist > units::set_units(0, "m")))
+    expect_true(all(sp_gps$cumdist > units::set_units(0, "m")))
+    expect_true(all(sp_gps$speed > units::set_units(0, "km/h")))
+    expect_true(all(sp_gps$cumtime > units::set_units(0, "s")))
 })
