@@ -49,7 +49,7 @@ filter_day_period <- function(gtfs, period_start = "00:00:01", period_end = "23:
   gtfs$calendar <- gtfs$calendar[ service_id %chin% unique_services ]
   
   # 4) filter AGENCY
-  gtfs$agency <- gtfs$agency[ agency_id %chin% unique(gtfs$routes$agency_id),]
+  gtfs$agency <- gtfs$agency[ agency_id %chin% unique(gtfs$routes$agency_id) ]
   
   # return fun output
   return(gtfs)
