@@ -1,9 +1,11 @@
 test_that("gtfs2gps", {
     poa <- system.file("extdata/poa.zip", package="gtfs2gps")
 
+    expect_warning(
     poa_gps <- read_gtfs(poa) %>%
       filter_week_days() %>%
-      gtfs2gps(parallel = FALSE)
+      gtfs2gps(parallel = FALSE),
+      "Trip '176-1@1#2310' has zero GPS points. Ignoring it.")
 
     #poa_shape <- read_gtfs(poa) %>% gtfs_shapes_as_sf()
     #plot(poa_shape)
@@ -33,9 +35,10 @@ test_that("gtfs2gps", {
     expect_true(all(poa_gps$speed > units::set_units(0, "km/h")))
     expect_true(all(poa_gps$cumtime > units::set_units(0, "s")))
 
-    poa_gps_300 <- read_gtfs(poa) %>%
+    expect_warning(poa_gps_300 <- read_gtfs(poa) %>%
       filter_week_days() %>%
-      gtfs2gps(spatial_resolution = 300, parallel = FALSE)
+      gtfs2gps(spatial_resolution = 300, parallel = FALSE),
+      "Trip '176-1@1#2310' has zero GPS points. Ignoring it.")
     
     expect_equal(dim(poa_gps_300)[1], 66264)
     expect(dim(poa_gps_300)[1] < dim(poa_gps)[1], "more spatial_resolution is not decreasing the number of points")
@@ -47,7 +50,8 @@ test_that("gtfs2gps", {
     poa_gps <- gtfs2gps(poa_simple, parallel = FALSE, filepath = ".")
     expect_null(poa_gps)
     
-    poa_gps <- gtfs2gps(poa, parallel = FALSE, filepath = ".", continue = TRUE)
+    expect_warning(poa_gps <- gtfs2gps(poa, parallel = FALSE, filepath = ".", continue = TRUE),
+                   "Trip '176-1@1#2310' has zero GPS points. Ignoring it.")
     
     expect_null(poa_gps)
     

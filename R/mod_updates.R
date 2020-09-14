@@ -2,7 +2,7 @@ update_freq <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
   # Update new_stoptimes
   new_stoptimes <- update_dt(tripid, new_stoptimes, gtfs_data, all_tripids)
 
-  if(is.null(new_stoptimes) || dim(new_stoptimes)[1] == 0){
+  if(is.null(new_stoptimes)){
     return(new_stoptimes) # nocov
   }
 
@@ -146,7 +146,7 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
     warning(paste0("Could not create stop times for trip '", tripid, "'. Ignoring it."),  call. = FALSE) # nocov
   }
   else if(dim(new_stoptimes)[1] == 0)
-    warning(paste0("Trip '", tripid, "' has zero points. Ignoring it."),  call. = FALSE) # nocov
+    warning(paste0("Trip '", tripid, "' has zero GPS points. Ignoring it."),  call. = FALSE) # nocov
   
   return(new_stoptimes)
 }
