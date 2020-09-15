@@ -16,7 +16,7 @@
 #' # write GTFS data into a zip file
 #' write_gtfs(poa, paste0(tempdir(), "/mypoa.zip"))
 write_gtfs <- function(gtfs, zipfile){
-  tempd <- file.path(tempdir(), "gtfsdir") # create tempr dir to save GTFS unzipped files
+  tempd <- file.path(tempdir(), "gtfsdir") # create temp dir to save GTFS unzipped files
   unlink(normalizePath(paste0(tempd, "/", dir(tempd)), mustWork = FALSE), recursive = TRUE) # clean tempfiles in that dir
 
   if(!is.null(gtfs$agency))      data.table::fwrite(gtfs$agency,      paste0(tempd, "/agency.txt"))
