@@ -50,8 +50,10 @@ read_gtfs <- function(gtfszip){
     result$frequencies[, end_time := data.table::as.ITime(mysub(end_time), format = "%H:%M:%OS")]
   }
 
-  result$stops$stop_id <- as.character(result$stops$stop_id)
+  result$stops$stop_id      <- as.character(result$stops$stop_id)
   result$stop_times$stop_id <- as.character(result$stop_times$stop_id)
+  result$trips$route_id     <- as.character(result$trips$route_id)
+  result$routes$route_id    <- as.character(result$routes$route_id)
 
   return(result)
 }
