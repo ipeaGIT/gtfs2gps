@@ -255,7 +255,6 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
     
     message(paste(ids, code1, code2, sep = "\n")) # nocov
     message("################################################") # nocov
-    message("The other shapeids were properly processed.") # nocov
   }
 
   total_shapes <- length(unique(gtfs_data$shapes$shape_id))
@@ -273,8 +272,7 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
     perc <- round(processed_trips / total_trips * 100, 2)
     message(paste0(processed_trips, " out of ", total_trips, " trips (", perc, "%) were properly processed."))
   }
-  
-    
+
   if(is.null(filepath)){
     output$speed <- units::set_units(output$speed, "km/h")
     output$dist <- units::set_units(output$dist, "m")
