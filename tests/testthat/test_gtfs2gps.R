@@ -86,4 +86,14 @@ test_that("gtfs2gps", {
     expect_true(all(sp_gps$cumdist > units::set_units(0, "m")))
     expect_true(all(sp_gps$speed > units::set_units(0, "km/h")))
     expect_true(all(sp_gps$cumtime > units::set_units(0, "s")))
+    
+    # messages when gtfs2gps cannot convert all shapes nor all trips
+    gtfs <- read_gtfs(sp) %>%
+      filter_by_shape_id(52000:52200) %>%
+      filter_week_days() %>%
+      filter_single_trip()
+    
+    gtfs$stop_times <- gtfs$stop_times[-(300:390), ]
+    expect_warning(result <-  gtfs2gps(gtfs, parallel = TRUE, spatial_resolution = 15),
+                   "Shape '52200' has zero stops. Ignoring it.")
 })

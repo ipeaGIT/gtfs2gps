@@ -38,6 +38,8 @@ read_gtfs <- function(gtfszip){
   if(is.null(result$stops)      || dim(result$stops)[1] == 0)      stop("stops.txt is empty in the GTFS file")
   if(is.null(result$stop_times) || dim(result$stop_times)[1] == 0) stop("stop_times.txt is empty in the GTFS file")
 
+  if(!is.null(result$frequencies) && dim(result$frequencies)[1] == 0) stop("frequencies.txt is empty in the GTFS file")
+  
   mysub <- function(value) sub("^24:", "00:", value)
     
   result$stop_times[, departure_time := data.table::as.ITime(mysub(departure_time), format = "%H:%M:%OS")]
@@ -48,8 +50,10 @@ read_gtfs <- function(gtfszip){
     result$frequencies[, end_time := data.table::as.ITime(mysub(end_time), format = "%H:%M:%OS")]
   }
 
-  result$stops$stop_id <- as.character(result$stops$stop_id)
+  result$stops$stop_id      <- as.character(result$stops$stop_id)
   result$stop_times$stop_id <- as.character(result$stop_times$stop_id)
+  result$trips$route_id     <- as.character(result$trips$route_id)
+  result$routes$route_id    <- as.character(result$routes$route_id)
 
   return(result)
 }
