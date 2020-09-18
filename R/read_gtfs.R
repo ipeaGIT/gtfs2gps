@@ -21,7 +21,10 @@ read_gtfs <- function(gtfszip){
 
   result <- list()
 
-  myread <- function(file) suppressWarnings(data.table::fread(paste0(tempd, "/", file), encoding = "UTF-8"))
+  myread <- function(file){
+    message(paste0("Reading '", file, "'"))
+    suppressWarnings(data.table::fread(paste0(tempd, "/", file), encoding = "UTF-8"))
+  }
 
   # read files to memory
   if("agency.txt"      %chin% unzippedfiles){result$agency      <- myread("agency.txt")}
