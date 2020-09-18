@@ -118,12 +118,6 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
       warning(paste0("Shape '", shapeid, "' has no snapped stops. Ignoring it."),  call. = FALSE)  # nocov
       return(NULL) # nocov
     }
-  
-    # If there is less than two valid stops, jump this shape_id
-    if(min(nstop) < 2){
-      warning(paste0("Shape '", shapeid, "' has less than two stops. Ignoring it."),  call. = FALSE)  # nocov
-      return(NULL) # nocov
-    }
 
     # Skip shape_id IF there is no route_id associated with that shape_id
     if(is.na(routeid)){
