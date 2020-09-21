@@ -13,12 +13,36 @@
 #' 
 #' new_gtfs <- merge_gtfs_feeds(gtfs_list)
 merge_gtfs_feeds <- function(gtfs_list){
-  
   # read all fees separately
   all_feeds <- lapply(gtfs_list, read_gtfs)
   
+  create_new_ids <- function(i, id, files){
+    values <- function(i, mfile, id)
+      all_feeds[[i]][[mfile]][[id]]
+    
+    ids <- as.vector(unlist(sapply(files, function(mfile) values(i, mfile, id))))
+    new_ids <- paste0(i, "_", 1:length(ids))
+    
+    for(mfile in files){  
+      if(!is.null(all_feeds[[i]][[mfile]])){
+        positions <- match(values(i, mfile, id), ids)
+        all_feeds[[i]][[mfile]][[id]] <- new_ids[positions]
+      }
+    }
+  }
+  
+  for(i in 1:length(all_feeds)){
+    create_new_ids(i, "shape_id",   c("shapes", "trips"))
+    create_new_ids(i, "agency_id",  c("agency", "routes"))
+    create_new_ids(i, "route_id",   c("routes", "trips"))
+    create_new_ids(i, "trip_id",    c("trips", "stop_times"))
+    create_new_ids(i, "stop_id",    c("stop_times", "stops"))
+    create_new_ids(i, "service_id", c("trips", "calendar"))
+    create_new_ids(i, "trip_id",    c("trips", "frequencies", "stop_times"))
+  }
+
   # separate 1st feed
-  new_gtfs <- all_feeds[[2]]
+  new_gtfs <- list()
   
   # function to extract elements in a series of lists
   extract_list_element <- function(i, element){ all_feeds[[i]][[element]] }
@@ -26,7 +50,7 @@ merge_gtfs_feeds <- function(gtfs_list){
   ## piling up
   
   # 1/8 agency
-  new_gtfs$agency <- lapply(X=1:length(all_feeds), FUN = extract_list_element, 'agency') %>% data.table::rbindlist(fill = TRUE)
+  new_gtfs$agency <- lapply(X = 1:length(all_feeds), FUN = extract_list_element, 'agency') %>% data.table::rbindlist(fill = TRUE)
   
   # 2/8 routes
   new_gtfs$routes <- lapply(X = 1:length(all_feeds), FUN = extract_list_element, 'routes') %>% data.table::rbindlist(fill = TRUE)
