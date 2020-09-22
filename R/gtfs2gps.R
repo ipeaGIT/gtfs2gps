@@ -98,7 +98,7 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
     
     spatial_resolution <- units::set_units(spatial_resolution / 1000, "km")
     
-    # new faster verion using sfheaders
+    # new faster version using sfheaders
     new_shape <- subset(shapes_sf, shape_id == shapeid) %>%
       sf::st_segmentize(spatial_resolution) %>%
       sfheaders::sf_to_df(fill = TRUE) %>%
