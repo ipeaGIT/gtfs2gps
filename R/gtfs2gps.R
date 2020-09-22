@@ -101,9 +101,8 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
     # new faster version using sfheaders
     new_shape <- subset(shapes_sf, shape_id == shapeid) %>%
       sf::st_segmentize(spatial_resolution) %>%
-      sfheaders::sf_to_df(fill = TRUE) %>%
-      sfheaders::sf_point(x = "x", y = "y", keep = TRUE)
-
+      sfheaders::sf_cast( "POINT")
+    
     # convert units of spatial resolution to meters
     spatial_resolution <- units::set_units(spatial_resolution, "m")
     
