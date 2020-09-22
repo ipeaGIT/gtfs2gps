@@ -8,7 +8,7 @@ test_that("append_height", {
     filter_single_trip() %>% 
     remove_invalid()
   
-  fortaleza_gps <- gtfs2gps(gtfs, progress = FALSE) %>% append_height(srtmfile)
+  fortaleza_gps <- gtfs2gps(gtfs) %>% append_height(srtmfile)
 
   expect_equal(sum(fortaleza_gps$height), 72932, 0.05)
   
