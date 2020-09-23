@@ -36,7 +36,8 @@ Imports:
       lwgeom,
       raster,
       pbapply,
-      progressr
+      progressr,
+      zip
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 LinkingTo: Rcpp

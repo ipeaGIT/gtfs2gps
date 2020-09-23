@@ -224,3 +224,10 @@ agency <- sapply(all_feeds, "[", 'agency')
 agency_ids <-  sapply(agency, "[[", 'agency_id')
 
 
+library(gtfs2gps)
+
+poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+
+write_gtfs(gtfs = poa, zipfile = "poa2.zip")
+
+poa <- read_gtfs("poa2.zip")
