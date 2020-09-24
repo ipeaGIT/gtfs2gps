@@ -253,7 +253,7 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
   total_shapes <- length(unique(gtfs_data$shapes$shape_id))
   processed_shapes <- length(unique(output$shape_id))
 
-  if(processed_shapes < total_shapes){
+  if(processed_shapes < total_shapes && is.null(filepath)){
     perc <- round(processed_shapes / total_shapes * 100, 2)
     message(paste0(processed_shapes, " out of ", total_shapes, " shapes (", perc, "%) were properly processed."))
   }
@@ -261,7 +261,7 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
   total_trips <- length(unique(gtfs_data$trips$trip_id))
   processed_trips <- length(unique(output$trip_id))
   
-  if(processed_trips < total_trips){
+  if(processed_trips < total_trips && is.null(filepath)){
     perc <- round(processed_trips / total_trips * 100, 2)
     message(paste0(processed_trips, " out of ", total_trips, " trips (", perc, "%) were properly processed."))
   }
