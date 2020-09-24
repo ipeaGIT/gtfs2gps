@@ -267,6 +267,12 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
   }
 
   if(is.null(filepath)){
+    if(any(is.na(output$speed)))
+      message("Some 'speed' values are NA in the returned data")
+    
+    if(any(is.infinite(output$speed)))
+      message("Some 'speed' values are Inf in the returned data")
+    
     output$speed <- units::set_units(output$speed, "km/h")
     output$dist <- units::set_units(output$dist, "m")
     output$cumdist <- units::set_units(output$cumdist, "m")
