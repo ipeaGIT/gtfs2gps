@@ -6,3 +6,6 @@ tests_joao
 tests_rafa
 .travis.yml
 README.md
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
