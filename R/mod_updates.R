@@ -119,7 +119,6 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
   lapply(X = 1:(L-1), FUN = update_speeds)
 
   # Speed info that was missing (either before or after 1st/last stops)
-  new_stoptimes[, speed := data.table::fifelse(is.na(speed), mean(speed, na.rm = TRUE), speed) ]
   # Get trip duration in seconds
   new_stoptimes[, cumtime := cumsum(3.6 * dist / speed)]
   
@@ -140,7 +139,6 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
   #temp_newdeparture <- new_stoptimes$departure_time[1L]+stats::lag(new_stoptimes$cumtime,1,0)
   new_stoptimes[, departure_time := round(departure_time[1L] + stats::lag(cumtime, 1, 0))]
   
-  new_stoptimes <- new_stoptimes[speed > 0 & cumtime > 0]
 
   if(is.null(new_stoptimes)){
     warning(paste0("Could not create stop times for trip '", tripid, "'. Ignoring it."),  call. = FALSE) # nocov
