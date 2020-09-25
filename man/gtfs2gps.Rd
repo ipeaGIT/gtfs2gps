@@ -54,4 +54,5 @@ subset <- filter_by_shape_id(poa, "T2-1") \%>\%
   filter_single_trip()
 
 poa_gps <- gtfs2gps(subset)
+
 }

@@ -32,8 +32,16 @@
 #'   filter_single_trip()
 #' 
 #' poa_gps <- gtfs2gps(subset)
-gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strategy = 'multiprocess', filepath = NULL, continue = FALSE){
-###### PART 1. Load and prepare data inputs ------------------------------------
+#' 
+
+gtfs2gps <- function(gtfs_data,
+                     spatial_resolution = 50,
+                     parallel = FALSE,
+                     strategy = 'multiprocess',
+                     filepath = NULL,
+                     continue = FALSE){
+
+  ###### PART 1. Load and prepare data inputs ------------------------------------
   if(continue & is.null(filepath))
     stop("Cannot use argument 'continue' without passing a 'filepath'.")
   
@@ -112,7 +120,7 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
                                      spatial_resolution,
                                      all_tripids[which.max(nstop)])
     
-    # Skip shape_id IF there are no snnaped stops
+    # Skip shape_id IF there are no snapped stops
     if(is.null(snapped) | length(snapped) == 0 ){
       warning(paste0("Shape '", shapeid, "' has no snapped stops. Ignoring it."),  call. = FALSE)  # nocov
       return(NULL) # nocov
@@ -147,8 +155,9 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
     new_stoptimes[stops_seq$ref, "departure_time"] <- stops_seq$departure_time
 
     # calculate Distance between successive points
-    new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type = "lead"), data.table::shift(shape_pt_lon, type = "lead"), tolerance = 1e10)]
-    new_stoptimes <- na.omit(new_stoptimes, cols = "dist")
+    new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type = "lag"), data.table::shift(shape_pt_lon, type = "lag"), tolerance = 1e10)]
+    new_stoptimes[1, dist := 0]
+    # new_stoptimes <- na.omit(new_stoptimes, cols = "dist")
 
     if(dim(new_stoptimes)[1] < 2){
       warning(paste0("Shape '", shapeid, "' has less than two stops after conversion. Ignoring it."),  call. = FALSE)  # nocov

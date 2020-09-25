@@ -17,8 +17,15 @@ devtools::document(pkg = ".")
 
 # calculate Distance between successive points
 new_stoptimes[ , dist := geosphere::distGeo(matrix(c(shape_pt_lon, shape_pt_lat), ncol = 2),
-                                            matrix(c(data.table::shift(shape_pt_lon, type="lead"), data.table::shift(shape_pt_lat, type="lead")), ncol = 2))/1000]
+                                            matrix(c(data.table::shift(shape_pt_lon, type="lag"), data.table::shift(shape_pt_lat, type="lag")), ncol = 2))/1000]
 
+new_stoptimes[.I==1, ]
+
+idx = new_stoptimes[, .(idx = .I[c(1L)]), by=shape_id]$idx
+new_stoptimes[1, dist := 0]
+
+
+new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type = "lead"), data.table::shift(shape_pt_lon, type = "lead"), tolerance = 1e10)]
 
 poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
 
