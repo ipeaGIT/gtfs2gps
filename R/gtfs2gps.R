@@ -155,9 +155,10 @@ gtfs2gps <- function(gtfs_data,
     new_stoptimes[stops_seq$ref, "departure_time"] <- stops_seq$departure_time
 
     # calculate Distance between successive points
-    new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type = "lag"), data.table::shift(shape_pt_lon, type = "lag"), tolerance = 1e10)]
-    new_stoptimes[1, dist := 0]
-    # new_stoptimes <- na.omit(new_stoptimes, cols = "dist")
+    new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type = "lead"), data.table::shift(shape_pt_lon, type = "lead"), tolerance = 1e10)]
+    # new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type = "lag"), data.table::shift(shape_pt_lon, type = "lag"), tolerance = 1e10)]
+    # new_stoptimes[1, dist := 0]
+    new_stoptimes <- na.omit(new_stoptimes, cols = "dist")
 
     if(dim(new_stoptimes)[1] < 2){
       warning(paste0("Shape '", shapeid, "' has less than two stops after conversion. Ignoring it."),  call. = FALSE)  # nocov
