@@ -32,8 +32,16 @@
 #'   filter_single_trip()
 #' 
 #' poa_gps <- gtfs2gps(subset)
-gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strategy = 'multiprocess', filepath = NULL, continue = FALSE){
-###### PART 1. Load and prepare data inputs ------------------------------------
+#' 
+
+gtfs2gps <- function(gtfs_data,
+                     spatial_resolution = 50,
+                     parallel = FALSE,
+                     strategy = 'multiprocess',
+                     filepath = NULL,
+                     continue = FALSE){
+
+  ###### PART 1. Load and prepare data inputs ------------------------------------
   if(continue & is.null(filepath))
     stop("Cannot use argument 'continue' without passing a 'filepath'.")
   
@@ -112,7 +120,7 @@ gtfs2gps <- function(gtfs_data, spatial_resolution = 50, parallel = FALSE, strat
                                      spatial_resolution,
                                      all_tripids[which.max(nstop)])
     
-    # Skip shape_id IF there are no snnaped stops
+    # Skip shape_id IF there are no snapped stops
     if(is.null(snapped) | length(snapped) == 0 ){
       warning(paste0("Shape '", shapeid, "' has no snapped stops. Ignoring it."),  call. = FALSE)  # nocov
       return(NULL) # nocov

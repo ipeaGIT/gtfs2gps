@@ -13,12 +13,12 @@ test_that("gtfs2gps", {
     #write_sf(poa_gps_shape, "poa_gps_shape.shp")
     
     my_dim <- dim(poa_gps)[1]
-    expect_equal(my_dim, 127961)
+    expect_equal(my_dim, 128155)
 
     poa_gps <- poa_gps[speed > units::set_units(0, "km/h") & cumtime > units::set_units(0, "s") & !is.na(speed) & !is.infinite(speed),]
 
     my_dim <- dim(poa_gps)[1]
-    expect_equal(my_dim, 80402)
+    expect_equal(my_dim, 80304)
     
     my_length <- length(poa_gps$dist[which(!poa_gps$dist < units::set_units(50, "m"))])
     expect_equal(my_length, 0)
@@ -42,7 +42,7 @@ test_that("gtfs2gps", {
       filter_week_days() %>%
       gtfs2gps(spatial_resolution = 300, parallel = FALSE)
     
-    expect_equal(dim(poa_gps_300)[1], 67377)
+    expect_equal(dim(poa_gps_300)[1], 67571)
     expect(dim(poa_gps_300)[1] < dim(poa_gps)[1], "more spatial_resolution is not decreasing the number of points")
     
     # save into file
@@ -81,12 +81,12 @@ test_that("gtfs2gps", {
     expect_true(all(sp_gps$trip_number %in% 1:4))
     
     my_dim <- dim(sp_gps)[1]
-    expect_equal(my_dim, 286838)
+    expect_equal(my_dim, 287078)
 
-    expect_true(all(sp_gps$dist > units::set_units(0, "m")))
-    expect_true(all(sp_gps$cumdist > units::set_units(0, "m")))
-    expect_equal(length(sp_gps$speed > units::set_units(0, "km/h")), 286838)
-    expect_equal(length(sp_gps$cumtime > units::set_units(0, "s")), 286838)
+    expect_true(all(sp_gps$dist >= units::set_units(0, "m")))
+    expect_true(all(sp_gps$cumdist >= units::set_units(0, "m")))
+    expect_equal(length(sp_gps$speed > units::set_units(0, "km/h")), 287078)
+    expect_equal(length(sp_gps$cumtime > units::set_units(0, "s")), 287078)
     
     # messages when gtfs2gps cannot convert all shapes nor all trips
     gtfs <- read_gtfs(sp) %>%
