@@ -21,20 +21,25 @@ read_gtfs <- function(gtfszip){
 
   result <- list()
 
-  myread <- function(file){
-    message(paste0("Reading '", file, "'"))
-    suppressWarnings(data.table::fread(paste0(tempd, "/", file), encoding = "UTF-8"))
+  myread <- function(file, ids, compulsory = FALSE){
+    filename <- paste0(file, ".txt")
+    message(paste0("Reading '", filename, "'"))
+    if(filename %chin% unzippedfiles){
+      result[[file]] <<- suppressWarnings(data.table::fread(paste0(tempd, "/", filename), encoding = "UTF-8", colClasses = list(character = ids)))
+    }
+    else if(compulsory)
+      stop(paste("File", filename, "is missing"))
   }
 
   # read files to memory
-  if("agency.txt"      %chin% unzippedfiles){result$agency      <- myread("agency.txt")}
-  if("routes.txt"      %chin% unzippedfiles){result$routes      <- myread("routes.txt")}
-  if("stops.txt"       %chin% unzippedfiles){result$stops       <- myread("stops.txt")}      else{stop("File stops.txt is missing")}
-  if("stop_times.txt"  %chin% unzippedfiles){result$stop_times  <- myread("stop_times.txt")} else{stop("File stop_times.txt is missing")}
-  if("shapes.txt"      %chin% unzippedfiles){result$shapes      <- myread("shapes.txt")}     else{stop("File shapes.txt is missing")}
-  if("trips.txt"       %chin% unzippedfiles){result$trips       <- myread("trips.txt")}      else{stop("File trips.txt is missing")}
-  if("calendar.txt"    %chin% unzippedfiles){result$calendar    <- myread("calendar.txt")}
-  if("frequencies.txt" %chin% unzippedfiles){result$frequencies <- myread("frequencies.txt")}
+  myread("agency", "agency_id")
+  myread("routes", c("agency_id", "route_id"))
+  myread("stops", "stop_id", TRUE)
+  myread("stop_times", c("trip_id", "stop_id"), TRUE)
+  myread("shapes", "shape_id", TRUE)
+  myread("trips", c("route_id", "trip_id", "shape_id", "service_id"), TRUE)
+  myread("calendar", "service_id")
+  myread("frequencies", "trip_id")
 
   if(is.null(result$shapes)     || dim(result$shapes)[1] == 0)     stop("shapes.txt is empty in the GTFS file")
   if(is.null(result$trips)      || dim(result$trips)[1] == 0)      stop("trips.txt is empty in the GTFS file")
@@ -52,11 +57,6 @@ read_gtfs <- function(gtfszip){
     result$frequencies[, start_time := data.table::as.ITime(mysub(start_time), format = "%H:%M:%OS")]
     result$frequencies[, end_time := data.table::as.ITime(mysub(end_time), format = "%H:%M:%OS")]
   }
-
-  result$stops$stop_id      <- as.character(result$stops$stop_id)
-  result$stop_times$stop_id <- as.character(result$stop_times$stop_id)
-  result$trips$route_id     <- as.character(result$trips$route_id)
-  result$routes$route_id    <- as.character(result$routes$route_id)
 
   return(result)
 }

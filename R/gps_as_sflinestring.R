@@ -21,7 +21,7 @@
 #' poa_gps_sf <- gps_as_sflinestring(poa_gps)
 gps_as_sflinestring  <- function(gps, crs = 4326){
   if(is.character(gps)){
-    dt <- data.table::fread(gps)
+    dt <- data.table::fread(gps, colClasses = list(character = c("id", "shape_id", "trip_id", "stop_id")))
   } else {
     dt <- gps
   }
