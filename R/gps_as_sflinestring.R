@@ -72,6 +72,7 @@ gps_as_sflinestring  <- function(gps, crs = 4326){
   
   dt2 <- dt2[grp %in% moreThanOne, ]
   dt2[, dist := max(cumdist) - min(cumdist), by = grp]
+  dt2[, departure_time := data.table::as.ITime(departure_time)]
   
   ## convert to linestring
   gps_sf <- sfheaders::sf_linestring(obj = dt2, 
@@ -81,8 +82,10 @@ gps_as_sflinestring  <- function(gps, crs = 4326){
                                               keep = TRUE) %>% sf::st_set_crs(crs)
 
   # edit columns
-  gps_sf$departure_time <- data.table::as.ITime(gps_sf$departure_time)
   gps_sf$grp <- NULL
-
+  gps_sf$grp.1 <- NULL
+  gps_sf$cumdist <- NULL
+  gps_sf$cumtime <- NULL
+  
   return(gps_sf)
 }
