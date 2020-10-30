@@ -230,7 +230,7 @@ gtfs2gps <- function(gtfs_data,
     }
 
     # number of cores
-    cores <- future::availableCores() - 1
+    cores <- max(1, future::availableCores() - 1)
     message(paste('Using', cores, 'CPU cores'))
     
     future::plan(strategy, workers = cores)
