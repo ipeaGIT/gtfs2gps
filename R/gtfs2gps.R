@@ -233,7 +233,8 @@ gtfs2gps <- function(gtfs_data,
     cores <- max(1, future::availableCores() - 1)
     message(paste('Using', cores, 'CPU cores'))
     
-    future::plan(strategy, workers = cores)
+    oplan <- future::plan(strategy, workers = cores)
+    on.exit(future::plan(oplan), add = TRUE)
     
     message("Processing the data")
     output <- furrr::future_map(.x = all_shapeids, .f = tryCorefun, 
