@@ -24,7 +24,7 @@ read_gtfs <- function(gtfszip){
   myread <- function(file, ids, compulsory = FALSE){
     filename <- paste0(file, ".txt")
     message(paste0("Reading '", filename, "'"))
-    if(filename %chin% unzippedfiles){
+    if(filename %in% unzippedfiles){
       result[[file]] <<- suppressWarnings(data.table::fread(paste0(tempd, "/", filename), encoding = "UTF-8", colClasses = list(character = ids)))
     }
     else if(compulsory)

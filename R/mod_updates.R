@@ -138,7 +138,6 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
   # update indexes in 'newstoptimes'
   #temp_newdeparture <- new_stoptimes$departure_time[1L]+stats::lag(new_stoptimes$cumtime,1,0)
   new_stoptimes[, departure_time := round(departure_time[1L] + stats::lag(cumtime, 1, 0))]
-  
 
   if(is.null(new_stoptimes)){
     warning(paste0("Could not create stop times for trip '", tripid, "'. Ignoring it."),  call. = FALSE) # nocov

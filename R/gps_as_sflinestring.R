@@ -42,7 +42,7 @@ gps_as_sflinestring  <- function(gps, crs = 4326){
   # Here we create a data.table indicating what are all the point ids in each interval
   list_ids <- data.table::data.table(
     interval = rep(seq_along(id0), id1 - id0 + 1),
-    id = unlist(sapply(1:length(id0), function(i) id0[i]:id1[i]))
+    id = unlist(sapply(seq_along(id0), function(i) id0[i]:id1[i]))
   )
 
   # add interval code to GPS

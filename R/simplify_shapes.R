@@ -25,7 +25,7 @@ simplify_shapes <- function(gtfs_data, tol = 0){
   
   dt <- data.table::data.table()
   
-  for(i in 1:length(IDs)){
+  for(i in seq_along(IDs)){
     coords <- gtfs_st_simpl@lines[[i]]@Lines[[1]]@coords
     
     df <- data.table::data.table(
