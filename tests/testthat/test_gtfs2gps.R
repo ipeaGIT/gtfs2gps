@@ -18,7 +18,7 @@ test_that("gtfs2gps", {
     poa_gps <- poa_gps[speed > units::set_units(0, "km/h") & cumtime > units::set_units(0, "s") & !is.na(speed) & !is.infinite(speed),]
 
     my_dim <- dim(poa_gps)[1]
-    expect_equal(my_dim, 80304)
+    expect_equal(my_dim, 81037)
     
     my_length <- length(poa_gps$dist[which(!poa_gps$dist < units::set_units(50, "m"))])
     expect_equal(my_length, 0)

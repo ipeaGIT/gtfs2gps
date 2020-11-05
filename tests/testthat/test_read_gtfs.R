@@ -44,14 +44,14 @@ test_that("read_gtfs", {
 
     empty_files <- c("stops.txt", "stop_times.txt", "shapes.txt", "trips.txt")
 
-    for(i in 1:length(empty_files)){
+    for(i in empty_files){
       unzip("poa.zip")
       if(file.exists("myfile.zip")) file.remove("myfile.zip")
-      file.remove(empty_files[i])
-      file.create(empty_files[i])
+      file.remove(i)
+      file.create(i)
       zip("myfile.zip", files, flags = "-q")
 
-      expect_error(read_gtfs("myfile.zip"), paste(empty_files[i], "is empty in the GTFS file"))
+      expect_error(read_gtfs("myfile.zip"), paste(i, "is empty in the GTFS file"))
     }
     
     file.remove("myfile.zip")

@@ -29,28 +29,28 @@ merge_gtfs_feeds <- function(gtfs_list){
   ## piling up
   
   # 1/8 agency
-  new_gtfs$agency <- lapply(X=1:length(all_feeds), FUN = extract_list_element, 'agency') %>% rbindlist(fill=T)
+  new_gtfs$agency <- lapply(X=seq_along(all_feeds), FUN = extract_list_element, 'agency') %>% rbindlist(fill=T)
   
   # 2/8 routes
-  new_gtfs$routes <- lapply(X=1:length(all_feeds), FUN = extract_list_element, 'routes') %>% rbindlist(fill=T)
+  new_gtfs$routes <- lapply(X=seq_along(all_feeds), FUN = extract_list_element, 'routes') %>% rbindlist(fill=T)
   
   # 3/8 stops
-  new_gtfs$stops <- lapply(X=1:length(all_feeds), FUN = extract_list_element, 'stops') %>% rbindlist(fill=T)
+  new_gtfs$stops <- lapply(X=seq_along(all_feeds), FUN = extract_list_element, 'stops') %>% rbindlist(fill=T)
   
   # 4/8 stop_times
-  new_gtfs$stop_times <- lapply(X=1:length(all_feeds), FUN = extract_list_element, 'stop_times') %>% rbindlist(fill=T)
+  new_gtfs$stop_times <- lapply(X=seq_along(all_feeds), FUN = extract_list_element, 'stop_times') %>% rbindlist(fill=T)
   
   # 5/8 shapes
-  new_gtfs$shapes <- lapply(X=1:length(all_feeds), FUN = extract_list_element, 'shapes') %>% rbindlist(fill=T)
+  new_gtfs$shapes <- lapply(X=seq_along(all_feeds), FUN = extract_list_element, 'shapes') %>% rbindlist(fill=T)
   
   # 6/8 trips
-  new_gtfs$trips <- lapply(X=1:length(all_feeds), FUN = extract_list_element, 'trips') %>% rbindlist(fill=T)
+  new_gtfs$trips <- lapply(X=seq_along(all_feeds), FUN = extract_list_element, 'trips') %>% rbindlist(fill=T)
   
   # 7/8 calendar
-  new_gtfs$calendar <- lapply(X=1:length(all_feeds), FUN = extract_list_element, 'calendar') %>% rbindlist(fill=T)
+  new_gtfs$calendar <- lapply(X=seq_along(all_feeds), FUN = extract_list_element, 'calendar') %>% rbindlist(fill=T)
   
   # 8/8 frequencies
-  new_gtfs$frequencies <- lapply(X=1:length(all_feeds), FUN = extract_list_element, 'frequencies') %>% rbindlist(fill=T)
+  new_gtfs$frequencies <- lapply(X=seq_along(all_feeds), FUN = extract_list_element, 'frequencies') %>% rbindlist(fill=T)
   
   return(new_gtfs)
 }

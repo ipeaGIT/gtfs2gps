@@ -23,11 +23,7 @@ filter_day_period <- function(gtfs, period_start = "00:00:01", period_end = "23:
   
   # Update frequencies
   if(test_gtfs_freq(gtfs) == "frequency"){
-    if((data.table::as.ITime(period_end) - data.table::as.ITime(period_start)) < data.table::as.ITime("01:00")){
-      stop("Using a frequency-based GTFS. Please input time period of one hour or longer")
-    } else {
       gtfs$frequencies <- gtfs$frequencies[ data.table::as.ITime(start_time) >= data.table::as.ITime(period_start) & data.table::as.ITime(end_time) <= data.table::as.ITime(period_end) ] 
-    }
   }
 
   # Remaining unique stops and trips
@@ -49,7 +45,7 @@ filter_day_period <- function(gtfs, period_start = "00:00:01", period_end = "23:
   gtfs$calendar <- gtfs$calendar[ service_id %chin% unique_services ]
   
   # 4) filter AGENCY
-  if(!is.null(gtfs$agency))
+  if(!is.null(gtfs$agency) && !is.null(unique(gtfs$routes$agency_id)))
     gtfs$agency <- gtfs$agency[ agency_id %chin% unique(gtfs$routes$agency_id) ]
 
   # return fun output

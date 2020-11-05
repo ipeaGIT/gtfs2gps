@@ -32,8 +32,6 @@
 #'   filter_single_trip()
 #' 
 #' poa_gps <- gtfs2gps(subset)
-#' 
-
 gtfs2gps <- function(gtfs_data,
                      spatial_resolution = 50,
                      parallel = FALSE,
@@ -86,7 +84,7 @@ gtfs2gps <- function(gtfs_data,
     all_tripids <- gtfs_data$trips[shape_id == shapeid & route_id == routeid, ]$trip_id %>% unique()
 
     # nstop = number of valid stops in each trip_id
-    nstop <- gtfs_data$stop_times[trip_id %chin% all_tripids, .N, by ="trip_id"]$N
+    nstop <- gtfs_data$stop_times[trip_id %chin% all_tripids, .N, by = "trip_id"]$N
 
     # Get the stops sequence with lat long linked to that route
     # each shape_id only has one stop sequence
@@ -230,10 +228,11 @@ gtfs2gps <- function(gtfs_data,
     }
 
     # number of cores
-    cores <- future::availableCores() - 1
+    cores <- max(1, future::availableCores() - 1)
     message(paste('Using', cores, 'CPU cores'))
     
-    future::plan(strategy, workers = cores)
+    oplan <- future::plan(strategy, workers = cores)
+    on.exit(future::plan(oplan), add = TRUE)
     
     message("Processing the data")
     output <- furrr::future_map(.x = all_shapeids, .f = tryCorefun, 
