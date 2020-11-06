@@ -137,7 +137,7 @@ gtfs2gps <- function(gtfs_data,
 
     # get shape points in high resolution
     new_stoptimes <- data.table::data.table(shape_id = new_shape$shape_id[1],
-                                            id = 1:nrow(new_shape),
+                                            id = seq_len(nrow(new_shape)),
                                             shape_pt_lon = sf::st_coordinates(new_shape)[,1],
                                             shape_pt_lat = sf::st_coordinates(new_shape)[,2])
     
