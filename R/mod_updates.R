@@ -111,7 +111,11 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
   update_speeds <- function(i){
     a <- lim0[i]
     b <- lim0[i + 1]
-    new_stoptimes[a:b, speed := 3.6 * (data.table::last(cumdist) - data.table::first(cumdist)) / (data.table::last(departure_time) - data.table::first(departure_time)) ]
+    diff_departure <- new_stoptimes$departure_time[b] - new_stoptimes$departure_time[a]
+    
+    if(diff_departure < 0) diff_departure <- diff_departure + 86400 # one day in seconds
+        
+    new_stoptimes[a:b, speed := 3.6 * (data.table::last(cumdist) - data.table::first(cumdist)) / diff_departure]
   }
   
   # apply function for speed estimation
