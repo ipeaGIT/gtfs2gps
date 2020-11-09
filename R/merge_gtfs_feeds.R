@@ -20,7 +20,7 @@ merge_gtfs_feeds <- function(gtfs_list){
     values <- function(i, mfile, id)
       all_feeds[[i]][[mfile]][[id]]
     
-    ids <- as.vector(unlist(sapply(files, function(mfile) values(i, mfile, id))))
+    ids <- as.vector(unlist(lapply(files, function(mfile) values(i, mfile, id))))
     new_ids <- paste0(i, "_", seq_along(ids))
     
     for(mfile in files){  

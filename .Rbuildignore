@@ -6,6 +6,7 @@ tests_joao
 tests_rafa
 .travis.yml
 README.md
+.Rprofile
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
