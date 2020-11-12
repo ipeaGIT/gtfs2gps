@@ -73,5 +73,7 @@ merge_gtfs_feeds <- function(gtfs_list){
   # 8/8 frequencies
   new_gtfs$frequencies <- lapply(X = seq_along(all_feeds), FUN = extract_list_element, 'frequencies') %>% data.table::rbindlist(fill =TRUE)
 
+  if(dim(new_gtfs$frequencies)[1] == 0) new_gtfs$frequencies <- NULL
+
   return(new_gtfs)
 }

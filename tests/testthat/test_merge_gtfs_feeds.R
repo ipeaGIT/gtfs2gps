@@ -22,7 +22,7 @@ test_that("merge_gtfs_feeds", {
   
   poa2 <- read_gtfs(poa)
   
-  for(i in names(new_gtfs)[-8]){ # all except frequencies
+  for(i in names(result)){
       expect(dim(poa2[[i]])[1] * 2 == dim(result[[i]])[1], paste("Problem in ", i))
   }
 })
