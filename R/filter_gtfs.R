@@ -221,7 +221,8 @@ filter_valid_stop_times <- function(gtfs_data){
 #' @title Filter GTFS trips operating on week days
 #' 
 #' @description Filter a GTFS data read using gtfs2gps::read_gtfs(). It removes the
-#' trips operating only saturday or sunday.
+#' trips operating only on Saturdays or Sundays. Note that it might produce
+#' inconsistent outputs that can be removed by using gtfs2gps::remove_invalid().
 #' @param gtfs_data A list of data.tables read using gtfs2gps::reag_gtfs().
 #' @return A filtered GTFS data. 
 #' @export
