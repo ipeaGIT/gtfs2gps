@@ -1,7 +1,7 @@
 #' @title Merge multiple GTFS feeds into a single one
 #' 
 #' @description Build a single GTFS by joinning together the elements of multiple GTFS feeds.
-#' @param gtfs_list A list of GTFS.zip files.
+#' @param gtfs_list A list or a vector of GTFS.zip file names.
 #' @return A single list of data.tables, where each index represents the respective GTFS file name.
 #' @export
 #' @examples
@@ -13,6 +13,9 @@
 #' 
 #' new_gtfs <- merge_gtfs_feeds(gtfs_list)
 merge_gtfs_feeds <- function(gtfs_list){
+  if(is.character(gtfs_list))
+     gtfs_list <- as.list(gtfs_list)
+  
   # read all fees separately
   all_feeds <- lapply(gtfs_list, read_gtfs)
   
