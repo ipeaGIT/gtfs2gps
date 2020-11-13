@@ -55,6 +55,16 @@ test_that("filter_week_days", {
   expect_error(filter_week_days(poa), "GTFS data does not have calendar")
 })
 
+test_that("filter_by_day", {
+  poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+  
+  subset <- filter_week_days(poa)
+  
+  subset2 <- filter_by_day(poa, c("monday", "tuesday", "wednesday", "thursday", "friday"))
+  
+  expect(identical(subset, subset2), "not identical")
+})
+
 test_that("filter_single_trip", {
   poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
   
