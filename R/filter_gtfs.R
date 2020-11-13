@@ -218,10 +218,39 @@ filter_valid_stop_times <- function(gtfs_data){
   return(gtfs_data)
 }
 
+#' @title Filter GTFS trips operating on given days
+#' 
+#' @description Filter a GTFS data read using gtfs2gps::read_gtfs(). It removes the
+#' trips operating in non-selected days. Note that it might produce
+#' inconsistent outputs that can be removed by using gtfs2gps::remove_invalid().
+#' @param gtfs_data A list of data.tables read using gtfs2gps::reag_gtfs().
+#' @param days A vector of selected week days written in the same way of column names
+#' in calendar file of GTFS (sunday, monday, etc.).
+#' @return A filtered GTFS data with the trips only from the selected days. 
+#' @export
+#' @examples
+#' poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
+#' 
+#' subset <- filter_by_day(poa, c("wednesday", "friday"))
+filter_by_day <- function(gtfs_data, days){
+  if(is.null(gtfs_data$calendar)) stop("GTFS data does not have calendar")
+  
+  code <- parse(text = paste(days, "> 0", collapse = " | "))
+  
+  calendar_temp <- subset(gtfs_data$calendar, eval(code))
+  serviceids <- calendar_temp$service_id
+  gtfs_data$trips <- subset(gtfs_data$trips, service_id %in% serviceids)
+  
+  gtfs_data$calendar[, (days) := 0]
+  
+  return(gtfs_data)
+}
+
 #' @title Filter GTFS trips operating on week days
 #' 
 #' @description Filter a GTFS data read using gtfs2gps::read_gtfs(). It removes the
-#' trips operating only saturday or sunday.
+#' trips operating only on Saturdays or Sundays. Note that it might produce
+#' inconsistent outputs that can be removed by using gtfs2gps::remove_invalid().
 #' @param gtfs_data A list of data.tables read using gtfs2gps::reag_gtfs().
 #' @return A filtered GTFS data. 
 #' @export

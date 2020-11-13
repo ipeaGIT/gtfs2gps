@@ -5,6 +5,7 @@ test_that("merge_gtfs_feeds", {
   gtfs_list <- list(spo, poa)
   
   new_gtfs <- merge_gtfs_feeds(gtfs_list)
+  gtfs_vector <- c(spo, poa)
   
   spo <- read_gtfs(spo)
   poa <- read_gtfs(poa)
@@ -15,6 +16,16 @@ test_that("merge_gtfs_feeds", {
 
   expect_equal(dim(new_gtfs$frequencies)[1], dim(spo$frequencies)[1])
 
+
+  new_gtfs_v <- merge_gtfs_feeds(gtfs_vector)
+
+  for(i in names(new_gtfs_v)){
+    expect_equal(dim(new_gtfs[[i]])[1], dim(new_gtfs_v[[i]])[1])
+  }
+  
+  expect_equal(dim(new_gtfs$frequencies)[1], dim(spo$frequencies)[1])
+  
+  
   poa <- system.file("extdata/poa.zip", package = "gtfs2gps")
   gtfs_list <- list(poa, poa)
   
@@ -22,7 +33,7 @@ test_that("merge_gtfs_feeds", {
   
   poa2 <- read_gtfs(poa)
   
-  for(i in names(new_gtfs)[-8]){ # all except frequencies
+  for(i in names(result)){
       expect(dim(poa2[[i]])[1] * 2 == dim(result[[i]])[1], paste("Problem in ", i))
   }
 })
