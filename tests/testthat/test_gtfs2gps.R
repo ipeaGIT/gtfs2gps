@@ -74,7 +74,7 @@ test_that("gtfs2gps", {
       filter_by_shape_id(52000:52200) %>%
       filter_week_days() %>%
       filter_single_trip() %>%
-      gtfs2gps(plan = TRUE, spatial_resolution = 15)
+      gtfs2gps(parallel = TRUE, spatial_resolution = 15)
 
     expect_true(all(names(sp_gps) %in% 
       c("trip_id", "route_type", "id", "shape_pt_lon", "shape_pt_lat", "trip_number",
@@ -97,6 +97,6 @@ test_that("gtfs2gps", {
       filter_single_trip()
     
     gtfs$stop_times <- gtfs$stop_times[-(300:390), ]
-    expect_warning(result <- gtfs2gps(gtfs, plan = TRUE, spatial_resolution = 15),
+    expect_warning(result <- gtfs2gps(gtfs, parallel = TRUE, spatial_resolution = 15),
                    "Shape '52200' has zero stops. Ignoring it.")
 })

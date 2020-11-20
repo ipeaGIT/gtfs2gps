@@ -10,9 +10,7 @@
 #' @param gtfs_data A path to a GTFS file to be converted to GPS, or a GTFS data
 #' represented as a list of data.tables.
 #' @param spatial_resolution The spatial resolution in meters. Default is 50m.
-#' @param parallel This argument is deprecated. Please use argument plan instead or
-#' use future::plan() directly.
-#' @param plan Decides whether the function should run in parallel. Defaults is FALSE.
+#' @param parallel Decides whether the function should run in parallel. Defaults is FALSE.
 #' When TRUE, it will use all cores available minus one using future::plan() with
 #' strategy "multiprocess" internally.
 #' Note that it is possible to create your own plan before calling gtfs2gps().
@@ -39,17 +37,13 @@
 #' poa_gps <- gtfs2gps(subset)
 gtfs2gps <- function(gtfs_data,
                      spatial_resolution = 50,
-                     parallel = NULL,
+                     parallel = FALSE,
                      strategy = NULL,
                      filepath = NULL,
-                     continue = FALSE,
-                     plan = FALSE){
+                     continue = FALSE){
 
-  if(!is.null(parallel))
-    warning("Argument 'parallel' is deprecated and will be removed in a future version. Please use 'plan' instead.") # nocov
-  
-  if(!is.null(parallel))
-    warning("Argument 'strategy' is deprecated and will be removed in a future version. Please use 'plan' instead.") # nocov
+  if(!is.null(strategy))
+    warning("Argument 'strategy' is deprecated and will be removed in a future version.") # nocov
 
   ###### PART 1. Load and prepare data inputs ------------------------------------
   if(continue & is.null(filepath))
@@ -205,7 +199,7 @@ gtfs2gps <- function(gtfs_data,
 
   ###### PART 3. Apply Core function in parallel to all shape ids------------------------------------
 
-  if(plan)
+  if(parallel)
   {
     # number of cores
     cores <- max(1, future::availableCores() - 1)

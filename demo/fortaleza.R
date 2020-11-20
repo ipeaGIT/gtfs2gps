@@ -14,7 +14,7 @@ for_small_sf <- gtfs_shapes_as_sf(fortaleza)
 
 srtmfile <- system.file("extdata/fortaleza-srtm.tif", package = "gtfs2gps")
 
-for_gps <- gtfs2gps(fortaleza, plan = TRUE) %>% append_height(srtmfile)
+for_gps <- gtfs2gps(fortaleza, parallel = TRUE) %>% append_height(srtmfile)
 
 for_gps_sf <- gps_as_sf(for_gps)
 

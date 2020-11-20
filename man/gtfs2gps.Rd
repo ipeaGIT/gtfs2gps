@@ -7,11 +7,10 @@
 gtfs2gps(
   gtfs_data,
   spatial_resolution = 50,
-  parallel = NULL,
+  parallel = FALSE,
   strategy = NULL,
   filepath = NULL,
-  continue = FALSE,
-  plan = FALSE
+  continue = FALSE
 )
 }
 \arguments{
@@ -20,8 +19,11 @@ represented as a list of data.tables.}
 
 \item{spatial_resolution}{The spatial resolution in meters. Default is 50m.}
 
-\item{parallel}{This argument is deprecated. Please use argument plan instead or
-use future::plan() directly.}
+\item{parallel}{Decides whether the function should run in parallel. Defaults is FALSE.
+When TRUE, it will use all cores available minus one using future::plan() with
+strategy "multiprocess" internally.
+Note that it is possible to create your own plan before calling gtfs2gps().
+In this case, do not use this argument.}
 
 \item{strategy}{This argument is deprecated. Please use argument plan instead or
 use future::plan() directly.}
@@ -34,12 +36,6 @@ with the name equals to its id. In this case, no output is returned.}
 skips processing the shape identifiers that were already saved into files.
 It is useful to continue processing a GTFS file that was stopped for some
 reason. Default value is FALSE.}
-
-\item{plan}{Decides whether the function should run in parallel. Defaults is FALSE.
-When TRUE, it will use all cores available minus one using future::plan() with
-strategy "multiprocess" internally.
-Note that it is possible to create your own plan before calling gtfs2gps().
-In this case, do not use this argument.}
 }
 \value{
 A data.table, where each row represents a GPS point. The following columns are
