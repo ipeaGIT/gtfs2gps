@@ -205,12 +205,7 @@ gtfs2gps <- function(gtfs_data,
 
   ###### PART 3. Apply Core function in parallel to all shape ids------------------------------------
 
-  badShapes <- c()
-
-  # all shape ids
-  all_shapeids <- unique(shapes_sf$shape_id)
-
-  if(plan == TRUE)
+  if(plan)
   {
     # number of cores
     cores <- max(1, future::availableCores() - 1)
@@ -220,6 +215,8 @@ gtfs2gps <- function(gtfs_data,
     on.exit(future::plan(oplan), add = TRUE)
   }
 
+  badShapes <- c()
+  all_shapeids <- unique(shapes_sf$shape_id)
   p <- progressr::progressor(steps = length(all_shapeids))
   
   tryCorefun <- function(shapeid){
