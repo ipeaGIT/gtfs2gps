@@ -8,7 +8,7 @@ gtfs2gps(
   gtfs_data,
   spatial_resolution = 50,
   parallel = FALSE,
-  strategy = "multiprocess",
+  strategy = NULL,
   filepath = NULL,
   continue = FALSE
 )
@@ -19,12 +19,14 @@ represented as a list of data.tables.}
 
 \item{spatial_resolution}{The spatial resolution in meters. Default is 50m.}
 
-\item{parallel}{Decides whether the function should run in parallel. Defaults to FALSE.
-When TRUE, it will use all cores available minus one.}
+\item{parallel}{Decides whether the function should run in parallel. Defaults is FALSE.
+When TRUE, it will use all cores available minus one using future::plan() with
+strategy "multiprocess" internally.
+Note that it is possible to create your own plan before calling gtfs2gps().
+In this case, do not use this argument.}
 
-\item{strategy}{Name of evaluation function to use in future parallel processing. Defaults to 
-"multiprocess", i.e. if multicore evaluation is supported, that will be used, otherwise
- multisession evaluation will be used. Fore details, check ?future::plan().}
+\item{strategy}{This argument is deprecated. Please use argument plan instead or
+use future::plan() directly.}
 
 \item{filepath}{Output file path. As default, the output is returned in R.
 When this argument is set, each route is saved into a file within filepath,
@@ -44,12 +46,13 @@ shape_pt_lon and shape_pt_lat (degrees), speed (km/h), departure_time (hh:mm:ss)
 Convert GTFS data to GPS format by sampling points using a
 spatial resolution. This function creates additional points in order to
 guarantee that two points in a same trip will have at most a given
-distance, indicated as a spatial resolution. This function uses progressr
-internally to show progress bars.
+distance, indicated as a spatial resolution. It is possible to use future package
+to parallelize the execution (or use argument plan). This function also
+uses progressr internally to show progress bars.
 }
 \examples{
 library(dplyr)
-poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
 subset <- filter_by_shape_id(poa, "T2-1") \%>\%
   filter_single_trip()
 

@@ -3,17 +3,20 @@
 #' @description Convert GTFS data to GPS format by sampling points using a
 #' spatial resolution. This function creates additional points in order to
 #' guarantee that two points in a same trip will have at most a given
-#' distance, indicated as a spatial resolution. This function uses progressr
-#' internally to show progress bars.
+#' distance, indicated as a spatial resolution. It is possible to use future package
+#' to parallelize the execution (or use argument plan). This function also
+#' uses progressr internally to show progress bars.
 #' 
 #' @param gtfs_data A path to a GTFS file to be converted to GPS, or a GTFS data
 #' represented as a list of data.tables.
 #' @param spatial_resolution The spatial resolution in meters. Default is 50m.
-#' @param parallel Decides whether the function should run in parallel. Defaults to FALSE.
-#' When TRUE, it will use all cores available minus one.
-#' @param strategy Name of evaluation function to use in future parallel processing. Defaults to 
-#' "multiprocess", i.e. if multicore evaluation is supported, that will be used, otherwise
-#'  multisession evaluation will be used. Fore details, check ?future::plan().
+#' @param parallel Decides whether the function should run in parallel. Defaults is FALSE.
+#' When TRUE, it will use all cores available minus one using future::plan() with
+#' strategy "multiprocess" internally.
+#' Note that it is possible to create your own plan before calling gtfs2gps().
+#' In this case, do not use this argument.
+#' @param strategy This argument is deprecated. Please use argument plan instead or
+#' use future::plan() directly.
 #' @param filepath Output file path. As default, the output is returned in R.
 #' When this argument is set, each route is saved into a file within filepath,
 #' with the name equals to its id. In this case, no output is returned.
@@ -27,7 +30,7 @@
 #' @export
 #' @examples
 #' library(dplyr)
-#' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+#' poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
 #' subset <- filter_by_shape_id(poa, "T2-1") %>%
 #'   filter_single_trip()
 #' 
@@ -35,9 +38,12 @@
 gtfs2gps <- function(gtfs_data,
                      spatial_resolution = 50,
                      parallel = FALSE,
-                     strategy = 'multiprocess',
+                     strategy = NULL,
                      filepath = NULL,
                      continue = FALSE){
+
+  if(!is.null(strategy))
+    warning("Argument 'strategy' is deprecated and will be removed in a future version.") # nocov
 
   ###### PART 1. Load and prepare data inputs ------------------------------------
   if(continue & is.null(filepath))
@@ -193,54 +199,37 @@ gtfs2gps <- function(gtfs_data,
 
   ###### PART 3. Apply Core function in parallel to all shape ids------------------------------------
 
-  badShapes <- c()
-
-  # all shape ids
-  all_shapeids <- unique(shapes_sf$shape_id)
-
-  if(parallel == FALSE){
-    tryCorefun <- function(shapeid){
-      result <- NULL
-      tryCatch({result <- corefun(shapeid)}, error = function(msg) {
-        badShapes <<- c(badShapes, shapeid) # nocov
-      })
-      
-      return(result)
-    }
-
-    message(paste('Using 1 CPU core'))
-
-    message("Processing the data")
-    output <- pbapply::pblapply(X = all_shapeids, FUN = tryCorefun) %>% data.table::rbindlist()
-  }
-  else
+  if(parallel)
   {
-    p <- progressr::progressor(steps = length(all_shapeids))
-
-    tryCorefun <- function(shapeid){
-      p()
-      result <- NULL
-      tryCatch({result <- corefun(shapeid)}, error = function(msg) {
-        badShapes <<- c(badShapes, shapeid) # nocov
-      })
-      
-      return(result)
-    }
-
     # number of cores
     cores <- max(1, future::availableCores() - 1)
     message(paste('Using', cores, 'CPU cores'))
     
-    oplan <- future::plan(strategy, workers = cores)
+    oplan <- future::plan("multiprocess", workers = cores)
     on.exit(future::plan(oplan), add = TRUE)
-    
-    message("Processing the data")
-    output <- furrr::future_map(.x = all_shapeids, .f = tryCorefun, 
-      .options = furrr::future_options(
-        packages = c('data.table', 'sf', 'magrittr', 'Rcpp', 'sfheaders', 'units'))) %>% 
-      data.table::rbindlist()
   }
 
+  badShapes <- c()
+  all_shapeids <- unique(shapes_sf$shape_id)
+  p <- progressr::progressor(steps = length(all_shapeids))
+  
+  tryCorefun <- function(shapeid){
+    p()
+    result <- NULL
+    tryCatch({result <- corefun(shapeid)}, error = function(msg) {
+      badShapes <<- c(badShapes, shapeid) # nocov
+    })
+    
+    return(result)
+  }
+  
+  message("Processing the data")
+  requiredPackages = c('data.table', 'sf', 'magrittr', 'Rcpp', 'sfheaders', 'units')
+  output <- furrr::future_map(.x = all_shapeids, .f = tryCorefun, 
+                              .options = furrr::future_options(
+                              packages = requiredPackages)) %>% 
+    data.table::rbindlist()
+  
   if(length(badShapes) > 0){
     if(original_gtfs_data_arg == ".") original_gtfs_data_arg <- "<your gtfs data>" # nocov
     
