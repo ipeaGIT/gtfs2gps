@@ -93,8 +93,8 @@ remove_invalid <- function(gtfs_data, only_essential = TRUE, prompt_invalid = FA
       service_ids <- intersect(gtfs_data$trips$service_id, gtfs_data$calendar$service_id)
       removed$service_ids <- c(removed$service_ids, setdiff(gtfs_data$trips$service_id, gtfs_data$calendar$service_id))
 
-      gtfs_data$trips          <- subset(gtfs_data$trips,          service_id %chin% service_ids)
-      gtfs_data$calendar       <- subset(gtfs_data$calendar,       service_id %chin% service_ids)
+      gtfs_data$trips    <- subset(gtfs_data$trips,    service_id %chin% service_ids)
+      gtfs_data$calendar <- subset(gtfs_data$calendar, service_id %chin% service_ids)
     }
 
     # trips-calendar_dates relation (service_id)
