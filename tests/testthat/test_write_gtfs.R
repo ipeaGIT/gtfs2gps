@@ -39,8 +39,8 @@ test_that("write_gtfs", {
     expect_equal(length(sp$trips), 6)
     expect_equal(length(sp$calendar), 10)
     
-    expect_equal(dim(sp$shapes)[1], 94386)
-    expect_equal(dim(sp$trips)[1], 233)
+    expect_equal(dim(sp$shapes)[1], 35886)
+    expect_equal(dim(sp$trips)[1], 92)
     
     invisible(file.remove("sp2.zip"))
 })

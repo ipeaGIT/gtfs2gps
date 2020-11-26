@@ -8,7 +8,7 @@ gtfs <- read_gtfs(local_gtfs_path)
 
 #unique(gtfs$shapes$shape_id)
 
-shape_ids <- 50000:55000
+shape_ids <- 50000:53000
 
 new_gtfs <- filter_by_shape_id(gtfs, shape_ids)
 

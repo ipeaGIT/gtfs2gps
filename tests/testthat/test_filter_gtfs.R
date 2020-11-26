@@ -100,8 +100,8 @@ test_that("filter_by_agency_id", {
   sp <- read_gtfs(system.file("extdata/saopaulo.zip", package="gtfs2gps"))
 
   result <- filter_by_agency_id(sp, 1)
-  expect_equal(dim(result$trips)[1], 233)
-  expect_equal(dim(result$shapes)[1], 94386)
+  expect_equal(dim(result$trips)[1], 92)
+  expect_equal(dim(result$shapes)[1], 35886)
 
   sp$routes <- NULL
   expect_error(filter_by_agency_id(sp, "abc"), "GTFS data does not have routes")
@@ -113,13 +113,13 @@ test_that("filter_by_agency_id", {
 test_that("remove_invalid", {
   sp <- read_gtfs(system.file("extdata/saopaulo.zip", package="gtfs2gps"))
 
-  sp$shapes <- sp$shapes[-(1:80000),]
+  sp$shapes <- sp$shapes[-(1:30000),]
   sp$agency$agency_id <- 'test'
   
   sp2 <- remove_invalid(sp, prompt_invalid = TRUE)
   
-  expect_equal(length(sp$stops$stop_id), 6117)
-  expect_equal(length(sp2$stops$stop_id), 1340)
+  expect_equal(length(sp$stops$stop_id), 3039)
+  expect_equal(length(sp2$stops$stop_id), 602)
   
   sp3 <- remove_invalid(sp, only_essential = FALSE)
   
