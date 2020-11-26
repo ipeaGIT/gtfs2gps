@@ -23,8 +23,8 @@ read_gtfs <- function(gtfszip){
 
   myread <- function(file, ids, compulsory = FALSE){
     filename <- paste0(file, ".txt")
-    message(paste0("Reading '", filename, "'"))
     if(filename %in% unzippedfiles){
+      message(paste0("Reading '", filename, "'"))
       result[[file]] <<- suppressWarnings(data.table::fread(paste0(tempd, "/", filename), encoding = "UTF-8", colClasses = list(character = ids)))
     }
     else if(compulsory)
@@ -39,6 +39,7 @@ read_gtfs <- function(gtfszip){
   myread("shapes", "shape_id", TRUE)
   myread("trips", c("route_id", "trip_id", "shape_id", "service_id"), TRUE)
   myread("calendar", "service_id")
+  myread("calendar_dates", "service_id")
   myread("frequencies", "trip_id")
 
   if(is.null(result$shapes)     || dim(result$shapes)[1] == 0)     stop("shapes.txt is empty in the GTFS file")

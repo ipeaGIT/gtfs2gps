@@ -40,7 +40,7 @@ merge_gtfs_feeds <- function(gtfs_list){
     create_new_ids(i, "route_id",   c("routes", "trips"))
     create_new_ids(i, "trip_id",    c("trips", "stop_times"))
     create_new_ids(i, "stop_id",    c("stop_times", "stops"))
-    create_new_ids(i, "service_id", c("trips", "calendar"))
+    create_new_ids(i, "service_id", c("trips", "calendar", "calendar_dates"))
     create_new_ids(i, "trip_id",    c("trips", "frequencies", "stop_times"))
   }
 
