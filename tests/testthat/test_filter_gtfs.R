@@ -66,10 +66,18 @@ test_that("filter_by_day", {
   
   berlin <- read_gtfs(system.file("extdata/berlin.zip", package="gtfs2gps"))
   
-  subset2 <- filter_by_day(berlin, c("monday", "tuesday", "wednesday", "thursday", "friday"))
+  wdays <- c("monday", "tuesday", "wednesday", "thursday", "friday")
+  subset2 <- filter_by_day(berlin, wdays)
   
   expect_equal(length(subset2$calendar_dates), 3)
   expect_equal(dim(subset2$calendar_dates)[1], 28843)
+  
+  mdate <- as.Date(paste(subset2$calendar_dates$date), format = "%Y%m%d")
+  
+  w_days <- c("sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday")
+  mdate <- unique(w_days[as.POSIXlt(mdate)$wday + 1])
+  
+  expect(all(mdate %in% wdays), "did nor temove the correct days")
 
   subset3 <- filter_by_day(subset2, c("monday", "tuesday", "wednesday", "thursday", "friday"))
 
