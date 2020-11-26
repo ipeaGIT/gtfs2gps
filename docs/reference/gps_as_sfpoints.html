@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gtfs2gps</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3-1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4-0</span>
       </span>
     </div>
 
@@ -92,6 +92,9 @@
       <a href="../articles/intro_to_gtfs2gps.html">gtfs2gps: Converting GTFS data to GPS-like format</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -123,7 +126,7 @@
     <p>Convert a GPS data stored in a data.table into Simple Feature points.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>gps_as_sfpoints</span>(<span class='kw'>gps</span>, crs = <span class='fl'>4326</span>)</pre>
+    <pre class="usage"><span class='fu'>gps_as_sfpoints</span><span class='op'>(</span><span class='va'>gps</span>, crs <span class='op'>=</span> <span class='fl'>4326</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -143,22 +146,22 @@
     <p>A simple feature (sf) object with point data.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://github.com/ipeaGIT/gtfs2gps'>gtfs2gps</a></span>)
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://dplyr.tidyverse.org'>dplyr</a></span>)
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/ipeaGIT/gtfs2gps'>gtfs2gps</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
 
-<span class='kw'>fortaleza</span> <span class='op'>&lt;-</span> <span class='fu'><a href='read_gtfs.html'>read_gtfs</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata/fortaleza.zip"</span>, package = <span class='st'>"gtfs2gps"</span>))
-</div><div class='output co'>#&gt; <span class='message'>Reading 'agency.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'routes.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'stops.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'stop_times.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'shapes.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'trips.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'calendar.txt'</span></div><div class='input'><span class='kw'>srtmfile</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata/fortaleza-srtm.tif"</span>, package=<span class='st'>"gtfs2gps"</span>)
+<span class='va'>fortaleza</span> <span class='op'>&lt;-</span> <span class='fu'><a href='read_gtfs.html'>read_gtfs</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/fortaleza.zip"</span>, package <span class='op'>=</span> <span class='st'>"gtfs2gps"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Reading 'agency.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'routes.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'stops.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'stop_times.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'shapes.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'trips.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'calendar.txt'</span></div><div class='input'><span class='va'>srtmfile</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/fortaleza-srtm.tif"</span>, package<span class='op'>=</span><span class='st'>"gtfs2gps"</span><span class='op'>)</span>
 
-<span class='kw'>subset</span> <span class='op'>&lt;-</span> <span class='kw'>fortaleza</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='filter_week_days.html'>filter_week_days</a></span>() <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='filter_single_trip.html'>filter_single_trip</a></span>() <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='filter_by_shape_id.html'>filter_by_shape_id</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"shape804-I"</span>, <span class='st'>"shape806-I"</span>))
+<span class='va'>subset</span> <span class='op'>&lt;-</span> <span class='va'>fortaleza</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='filter_week_days.html'>filter_week_days</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='filter_single_trip.html'>filter_single_trip</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='filter_by_shape_id.html'>filter_by_shape_id</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"shape804-I"</span>, <span class='st'>"shape806-I"</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='kw'>for_gps</span> <span class='op'>&lt;-</span> <span class='fu'><a href='gtfs2gps.html'>gtfs2gps</a></span>(<span class='kw'>subset</span>)
-</div><div class='output co'>#&gt; <span class='message'>Converting shapes to sf objects</span></div><div class='output co'>#&gt; <span class='message'>Using 1 CPU core</span></div><div class='output co'>#&gt; <span class='message'>Processing the data</span></div><div class='input'><span class='kw'>for_gps_sf_points</span> <span class='op'>&lt;-</span> <span class='fu'>gps_as_sfpoints</span>(<span class='kw'>for_gps</span>) <span class='co'># without height</span>
+<span class='va'>for_gps</span> <span class='op'>&lt;-</span> <span class='fu'><a href='gtfs2gps.html'>gtfs2gps</a></span><span class='op'>(</span><span class='va'>subset</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Converting shapes to sf objects</span></div><div class='output co'>#&gt; <span class='message'>Processing the data</span></div><div class='output co'>#&gt; <span class='message'>Some 'speed' values are NA in the returned data</span></div><div class='input'><span class='va'>for_gps_sf_points</span> <span class='op'>&lt;-</span> <span class='fu'>gps_as_sfpoints</span><span class='op'>(</span><span class='va'>for_gps</span><span class='op'>)</span> <span class='co'># without height</span>
 
-<span class='kw'>for_gps</span> <span class='op'>&lt;-</span> <span class='fu'><a href='append_height.html'>append_height</a></span>(<span class='kw'>for_gps</span>, <span class='kw'>srtmfile</span>)
-<span class='kw'>for_gps_sf_points</span> <span class='op'>&lt;-</span> <span class='fu'>gps_as_sfpoints</span>(<span class='kw'>for_gps</span>) <span class='co'># with height</span>
+<span class='va'>for_gps</span> <span class='op'>&lt;-</span> <span class='fu'><a href='append_height.html'>append_height</a></span><span class='op'>(</span><span class='va'>for_gps</span>, <span class='va'>srtmfile</span><span class='op'>)</span>
+<span class='va'>for_gps_sf_points</span> <span class='op'>&lt;-</span> <span class='fu'>gps_as_sfpoints</span><span class='op'>(</span><span class='va'>for_gps</span><span class='op'>)</span> <span class='co'># with height</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -43,8 +43,9 @@
 <meta property="og:description" content="Convert GTFS data to GPS format by sampling points using a
 spatial resolution. This function creates additional points in order to
 guarantee that two points in a same trip will have at most a given
-distance, indicated as a spatial resolution. This function uses progressr
-internally to show progress bars." />
+distance, indicated as a spatial resolution. It is possible to use future package
+to parallelize the execution (or use argument plan). This function also
+uses progressr internally to show progress bars." />
 
 
 
@@ -76,7 +77,7 @@ internally to show progress bars." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gtfs2gps</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3-1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4-0</span>
       </span>
     </div>
 
@@ -96,6 +97,9 @@ internally to show progress bars." />
       <a href="../articles/intro_to_gtfs2gps.html">gtfs2gps: Converting GTFS data to GPS-like format</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -127,18 +131,19 @@ internally to show progress bars." />
     <p>Convert GTFS data to GPS format by sampling points using a
 spatial resolution. This function creates additional points in order to
 guarantee that two points in a same trip will have at most a given
-distance, indicated as a spatial resolution. This function uses progressr
-internally to show progress bars.</p>
+distance, indicated as a spatial resolution. It is possible to use future package
+to parallelize the execution (or use argument plan). This function also
+uses progressr internally to show progress bars.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>gtfs2gps</span>(
-  <span class='kw'>gtfs_data</span>,
-  spatial_resolution = <span class='fl'>50</span>,
-  parallel = <span class='fl'>FALSE</span>,
-  strategy = <span class='st'>"multiprocess"</span>,
-  filepath = <span class='kw'>NULL</span>,
-  continue = <span class='fl'>FALSE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>gtfs2gps</span><span class='op'>(</span>
+  <span class='va'>gtfs_data</span>,
+  spatial_resolution <span class='op'>=</span> <span class='fl'>50</span>,
+  parallel <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  strategy <span class='op'>=</span> <span class='cn'>NULL</span>,
+  filepath <span class='op'>=</span> <span class='cn'>NULL</span>,
+  continue <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -154,14 +159,16 @@ represented as a list of data.tables.</p></td>
     </tr>
     <tr>
       <th>parallel</th>
-      <td><p>Decides whether the function should run in parallel. Defaults to FALSE.
-When TRUE, it will use all cores available minus one.</p></td>
+      <td><p>Decides whether the function should run in parallel. Defaults is FALSE.
+When TRUE, it will use all cores available minus one using future::plan() with
+strategy "multiprocess" internally.
+Note that it is possible to create your own plan before calling gtfs2gps().
+In this case, do not use this argument.</p></td>
     </tr>
     <tr>
       <th>strategy</th>
-      <td><p>Name of evaluation function to use in future parallel processing. Defaults to 
-"multiprocess", i.e. if multicore evaluation is supported, that will be used, otherwise
- multisession evaluation will be used. Fore details, check ?future::plan().</p></td>
+      <td><p>This argument is deprecated. Please use argument plan instead or
+use future::plan() directly.</p></td>
     </tr>
     <tr>
       <th>filepath</th>
@@ -185,13 +192,13 @@ returned (units of measurement in parenthesis): dist and cumdist (meters), cumti
 shape_pt_lon and shape_pt_lat (degrees), speed (km/h), departure_time (hh:mm:ss), .</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://dplyr.tidyverse.org'>dplyr</a></span>)
-<span class='kw'>poa</span> <span class='op'>&lt;-</span> <span class='fu'><a href='read_gtfs.html'>read_gtfs</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata/poa.zip"</span>, package=<span class='st'>"gtfs2gps"</span>))
-</div><div class='output co'>#&gt; <span class='message'>Reading 'agency.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'routes.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'stops.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'stop_times.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'shapes.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'trips.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'calendar.txt'</span></div><div class='input'><span class='kw'>subset</span> <span class='op'>&lt;-</span> <span class='fu'><a href='filter_by_shape_id.html'>filter_by_shape_id</a></span>(<span class='kw'>poa</span>, <span class='st'>"T2-1"</span>) <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='filter_single_trip.html'>filter_single_trip</a></span>()
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
+<span class='va'>poa</span> <span class='op'>&lt;-</span> <span class='fu'><a href='read_gtfs.html'>read_gtfs</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/poa.zip"</span>, package <span class='op'>=</span> <span class='st'>"gtfs2gps"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Reading 'agency.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'routes.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'stops.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'stop_times.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'shapes.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'trips.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'calendar.txt'</span></div><div class='input'><span class='va'>subset</span> <span class='op'>&lt;-</span> <span class='fu'><a href='filter_by_shape_id.html'>filter_by_shape_id</a></span><span class='op'>(</span><span class='va'>poa</span>, <span class='st'>"T2-1"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='filter_single_trip.html'>filter_single_trip</a></span><span class='op'>(</span><span class='op'>)</span>
 
-<span class='kw'>poa_gps</span> <span class='op'>&lt;-</span> <span class='fu'>gtfs2gps</span>(<span class='kw'>subset</span>)
-</div><div class='output co'>#&gt; <span class='message'>Converting shapes to sf objects</span></div><div class='output co'>#&gt; <span class='message'>Using 1 CPU core</span></div><div class='output co'>#&gt; <span class='message'>Processing the data</span></div></pre>
+<span class='va'>poa_gps</span> <span class='op'>&lt;-</span> <span class='fu'>gtfs2gps</span><span class='op'>(</span><span class='va'>subset</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Converting shapes to sf objects</span></div><div class='output co'>#&gt; <span class='message'>Processing the data</span></div><div class='output co'>#&gt; <span class='message'>Some 'speed' values are NA in the returned data</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
