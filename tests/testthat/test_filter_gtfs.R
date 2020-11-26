@@ -63,6 +63,17 @@ test_that("filter_by_day", {
   subset2 <- filter_by_day(poa, c("monday", "tuesday", "wednesday", "thursday", "friday"))
   
   expect(identical(subset, subset2), "not identical")
+  
+  berlin <- read_gtfs(system.file("extdata/berlin.zip", package="gtfs2gps"))
+  
+  subset2 <- filter_by_day(berlin, c("monday", "tuesday", "wednesday", "thursday", "friday"))
+  
+  expect_equal(length(subset2$calendar_dates), 3)
+  expect_equal(dim(subset2$calendar_dates)[1], 28843)
+
+  subset3 <- filter_by_day(subset2, c("monday", "tuesday", "wednesday", "thursday", "friday"))
+
+  expect(identical(subset2, subset3), "not identical")
 })
 
 test_that("filter_single_trip", {
