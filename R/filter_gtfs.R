@@ -96,7 +96,16 @@ remove_invalid <- function(gtfs_data, only_essential = TRUE, prompt_invalid = FA
       gtfs_data$trips    <- subset(gtfs_data$trips,    service_id %chin% service_ids)
       gtfs_data$calendar <- subset(gtfs_data$calendar, service_id %chin% service_ids)
     }
-  
+
+    # trips-calendar_dates relation (service_id)
+    if(!only_essential & !is.null(gtfs_data$calendar_dates)){
+      service_ids <- intersect(gtfs_data$trips$service_id, gtfs_data$calendar_dates$service_id)
+      removed$service_ids <- c(removed$service_ids, setdiff(gtfs_data$trips$service_id, gtfs_data$calendar_dates$service_id))
+      
+      gtfs_data$trips          <- subset(gtfs_data$trips,          service_id %chin% service_ids)
+      gtfs_data$calendar_dates <- subset(gtfs_data$calendar_dates, service_id %chin% service_ids)
+    }
+
     newsize <- object.size(gtfs_data)
   }
 
@@ -233,16 +242,28 @@ filter_valid_stop_times <- function(gtfs_data){
 #' 
 #' subset <- filter_by_day(poa, c("wednesday", "friday"))
 filter_by_day <- function(gtfs_data, days){
-  if(is.null(gtfs_data$calendar)) stop("GTFS data does not have calendar")
-  
-  code <- parse(text = paste(days, "> 0", collapse = " | "))
-  
-  calendar_temp <- subset(gtfs_data$calendar, eval(code))
-  serviceids <- calendar_temp$service_id
-  gtfs_data$trips <- subset(gtfs_data$trips, service_id %in% serviceids)
-  
-  gtfs_data$calendar[, (days) := 0]
-  
+  if(!is.null(gtfs_data$calendar_dates)){
+    # do not use data.table operators to avoid changing the argument itself
+    gtfs_data$calendar_dates$mdate <- as.Date(paste(gtfs_data$calendar_dates$date), format = "%Y%m%d")
+
+    w_days <- c("sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday")
+    gtfs_data$calendar_dates$mdate <- w_days[as.POSIXlt(gtfs_data$calendar_dates$mdate)$wday + 1]
+    
+    gtfs_data$calendar_dates <- subset(gtfs_data$calendar_dates, mdate %in% days)
+    serviceids <- unique(gtfs_data$calendar_dates$service_id)
+    gtfs_data$trips <- subset(gtfs_data$trips, service_id %in% serviceids)
+    gtfs_data$calendar_dates$mdate <- NULL
+  }
+  else if(!is.null(gtfs_data$calendar)){
+    code <- parse(text = paste(days, "> 0", collapse = " | "))
+    calendar_temp <- subset(gtfs_data$calendar, eval(code))
+    serviceids <- unique(calendar_temp$service_id)
+    gtfs_data$trips <- subset(gtfs_data$trips, service_id %in% serviceids)
+    
+    gtfs_data$calendar[, (days) := 0]
+  }
+  else stop("GTFS data does not have calendar_dates nor calendar")
+
   return(gtfs_data)
 }
 

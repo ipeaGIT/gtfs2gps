@@ -63,6 +63,25 @@ test_that("filter_by_day", {
   subset2 <- filter_by_day(poa, c("monday", "tuesday", "wednesday", "thursday", "friday"))
   
   expect(identical(subset, subset2), "not identical")
+  
+  berlin <- read_gtfs(system.file("extdata/berlin.zip", package="gtfs2gps"))
+  
+  wdays <- c("monday", "tuesday", "wednesday", "thursday", "friday")
+  subset2 <- filter_by_day(berlin, wdays)
+  
+  expect_equal(length(subset2$calendar_dates), 3)
+  expect_equal(dim(subset2$calendar_dates)[1], 28843)
+  
+  mdate <- as.Date(paste(subset2$calendar_dates$date), format = "%Y%m%d")
+  
+  w_days <- c("sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday")
+  mdate <- unique(w_days[as.POSIXlt(mdate)$wday + 1])
+  
+  expect(all(mdate %in% wdays), "did nor temove the correct days")
+
+  subset3 <- filter_by_day(subset2, c("monday", "tuesday", "wednesday", "thursday", "friday"))
+
+  expect(identical(subset2, subset3), "not identical")
 })
 
 test_that("filter_single_trip", {
@@ -89,8 +108,8 @@ test_that("filter_by_agency_id", {
   sp <- read_gtfs(system.file("extdata/saopaulo.zip", package="gtfs2gps"))
 
   result <- filter_by_agency_id(sp, 1)
-  expect_equal(dim(result$trips)[1], 233)
-  expect_equal(dim(result$shapes)[1], 94386)
+  expect_equal(dim(result$trips)[1], 92)
+  expect_equal(dim(result$shapes)[1], 35886)
 
   sp$routes <- NULL
   expect_error(filter_by_agency_id(sp, "abc"), "GTFS data does not have routes")
@@ -102,13 +121,13 @@ test_that("filter_by_agency_id", {
 test_that("remove_invalid", {
   sp <- read_gtfs(system.file("extdata/saopaulo.zip", package="gtfs2gps"))
 
-  sp$shapes <- sp$shapes[-(1:80000),]
+  sp$shapes <- sp$shapes[-(1:30000),]
   sp$agency$agency_id <- 'test'
   
   sp2 <- remove_invalid(sp, prompt_invalid = TRUE)
   
-  expect_equal(length(sp$stops$stop_id), 6117)
-  expect_equal(length(sp2$stops$stop_id), 1340)
+  expect_equal(length(sp$stops$stop_id), 3039)
+  expect_equal(length(sp2$stops$stop_id), 602)
   
   sp3 <- remove_invalid(sp, only_essential = FALSE)
   
