@@ -37,35 +37,35 @@ gps_as_sflinestring  <- function(gps, crs = 4326){
   
   # get row position of consecutive stops
   id1 <- c(id0[-1], nrow(dt))
-
+  
   # create a data table grouping ids by unique intervals
   # Here we create a data.table indicating what are all the point ids in each interval
   list_ids <- data.table::data.table(
     interval = rep(seq_along(id0), id1 - id0 + 1),
     id = unlist(lapply(seq_along(id0), function(i) id0[i]:id1[i]))
   )
-
+  
   # add interval code to GPS
   dt[list_ids, on = "id", interval_id := i.interval]
-
+  
   ## Each stop is the start of an interval and the end of another one.
   ## So we we need to duplicate each stop to make sure every interval has a unique start and end point  
   
   # get unique valid stops (extra spatial points)
-  dt1 <- dt[, .SD[1], by = .(trip_id, interval_id, trip_number)]
+  dt1 <- data.table::copy(dt)[, .SD[1], by = .(trip_id, interval_id, trip_number)]
   
   # reorder columns
   dt1 <- data.table::setcolorder(dt1, names(dt))
   
   # recode their unique id's so they fall and the end of each interval
-  dt1[, c("id", "interval_id", "trip_number") := list(id - 0.1, interval_id - 1, trip_number - 0.1)] 
+  dt1[, c("id", "interval_id") := list(id - 0.1, interval_id - 1)] 
   
   # add extra points in valid_id's of the GPS data
   dt2 <- data.table::rbindlist(list(dt, dt1))[order(id)]
   
   # create unique id for each unique combination of interval_id & trip_id & trip_number
-  dt2[, grp := .GRP, by = .(interval_id, trip_id, trip_number)]
-
+  dt2[, grp := .GRP, by = .(interval_id,trip_id,trip_number)]
+  
   dt2[, .N, by = grp] # number of observations in each grp
   
   moreThanOne <- which(as.vector(table(dt2$grp)) != 1)
@@ -75,11 +75,11 @@ gps_as_sflinestring  <- function(gps, crs = 4326){
   
   ## convert to linestring
   gps_sf <- sfheaders::sf_linestring(obj = dt2, 
-                                              x = 'shape_pt_lon',
-                                              y = 'shape_pt_lat',
-                                              linestring_id = 'grp',
-                                              keep = TRUE) %>% sf::st_set_crs(crs)
-
+                                     x = 'shape_pt_lon',
+                                     y = 'shape_pt_lat',
+                                     linestring_id = 'grp',
+                                     keep = TRUE) %>% sf::st_set_crs(crs)
+  
   gps_sf$dist <- sf::st_length(gps_sf$geometry)
   # edit columns
   gps_sf$grp <- NULL
