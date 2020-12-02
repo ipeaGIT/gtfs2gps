@@ -11,6 +11,7 @@
 **Minor changes**
 * Fixed a bug in filter_day_period. Closes #96
 * Fix the treatment of midnight trips. Closes #43
+* Fix linebreak gps_as_sflinestring. Closes #171
 
 
 
