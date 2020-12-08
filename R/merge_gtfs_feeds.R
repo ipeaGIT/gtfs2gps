@@ -17,7 +17,10 @@ merge_gtfs_feeds <- function(gtfs_list){
      gtfs_list <- as.list(gtfs_list)
   
   # read all fees separately
-  all_feeds <- lapply(gtfs_list, read_gtfs)
+  all_feeds <- lapply(gtfs_list, function(i){
+    message(paste0("GTFS '", i, "'"))
+    read_gtfs(i)
+  })
   
   create_new_ids <- function(i, id, files){
     values <- function(i, mfile, id)
