@@ -1,6 +1,5 @@
 # log history of gtfs2gps package development
 
-
 -------------------------------------------------------
 # gtfs2gps dev v1.4-0
 
@@ -13,9 +12,6 @@
 * Fix the treatment of midnight trips. Closes #43
 * Fix linebreak gps_as_sflinestring. Closes #171
 
-
-
-
 -------------------------------------------------------
 # gtfs2gps v1.3-2
 
@@ -27,31 +23,44 @@
 **Minor changes**
 * changes parallel execution to conform new `future` standards. closes #55
 * Improve time filter in `filter_day_period`. Closes #89 and 147
-* Improved documentation of  `spatial_resolution` parameterCloses #116
-
+* Improved documentation of  `spatial_resolution` parameter. Closes #116
 
 -------------------------------------------------------
 # gtfs2gps v1.3-0
 
 **Major changes**
 * Use progress bar from progressr. Closes #142
-
+* Handling units of measurement
+* Speeding up some algorithms
 
 -------------------------------------------------------
 # gtfs2gps v1.2-1
 
+**Minor changes**
+* Allowing to read gtfs files without calendar/agency
+* New verifications to create a better feedback for the user
 
 -------------------------------------------------------
 # gtfs2gps v1.2-0
 
+**Major changes**
+* Processing mixed detailed and frequency-based GTFS files
+* Small changes in `gps_as_sflinestring()` due to new GDAL
+* Function to simplify shapes
 
 -------------------------------------------------------
 # gtfs2gps v1.1-0
 
+**Major changes**
+* New function append_height(), to create height column to GPS data
+* Update related to the newest versions of lwgeom and sf (#112)
+* Replacing `sf_multipoint` by `sf_point` in `gps_as_sf()` to keep all the data
 
 -------------------------------------------------------
 # gtfs2gps v1.0-7
 
+**Minor changes**
+* Removing bugs found by CRAN automatic tests
 
 -------------------------------------------------------
 # gtfs2gps v1.0-5
