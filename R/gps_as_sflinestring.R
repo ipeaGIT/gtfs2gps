@@ -21,9 +21,9 @@
 #' poa_gps_sf <- gps_as_sflinestring(poa_gps)
 gps_as_sflinestring  <- function(gps, crs = 4326){
   
-  # gps <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps")) %>% 
-  #   filter_by_shape_id(c("T2-1", "A141-1")) %>% filter_single_trip() %>% 
-  #   gtfs2gps() 
+   # gps <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps")) %>%
+   #   filter_by_shape_id(c("T2-1", "A141-1")) %>% filter_single_trip() %>%
+   #   gtfs2gps();crs=4326
   
   if(is.character(gps)){
     dt <- data.table::fread(gps, colClasses = list(character = c("id", "shape_id", "trip_id", "stop_id")))
@@ -52,6 +52,8 @@ gps_as_sflinestring  <- function(gps, crs = 4326){
   
   # add interval code to GPS
   dt[list_ids, on = "id", interval_id := i.interval]
+  # rename columns
+  data.table::setnames(dt,"stop_id","from_stop_id")
   
   ## Each stop is the start of an interval and the end of another one.
   ## So we we need to duplicate each stop to make sure every interval has a unique start and end point  
@@ -59,8 +61,8 @@ gps_as_sflinestring  <- function(gps, crs = 4326){
   # get unique valid stops (extra spatial points)
   dt1 <- data.table::copy(dt)[, .SD[1], by = .(trip_id, interval_id, trip_number)]
   
-  # reorder columns
-  data.table::setnames(dt1,"stop_id","to_stop_id")
+  # rename columns
+  data.table::setnames(dt1,"from_stop_id","to_stop_id")
   #dt1 <- data.table::setcolorder(dt1, names(dt))
   
   # recode their unique id's so they fall and the end of each interval
@@ -93,8 +95,8 @@ gps_as_sflinestring  <- function(gps, crs = 4326){
   gps_sf$cumdist <- NULL
   gps_sf$cumtime <- NULL
   # order columns "stop_id" <> "to_stop_id"
-  colsToStop <- names(gps_sf)[1:which(names(gps_sf) %in% "stop_id")]
-  colsFromStop <- names(gps_sf)[(which(names(gps_sf) %in% "stop_id")+1):(which(names(gps_sf) %in% "to_stop_id")-1)]
+  colsToStop <- names(gps_sf)[1:which(names(gps_sf) %in% "from_stop_id")]
+  colsFromStop <- names(gps_sf)[(which(names(gps_sf) %in% "from_stop_id")+1):(which(names(gps_sf) %in% "to_stop_id")-1)]
   colsNewnames <- c(colsToStop,"to_stop_id",colsFromStop)
   gps_sf <- gps_sf[colsNewnames]
   
