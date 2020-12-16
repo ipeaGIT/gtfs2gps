@@ -1,7 +1,7 @@
 # gtfs2gps
 
 [![CRAN/METACRAN Version](https://www.r-pkg.org/badges/version/gtfs2gps)](https://CRAN.R-project.org/package=gtfs2gps).[![CRAN/METACRAN Total downloads](http://cranlogs.r-pkg.org/badges/grand-total/gtfs2gps?color=blue)](https://CRAN.R-project.org/package=gtfs2gps)
-[![Travis-CI Build Status](https://travis-ci.org/ipeaGIT/gtfs2gps.svg?branch=master)](https://travis-ci.org/ipeaGIT/gtfs2gps)
+[![R-CMD-check](https://github.com/ipeaGIT/gtfs2gps/workflows/R-CMD-check/badge.svg)](https://github.com/ipeaGIT/gtfs2gps/actions)
 [![Codecov test coverage](https://codecov.io/gh/ipeaGIT/gtfs2gps/branch/master/graph/badge.svg)](https://codecov.io/gh/ipeaGIT/gtfs2gps?branch=master)
 [![DOI](https://zenodo.org/badge/203697230.svg)](https://zenodo.org/badge/latestdoi/203697230)
 
