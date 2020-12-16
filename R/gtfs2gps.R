@@ -226,7 +226,7 @@ gtfs2gps <- function(gtfs_data,
   message("Processing the data")
   requiredPackages = c('data.table', 'sf', 'magrittr', 'Rcpp', 'sfheaders', 'units')
   output <- furrr::future_map(.x = all_shapeids, .f = tryCorefun, 
-                              .options = furrr::future_options(
+                              .options = furrr::furrr_options(
                               packages = requiredPackages)) %>% 
     data.table::rbindlist()
   
