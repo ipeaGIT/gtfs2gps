@@ -10,3 +10,4 @@ src/*.o
 vignettes/*.zip
 /tests/test_ig.txt
 *.gif
+.Rprofile
