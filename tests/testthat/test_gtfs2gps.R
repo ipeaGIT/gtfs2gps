@@ -58,18 +58,41 @@ test_that("gtfs2gps", {
 
     expect_null(poa_gps)
     
-    files <- list.files(".", pattern = "\\.txt$")
-    names <- gsub('.{4}$', '', files)
+    files1 <- list.files(".", pattern = "\\.txt$")
+    names <- gsub('.{4}$', '', files1)
+    
+    poa_shape <- gtfs_shapes_as_sf(read_gtfs(poa))
+    expect_setequal(poa_shape$shape_id, names)
+
+    poa_gps <- gtfs2gps(poa, filepath = ".", compress = TRUE)
+    
+    expect_null(poa_gps)
+  
+    files2 <- list.files(".", pattern = "\\.rds$")
+    names2 <- gsub('.{4}$', '', files2)
+    
+    data1 <- data.table::fread(files1[1])
+
+    # note how the types are converted    
+    data1[, departure_time := as.ITime(departure_time)]
+    data1[, stop_id := as.character(stop_id)]
+    data1[, trip_number := as.double(trip_number)]
+    
+    data2 <- readr::read_rds(files2[1])
+    
+    expect_true(all(data1$trip_id == data2$trip_id))
     
     poa_shape <- gtfs_shapes_as_sf(read_gtfs(poa))
     expect_setequal(poa_shape$shape_id, names)
     
-    file.remove(files)
-    
+    file.remove(files1)
+    file.remove(files2)
+
     sp <- system.file("extdata/saopaulo.zip", package="gtfs2gps")
 
     expect_error(gtfs2gps(sp, continue = TRUE), "Cannot use argument 'continue' without passing a 'filepath'.", fixed = TRUE)
-
+    expect_error(gtfs2gps(sp, compress = TRUE), "Cannot use argument 'compress' without passing a 'filepath'.", fixed = TRUE)
+    
     sp_gps <- read_gtfs(sp) %>%
       filter_by_shape_id(52000:52200) %>%
       filter_week_days() %>%

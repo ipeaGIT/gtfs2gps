@@ -10,6 +10,7 @@ gtfs2gps(
   parallel = FALSE,
   strategy = NULL,
   filepath = NULL,
+  compress = FALSE,
   continue = FALSE
 )
 }
@@ -28,9 +29,17 @@ In this case, do not use this argument.}
 \item{strategy}{This argument is deprecated. Please use argument plan instead or
 use future::plan() directly.}
 
-\item{filepath}{Output file path. As default, the output is returned in R.
-When this argument is set, each route is saved into a file within filepath,
-with the name equals to its id. In this case, no output is returned.}
+\item{filepath}{Output file path. As default, the output is returned when gtfs2gps finishes.
+When this argument is set, each route is saved into a txt file within filepath,
+with the name equals to its id. In this case, no output is returned. See argument
+compress for another option.}
+
+\item{compress}{Argument that can be used only with filepath. When TRUE, it
+compresses the output files by saving them using rds format. Default value is FALSE.
+Note that compress guarantees that the data saved will be read in the same way as it
+was created in R. If not compress, the txt extension requires the data to be converted
+from ITime to string, and therefore they need to manually converted back to ITime to 
+be properly handled by gtfs2gps.}
 
 \item{continue}{Argument that can be used only with filepath. When TRUE, it
 skips processing the shape identifiers that were already saved into files.

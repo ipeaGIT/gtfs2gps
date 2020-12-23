@@ -17,9 +17,16 @@
 #' In this case, do not use this argument.
 #' @param strategy This argument is deprecated. Please use argument plan instead or
 #' use future::plan() directly.
-#' @param filepath Output file path. As default, the output is returned in R.
-#' When this argument is set, each route is saved into a file within filepath,
-#' with the name equals to its id. In this case, no output is returned.
+#' @param filepath Output file path. As default, the output is returned when gtfs2gps finishes.
+#' When this argument is set, each route is saved into a txt file within filepath,
+#' with the name equals to its id. In this case, no output is returned. See argument
+#' compress for another option.
+#' @param compress Argument that can be used only with filepath. When TRUE, it
+#' compresses the output files by saving them using rds format. Default value is FALSE.
+#' Note that compress guarantees that the data saved will be read in the same way as it
+#' was created in R. If not compress, the txt extension requires the data to be converted
+#' from ITime to string, and therefore they need to manually converted back to ITime to 
+#' be properly handled by gtfs2gps.
 #' @param continue Argument that can be used only with filepath. When TRUE, it
 #' skips processing the shape identifiers that were already saved into files.
 #' It is useful to continue processing a GTFS file that was stopped for some
@@ -40,12 +47,16 @@ gtfs2gps <- function(gtfs_data,
                      parallel = FALSE,
                      strategy = NULL,
                      filepath = NULL,
+                     compress = FALSE,
                      continue = FALSE){
 
   if(!is.null(strategy))
     warning("Argument 'strategy' is deprecated and will be removed in a future version.") # nocov
 
   ###### PART 1. Load and prepare data inputs ------------------------------------
+  if(compress & is.null(filepath))
+    stop("Cannot use argument 'compress' without passing a 'filepath'.")
+
   if(continue & is.null(filepath))
     stop("Cannot use argument 'continue' without passing a 'filepath'.")
   
@@ -72,7 +83,8 @@ gtfs2gps <- function(gtfs_data,
   ###### PART 2. Analysing data type ----------------------------------------------
   corefun <- function(shapeid){
     if(continue){
-      file <- paste0(filepath, "/", shapeid, ".txt")
+      extension <- ifelse(compress, ".rda", ".txt")
+      file <- paste0(filepath, "/", shapeid, extension)
       if(file.exists(file)) return(NULL)
     }
 
@@ -189,8 +201,12 @@ gtfs2gps <- function(gtfs_data,
       "cumtime", "speed"))
     
     if(!is.null(filepath)){ # Write object
-      data.table::fwrite(x = new_stoptimes,
-             file = paste0(filepath, "/", shapeid, ".txt"))
+      if(compress)
+        readr::write_rds(x = new_stoptimes,
+          file = paste0(filepath, "/", shapeid, ".rds"), compress = "gz")
+      else
+        data.table::fwrite(x = new_stoptimes,
+          file = paste0(filepath, "/", shapeid, ".txt"))
       return(NULL)
     }
 
