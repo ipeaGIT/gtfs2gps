@@ -1,6 +1,8 @@
 
 #include <Rcpp.h>
+#include <iostream>
 
+using namespace std;
 using namespace Rcpp;
 
 double distanceHaversine(double latf, double lonf, double latt, double lont,
@@ -12,39 +14,58 @@ Rcpp::NumericVector cpp_snap_points_level(Rcpp::NumericMatrix& data, Rcpp::Numer
   
   const int nrow = data.nrow();
   const int ref_nrow = ref.nrow();
+  
+//  cout << "=========================== " << spatial_resolution  << endl;
+//  cout << nrow << "   " << ref_nrow << endl;
   int ref_i = -1;
+  int i = 0;
+  bool found;
+  double dist;
+  double dist_next;
 
-  for(int i = 0; i < nrow; i++){
+  while(i < nrow && ref_i + 1 < ref_nrow) {
     const double x = data[i];
     const double y = data[i + nrow];
-    double dist = spatial_resolution + 1;
 
-    if(ref_i + 1 < ref_nrow && ref_i + 1 + ref_nrow < ref.length()){
-      do {
-        ref_i++;
-        const double ref_x = ref[ref_i];
-        const double ref_y = ref[ref_i + ref_nrow];
-        
-        dist = distanceHaversine(toRadians(y), toRadians(x), toRadians(ref_y), toRadians(ref_x), 1);
-      } while (dist > spatial_resolution && ref_i + 1 < ref_nrow);
-    }
+    found = false;
+    
+    do {
+      ref_i++;
+      const double ref_x = ref[ref_i];
+      const double ref_y = ref[ref_i + ref_nrow];
+      
+      dist = distanceHaversine(toRadians(y), toRadians(x), toRadians(ref_y), toRadians(ref_x), 1) / spatial_resolution;
 
-    if(dist <= spatial_resolution){
-      result_pos.push_back(ref_i + 1);
-    }
+      const double ref_x_next = ref[ref_i + 1];
+      const double ref_y_next = ref[ref_i + 1 + ref_nrow];
+
+      dist_next = distanceHaversine(toRadians(ref_y_next), toRadians(ref_x_next), toRadians(ref_y), toRadians(ref_x), 1);
+
+//      cout << dist << "   " << dist_next << endl;
+      
+
+      if(dist < dist_next){
+//        cout << "found: " << i << "   " << ref_i << endl;
+        result_pos.push_back(ref_i + 1);
+        found = true;
+      }
+    } while (ref_i + 1 < ref_nrow && !found);
+
+
+    i++;
   }
 
+//  cout << result_pos.length() << endl;
+//  cout << nrow << endl;
+  
   if(result_pos.length() < nrow){
-    if(level > 3){
       std::stringstream text;
-      text << "Could not find a nearest point closer than " << spatial_resolution << "m (eight times spatial_resolution) for stop '" << id(0) << "'. Ignoring it.";
+      text << "Could not find snap for trip '" << id(0) << "'. Stops are not perfectly aligned. Ignoring it.";
       Rf_warningcall(R_NilValue, text.str().c_str());
       return Rcpp::NumericVector();
-    }
-    
-    return cpp_snap_points_level(data, ref, spatial_resolution * 2, level + 1, id);
-  }
 
+   // return cpp_snap_points_level(data, ref, spatial_resolution * 2, level + 1, id);
+  }
   return result_pos;
 }
 
@@ -65,5 +86,5 @@ Rcpp::NumericVector cpp_snap_points_level(Rcpp::NumericMatrix& data, Rcpp::Numer
 //' @export
 // [[Rcpp::export]]
 Rcpp::NumericVector cpp_snap_points(Rcpp::NumericMatrix& data, Rcpp::NumericMatrix& ref, int spatial_resolution, Rcpp::StringVector id){
-  return cpp_snap_points_level(data, ref, spatial_resolution, 1, id);
+  return cpp_snap_points_level(data, ref, 1, 1, id);
 }
