@@ -358,9 +358,8 @@ filter_by_route_type <- function(gtfs_data, route_types) {
 #' @title Filter GTFS data by route ids
 #' 
 #' @description Filter a GTFS data by its route ids, subsetting routes
-#' and trips. It also removes the
-#' unnecessary stop_times, shapes, frequencies (if exist in a feed), 
-#' and stops accordingly.
+#' and trips. It also removes the unnecessary stop_times, shapes, frequencies
+#' (if exist in a feed), and stops accordingly.
 #' @param gtfs_data A list of data.tables read using gtfs2gps::reag_gtfs().
 #' @param route_ids A vector of route ids belonging to the routes of the
 #' gtfs_data data. Note that route_id might be loaded by gtfs2gps::read_gtfs()

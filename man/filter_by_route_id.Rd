@@ -18,9 +18,8 @@ A filtered GTFS data.
 }
 \description{
 Filter a GTFS data by its route ids, subsetting routes
-and trips. It also removes the
-unnecessary stop_times, shapes, frequencies (if exist in a feed), 
-and stops accordingly.
+and trips. It also removes the unnecessary stop_times, shapes, frequencies
+(if exist in a feed), and stops accordingly.
 }
 \examples{
 warsaw <- read_gtfs(system.file("extdata/warsaw.zip", package="gtfs2gps"))
