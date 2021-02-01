@@ -390,3 +390,44 @@ filter_by_route_id <- function(gtfs_data, route_ids) {
   
   return(gtfs_data)
 }
+
+
+
+#' @title Remove GTFS data by route ids
+#' 
+#' @description Remove a GTFS data by its route ids, dropping routes
+#' and trips. It also removes the unnecessary stop_times, shapes, frequencies
+#' (if exist in a feed), and stops accordingly.
+#' @param gtfs_data A list of data.tables read using gtfs2gps::reag_gtfs().
+#' @param route_ids A vector of route ids belonging to the routes of the
+#' gtfs_data data. Note that route_id might be loaded by gtfs2gps::read_gtfs()
+#' as a string or a number, depending on the available values.
+#' @return A filtered GTFS data without service information of the set route ids. 
+#' @export
+#' @examples
+#' warsaw <- read_gtfs(system.file("extdata/warsaw.zip", package="gtfs2gps"))
+#' 
+#' subset <- remove_by_route_id(warsaw, c("15", "175"))
+remove_by_route_id <- function(gtfs_data, route_ids) {
+  if(is.null(gtfs_data$routes)) stop("GTFS data does not have routes")
+  
+  `%nin%` = Negate(`%in%`)
+  `%nchin%` = Negate(`%chin%`)
+  
+  gtfs_data$routes <- subset(gtfs_data$routes, route_id %nin% route_ids)
+  gtfs_data$trips <- subset(gtfs_data$trips, route_id %nin% route_ids) 
+  
+  shape_ids <- unique(gtfs_data$trips$shape_id)
+  gtfs_data$shapes <- subset(gtfs_data$shapes, shape_id %in% shape_ids)
+  
+  trip_ids <- unique(gtfs_data$trips$trip_id)
+  gtfs_data$stop_times <- subset(gtfs_data$stop_times, trip_id %chin% trip_ids)
+  
+  if(!is.null(gtfs_data$frequencies))
+    gtfs_data$frequencies <- subset(gtfs_data$frequencies, trip_id %chin% trip_ids)
+  
+  stop_ids <- unique(gtfs_data$stop_times$stop_id)
+  gtfs_data$stops <- subset(gtfs_data$stops, stop_id %in% stop_ids)
+  
+  return(gtfs_data)
+}
