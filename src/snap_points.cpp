@@ -59,9 +59,9 @@ Rcpp::NumericVector cpp_snap_points_level(Rcpp::NumericMatrix& data, Rcpp::Numer
 //  cout << nrow << endl;
   
   if(result_pos.length() < nrow){
-      std::stringstream text;
-      text << "Could not find snap for trip '" << id(0) << "'. Stops are not perfectly aligned. Ignoring it.";
-      Rf_warningcall(R_NilValue, text.str().c_str());
+      //std::stringstream text;
+      //text << "Could not find snap for trip '" << id(0) << "'. Stops are not perfectly aligned. Ignoring it.";
+      //Rf_warningcall(R_NilValue, text.str().c_str());
       return Rcpp::NumericVector();
 
    // return cpp_snap_points_level(data, ref, spatial_resolution * 2, level + 1, id);
