@@ -21,7 +21,8 @@ gtfs_shapes_as_sf <- function(gtfs, crs = 4326){
   sf::st_crs(temp_shapes) <- crs
   
   # calculate distances
-  data.table::setDT(temp_shapes)[, length := sf::st_length(geometry) %>% units::set_units("km") ] 
+  data.table::setDT(temp_shapes)[, length := sf::st_length(geometry)] 
+  data.table::setDT(temp_shapes)[, length := units::set_units(length, "km") ] 
   
   # back to sf
   temp_shapes <- sf::st_sf(temp_shapes)

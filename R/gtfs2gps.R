@@ -99,7 +99,7 @@ gtfs2gps <- function(gtfs_data,
     routeid <- gtfs_data$trips[shape_id == shapeid]$route_id[1]
     
     # get all trips linked to that route
-    all_tripids <- gtfs_data$trips[shape_id == shapeid & route_id == routeid, ]$trip_id %>% unique()
+    all_tripids <- unique( gtfs_data$trips[shape_id == shapeid & route_id == routeid, ]$trip_id )
 
     # nstop = number of valid stops in each trip_id
     nstop <- gtfs_data$stop_times[trip_id %chin% all_tripids, .N, by = "trip_id"]$N
@@ -123,18 +123,20 @@ gtfs2gps <- function(gtfs_data,
     spatial_resolution <- units::set_units(spatial_resolution / 1000, "km")
     
     # new faster version using sfheaders
-    new_shape <- subset(shapes_sf, shape_id == shapeid) %>%
-      sf::st_segmentize(spatial_resolution) %>%
-      sfheaders::sf_cast( "POINT")
-    
+    new_shape <- subset(shapes_sf, shape_id == shapeid)
+    new_shape <- sf::st_segmentize(new_shape, spatial_resolution)
+    new_shape <- sfheaders::sf_cast(new_shape, "POINT")
+      
     # convert units of spatial resolution to meters
     spatial_resolution <- units::set_units(spatial_resolution, "m")
     
     # snap stops the nodes of the shape route
-    snapped <- cpp_snap_points(stops_sf %>% sf::st_coordinates(), 
-                                     new_shape %>% sf::st_coordinates(),
-                                     spatial_resolution,
-                                     all_tripids[which.max(nstop)])
+    temp_stops_coords <- sf::st_coordinates(stops_sf)
+    temp_shape_coords <- sf::st_coordinates(new_shape)
+    snapped <- cpp_snap_points(temp_stops_coords, 
+                               temp_shape_coords,
+                               spatial_resolution,
+                               all_tripids[which.max(nstop)])
     
     # Skip shape_id IF there are no snapped stops
     if(is.null(snapped) | length(snapped) == 0 ){
@@ -187,8 +189,9 @@ gtfs2gps <- function(gtfs_data,
     }
 
     ###### PART 2.2 Function recalculate new stop_times for each trip id of each Shape id ------------------------------
-    new_stoptimes <- lapply(X = all_tripids, FUN = update_freq, new_stoptimes, gtfs_data, all_tripids) %>% data.table::rbindlist()
-
+    new_stoptimes <- lapply(X = all_tripids, FUN = update_freq, new_stoptimes, gtfs_data, all_tripids)
+    new_stoptimes <- data.table::rbindlist(new_stoptimes)
+      
     if(is.null(new_stoptimes$departure_time)){
       warning(paste0("Shape '", shapeid, "' has no departure_time. Ignoring it."),  call. = FALSE)  # nocov
       return(NULL)  # nocov
@@ -243,8 +246,8 @@ gtfs2gps <- function(gtfs_data,
   requiredPackages = c('data.table', 'sf', 'magrittr', 'Rcpp', 'sfheaders', 'units')
   output <- furrr::future_map(.x = all_shapeids, .f = tryCorefun, 
                               .options = furrr::furrr_options(
-                              packages = requiredPackages)) %>% 
-    data.table::rbindlist()
+                              packages = requiredPackages))
+    output <- data.table::rbindlist(output)
   
   if(length(badShapes) > 0){
     if(original_gtfs_data_arg == ".") original_gtfs_data_arg <- "<your gtfs data>" # nocov

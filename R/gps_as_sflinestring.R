@@ -87,7 +87,8 @@ gps_as_sflinestring  <- function(gps, crs = 4326){
                                      x = 'shape_pt_lon',
                                      y = 'shape_pt_lat',
                                      linestring_id = 'grp',
-                                     keep = TRUE) %>% sf::st_set_crs(crs)
+                                     keep = TRUE)
+  gps_sf <- sf::st_set_crs(gps_sf, crs)
   
   gps_sf$dist <- sf::st_length(gps_sf$geometry)
   # edit columns

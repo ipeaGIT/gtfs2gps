@@ -29,14 +29,14 @@ system.time(poa_gps <- gtfs2gps(poa))
 user  system elapsed 
 9.34    0.15    9.67 
 7.59    0.15    7.73 
-
+7.15    0.36    7.51 
 
 spo <- read_gtfs(system.file("extdata/saopaulo.zip", package = "gtfs2gps"))
 system.time(spo_gps <- gtfs2gps(spo))
 user  system elapsed 
 79.97    1.71   82.67 
 79.31    1.68   81.69
-
+77.51    1.37   80.29 
 ##### INPUT  ------------------------
   # normal
   gtfsn <- './inst/extdata/poa.zip'
