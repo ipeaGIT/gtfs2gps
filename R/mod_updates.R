@@ -6,7 +6,7 @@ update_freq <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
     return(new_stoptimes) # nocov
   }
 
-  new_stoptimes[, "trip_number"] <- 1
+  new_stoptimes[, trip_number := 1 ]
   
   if(is.null(gtfs_data$frequencies)) return(new_stoptimes) # nocov
   

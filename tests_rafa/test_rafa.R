@@ -19,22 +19,23 @@ devtools::document(pkg = ".")
 new_stoptimes[ , dist := geosphere::distGeo(matrix(c(shape_pt_lon, shape_pt_lat), ncol = 2),
                                             matrix(c(data.table::shift(shape_pt_lon, type="lag"), data.table::shift(shape_pt_lat, type="lag")), ncol = 2))/1000]
 
-new_stoptimes[.I==1, ]
-
-idx = new_stoptimes[, .(idx = .I[c(1L)]), by=shape_id]$idx
-new_stoptimes[1, dist := 0]
 
 
-new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type = "lead"), data.table::shift(shape_pt_lon, type = "lead"), tolerance = 1e10)]
 
-poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+#### SPEED
+poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
+
+system.time(poa_gps <- gtfs2gps(poa))
+user  system elapsed 
+9.34    0.15    9.67 
+7.59    0.15    7.73 
 
 
-poa1 <- filter_day_period(poa, period_start = "10:00", period_end = "18:00")
-
-poa2 <- gtfs2gps(poa1, cores=1)
-
-
+spo <- read_gtfs(system.file("extdata/saopaulo.zip", package = "gtfs2gps"))
+system.time(spo_gps <- gtfs2gps(spo))
+user  system elapsed 
+79.97    1.71   82.67 
+79.31    1.68   81.69
 
 ##### INPUT  ------------------------
   # normal

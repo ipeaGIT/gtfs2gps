@@ -162,14 +162,14 @@ gtfs2gps <- function(gtfs_data,
     # identify route type
     if(!is.null(gtfs_data$routes)){
       routetype <- gtfs_data$routes[route_id == routeid]$route_type
-      new_stoptimes[, "route_type"] <- routetype
+      new_stoptimes[, route_type := routetype ]
     }
 
     ## Add stops to new_stoptimes  
-    new_stoptimes[stops_seq$ref, "stop_id"] <- stops_seq$stop_id
-    new_stoptimes[stops_seq$ref, "stop_sequence"] <- stops_seq$stop_sequence
-    new_stoptimes[stops_seq$ref, "departure_time"] <- stops_seq$departure_time
-
+    new_stoptimes[stops_seq$ref, stop_id := stops_seq$stop_id ]
+    new_stoptimes[stops_seq$ref, stop_sequence := stops_seq$stop_sequence ]
+    new_stoptimes[stops_seq$ref, departure_time := stops_seq$departure_tim ]
+    
     # calculate Distance between successive points
     new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type = "lead"), data.table::shift(shape_pt_lon, type = "lead"), tolerance = 1e10)]
     # new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type = "lag"), data.table::shift(shape_pt_lon, type = "lag"), tolerance = 1e10)]
