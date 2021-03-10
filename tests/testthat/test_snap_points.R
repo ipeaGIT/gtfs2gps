@@ -13,7 +13,7 @@ test_that("snap_points", {
   shape_points <- sf::st_as_sf(shape_points, coords = c('X', 'Y'), agr = "identity", crs = 31982)
 
   res <- 15
-  result <- cpp_snap_points(stops %>% sf::st_coordinates(), stops %>% sf::st_coordinates(), res, "abc")
+  result <- cpp_snap_points(stops %>% sf::st_coordinates(), stops %>% sf::st_coordinates(), res)
   
   expect_equal(result, 1)
 
@@ -33,7 +33,7 @@ test_that("snap_points", {
   shape_points <- sf::st_as_sf(shape_points, coords = c('X', 'Y'), agr="identity", crs = 31982)
   
   res <- 3000
-  result <- cpp_snap_points(stops %>% sf::st_coordinates(), shape_points %>% sf::st_coordinates(), res, "abc")
+  result <- cpp_snap_points(stops %>% sf::st_coordinates(), shape_points %>% sf::st_coordinates(), res)
   
   expect_equal(length(result), 62)
   expect_true(all(result == sort(result)))

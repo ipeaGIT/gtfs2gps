@@ -133,8 +133,7 @@ gtfs2gps <- function(gtfs_data,
     # snap stops the nodes of the shape route
     snapped <- cpp_snap_points(stops_sf %>% sf::st_coordinates(), 
                                      new_shape %>% sf::st_coordinates(),
-                                     spatial_resolution,
-                                     all_tripids[which.max(nstop)])
+                                     spatial_resolution)
     
     # Skip shape_id IF there are no snapped stops
     if(is.null(snapped) | length(snapped) == 0 ){
