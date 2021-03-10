@@ -116,6 +116,8 @@ gtfs2gps <- function(gtfs_data,
     stops_seq <- gtfs_data$stop_times[trip_id == all_tripids[which.max(nstop)], .(stop_id, stop_sequence, departure_time)]
     stops_seq[gtfs_data$stops, on = "stop_id", c('stop_lat', 'stop_lon') := list(i.stop_lat, i.stop_lon)] # add lat long info
 
+    data.table::setorderv(stops_seq, "stop_sequence")
+
     # convert stops to sf
     stops_sf <- sfheaders::sf_point(stops_seq, x = "stop_lon", y = "stop_lat", keep = TRUE)
     sf::st_crs(stops_sf) <- sf::st_crs(shapes_sf)
@@ -298,6 +300,8 @@ gtfs2gps <- function(gtfs_data,
     if(any(is.infinite(output$speed)))
       message("Some 'speed' values are Inf in the returned data.")
     
+    if(is.null(output)) return(NULL)
+      
     output$speed <- units::set_units(output$speed, "km/h")
     output$dist <- units::set_units(output$dist, "m")
     output$cumdist <- units::set_units(output$cumdist, "m")
