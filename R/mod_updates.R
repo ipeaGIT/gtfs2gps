@@ -47,7 +47,7 @@ update_freq <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
     nmber_of_departures <- subset(freq_temp, start_time == starttimes[1])$number_of_departures
 
     if(length(nmber_of_departures) == 0 || is.na(nmber_of_departures)){
-      warning(paste0("Trip '", tripid, "' has zero departures. Ignoring it."),  call. = FALSE) # nocov
+      message(paste0("Trip '", tripid, "' has zero departures. Ignoring it.")) # nocov
       return(NULL) # nocov
     }
 
@@ -100,7 +100,7 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
   
   # ignore trip_id if original departure_time values are missing
   if(is.null(length(stop_id_ok)) == TRUE | length(stop_id_ok) == 1 | length(stop_id_ok) == 0){ 
-    warning(paste0("Trip '", tripid, "' has less than two stop_ids. Ignoring it."),  call. = FALSE) # nocov
+    message(paste0("Trip '", tripid, "' has less than two stop_ids. Ignoring it.")) # nocov
     return(NULL) # nocov
   }
     
@@ -144,10 +144,10 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
   new_stoptimes[, departure_time := round(departure_time[1L] + stats::lag(cumtime, 1, 0))]
 
   if(is.null(new_stoptimes)){
-    warning(paste0("Could not create stop times for trip '", tripid, "'. Ignoring it."),  call. = FALSE) # nocov
+    message(paste0("Could not create stop times for trip '", tripid, "'. Ignoring it.")) # nocov
   }
   else if(dim(new_stoptimes)[1] == 0)
-    warning(paste0("Trip '", tripid, "' has zero GPS points. Ignoring it."),  call. = FALSE) # nocov
+    message(paste0("Trip '", tripid, "' has zero GPS points. Ignoring it.")) # nocov
   
   return(new_stoptimes)
 }

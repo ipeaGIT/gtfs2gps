@@ -108,13 +108,15 @@ gtfs2gps <- function(gtfs_data,
     # each shape_id only has one stop sequence
     
     if(length(nstop) == 0){
-      warning(paste0("Shape '", shapeid, "' has zero stops. Ignoring it."),  call. = FALSE) # nocov
+      message(paste0("Shape '", shapeid, "' has zero stops. Ignoring it.")) # nocov
       return(NULL) # nocov
     }
     
     # check stop sequence
     stops_seq <- gtfs_data$stop_times[trip_id == all_tripids[which.max(nstop)], .(stop_id, stop_sequence, departure_time)]
     stops_seq[gtfs_data$stops, on = "stop_id", c('stop_lat', 'stop_lon') := list(i.stop_lat, i.stop_lon)] # add lat long info
+
+    data.table::setorderv(stops_seq, "stop_sequence")
 
     # convert stops to sf
     stops_sf <- sfheaders::sf_point(stops_seq, x = "stop_lon", y = "stop_lat", keep = TRUE)
@@ -135,18 +137,17 @@ gtfs2gps <- function(gtfs_data,
     temp_shape_coords <- sf::st_coordinates(new_shape)
     snapped <- cpp_snap_points(temp_stops_coords, 
                                temp_shape_coords,
-                               spatial_resolution,
-                               all_tripids[which.max(nstop)])
-    
+                               spatial_resolution)
+
     # Skip shape_id IF there are no snapped stops
     if(is.null(snapped) | length(snapped) == 0 ){
-      warning(paste0("Shape '", shapeid, "' has no snapped stops. Ignoring it."),  call. = FALSE)  # nocov
+      message(paste0("Shape '", shapeid, "' has no snapped stops. Ignoring it."))  # nocov
       return(NULL) # nocov
     }
 
     # Skip shape_id IF there is no route_id associated with that shape_id
     if(is.na(routeid)){
-      warning(paste0("Shape '", shapeid, "' has no route_id. Ignoring it."),  call. = FALSE)  # nocov
+      message(paste0("Shape '", shapeid, "' has no route_id. Ignoring it."))  # nocov
       return(NULL) # nocov
     }
       
@@ -179,12 +180,12 @@ gtfs2gps <- function(gtfs_data,
     new_stoptimes <- na.omit(new_stoptimes, cols = "dist")
 
     if(dim(new_stoptimes)[1] < 2){
-      warning(paste0("Shape '", shapeid, "' has less than two stops after conversion. Ignoring it."),  call. = FALSE)  # nocov
+      message(paste0("Shape '", shapeid, "' has less than two stops after conversion. Ignoring it."))  # nocov
       return(NULL) # nocov
     }
 
     if(length(which(!is.na(new_stoptimes$stop_sequence))) < 2){
-      warning(paste0("Shape '", shapeid, "' has less than two stop_sequences after conversion. Ignoring it."),  call. = FALSE)  # nocov
+      message(paste0("Shape '", shapeid, "' has less than two stop_sequences after conversion. Ignoring it."))  # nocov
       return(NULL) # nocov
     }
 
@@ -193,7 +194,7 @@ gtfs2gps <- function(gtfs_data,
     new_stoptimes <- data.table::rbindlist(new_stoptimes)
       
     if(is.null(new_stoptimes$departure_time)){
-      warning(paste0("Shape '", shapeid, "' has no departure_time. Ignoring it."),  call. = FALSE)  # nocov
+      message(paste0("Shape '", shapeid, "' has no departure_time. Ignoring it."))  # nocov
       return(NULL)  # nocov
     }
     
@@ -202,7 +203,19 @@ gtfs2gps <- function(gtfs_data,
     data.table::setcolorder(new_stoptimes, c("id", "shape_id", "trip_id", "trip_number", "route_type", 
       "shape_pt_lon", "shape_pt_lat", "departure_time", "stop_id", "stop_sequence", "dist", "cumdist",
       "cumtime", "speed"))
+
+    na_values <- length(which(is.na(new_stoptimes$speed)))
+    if(na_values > 0)
+      message(paste0(na_values, " 'speed' values are NA for shapeid '", shapeid, "'."))
     
+    infinite_values <- length(which(is.infinite(new_stoptimes$speed)))
+    if(infinite_values > 0)
+      message(paste0(infinite_values, " 'speed' values are Inf for shapeid '", shapeid, "'."))
+    
+    negative_values <- length(which(new_stoptimes$speed <= 0))
+    if(negative_values > 0)
+      message(paste0(negative_values, " 'speed' values are zero or negative for shapeid '", shapeid, "'."))
+
     if(!is.null(filepath)){ # Write object
       if(compress)
         readr::write_rds(x = new_stoptimes,
@@ -285,11 +298,13 @@ gtfs2gps <- function(gtfs_data,
 
   if(is.null(filepath)){
     if(any(is.na(output$speed)))
-      message("Some 'speed' values are NA in the returned data")
+      message("Some 'speed' values are NA in the returned data.")
     
     if(any(is.infinite(output$speed)))
-      message("Some 'speed' values are Inf in the returned data")
+      message("Some 'speed' values are Inf in the returned data.")
     
+    if(is.null(output) || dim(output)[1] == 0) return(NULL)
+
     output$speed <- units::set_units(output$speed, "km/h")
     output$dist <- units::set_units(output$dist, "m")
     output$cumdist <- units::set_units(output$cumdist, "m")

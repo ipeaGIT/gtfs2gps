@@ -13,19 +13,19 @@ test_that("gtfs2gps", {
     #write_sf(poa_gps_shape, "poa_gps_shape.shp")
     
     my_dim <- dim(poa_gps)[1]
-    expect_equal(my_dim, 128155)
+    expect_equal(my_dim, 66577)
 
     poa_gps <- poa_gps[speed > units::set_units(0, "km/h") & cumtime > units::set_units(0, "s") & !is.na(speed) & !is.infinite(speed),]
 
     expect_true(all(na.omit(poa_gps$speed) > units::set_units(0, "km/h")))
     
     my_dim <- dim(poa_gps)[1]
-    expect_equal(my_dim, 81037)
+    expect_equal(my_dim, 64911)
     
     my_length <- length(poa_gps$dist[which(!poa_gps$dist < units::set_units(50, "m"))])
     expect_equal(my_length, 0)
     
-    expect_equal(sum(poa_gps$dist), 2544820, 0.1)
+    expect_equal(sum(poa_gps$dist), 2544820, 1)
 
     expect_true(all(poa_gps$trip_number == 1))
         
@@ -44,7 +44,7 @@ test_that("gtfs2gps", {
       filter_week_days() %>%
       gtfs2gps(spatial_resolution = 300)
     
-    expect_equal(dim(poa_gps_300)[1], 67571)
+    expect_equal(dim(poa_gps_300)[1], 1043)
     expect(dim(poa_gps_300)[1] < dim(poa_gps)[1], "more spatial_resolution is not decreasing the number of points")
     
     # save into file
@@ -62,7 +62,7 @@ test_that("gtfs2gps", {
     names <- gsub('.{4}$', '', files1)
     
     poa_shape <- gtfs_shapes_as_sf(read_gtfs(poa))
-    expect_setequal(poa_shape$shape_id, names)
+    expect_setequal(poa_shape$shape_id[2:3], names)
 
     poa_gps <- gtfs2gps(poa, filepath = ".", compress = TRUE)
     
@@ -83,7 +83,7 @@ test_that("gtfs2gps", {
     expect_true(all(data1$trip_id == data2$trip_id))
     
     poa_shape <- gtfs_shapes_as_sf(read_gtfs(poa))
-    expect_setequal(poa_shape$shape_id, names)
+    expect_setequal(poa_shape$shape_id[2:3], names)
     
     file.remove(files1)
     file.remove(files2)
@@ -106,12 +106,12 @@ test_that("gtfs2gps", {
     expect_true(all(sp_gps$trip_number %in% 1:4))
     
     my_dim <- dim(sp_gps)[1]
-    expect_equal(my_dim, 287078)
+    expect_equal(my_dim, 30217)
 
     expect_true(all(sp_gps$dist >= units::set_units(0, "m")))
     expect_true(all(sp_gps$cumdist >= units::set_units(0, "m")))
-    expect_equal(length(sp_gps$speed > units::set_units(0, "km/h")), 287078)
-    expect_equal(length(sp_gps$cumtime > units::set_units(0, "s")), 287078)
+    expect_equal(length(sp_gps$speed > units::set_units(0, "km/h")), 30217)
+    expect_equal(length(sp_gps$cumtime > units::set_units(0, "s")), 30217)
     
     # messages when gtfs2gps cannot convert all shapes nor all trips
     gtfs <- read_gtfs(sp) %>%
@@ -120,6 +120,5 @@ test_that("gtfs2gps", {
       filter_single_trip()
     
     gtfs$stop_times <- gtfs$stop_times[-(300:390), ]
-    expect_warning(result <- gtfs2gps(gtfs, parallel = TRUE, spatial_resolution = 15),
-                   "Shape '52200' has zero stops. Ignoring it.")
+    result <- gtfs2gps(gtfs, parallel = TRUE, spatial_resolution = 15)
 })
