@@ -303,8 +303,8 @@ gtfs2gps <- function(gtfs_data,
     if(any(is.infinite(output$speed)))
       message("Some 'speed' values are Inf in the returned data.")
     
-    if(is.null(output)) return(NULL)
-      
+    if(is.null(output) || dim(output)[1] == 0) return(NULL)
+
     output$speed <- units::set_units(output$speed, "km/h")
     output$dist <- units::set_units(output$dist, "m")
     output$cumdist <- units::set_units(output$cumdist, "m")
