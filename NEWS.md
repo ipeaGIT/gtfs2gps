@@ -8,11 +8,15 @@
 * New sample GTFS.zip data for Berlin
 * New `compress` parameter in `gtfs2gps` function so that users can save the function outputs in compressed `.RDS` format.
 * New function `remove_by_route_id()` to remove GTFS data by route ids. Closes #180
+* Stops are now snapped to shapes using a simples and more restrictive algorithm. This help identifies when a route is has a problem with `stop_sequence` in the wrong order
 
 **Minor changes**
 * Fixed a bug in filter_day_period. Closes #96
 * Fix the treatment of midnight trips. Closes #43
 * Fix linebreak gps_as_sflinestring. Closes #171
+* Warnings are now printed as messages
+* Order stop sequence before converting to GPS.
+* Additional verifications in gtfs2gps
 
 -------------------------------------------------------
 # gtfs2gps v1.3-2
