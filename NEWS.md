@@ -17,6 +17,8 @@
 * Warnings are now printed as messages
 * Order stop sequence before converting to GPS.
 * Additional verifications in gtfs2gps
+* Added package Hex sticker Closes #75
+
 
 -------------------------------------------------------
 # gtfs2gps v1.3-2
