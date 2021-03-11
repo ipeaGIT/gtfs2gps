@@ -101,7 +101,7 @@ of points." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/ipeaGIT/gtfs2gps/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -128,7 +128,7 @@ of points." />
 of points.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cpp_snap_points</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>ref</span>, <span class='va'>spatial_resolution</span>, <span class='va'>id</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>cpp_snap_points</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>ref</span>, <span class='va'>spatial_resolution</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -149,11 +149,6 @@ a subset of this parameter.</p></td>
       <td><p>The spatial resolution of data, which means that from each
 point of data it is possible to reach at least one point within data with distance 
 equals or less than spatial_resolution.</p></td>
-    </tr>
-    <tr>
-      <th>id</th>
-      <td><p>The id of the data to be shown in case of an error when a given point is
-more than [spatial_resolution ^ 4] meters away from the reference matrix.</p></td>
     </tr>
     </table>
 

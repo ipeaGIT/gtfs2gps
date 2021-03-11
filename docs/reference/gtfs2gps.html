@@ -105,7 +105,7 @@ uses progressr internally to show progress bars." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/ipeaGIT/gtfs2gps/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -142,6 +142,7 @@ uses progressr internally to show progress bars.</p>
   parallel <span class='op'>=</span> <span class='cn'>FALSE</span>,
   strategy <span class='op'>=</span> <span class='cn'>NULL</span>,
   filepath <span class='op'>=</span> <span class='cn'>NULL</span>,
+  compress <span class='op'>=</span> <span class='cn'>FALSE</span>,
   continue <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
@@ -172,9 +173,19 @@ use future::plan() directly.</p></td>
     </tr>
     <tr>
       <th>filepath</th>
-      <td><p>Output file path. As default, the output is returned in R.
-When this argument is set, each route is saved into a file within filepath,
-with the name equals to its id. In this case, no output is returned.</p></td>
+      <td><p>Output file path. As default, the output is returned when gtfs2gps finishes.
+When this argument is set, each route is saved into a txt file within filepath,
+with the name equals to its id. In this case, no output is returned. See argument
+compress for another option.</p></td>
+    </tr>
+    <tr>
+      <th>compress</th>
+      <td><p>Argument that can be used only with filepath. When TRUE, it
+compresses the output files by saving them using rds format. Default value is FALSE.
+Note that compress guarantees that the data saved will be read in the same way as it
+was created in R. If not compress, the txt extension requires the data to be converted
+from ITime to string, and therefore they need to manually converted back to ITime to 
+be properly handled by gtfs2gps.</p></td>
     </tr>
     <tr>
       <th>continue</th>
@@ -198,7 +209,7 @@ shape_pt_lon and shape_pt_lat (degrees), speed (km/h), departure_time (hh:mm:ss)
   <span class='fu'><a href='filter_single_trip.html'>filter_single_trip</a></span><span class='op'>(</span><span class='op'>)</span>
 
 <span class='va'>poa_gps</span> <span class='op'>&lt;-</span> <span class='fu'>gtfs2gps</span><span class='op'>(</span><span class='va'>subset</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Converting shapes to sf objects</span></div><div class='output co'>#&gt; <span class='message'>Processing the data</span></div><div class='output co'>#&gt; <span class='message'>Some 'speed' values are NA in the returned data</span></div></pre>
+</div><div class='output co'>#&gt; <span class='message'>Converting shapes to sf objects</span></div><div class='output co'>#&gt; <span class='message'>Processing the data</span></div><div class='output co'>#&gt; <span class='message'>Shape 'T2-1' has no snapped stops. Ignoring it.</span></div><div class='output co'>#&gt; <span class='message'>0 out of 1 shapes (0%) were properly processed.</span></div><div class='output co'>#&gt; <span class='message'>0 out of 1 trips (0%) were properly processed.</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Simplify shapes of a GTFS file — simplify_shapes • gtfs2gps</title>
+<title>Remove GTFS data by route ids — remove_by_route_id • gtfs2gps</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,10 @@
 
 
 
-<meta property="og:title" content="Simplify shapes of a GTFS file — simplify_shapes" />
-<meta property="og:description" content="Remove points from the shapes of a GTFS file in order to
-reduce its size. It uses Douglas-Peucker algorithm internally." />
+<meta property="og:title" content="Remove GTFS data by route ids — remove_by_route_id" />
+<meta property="og:description" content="Remove a GTFS data by its route ids, dropping routes
+and trips. It also removes the unnecessary stop_times, shapes, frequencies
+(if exist in a feed), and stops accordingly." />
 
 
 
@@ -118,40 +119,42 @@ reduce its size. It uses Douglas-Peucker algorithm internally." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Simplify shapes of a GTFS file</h1>
-    <small class="dont-index">Source: <a href='https://github.com/ipeaGIT/gtfs2gps/blob/master/R/simplify_shapes.R'><code>R/simplify_shapes.R</code></a></small>
-    <div class="hidden name"><code>simplify_shapes.Rd</code></div>
+    <h1>Remove GTFS data by route ids</h1>
+    <small class="dont-index">Source: <a href='https://github.com/ipeaGIT/gtfs2gps/blob/master/R/filter_gtfs.R'><code>R/filter_gtfs.R</code></a></small>
+    <div class="hidden name"><code>remove_by_route_id.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Remove points from the shapes of a GTFS file in order to
-reduce its size. It uses Douglas-Peucker algorithm internally.</p>
+    <p>Remove a GTFS data by its route ids, dropping routes
+and trips. It also removes the unnecessary stop_times, shapes, frequencies
+(if exist in a feed), and stops accordingly.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>simplify_shapes</span><span class='op'>(</span><span class='va'>gtfs_data</span>, tol <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>remove_by_route_id</span><span class='op'>(</span><span class='va'>gtfs_data</span>, <span class='va'>route_ids</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>gtfs_data</th>
-      <td><p>A list of data.tables read using gtfs2gps::read_gtfs().</p></td>
+      <td><p>A list of data.tables read using gtfs2gps::reag_gtfs().</p></td>
     </tr>
     <tr>
-      <th>tol</th>
-      <td><p>Numerical tolerance value to be used by the Douglas-Peuker algorithm.
-The default value is 0, which means that no data will be lost.</p></td>
+      <th>route_ids</th>
+      <td><p>A vector of route ids belonging to the routes of the
+gtfs_data data. Note that route_id might be loaded by gtfs2gps::read_gtfs()
+as a string or a number, depending on the available values.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A GTFS data whose shapes is a subset of the input data.</p>
+    <p>A filtered GTFS data without service information of the set route ids.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>poa</span> <span class='op'>&lt;-</span> <span class='fu'><a href='read_gtfs.html'>read_gtfs</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/poa.zip"</span>, package<span class='op'>=</span><span class='st'>"gtfs2gps"</span><span class='op'>)</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='va'>warsaw</span> <span class='op'>&lt;-</span> <span class='fu'><a href='read_gtfs.html'>read_gtfs</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/warsaw.zip"</span>, package<span class='op'>=</span><span class='st'>"gtfs2gps"</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Reading 'agency.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'routes.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'stops.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'stop_times.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'shapes.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'trips.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'calendar.txt'</span></div><div class='input'>
-<span class='va'>poa_simpl</span> <span class='op'>&lt;-</span> <span class='fu'>simplify_shapes</span><span class='op'>(</span><span class='va'>poa</span><span class='op'>)</span>
+<span class='va'>subset</span> <span class='op'>&lt;-</span> <span class='fu'>remove_by_route_id</span><span class='op'>(</span><span class='va'>warsaw</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"15"</span>, <span class='st'>"175"</span><span class='op'>)</span><span class='op'>)</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
