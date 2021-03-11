@@ -99,7 +99,7 @@ gtfs2gps <- function(gtfs_data,
     routeid <- gtfs_data$trips[shape_id == shapeid]$route_id[1]
     
     # get all trips linked to that route
-    all_tripids <- gtfs_data$trips[shape_id == shapeid & route_id == routeid, ]$trip_id %>% unique()
+    all_tripids <- unique( gtfs_data$trips[shape_id == shapeid & route_id == routeid, ]$trip_id )
 
     # nstop = number of valid stops in each trip_id
     nstop <- gtfs_data$stop_times[trip_id %chin% all_tripids, .N, by = "trip_id"]$N
@@ -125,18 +125,20 @@ gtfs2gps <- function(gtfs_data,
     spatial_resolution <- units::set_units(spatial_resolution / 1000, "km")
     
     # new faster version using sfheaders
-    new_shape <- subset(shapes_sf, shape_id == shapeid) %>%
-      sf::st_segmentize(spatial_resolution) %>%
-      sfheaders::sf_cast( "POINT")
-    
+    new_shape <- subset(shapes_sf, shape_id == shapeid)
+    new_shape <- sf::st_segmentize(new_shape, spatial_resolution)
+    new_shape <- sfheaders::sf_cast(new_shape, "POINT")
+      
     # convert units of spatial resolution to meters
     spatial_resolution <- units::set_units(spatial_resolution, "m")
     
     # snap stops the nodes of the shape route
-    snapped <- cpp_snap_points(stops_sf %>% sf::st_coordinates(), 
-                                     new_shape %>% sf::st_coordinates(),
-                                     spatial_resolution)
-    
+    temp_stops_coords <- sf::st_coordinates(stops_sf)
+    temp_shape_coords <- sf::st_coordinates(new_shape)
+    snapped <- cpp_snap_points(temp_stops_coords, 
+                               temp_shape_coords,
+                               spatial_resolution)
+
     # Skip shape_id IF there are no snapped stops
     if(is.null(snapped) | length(snapped) == 0 ){
       message(paste0("Shape '", shapeid, "' has no snapped stops. Ignoring it."))  # nocov
@@ -163,14 +165,14 @@ gtfs2gps <- function(gtfs_data,
     # identify route type
     if(!is.null(gtfs_data$routes)){
       routetype <- gtfs_data$routes[route_id == routeid]$route_type
-      new_stoptimes[, "route_type"] <- routetype
+      new_stoptimes[, route_type := routetype ]
     }
 
     ## Add stops to new_stoptimes  
-    new_stoptimes[stops_seq$ref, "stop_id"] <- stops_seq$stop_id
-    new_stoptimes[stops_seq$ref, "stop_sequence"] <- stops_seq$stop_sequence
-    new_stoptimes[stops_seq$ref, "departure_time"] <- stops_seq$departure_time
-
+    new_stoptimes[stops_seq$ref, stop_id := stops_seq$stop_id ]
+    new_stoptimes[stops_seq$ref, stop_sequence := stops_seq$stop_sequence ]
+    new_stoptimes[stops_seq$ref, departure_time := stops_seq$departure_tim ]
+    
     # calculate Distance between successive points
     new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type = "lead"), data.table::shift(shape_pt_lon, type = "lead"), tolerance = 1e10)]
     # new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type = "lag"), data.table::shift(shape_pt_lon, type = "lag"), tolerance = 1e10)]
@@ -188,8 +190,9 @@ gtfs2gps <- function(gtfs_data,
     }
 
     ###### PART 2.2 Function recalculate new stop_times for each trip id of each Shape id ------------------------------
-    new_stoptimes <- lapply(X = all_tripids, FUN = update_freq, new_stoptimes, gtfs_data, all_tripids) %>% data.table::rbindlist()
-
+    new_stoptimes <- lapply(X = all_tripids, FUN = update_freq, new_stoptimes, gtfs_data, all_tripids)
+    new_stoptimes <- data.table::rbindlist(new_stoptimes)
+      
     if(is.null(new_stoptimes$departure_time)){
       message(paste0("Shape '", shapeid, "' has no departure_time. Ignoring it."))  # nocov
       return(NULL)  # nocov
@@ -256,8 +259,8 @@ gtfs2gps <- function(gtfs_data,
   requiredPackages = c('data.table', 'sf', 'magrittr', 'Rcpp', 'sfheaders', 'units')
   output <- furrr::future_map(.x = all_shapeids, .f = tryCorefun, 
                               .options = furrr::furrr_options(
-                              packages = requiredPackages)) %>% 
-    data.table::rbindlist()
+                              packages = requiredPackages))
+    output <- data.table::rbindlist(output)
   
   if(length(badShapes) > 0){
     if(original_gtfs_data_arg == ".") original_gtfs_data_arg <- "<your gtfs data>" # nocov
