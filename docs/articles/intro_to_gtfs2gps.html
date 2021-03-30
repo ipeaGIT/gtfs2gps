@@ -348,7 +348,7 @@
 <p>We can then easily convert the data to simple feature format and plot them.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sao_small_shapes_sf</span> <span class="op">&lt;-</span> <span class="fu">gtfs2gps</span><span class="fu">::</span><span class="fu"><a href="../reference/gtfs_shapes_as_sf.html">gtfs_shapes_as_sf</a></span><span class="op">(</span><span class="va">sao_small</span><span class="op">)</span></code></pre></div>
-<pre><code>## Warning: package 'sf' was built under R version 4.0.3</code></pre>
+<pre><code>## Warning: package 'sf' was built under R version 4.0.4</code></pre>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sao_small_stops_sf</span> <span class="op">&lt;-</span> <span class="fu">gtfs2gps</span><span class="fu">::</span><span class="fu"><a href="../reference/gtfs_stops_as_sf.html">gtfs_stops_as_sf</a></span><span class="op">(</span><span class="va">sao_small</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html">st_geometry</a></span><span class="op">(</span><span class="va">sao_small_shapes_sf</span><span class="op">)</span><span class="op">)</span>
@@ -364,8 +364,10 @@
 <a href="#converting-to-gps-like-format" class="anchor"></a>Converting to GPS-like format</h1>
 <p>To convert GTFS to GPS-like format, use <code><a href="../reference/gtfs2gps.html">gtfs2gps()</a></code>. This is the core function of the package. It takes a GTFS zipped file as an input and returns a <code>data.table</code> where each row represents a ‘GPS-like’ data point for every trip in the GTFS file. In summary, this function interpolates the space-time position of each vehicle in each trip considering the network distance and average speed between stops. The function samples the timestamp of each vehicle every <span class="math inline">\(15m\)</span> by default, but the user can set a different value in the <code>spatial_resolution</code> argument. See the example below.</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R">  <span class="va">sao_gps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gtfs2gps.html">gtfs2gps</a></span><span class="op">(</span><span class="st">"sao_small.zip"</span>, spatial_resolution <span class="op">=</span> <span class="fl">50</span><span class="op">)</span>
-  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">sao_gps</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R">  <span class="va">sao_gps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gtfs2gps.html">gtfs2gps</a></span><span class="op">(</span><span class="st">"sao_small.zip"</span>, spatial_resolution <span class="op">=</span> <span class="fl">50</span><span class="op">)</span></code></pre></div>
+<pre><code>## Warning: package 'units' was built under R version 4.0.4</code></pre>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R">  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">sao_gps</span><span class="op">)</span></code></pre></div>
 <pre><code>##    id shape_id   trip_id trip_number route_type shape_pt_lon shape_pt_lat
 ## 1:  1    51338 5010-10-0           1          3    -46.63120    -23.66268
 ## 2:  2    51338 5010-10-0           1          3    -46.63117    -23.66273
@@ -388,7 +390,7 @@
 ## 5: 13.383957 [s] 25.44852 [km/h]
 ## 6: 18.544319 [s] 25.44852 [km/h]</code></pre>
 <p>The following figure maps the first 100 data points of the sample data we processed. They can be converted to <code>simple feature</code> points or linestring.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R">  <span class="va">sao_gps60</span> <span class="op">&lt;-</span> <span class="va">sao_gps</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span>, <span class="op">]</span>
   
   <span class="co"># points</span>
@@ -403,7 +405,7 @@
   <span class="fu"><a href="https://rdrr.io/r/graphics/box.html">box</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="intro_to_gtfs2gps_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 <p>The function <code><a href="../reference/gtfs2gps.html">gtfs2gps()</a></code> automatically recognizes whether the GTFS data brings detailed <code>stop_times.txt</code> information or whether it is a <code>frequency.txt</code> GTFS file. A sample data of a GTFS with detailed <code>stop_times.txt</code> cab be found below:</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">poa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa.zip"</span>, package <span class="op">=</span><span class="st">"gtfs2gps"</span><span class="op">)</span>
 
 <span class="va">poa_gps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gtfs2gps.html">gtfs2gps</a></span><span class="op">(</span><span class="va">poa</span>, spatial_resolution <span class="op">=</span> <span class="fl">50</span><span class="op">)</span>
