@@ -73,4 +73,4 @@
 -------------------------------------------------------
 # gtfs2gps v1.0-5
 
-* Launch of **gtfs2gps** v1.0-5 on [CRAN](https://cran.r-project.org/web/packages/gtfs2gps/index.html) on 2020-03-16
+* Launch of **gtfs2gps** v1.0-5 on [CRAN](https://CRAN.R-project.org/package=gtfs2gps) on 2020-03-16
