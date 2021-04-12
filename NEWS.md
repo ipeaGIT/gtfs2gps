@@ -1,6 +1,12 @@
 # log history of gtfs2gps package development
 
 -------------------------------------------------------
+# gtfs2gps dev v1.4-1 dev
+
+
+
+
+-------------------------------------------------------
 # gtfs2gps dev v1.4-0
 
 **Major changes**
