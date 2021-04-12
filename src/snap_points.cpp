@@ -21,13 +21,13 @@ Rcpp::NumericVector cpp_snap_points_level(Rcpp::NumericMatrix& data, Rcpp::Numer
   double dist;
   double dist_next;
 
-  while(i < nrow && ref_i + 1 < ref_nrow) {
+  while(i < nrow && ref_i + 2 < ref_nrow) {
     const double x = data[i];
     const double y = data[i + nrow];
 
     found = false;
     
-    do {
+    while (ref_i + 2 < ref_nrow && !found) {
       ref_i++;
       const double ref_x = ref[ref_i];
       const double ref_y = ref[ref_i + ref_nrow];
@@ -43,7 +43,7 @@ Rcpp::NumericVector cpp_snap_points_level(Rcpp::NumericMatrix& data, Rcpp::Numer
         result_pos.push_back(ref_i + 1);
         found = true;
       }
-    } while (ref_i + 1 < ref_nrow && !found);
+    };
 
     i++;
   }
