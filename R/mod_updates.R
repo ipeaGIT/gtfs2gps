@@ -1,25 +1,26 @@
 update_freq <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
   # Update new_stoptimes
-  new_stoptimes <- update_dt(tripid, new_stoptimes, gtfs_data, all_tripids)
-
+  new_stoptimes <- update_dt(tripid, data.table::copy(new_stoptimes), gtfs_data, all_tripids)
   if(is.null(new_stoptimes)){
     return(new_stoptimes) # nocov
   }
 
-  new_stoptimes[, trip_number := 1 ]
-  
-  if(is.null(gtfs_data$frequencies)) return(new_stoptimes) # nocov
-  
+  if(is.null(gtfs_data$frequencies)) {
+    new_stoptimes[, trip_number := tripid ]
+    return(new_stoptimes) # nocov
+  }  
   #  Get freq info for that trip
   # tripid <- "8700-21-0"
-  freq_temp <- subset(gtfs_data$frequencies, trip_id == tripid)
+  freq_temp <- subset(gtfs_data$frequencies, trip_id == all_tripids[tripid])
   
   if(dim(freq_temp)[1] == 0) return(new_stoptimes)
   
   # number of trips
   freq_temp[, service_duration := abs(end_time[1] - start_time[1])]
   freq_temp[, number_of_departures := ceiling(service_duration / headway_secs)]
-  
+  # update number of trips
+  freq_temp[, start_trip_number := shift(cumsum(number_of_departures),1,0) +1]
+  freq_temp[, end_trip_number := start_trip_number + number_of_departures - 1]
   # get all start times of each period
   starttimes <- freq_temp$start_time #- new_stoptimes$cumtime[newstop_t0[1]-1]
   
@@ -36,7 +37,7 @@ update_freq <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
       
       # Updating all stop times by adding the headway
       dt_list[[i]][, departure_time := round(departure_time + ((i - 1) * thisheadway))]
-      dt_list[[i]][, trip_number := i]
+      dt_list[[i]][, trip_number := departure_list[i]]
       return(dt_list[[i]])
     }
     
@@ -53,15 +54,18 @@ update_freq <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
 
 #    if(nmber_of_departures < 0) nmber_of_departures <- -nmber_of_departures
       
+    # # list of departures
+    # departure_list <- 1:nmber_of_departures
     # list of departures
-    departure_list <- 1:nmber_of_departures
+    departure_list <- subset(freq_temp, start_time == starttimes[1])[,c(start_trip_number,end_trip_number)]
+    departure_list <- departure_list[1]:departure_list[2]
     
     # # Replicate one new_stop_times for each departure  
     # all_departures <- rep(list(new_stoptimes), nmber_of_departures)
     dt_list <- replicate(nmber_of_departures, list(data.table::copy(new_stoptimes)))
     
     # Function to update stoptimes of each departure
-    dt_list <- lapply(departure_list, update_departure_stoptimes, dt_list)
+    dt_list <- lapply(seq_along(departure_list), update_departure_stoptimes, dt_list)
     
     # Apply function and return the stop times of all departures from that period
     departure_stoptimes <- lapply(X = seq_along(dt_list), FUN = update_departure_stoptimes, dt_list)
@@ -82,25 +86,24 @@ update_freq <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
 update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
                     # internal test
                     # tripid <- "176-1@1#1800" all_tripids[1]
-  # message(tripid)
   # add trip_id 
-  new_stoptimes[, trip_id := tripid]
+  new_stoptimes[, trip_id := all_tripids[tripid]]
   
   # add cummulative distance
   new_stoptimes[, cumdist := cumsum(dist)]
 
   # subset original stoptimes to get original travel_times btwn stops
-  stoptimes_temp <- gtfs_data$stop_times[trip_id == tripid]
+  stoptimes_temp <- gtfs_data$stop_times[trip_id == all_tripids[tripid]]
   
   # add departure_time based on stop sequence
   new_stoptimes[stoptimes_temp, on = 'stop_sequence', 'departure_time' := i.departure_time]
 
   # get a 'stop_sequence' of the stops which have proper info on 'departure_time'
-  stop_id_ok <- gtfs_data$stop_times[trip_id == tripid & is.na(departure_time) == FALSE,]$stop_sequence
+  stop_id_ok <- gtfs_data$stop_times[trip_id == all_tripids[tripid] & is.na(departure_time) == FALSE,]$stop_sequence
   
   # ignore trip_id if original departure_time values are missing
   if(is.null(length(stop_id_ok)) == TRUE | length(stop_id_ok) == 1 | length(stop_id_ok) == 0){ 
-    message(paste0("Trip '", tripid, "' has less than two stop_ids. Ignoring it.")) # nocov
+    message(paste0("Trip '", all_tripids[tripid], "' has less than two stop_ids. Ignoring it.")) # nocov
     return(NULL) # nocov
   }
     
@@ -144,10 +147,12 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
   new_stoptimes[, departure_time := round(departure_time[1L] + stats::lag(cumtime, 1, 0))]
 
   if(is.null(new_stoptimes)){
-    message(paste0("Could not create stop times for trip '", tripid, "'. Ignoring it.")) # nocov
+    message(paste0("Could not create stop times for trip '", 
+                   all_tripids[tripid], "'. Ignoring it.")) # nocov
   }
   else if(dim(new_stoptimes)[1] == 0)
-    message(paste0("Trip '", tripid, "' has zero GPS points. Ignoring it.")) # nocov
+    message(paste0("Trip '", all_tripids[tripid], 
+                   "' has zero GPS points. Ignoring it.")) # nocov
   
   return(new_stoptimes)
 }

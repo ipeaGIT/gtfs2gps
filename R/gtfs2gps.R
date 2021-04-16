@@ -190,9 +190,9 @@ gtfs2gps <- function(gtfs_data,
     }
 
     ###### PART 2.2 Function recalculate new stop_times for each trip id of each Shape id ------------------------------
-    new_stoptimes <- lapply(X = all_tripids, FUN = update_freq, new_stoptimes, gtfs_data, all_tripids)
-    new_stoptimes <- data.table::rbindlist(new_stoptimes)
-      
+    new_stoptimes <- lapply(X = seq_along(all_tripids), FUN = update_freq,
+                            new_stoptimes, gtfs_data, all_tripids)
+    new_stoptimes <- data.table::rbindlist(new_stoptimes)  
     if(is.null(new_stoptimes$departure_time)){
       message(paste0("Shape '", shapeid, "' has no departure_time. Ignoring it."))  # nocov
       return(NULL)  # nocov
@@ -280,16 +280,16 @@ gtfs2gps <- function(gtfs_data,
     message("################################################") # nocov
   }
 
-  total_shapes <- length(unique(gtfs_data$shapes$shape_id))
-  processed_shapes <- length(unique(output$shape_id))
+  total_shapes <- data.table::uniqueN(gtfs_data$shapes$shape_id)
+  processed_shapes <- data.table::uniqueN(output$shape_id)
 
   if(processed_shapes < total_shapes && is.null(filepath)){
     perc <- round(processed_shapes / total_shapes * 100, 2)
     message(paste0(processed_shapes, " out of ", total_shapes, " shapes (", perc, "%) were properly processed."))
   }
 
-  total_trips <- length(unique(gtfs_data$trips$trip_id))
-  processed_trips <- length(unique(output$trip_id))
+  total_trips <- data.table::uniqueN(gtfs_data$trips$trip_id)
+  processed_trips <- data.table::uniqueN(output$trip_id)
   
   if(processed_trips < total_trips && is.null(filepath)){
     perc <- round(processed_trips / total_trips * 100, 2)
