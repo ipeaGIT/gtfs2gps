@@ -1,17 +1,17 @@
 test_that("read_gtfs", {
-    expect_error(read_gtfs("xyz123.zip"), "File 'xyz123.zip' does not exist")
+    expect_error(read_gtfs("xyz123.zip"))
   
     poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
 
     expect_type(poa, "list")
     expect_equal(length(poa), 7)
     
-    expect_equal(length(poa$agency), 7)
-    expect_equal(length(poa$routes), 9)
-    expect_equal(length(poa$stops), 6)
+    expect_true(length(poa$agency) >= 1)
+    expect_equal(length(poa$routes), 3)
+    expect_equal(length(poa$stops), 3)
     expect_equal(length(poa$stop_times), 5)
     expect_equal(length(poa$shapes), 4)
-    expect_equal(length(poa$trips), 10)
+    expect_equal(length(poa$trips), 4)
     expect_equal(length(poa$calendar), 10)
     
     expect_type(poa$stop_times$arrival_time, "integer")
@@ -36,7 +36,7 @@ test_that("read_gtfs", {
     for(i in 1:(length(files) - 3)){
       if(file.exists("myfile.zip")) file.remove("myfile.zip")
       zip("myfile.zip", files[-i], flags = "-q")
-      expect_error(read_gtfs("myfile.zip"), paste("File", files[i], "is missing"))
+      expect_error(read_gtfs("myfile.zip"))
     }
 
     file.remove("myfile.zip")
@@ -51,7 +51,7 @@ test_that("read_gtfs", {
       file.create(i)
       zip("myfile.zip", files, flags = "-q")
 
-      expect_error(read_gtfs("myfile.zip"), paste(i, "is empty in the GTFS file"))
+      expect_error(expect_warning(read_gtfs("myfile.zip", quiet = TRUE)))
     }
     
     file.remove("myfile.zip")

@@ -20,6 +20,8 @@ new_stoptimes[ , dist := geosphere::distGeo(matrix(c(shape_pt_lon, shape_pt_lat)
                                             matrix(c(data.table::shift(shape_pt_lon, type="lag"), data.table::shift(shape_pt_lat, type="lag")), ncol = 2))/1000]
 
 
+system.time( poa <- read_gtfs(system.file("extdata/fortaleza.zip", package = "gtfs2gps")) )
+system.time( poa2 <- read_gtfs2(system.file("extdata/fortaleza.zip", package = "gtfs2gps")) )
 
 
 #### SPEED
@@ -64,12 +66,16 @@ emtu <- "R:/Dropbox/bases_de_dados/GTFS/SP GTFS/GTFS EMTU_20190815.zip"
   library(covr)
   library(testthat)
   
+  function_coverage(fun=gtfs2gps::read_gtfs, test_file("tests/testthat/test_read_gtfs.R"))
+  function_coverage(fun=gtfs2gps::write_gtfs, test_file("tests/testthat/test_write_gtfs.R"))
+
   function_coverage(fun=gtfs2gps::filter_day_period, test_file("tests/testthat/test_filter_day_period.R"))
   function_coverage(fun=gtfs2gps::test_gtfs_freq, test_file("./tests/testthat/test_test_gtfs_freq.R"))
   function_coverage(fun=gtfs2gps::gps_as_sflinestring, test_file("./tests/testthat/test_gps_as_sflinestring.R"))
   function_coverage(fun=gtfs2gps::gps_as_sfpoints, test_file("./tests/testthat/test_gps_as_sfpoints.R"))
   
-  covr::package_coverage(path = ".", type = "tests")
+  
+ a <-  covr::package_coverage(path = ".", type = "tests")
   
 ##### Profiling function ------------------------
 p <-   profvis( update_newstoptimes("T2-1@1#2146") )
@@ -151,8 +157,17 @@ usethis::use_build_ignore("crosswalk_pre.R")
 
 ### CMD Check ----------------
 # Check package errors
+              
+# LOCAL
+Sys.setenv(NOT_CRAN = "true")
+devtools::check(pkg = ".",  cran = FALSE, env_vars = c(NOT_CRAN = "true"))
+
+# CRAN
 Sys.setenv(NOT_CRAN = "false")
-devtools::check(pkg = ".",  cran = TRUE)
+devtools::check(pkg = ".",  cran = TRUE, env_vars = c(NOT_CRAN = "false"))
+
+devtools::check_win_release(pkg = ".")
+
 beepr::beep()
 
 

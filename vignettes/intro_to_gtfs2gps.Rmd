@@ -28,7 +28,7 @@ This function gets a zipped GTFS file and returns a list of `data.table` objects
 library("gtfs2gps")
 sao <- read_gtfs(system.file("extdata/saopaulo.zip", package ="gtfs2gps"))
 names(sao)
-sao$trips
+head(sao$trips)
 ```
 
 Note that not all GTFS files are loaded into R. This function only loads the necessary data to spatially and temporally handle trips and stops, which are:
@@ -73,7 +73,8 @@ box()
 After subsetting the data, it is also possible to save it as a new GTFS file using `write_gtfs()`, as shown below.
 
 ```{r, message = FALSE}
-write_gtfs(sao_small, "sao_small.zip")
+# write_gtfs(sao_small, "sao_small.zip")
+gtfsio::export_gtfs(sao_small, "sao_small.zip")
 ```
 
 # Converting to GPS-like format

@@ -4,10 +4,13 @@
 \alias{read_gtfs}
 \title{Read GTFS data into a list of data.tables}
 \usage{
-read_gtfs(gtfszip)
+read_gtfs(gtfszip, quiet = FALSE)
 }
 \arguments{
 \item{gtfszip}{A zipped GTFS data.}
+
+\item{quiet}{A logical. Whether to hide log messages and progress bars. 
+Defaults to `FALSE`.}
 }
 \value{
 A list of data.tables, where each index represents the respective GTFS file name.
@@ -21,4 +24,5 @@ this function will stop with an error message.
 }
 \examples{
 poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
+
 }

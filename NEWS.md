@@ -3,18 +3,19 @@
 -------------------------------------------------------
 # gtfs2gps dev v1.4-1 dev
 
-
+**Minor changes**
+* Using previous algorithm to snap stops to shapes.
 
 
 -------------------------------------------------------
-# gtfs2gps dev v1.4-0
+# gtfs2gps v1.4-0
 
 **Major changes**
 * Allows filtering a GTFS feed by weekday and accounts for `calendar_dates.txt` info. Closes #103, #124 and #141
 * New sample GTFS.zip data for Berlin
 * New `compress` parameter in `gtfs2gps` function so that users can save the function outputs in compressed `.RDS` format.
 * New function `remove_by_route_id()` to remove GTFS data by route ids. Closes #180
-* Stops are now snapped to shapes using a simpler and more restrictive algorithm. This help identifies when a route is has problem with `stop_sequence` in the wrong order
+* Stops are now snapped to shapes using a simpler and more restrictive algorithm. This help identifies when a route has problem with `stop_sequence` in the wrong order
 
 **Minor changes**
 * Fixed a bug in filter_day_period. Closes #96
