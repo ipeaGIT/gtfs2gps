@@ -19,7 +19,7 @@ update_freq <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
   freq_temp[, service_duration := abs(end_time[1] - start_time[1])]
   freq_temp[, number_of_departures := ceiling(service_duration / headway_secs)]
   # update number of trips
-  freq_temp[, start_trip_number := shift(cumsum(number_of_departures),1,0) +1]
+  freq_temp[, start_trip_number := data.table::shift(cumsum(number_of_departures),1,0) +1]
   freq_temp[, end_trip_number := start_trip_number + number_of_departures - 1]
   # get all start times of each period
   starttimes <- freq_temp$start_time #- new_stoptimes$cumtime[newstop_t0[1]-1]
