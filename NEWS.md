@@ -1,8 +1,10 @@
 # log history of gtfs2gps package development
 
 -------------------------------------------------------
-# gtfs2gps dev v1.4-1 dev
+# gtfs2gps dev v1.5 dev
 
+**Major changes**
+* Fixed the update of trip_number attribute. This affects the output of `gps_as_sflinestring()`. Closes #189.
 
 
 
