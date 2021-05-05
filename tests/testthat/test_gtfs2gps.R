@@ -27,8 +27,9 @@ test_that("gtfs2gps", {
     
     expect_equal(sum(poa_gps$dist), 2544820, 1)
 
-    expect_true(all(poa_gps$trip_number == 1))
-        
+    expect_true(all(poa_gps$trip_number[1] == 1))
+    expect_true(all(poa_gps$trip_number[.N] == 77))
+    
     expect_true(all(names(poa_gps) %in% 
       c("trip_id", "route_type", "id", "shape_pt_lon", "shape_pt_lat", "trip_number",
         "departure_time", "stop_id", "stop_sequence", "dist", "shape_id", "cumdist", "speed", "cumtime")))
@@ -97,13 +98,13 @@ test_that("gtfs2gps", {
       filter_by_shape_id(52000:52200) %>%
       filter_week_days() %>%
       filter_single_trip() %>%
-      gtfs2gps(parallel = TRUE, spatial_resolution = 15)
+      gtfs2gps(parallel = FALSE, spatial_resolution = 15)
 
     expect_true(all(names(sp_gps) %in% 
       c("trip_id", "route_type", "id", "shape_pt_lon", "shape_pt_lat", "trip_number",
         "departure_time", "stop_id", "stop_sequence", "dist", "shape_id", "cumdist", "speed", "cumtime")))
 
-    expect_true(all(sp_gps$trip_number %in% 1:4))
+    expect_true(all(sp_gps$trip_number %in% 1:17))
     
     my_dim <- dim(sp_gps)[1]
     expect_equal(my_dim, 30217)
