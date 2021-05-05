@@ -20,23 +20,37 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// cpp_snap_points
-Rcpp::NumericVector cpp_snap_points(Rcpp::NumericMatrix& data, Rcpp::NumericMatrix& ref, int spatial_resolution);
-RcppExport SEXP _gtfs2gps_cpp_snap_points(SEXP dataSEXP, SEXP refSEXP, SEXP spatial_resolutionSEXP) {
+// cpp_snap_points_restrictive
+Rcpp::NumericVector cpp_snap_points_restrictive(Rcpp::NumericMatrix& data, Rcpp::NumericMatrix& ref, int spatial_resolution);
+RcppExport SEXP _gtfs2gps_cpp_snap_points_restrictive(SEXP dataSEXP, SEXP refSEXP, SEXP spatial_resolutionSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::NumericMatrix& >::type data(dataSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericMatrix& >::type ref(refSEXP);
     Rcpp::traits::input_parameter< int >::type spatial_resolution(spatial_resolutionSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_snap_points(data, ref, spatial_resolution));
+    rcpp_result_gen = Rcpp::wrap(cpp_snap_points_restrictive(data, ref, spatial_resolution));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_snap_points_nearest
+Rcpp::NumericVector cpp_snap_points_nearest(Rcpp::NumericMatrix& data, Rcpp::NumericMatrix& ref, int spatial_resolution);
+RcppExport SEXP _gtfs2gps_cpp_snap_points_nearest(SEXP dataSEXP, SEXP refSEXP, SEXP spatial_resolutionSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix& >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix& >::type ref(refSEXP);
+    Rcpp::traits::input_parameter< int >::type spatial_resolution(spatial_resolutionSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_snap_points_nearest(data, ref, spatial_resolution));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
     {"_gtfs2gps_rcpp_distance_haversine", (DL_FUNC) &_gtfs2gps_rcpp_distance_haversine, 5},
-    {"_gtfs2gps_cpp_snap_points", (DL_FUNC) &_gtfs2gps_cpp_snap_points, 3},
+    {"_gtfs2gps_cpp_snap_points_restrictive", (DL_FUNC) &_gtfs2gps_cpp_snap_points_restrictive, 3},
+    {"_gtfs2gps_cpp_snap_points_nearest", (DL_FUNC) &_gtfs2gps_cpp_snap_points_nearest, 3},
     {NULL, NULL, 0}
 };
 
