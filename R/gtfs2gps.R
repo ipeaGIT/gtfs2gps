@@ -31,6 +31,25 @@
 #' skips processing the shape identifiers that were already saved into files.
 #' It is useful to continue processing a GTFS file that was stopped for some
 #' reason. Default value is FALSE.
+#' @param method The method to be used to snap stops to match the GPS points created
+#' according to the defined spatial resolution. There are two available
+#' methods: "nearest" (details) and "restrictive". See more in the details.
+#' @details After creating points for a given shape id according to the spatial
+#' resolution, gtfs2gps() snaps the stops to make each of them to be in the same 
+#' location of a point in the shape. Two strategies are implemented. The "nearest" 
+#' traverses the points computing their distances to the first stop. Whenever it
+#' finds a distance to the stop smaller than the spatial resolution, then the 
+#' stop will be snapped to such point. The algorithm then applies the same
+#' strategy to the next stop until the vector of stops end.
+#' The "restricted" strategy requires not only that the distance from the stop 
+#' to the point is smaller than the spatial resolution, but also that it needs
+#' to be smaller then the distance to the next point.
+#' 
+#' Whenever it is not possible to snap all stops then the respective shape is
+#' ignored in the output of gtfs2gps() and a warning will be shown. The second
+#' strategy is more restricted as it requires that there is no error in the data.
+#' It is recommended that, whenever the user is not sure about the quality of the
+#' data, the first strategy should be used.
 #' @return A data.table, where each row represents a GPS point. The following columns are
 #' returned (units of measurement in parenthesis): dist and cumdist (meters), cumtime (seconds),
 #' shape_pt_lon and shape_pt_lat (degrees), speed (km/h), departure_time (hh:mm:ss), .
@@ -48,6 +67,7 @@ gtfs2gps <- function(gtfs_data,
                      strategy = NULL,
                      filepath = NULL,
                      compress = FALSE,
+                     method = "nearest",
                      continue = FALSE){
 
   if(!is.null(strategy))
@@ -135,7 +155,13 @@ gtfs2gps <- function(gtfs_data,
     # snap stops the nodes of the shape route
     temp_stops_coords <- sf::st_coordinates(stops_sf)
     temp_shape_coords <- sf::st_coordinates(new_shape)
-    snapped <- cpp_snap_points(temp_stops_coords, 
+
+    mymethod <- cpp_snap_points_nearest
+    
+    if(method == "restrictive")
+      mymethod <- cpp_snap_points_restrictive
+    
+    snapped <- mymethod(temp_stops_coords, 
                                temp_shape_coords,
                                spatial_resolution)
 

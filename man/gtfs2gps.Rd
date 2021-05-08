@@ -11,6 +11,7 @@ gtfs2gps(
   strategy = NULL,
   filepath = NULL,
   compress = FALSE,
+  method = "nearest",
   continue = FALSE
 )
 }
@@ -41,6 +42,10 @@ was created in R. If not compress, the txt extension requires the data to be con
 from ITime to string, and therefore they need to manually converted back to ITime to 
 be properly handled by gtfs2gps.}
 
+\item{method}{The method to be used to snap stops to match the GPS points created
+according to the defined spatial resolution. There are two available
+methods: "nearest" (details) and "restrictive". See more in the details.}
+
 \item{continue}{Argument that can be used only with filepath. When TRUE, it
 skips processing the shape identifiers that were already saved into files.
 It is useful to continue processing a GTFS file that was stopped for some
@@ -58,6 +63,24 @@ guarantee that two points in a same trip will have at most a given
 distance, indicated as a spatial resolution. It is possible to use future package
 to parallelize the execution (or use argument plan). This function also
 uses progressr internally to show progress bars.
+}
+\details{
+After creating points for a given shape id according to the spatial
+resolution, gtfs2gps() snaps the stops to make each of them to be in the same 
+location of a point in the shape. Two strategies are implemented. The "nearest" 
+traverses the points computing their distances to the first stop. Whenever it
+finds a distance to the stop smaller than the spatial resolution, then the 
+stop will be snapped to such point. The algorithm then applies the same
+strategy to the next stop until the vector of stops end.
+The "restricted" strategy requires not only that the distance from the stop 
+to the point is smaller than the spatial resolution, but also that it needs
+to be smaller then the distance to the next point.
+
+Whenever it is not possible to snap all stops then the respective shape is
+ignored in the output of gtfs2gps() and a warning will be shown. The second
+strategy is more restricted as it requires that there is no error in the data.
+It is recommended that, whenever the user is not sure about the quality of the
+data, the first strategy should be used.
 }
 \examples{
 library(dplyr)

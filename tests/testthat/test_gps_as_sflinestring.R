@@ -7,7 +7,7 @@ test_that("gps_as_sflinestring", {
     filter_single_trip() %>%
     filter_by_shape_id(c("shape804-I", "shape806-I"))
   
-  for_gps <- gtfs2gps(subset)
+  for_gps <- gtfs2gps(subset, method = "restrictive")
 
   for_gps_sf_lines <- gps_as_sflinestring(for_gps)
   

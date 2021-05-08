@@ -3,7 +3,38 @@ test_that("gtfs2gps", {
 
     poa_gps <- read_gtfs(poa) %>%
       filter_week_days() %>%
-      gtfs2gps()
+      gtfs2gps(parallel = FALSE)
+
+    my_dim <- dim(poa_gps)[1]
+    expect_equal(my_dim, 128155)
+    
+    poa_gps <- poa_gps[speed > units::set_units(0, "km/h") & cumtime > units::set_units(0, "s") & !is.na(speed) & !is.infinite(speed),]
+    
+    my_dim <- dim(poa_gps)[1]
+    expect_equal(my_dim, 81037)
+    
+    my_length <- length(poa_gps$dist[which(!poa_gps$dist < units::set_units(50, "m"))])
+    expect_equal(my_length, 0)
+    
+    expect_equal(sum(poa_gps$dist), 2544820, 0.1)
+    
+    expect_true(all(poa_gps$trip_number[1] == 1))
+    expect_true(all(poa_gps$trip_number[.N] == 77))
+    
+    expect_true(all(names(poa_gps) %in% 
+                      c("trip_id", "route_type", "id", "shape_pt_lon", "shape_pt_lat", "trip_number",
+                        "departure_time", "stop_id", "stop_sequence", "dist", "shape_id", "cumdist", "speed", "cumtime")))
+    
+    expect_true(all(!is.na(poa_gps$dist)))
+    
+    expect_true(all(poa_gps$dist > units::set_units(0, "m")))
+    expect_true(all(poa_gps$cumdist > units::set_units(0, "m")))
+    expect_true(all(poa_gps$speed > units::set_units(0, "km/h")))
+    expect_true(all(poa_gps$cumtime > units::set_units(0, "s")))
+    
+    poa_gps <- read_gtfs(poa) %>%
+      filter_week_days() %>%
+      gtfs2gps(method = "restrictive")
 
     #poa_shape <- read_gtfs(poa) %>% gtfs_shapes_as_sf()
     #plot(poa_shape)
@@ -43,7 +74,7 @@ test_that("gtfs2gps", {
 
     poa_gps_300 <- read_gtfs(poa) %>%
       filter_week_days() %>%
-      gtfs2gps(spatial_resolution = 300)
+      gtfs2gps(spatial_resolution = 300, method = "restrictive")
     
     expect_equal(dim(poa_gps_300)[1], 1043)
     expect(dim(poa_gps_300)[1] < dim(poa_gps)[1], "more spatial_resolution is not decreasing the number of points")
@@ -52,10 +83,10 @@ test_that("gtfs2gps", {
     poa_simple <- read_gtfs(poa) %>%
       filter_by_shape_id(c("T2-1", "A141-1"))
 
-    poa_gps <- gtfs2gps(poa_simple, filepath = ".")
+    poa_gps <- gtfs2gps(poa_simple, filepath = ".", method = "restrictive")
     expect_null(poa_gps)
     
-    poa_gps <- gtfs2gps(poa, filepath = ".", continue = TRUE)
+    poa_gps <- gtfs2gps(poa, filepath = ".", continue = TRUE, method = "restrictive")
 
     expect_null(poa_gps)
     
@@ -65,7 +96,7 @@ test_that("gtfs2gps", {
     poa_shape <- gtfs_shapes_as_sf(read_gtfs(poa))
     expect_setequal(poa_shape$shape_id[2:3], names)
 
-    poa_gps <- gtfs2gps(poa, filepath = ".", compress = TRUE)
+    poa_gps <- gtfs2gps(poa, filepath = ".", compress = TRUE, method = "restrictive")
     
     expect_null(poa_gps)
   
@@ -98,7 +129,7 @@ test_that("gtfs2gps", {
       filter_by_shape_id(52000:52200) %>%
       filter_week_days() %>%
       filter_single_trip() %>%
-      gtfs2gps(parallel = FALSE, spatial_resolution = 15)
+      gtfs2gps(parallel = FALSE, spatial_resolution = 15, method = "restrictive")
 
     expect_true(all(names(sp_gps) %in% 
       c("trip_id", "route_type", "id", "shape_pt_lon", "shape_pt_lat", "trip_number",
@@ -121,5 +152,5 @@ test_that("gtfs2gps", {
       filter_single_trip()
     
     gtfs$stop_times <- gtfs$stop_times[-(300:390), ]
-    result <- gtfs2gps(gtfs, parallel = TRUE, spatial_resolution = 15)
+    result <- gtfs2gps(gtfs, parallel = TRUE, spatial_resolution = 15, method = "restrictive")
 })
