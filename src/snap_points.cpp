@@ -66,7 +66,7 @@ Rcpp::NumericVector cpp_snap_points_restrictive_level(Rcpp::NumericMatrix& data,
 //' point of data it is possible to reach at least one point within data with distance 
 //' equals or less than spatial_resolution.
 //' @return A data.frame with the snapped points.
-//' @expor
+//' @export
 // [[Rcpp::export]]
 Rcpp::NumericVector cpp_snap_points_restrictive(Rcpp::NumericMatrix& data, Rcpp::NumericMatrix& ref, int spatial_resolution){
   return cpp_snap_points_restrictive_level(data, ref, spatial_resolution);
