@@ -166,7 +166,14 @@
   <span class='fu'><a href='filter_week_days.html'>filter_week_days</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='filter_single_trip.html'>filter_single_trip</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='remove_invalid.html'>remove_invalid</a></span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Reading 'agency.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'routes.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'stops.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'stop_times.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'shapes.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'trips.txt'</span></div><div class='output co'>#&gt; <span class='message'>Reading 'calendar.txt'</span></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>Unzipped the following files to /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpTVVM0A/gtfsio:</span>
+#&gt; <span class='message'>  * agency.txt</span>
+#&gt; <span class='message'>  * calendar.txt</span>
+#&gt; <span class='message'>  * routes.txt</span>
+#&gt; <span class='message'>  * shapes.txt</span>
+#&gt; <span class='message'>  * stop_times.txt</span>
+#&gt; <span class='message'>  * stops.txt</span>
+#&gt; <span class='message'>  * trips.txt</span></div><div class='output co'>#&gt; <span class='message'>Reading agency.txt</span></div><div class='output co'>#&gt; <span class='message'>Reading calendar.txt</span></div><div class='output co'>#&gt; <span class='message'>Reading routes.txt</span></div><div class='output co'>#&gt; <span class='message'>Reading shapes.txt</span></div><div class='output co'>#&gt; <span class='message'>Reading stop_times.txt</span></div><div class='output co'>#&gt; <span class='message'>Reading stops.txt</span></div><div class='output co'>#&gt; <span class='message'>Reading trips.txt</span></div><div class='input'>
 <span class='va'>fortaleza_gps</span> <span class='op'>&lt;-</span> <span class='fu'><a href='gtfs2gps.html'>gtfs2gps</a></span><span class='op'>(</span><span class='va'>gtfs</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>append_height</span><span class='op'>(</span><span class='va'>srtmfile</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Converting shapes to sf objects</span></div><div class='output co'>#&gt; <span class='message'>Linking to GEOS 3.8.1, GDAL 3.1.4, PROJ 6.3.1</span></div><div class='output co'>#&gt; <span class='message'>Processing the data</span></div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Attaching package: ‘data.table’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:purrr’:</span>
