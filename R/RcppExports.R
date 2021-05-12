@@ -19,7 +19,7 @@ rcpp_distance_haversine <- function(latFrom, lonFrom, latTo, lonTo, tolerance) {
 #' point of data it is possible to reach at least one point within data with distance 
 #' equals or less than spatial_resolution.
 #' @return A data.frame with the snapped points.
-#' @expor
+#' @export
 cpp_snap_points_restrictive <- function(data, ref, spatial_resolution) {
     .Call(`_gtfs2gps_cpp_snap_points_restrictive`, data, ref, spatial_resolution)
 }

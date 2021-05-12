@@ -69,7 +69,7 @@ emtu <- "R:/Dropbox/bases_de_dados/GTFS/SP GTFS/GTFS EMTU_20190815.zip"
   function_coverage(fun=gtfs2gps::gps_as_sflinestring, test_file("./tests/testthat/test_gps_as_sflinestring.R"))
   function_coverage(fun=gtfs2gps::gps_as_sfpoints, test_file("./tests/testthat/test_gps_as_sfpoints.R"))
   
-  covr::package_coverage(path = ".", type = "tests")
+ a <-  covr::package_coverage(path = ".", type = "tests")
   
   
 ##### Profiling function ------------------------
@@ -235,11 +235,20 @@ usethis::use_build_ignore("crosswalk_pre.R")
 
 
 
+
+### tests ----------------
+
+devtools::test(stop_on_failure = T)
+
+
+
 ### CMD Check ----------------
 # Check package errors
 Sys.setenv(NOT_CRAN = "false")
 devtools::check(pkg = ".",  cran = TRUE)
 beepr::beep()
+
+
 
 
 # build binary

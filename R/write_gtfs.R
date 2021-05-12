@@ -3,6 +3,11 @@
 #' This function overwrites the zip file if it exists.
 #' @param gtfs A GTFS data set stored in memory as a list of data.tables/data.frames.
 #' @param zipfile The pathname of a .zip file to be saved with the GTFS data.
+#' @param overwrite A logical. Whether to overwrite an existing \code{.zip} file.
+#'        Defaults to \code{TRUE}.
+#' @param quiet A logical. Whether to hide log messages and progress bars. 
+#'        Defaults to \code{TRUE}.
+#'        
 #' @return The status value returned by the external zip command, invisibly.
 #' @export
 #' @examples
@@ -15,13 +20,12 @@
 #' 
 #' # write GTFS data into a zip file
 #' write_gtfs(poa, paste0(tempdir(), "/mypoa.zip"))
-write_gtfs <- function(gtfs, zipfile){
-  tempd <- file.path(tempdir(), "gtfsdir") # create temp dir to save GTFS unzipped files
-  unlink(normalizePath(paste0(tempd, "/", dir(tempd)), mustWork = FALSE), recursive = TRUE) # clean tempfiles in that dir
-
-  for(attr in names(gtfs))
-    data.table::fwrite(gtfs[[attr]], paste0(tempd, "/", attr, ".txt"))
-
-  # utils::zip(zipfile = zipfile, files = list.files(tempd, full.names = TRUE), flags = "-jr9Xq")
-  zip::zipr(zipfile = zipfile, files = list.files(tempd, full.names = TRUE))
+#' 
+write_gtfs <- function(gtfs, zipfile, overwrite = TRUE, quiet = FALSE){
+  
+  gtfsio::export_gtfs(gtfs = gtfs, 
+                      path = zipfile, 
+                      overwrite = TRUE, 
+                      quiet = quiet
+  )
 }

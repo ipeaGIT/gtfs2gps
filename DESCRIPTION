@@ -25,6 +25,7 @@ Imports:
       data.table,
       furrr,
       future,
+      gtfsio,
       magrittr,
       Rcpp,
       units,

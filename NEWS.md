@@ -5,7 +5,7 @@
 
 **Major changes**
 * Fixed the update of trip_number attribute. This affects the output of `gps_as_sflinestring()`. Closes #189.
-
+* Imports the `gtfsio` package, used in the `read_gtfs()` and `write_gtfs()` functions. Closes #191.
 
 
 -------------------------------------------------------
