@@ -304,11 +304,19 @@ filter_week_days <- function(gtfs_data){
 filter_single_trip <- function(gtfs_data){
   gtfs_data$trips <- gtfs_data$trips[!duplicated(gtfs_data$trips$shape_id), ]
 
+
+  # unique trips
+  trip_ids <- unique(gtfs_data$trips$trip_id)
+
+  # filter stop_times
+  gtfs_data$stop_times <- subset(gtfs_data$stop_times, trip_id %chin% trip_ids)
+  
+  # filter frequencies
   if(!is.null(gtfs_data$frequencies)){
-    trip_ids <- unique(gtfs_data$trips$trip_id)
     gtfs_data$frequencies <- subset(gtfs_data$frequencies, trip_id %chin% trip_ids)
   }
   
+  # filter routes
   if(!is.null(gtfs_data$routes)){
     route_ids <- unique(gtfs_data$trips$route_id)
     gtfs_data$routes <- subset(gtfs_data$routes, route_id %in% route_ids)

@@ -94,18 +94,22 @@ library(data.table)
 library(gtfs2gps)
 library(gtfstools)
 
-system.time( gtfs <- read_gtfs(system.file("extdata/ber_gtfs.zip", package = "gtfstools")) )
-head(gtfs$stops)
-nrow(gtfs$trips)
+# system.time( gtfs <- read_gtfs(system.file("extdata/ber_gtfs.zip", package = "gtfstools")) )
+# head(gtfs$stops)
+# nrow(gtfs$trips)
 
 system.time( gtfs <- read_gtfs('R:/Dropbox/bases_de_dados/GTFS/SP/GTFS EMTU_20200715.zip'))
-head(gtfs$stops)
+
+nrow(gtfs$trips)
+nrow(gtfs$stop_times)
 
 gtfs <- gtfs2gps::filter_single_trip(gtfs) 
-nrow(gtfs$trips)
 
-n <- gtfs2gps::gtfs2gps(gtfs, method = 'nearest', parallel = T, spatial_resolution = 200,)
-r <- gtfs2gps::gtfs2gps(gtfs, method = 'restrictive', parallel = T, spatial_resolution = 200)
+nrow(gtfs$trips)
+nrow(gtfs$stop_times)
+
+n <- gtfs2gps::gtfs2gps(gtfs, method = 'nearest', parallel = T, spatial_resolution = 500,)
+r <- gtfs2gps::gtfs2gps(gtfs, method = 'restrictive', parallel = T, spatial_resolution = 500)
 
 unique(n$shape_id) %>% length() # 20
 unique(r$shape_id) %>% length() # 16

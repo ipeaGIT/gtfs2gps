@@ -8,6 +8,9 @@
 * Imports the `gtfsio` package, used in the `read_gtfs()` and `write_gtfs()` functions. Closes #191.
 
 
+**Minor changes**
+* Function `filter_single_trip()` now also filters the `stop_times` table. Closes #195.
+
 -------------------------------------------------------
 # gtfs2gps dev v1.4-0
 
