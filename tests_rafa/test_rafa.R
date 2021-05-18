@@ -124,7 +124,7 @@ mapview(subset(stops_sf, stop_id %in% children))
 
 
 
-system.time( gtfs <- read_gtfs('R:/Dropbox/bases_de_dados/GTFS/Curitiba/gtfs_curitiba_muni_201609.zip'))
+# system.time( gtfs <- read_gtfs('R:/Dropbox/bases_de_dados/GTFS/Curitiba/gtfs_curitiba_muni_201609.zip'))
 
 nrow(gtfs$trips)
 nrow(gtfs$stop_times)
@@ -134,8 +134,8 @@ gtfs <- gtfs2gps::filter_single_trip(gtfs)
 nrow(gtfs$trips)
 nrow(gtfs$stop_times)
 
-n <- gtfs2gps::gtfs2gps(gtfs, method = 'nearest', parallel = T, spatial_resolution = 50,)
-r <- gtfs2gps::gtfs2gps(gtfs, method = 'restrictive', parallel = T, spatial_resolution = 50)
+n <- gtfs2gps::gtfs2gps(gtfs, method = 'nearest', parallel = T, spatial_resolution = 500,)
+r <- gtfs2gps::gtfs2gps(gtfs, method = 'restrictive', parallel = T, spatial_resolution = 500)
 
 unique(n$shape_id) %>% length() # 20
 unique(r$shape_id) %>% length() # 16
@@ -152,7 +152,7 @@ unique(r2$shape_id) %>% length() # 16
 ###### fun
 use_parent_station <- function(gtfs){
   
-# check if gtfs has parent_station
+# check if gtfs has parent_station field
 if (!'parent_station' %in% names(gtfs$stops)) { return(NULL) }
   
 # stops which are parent_station (location_type==1) will be Parent Stations of themselves
@@ -173,7 +173,9 @@ gtfs$stops[, parent_station := as.character(parent_station)]
 gtfs$stop_times[gtfs$stops, on='stop_id', stop_id := i.parent_station]
 gtfs$stops[, stop_id := as.character(parent_station)]
 
-unique()
+# remove duplicated stops
+gtfs$stops<- unique(gtfs$stops)
+
 return(gtfs)
 
 }
