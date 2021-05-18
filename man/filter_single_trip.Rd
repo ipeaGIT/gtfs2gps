@@ -14,7 +14,7 @@ A filtered GTFS data.
 }
 \description{
 Filter a GTFS data by keeping only one trip per shape_id.
-It also removes the unnecessary routes accordingly.
+It also removes the unnecessary routes and stop_times accordingly.
 }
 \examples{
 poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
