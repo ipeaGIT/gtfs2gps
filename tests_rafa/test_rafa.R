@@ -94,11 +94,37 @@ library(data.table)
 library(gtfs2gps)
 library(gtfstools)
 
-# system.time( gtfs <- read_gtfs(system.file("extdata/ber_gtfs.zip", package = "gtfstools")) )
-# head(gtfs$stops)
+ system.time( gtfs <- read_gtfs(system.file("extdata/berlin.zip", package = "gtfs2gps")) )
+ head(gtfs$stops)
 # nrow(gtfs$trips)
 
-system.time( gtfs <- read_gtfs('R:/Dropbox/bases_de_dados/GTFS/SP/GTFS EMTU_20200715.zip'))
+
+  parent <- gtfs$stops$parent_station[1]
+  children <- gtfs$stops$stop_id[which( gtfs$stops$parent_station == parent)]
+
+stopsss <- gtfs$stop_times$stop_id
+   
+children[2] %in% stopsss
+parent %in% stopsss
+
+subset(gtfs$stop_times, stop_id==children[1])
+subset(gtfs$stop_times, stop_id==children[2])
+
+stops_sf <- gtfs2gps::gtfs_stops_as_sf(gtfs)
+
+subset(stops_sf, stop_id %in% children)
+
+mapview(subset(stops_sf, stop_id %in% children))
+
+
+
+
+
+
+
+
+
+system.time( gtfs <- read_gtfs('R:/Dropbox/bases_de_dados/GTFS/Curitiba/gtfs_curitiba_muni_201609.zip'))
 
 nrow(gtfs$trips)
 nrow(gtfs$stop_times)
@@ -108,8 +134,8 @@ gtfs <- gtfs2gps::filter_single_trip(gtfs)
 nrow(gtfs$trips)
 nrow(gtfs$stop_times)
 
-n <- gtfs2gps::gtfs2gps(gtfs, method = 'nearest', parallel = T, spatial_resolution = 500,)
-r <- gtfs2gps::gtfs2gps(gtfs, method = 'restrictive', parallel = T, spatial_resolution = 500)
+n <- gtfs2gps::gtfs2gps(gtfs, method = 'nearest', parallel = T, spatial_resolution = 50,)
+r <- gtfs2gps::gtfs2gps(gtfs, method = 'restrictive', parallel = T, spatial_resolution = 50)
 
 unique(n$shape_id) %>% length() # 20
 unique(r$shape_id) %>% length() # 16
