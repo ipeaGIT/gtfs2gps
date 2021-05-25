@@ -5,8 +5,11 @@
 
 **Major changes**
 * Fixed the update of trip_number attribute. This affects the output of `gps_as_sflinestring()`. Closes #189.
+* Imports the `gtfsio` package, used in the `read_gtfs()` and `write_gtfs()` functions. Closes #191.
 
 
+**Minor changes**
+* Function `filter_single_trip()` now also filters the `stop_times` table. Closes #195.
 
 -------------------------------------------------------
 # gtfs2gps dev v1.4-0
