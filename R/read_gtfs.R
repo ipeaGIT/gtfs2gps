@@ -13,7 +13,6 @@
 #' poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
 #' 
 read_gtfs <- function(gtfszip, quiet = FALSE){
-  
   # read GTFS feed
   result <- 
     gtfsio::import_gtfs(
@@ -28,8 +27,7 @@ read_gtfs <- function(gtfszip, quiet = FALSE){
         trips = c("route_id", "service_id", "trip_id", "shape_id")
       )
     )
-  
-  
+
   # check columns
   if(is.null(result$shapes)     || dim(result$shapes)[1] == 0)     stop("shapes.txt is empty in the GTFS file")
   if(is.null(result$trips)      || dim(result$trips)[1] == 0)      stop("trips.txt is empty in the GTFS file")

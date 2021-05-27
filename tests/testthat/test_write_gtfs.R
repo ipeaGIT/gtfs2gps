@@ -10,7 +10,7 @@ test_that("write_gtfs", {
     
     expect_true(length(poa$agency) >= 1)
     expect_equal(length(poa$routes), 3)
-    expect_equal(length(poa$stops), 3)
+    expect_equal(length(poa$stops), 6)
     expect_equal(length(poa$stop_times), 5)
     expect_equal(length(poa$shapes), 4)
     expect_equal(length(poa$trips), 4)
@@ -33,7 +33,7 @@ test_that("write_gtfs", {
     
     expect_equal(length(sp$agency), 5)
     expect_equal(length(sp$routes), 3)
-    expect_equal(length(sp$stops), 3)
+    expect_equal(length(sp$stops), 5)
     expect_equal(length(sp$stop_times), 5)
     expect_equal(length(sp$shapes), 4)
     expect_equal(length(sp$trips),4)
