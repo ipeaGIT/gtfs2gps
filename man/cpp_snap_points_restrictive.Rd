@@ -25,5 +25,5 @@ A data.frame with the snapped points.
 Snap a set of points to the closest reference points.
 It requires that the distance from the data points to the reference
 points should be smaller than the spatial resolution and that such distance
-should be smaller then the distance to the next reference point.
+should be smaller than the distance to the next reference point.
 }

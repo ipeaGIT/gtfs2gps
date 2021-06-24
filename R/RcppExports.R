@@ -9,7 +9,7 @@ rcpp_distance_haversine <- function(latFrom, lonFrom, latTo, lonTo, tolerance) {
 #' @description Snap a set of points to the closest reference points.
 #' It requires that the distance from the data points to the reference
 #' points should be smaller than the spatial resolution and that such distance
-#' should be smaller then the distance to the next reference point.
+#' should be smaller than the distance to the next reference point.
 #' @param data A set of points to be snapped (a matrix). The result will have  
 #' the same number of rows of this argument. Each row will return the respective
 #' snapped point.
