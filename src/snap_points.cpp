@@ -1,14 +1,22 @@
 
 #include <Rcpp.h>
-
 using namespace Rcpp;
+
+#define MYCOUT false
+
+#ifdef MYCOUT
+  #include <iostream>
+  using namespace std;
+#endif
 
 double distanceHaversine(double latf, double lonf, double latt, double lont,
                          double tolerance);
 double toRadians(double deg);
 
-Rcpp::NumericVector cpp_snap_points_restrictive_level(Rcpp::NumericMatrix& data, Rcpp::NumericMatrix& ref, int spatial_resolution){
+Rcpp::NumericVector cpp_snap_points_restrictive_level(Rcpp::NumericMatrix& data, Rcpp::NumericMatrix& ref, int spatial_resolution, int level){
   Rcpp::NumericVector result_pos;
+  
+  if(MYCOUT) cout << "SNAP RESTRICTIVE" << endl;
   
   const int nrow = data.nrow();
   const int ref_nrow = ref.nrow();
@@ -35,9 +43,11 @@ Rcpp::NumericVector cpp_snap_points_restrictive_level(Rcpp::NumericMatrix& data,
       const double ref_x_next = ref[ref_i + 1];
       const double ref_y_next = ref[ref_i + 1 + ref_nrow];
 
-      dist_next = distanceHaversine(toRadians(ref_y_next), toRadians(ref_x_next), toRadians(ref_y), toRadians(ref_x), 1);
+      dist_next = distanceHaversine(toRadians(y), toRadians(x), toRadians(ref_y_next), toRadians(ref_x_next), 1);
 
+      if(MYCOUT) cout << "dist: " << dist << " next: " << dist_next << " (" << spatial_resolution << ")" << endl;
       if(dist < spatial_resolution && dist < dist_next){
+        if(MYCOUT) cout << "found! " << ref_i << endl;
         result_pos.push_back(ref_i + 1);
         found = true;
       }
@@ -46,9 +56,16 @@ Rcpp::NumericVector cpp_snap_points_restrictive_level(Rcpp::NumericMatrix& data,
     i++;
   }
 
+  if(MYCOUT) cout << "points snapped: " << result_pos.length() << "/" << nrow << endl;
+
   if(result_pos.length() < nrow){
+    if(level > 3){
       return Rcpp::NumericVector();
+    }
+    
+    return cpp_snap_points_restrictive_level(data, ref, spatial_resolution * 2, level + 1);
   }
+  
   return result_pos;
 }
 
@@ -56,7 +73,7 @@ Rcpp::NumericVector cpp_snap_points_restrictive_level(Rcpp::NumericMatrix& data,
 //' @description Snap a set of points to the closest reference points.
 //' It requires that the distance from the data points to the reference
 //' points should be smaller than the spatial resolution and that such distance
-//' should be smaller then the distance to the next reference point.
+//' should be smaller than the distance to the next reference point.
 //' @param data A set of points to be snapped (a matrix). The result will have  
 //' the same number of rows of this argument. Each row will return the respective
 //' snapped point.
@@ -69,12 +86,14 @@ Rcpp::NumericVector cpp_snap_points_restrictive_level(Rcpp::NumericMatrix& data,
 //' @export
 // [[Rcpp::export]]
 Rcpp::NumericVector cpp_snap_points_restrictive(Rcpp::NumericMatrix& data, Rcpp::NumericMatrix& ref, int spatial_resolution){
-  return cpp_snap_points_restrictive_level(data, ref, spatial_resolution);
+  return cpp_snap_points_restrictive_level(data, ref, spatial_resolution, 1);
 }
 
 Rcpp::NumericVector cpp_snap_points_nearest_level(Rcpp::NumericMatrix& data, Rcpp::NumericMatrix& ref, int spatial_resolution, int level){
   Rcpp::NumericVector result_pos;
-  
+
+  if(MYCOUT) cout << "LEVEL: " << level << endl;
+    
   const int nrow = data.nrow();
   const int ref_nrow = ref.nrow();
   int ref_i = -1;
@@ -98,6 +117,8 @@ Rcpp::NumericVector cpp_snap_points_nearest_level(Rcpp::NumericMatrix& data, Rcp
       result_pos.push_back(ref_i + 1);
     }
   }
+  
+  if(MYCOUT) cout << "points snapped: " << result_pos.length() << "/" << nrow << endl;
   
   if(result_pos.length() < nrow){
     if(level > 3){
