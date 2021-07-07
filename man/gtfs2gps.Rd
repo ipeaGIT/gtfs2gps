@@ -57,7 +57,7 @@ columns are returned (units of measurement in parenthesis): dist and cumdist
 (km/h), departure_time (hh:mm:ss).
 }
 \description{
-Convert GTFS data to GPS format by sampling points using a
+Convert GTFS data to GPS format by sampling points using a given
 spatial resolution. This function creates additional points in order to
 guarantee that two points in a same trip will have at most a given
 distance, indicated as a spatial resolution. It is possible to use future package
