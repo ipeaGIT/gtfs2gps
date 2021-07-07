@@ -28,27 +28,26 @@
 #' from ITime to string, and therefore they need to manually converted back to ITime to 
 #' be properly handled by gtfs2gps.
 #' @param continue Argument that can be used only with filepath. When TRUE, it
-#' skips processing the shape identifiers that were already saved into files.
-#' It is useful to continue processing a GTFS file that was stopped for some
-#' reason. Default value is FALSE.
-#' @param method The method used to snap stops to the route geometry. There are
-#' two available methods: `nearest` and `restrictive`. See details for more info.
+#'        skips processing the shape identifiers that were already saved into 
+#'        files. It is useful to continue processing a GTFS file that was stopped
+#'        for some reason. Default value is FALSE.
+#' @param snap_method The method used to snap stops to the route geometry. There
+#'        are two available methods: `nearest1` and `nearest2`. Defaults to 
+#'        `nearest2`. See details for more info.
 #' 
-#' @details After creating geometry points for a given shape id, the gtfs2gps()
+#' @details After creating geometry points for a given shape id, the `gtfs2gps()`
 #' function snaps the stops to the route geometry. Two strategies are implemented
-#' to do this. The `nearest` method traverses the geometry points computing their
-#' distances to the first stop. Whenever it finds a distance to the stop smaller 
+#' to do this. 
+#' - The `nearest2` method (default) triangulates the distance between each stop 
+#' and the two nearest points in the route geometry to decide which point the 
+#' stop should be snapped to. If there is any stop that is further away to the 
+#' route geometry  than `spatial_resolution`, the algorithm recursively doubles 
+#' the `spatial_resolution` to do the search/snap of all stops.
+#' - The `nearest1` method traverses the geometry points computing their 
+#' distances to the first stop. Whenever it finds a distance to the stop smaller
 #' than `spatial_resolution`, then the stop will be snapped to such point. The 
 #' algorithm then applies the same strategy to the next stop until the vector of
-#' stops end. The `restrictive` method requires not only that the distance from
-#' the stop to the geometry point is smaller than `spatial_resolution`, but also
-#' that it needs to be smaller then the distance to the next point.
-#' 
-#' The function `gtfs2gps()` only returns those shapes and trips for which all 
-#' stops were successfully snapped. The ignored shapes are shown in a warning
-#' mesage. The second strategy is more restrictive as it requires that there is 
-#' no error in the data. It is recommended that, whenever the user is not sure 
-#' about the quality of the data, the first strategy should be used.
+#' stops end.
 #' 
 #' @return A `data.table`, where each row represents a GPS point. The following 
 #' columns are returned (units of measurement in parenthesis): dist and cumdist 

@@ -42,13 +42,14 @@ was created in R. If not compress, the txt extension requires the data to be con
 from ITime to string, and therefore they need to manually converted back to ITime to 
 be properly handled by gtfs2gps.}
 
-\item{method}{The method used to snap stops to the route geometry. There are
-two available methods: `nearest` and `restrictive`. See details for more info.}
-
 \item{continue}{Argument that can be used only with filepath. When TRUE, it
-skips processing the shape identifiers that were already saved into files.
-It is useful to continue processing a GTFS file that was stopped for some
-reason. Default value is FALSE.}
+skips processing the shape identifiers that were already saved into 
+files. It is useful to continue processing a GTFS file that was stopped
+for some reason. Default value is FALSE.}
+
+\item{snap_method}{The method used to snap stops to the route geometry. There
+are two available methods: `nearest1` and `nearest2`. Defaults to 
+`nearest2`. See details for more info.}
 }
 \value{
 A `data.table`, where each row represents a GPS point. The following 
@@ -65,21 +66,19 @@ to parallelize the execution (or use argument plan). This function also
 uses progressr internally to show progress bars.
 }
 \details{
-After creating geometry points for a given shape id, the gtfs2gps()
+After creating geometry points for a given shape id, the `gtfs2gps()`
 function snaps the stops to the route geometry. Two strategies are implemented
-to do this. The `nearest` method traverses the geometry points computing their
-distances to the first stop. Whenever it finds a distance to the stop smaller 
+to do this. 
+- The `nearest2` method (default) triangulates the distance between each stop 
+and the two nearest points in the route geometry to decide which point the 
+stop should be snapped to. If there is any stop that is further away to the 
+route geometry  than `spatial_resolution`, the algorithm recursively doubles 
+the `spatial_resolution` to do the search/snap of all stops.
+- The `nearest1` method traverses the geometry points computing their 
+distances to the first stop. Whenever it finds a distance to the stop smaller
 than `spatial_resolution`, then the stop will be snapped to such point. The 
 algorithm then applies the same strategy to the next stop until the vector of
-stops end. The `restrictive` method requires not only that the distance from
-the stop to the geometry point is smaller than `spatial_resolution`, but also
-that it needs to be smaller then the distance to the next point.
-
-The function `gtfs2gps()` only returns those shapes and trips for which all 
-stops were successfully snapped. The ignored shapes are shown in a warning
-mesage. The second strategy is more restrictive as it requires that there is 
-no error in the data. It is recommended that, whenever the user is not sure 
-about the quality of the data, the first strategy should be used.
+stops end.
 }
 \examples{
 library(dplyr)
