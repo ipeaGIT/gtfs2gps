@@ -3,7 +3,7 @@ test_that("gtfs2gps", {
 
     poa_gps <- read_gtfs(poa) %>%
       filter_week_days() %>%
-      gtfs2gps(parallel = FALSE)
+      gtfs2gps(parallel = FALSE, spatial_resolution = 50)
 
     my_dim <- dim(poa_gps)[1]
     expect_equal(my_dim, 128155)
@@ -34,7 +34,7 @@ test_that("gtfs2gps", {
     
     poa_gps <- read_gtfs(poa) %>%
       filter_week_days() %>%
-      gtfs2gps(method = "restrictive")
+      gtfs2gps(method = "restrictive", spatial_resolution = 50)
 
     #poa_shape <- read_gtfs(poa) %>% gtfs_shapes_as_sf()
     #plot(poa_shape)
@@ -83,10 +83,10 @@ test_that("gtfs2gps", {
     poa_simple <- read_gtfs(poa) %>%
       filter_by_shape_id(c("T2-1", "A141-1"))
 
-    poa_gps <- gtfs2gps(poa_simple, filepath = ".", method = "restrictive")
+    poa_gps <- gtfs2gps(poa_simple, filepath = ".", method = "restrictive", spatial_resolution = 50)
     expect_null(poa_gps)
     
-    poa_gps <- gtfs2gps(poa, filepath = ".", continue = TRUE, method = "restrictive")
+    poa_gps <- gtfs2gps(poa, filepath = ".", continue = TRUE, method = "restrictive", spatial_resolution = 50)
 
     expect_null(poa_gps)
     
@@ -96,7 +96,7 @@ test_that("gtfs2gps", {
     # poa_shape <- gtfs_shapes_as_sf(read_gtfs(poa))
     # expect_setequal(poa_shape$shape_id[2:3], names[c(1,4)])
 
-    poa_gps <- gtfs2gps(poa, filepath = ".", compress = TRUE, method = "restrictive")
+    poa_gps <- gtfs2gps(poa, filepath = ".", compress = TRUE, method = "restrictive", spatial_resolution = 50)
     
     expect_null(poa_gps)
   
