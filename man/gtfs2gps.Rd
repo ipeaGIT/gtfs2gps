@@ -6,7 +6,7 @@
 \usage{
 gtfs2gps(
   gtfs_data,
-  spatial_resolution = 50,
+  spatial_resolution = 100,
   parallel = FALSE,
   strategy = NULL,
   filepath = NULL,
@@ -19,11 +19,11 @@ gtfs2gps(
 \item{gtfs_data}{A path to a GTFS file to be converted to GPS, or a GTFS data
 represented as a list of data.tables.}
 
-\item{spatial_resolution}{The spatial resolution in meters. Default is 50m.}
+\item{spatial_resolution}{The spatial resolution in meters. Default is 100m.}
 
 \item{parallel}{Decides whether the function should run in parallel. Defaults is FALSE.
 When TRUE, it will use all cores available minus one using future::plan() with
-strategy "multiprocess" internally.
+strategy "multisession" internally.
 Note that it is possible to create your own plan before calling gtfs2gps().
 In this case, do not use this argument.}
 

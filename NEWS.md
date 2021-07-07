@@ -10,6 +10,9 @@
 
 **Minor changes**
 * Function `filter_single_trip()` now also filters the `stop_times` table. Closes #195.
+* Change default spatial_resolution from 50m to 100m. Closes #202.
+
+
 
 -------------------------------------------------------
 # gtfs2gps dev v1.4-0
