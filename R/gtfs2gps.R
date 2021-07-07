@@ -9,10 +9,10 @@
 #' 
 #' @param gtfs_data A path to a GTFS file to be converted to GPS, or a GTFS data
 #' represented as a list of data.tables.
-#' @param spatial_resolution The spatial resolution in meters. Default is 50m.
+#' @param spatial_resolution The spatial resolution in meters. Default is 100m.
 #' @param parallel Decides whether the function should run in parallel. Defaults is FALSE.
 #' When TRUE, it will use all cores available minus one using future::plan() with
-#' strategy "multiprocess" internally.
+#' strategy "multisession" internally.
 #' Note that it is possible to create your own plan before calling gtfs2gps().
 #' In this case, do not use this argument.
 #' @param strategy This argument is deprecated. Please use argument plan instead or
@@ -28,27 +28,26 @@
 #' from ITime to string, and therefore they need to manually converted back to ITime to 
 #' be properly handled by gtfs2gps.
 #' @param continue Argument that can be used only with filepath. When TRUE, it
-#' skips processing the shape identifiers that were already saved into files.
-#' It is useful to continue processing a GTFS file that was stopped for some
-#' reason. Default value is FALSE.
-#' @param method The method used to snap stops to the route geometry. There are
-#' two available methods: `nearest` and `restrictive`. See details for more info.
+#'        skips processing the shape identifiers that were already saved into 
+#'        files. It is useful to continue processing a GTFS file that was stopped
+#'        for some reason. Default value is FALSE.
+#' @param snap_method The method used to snap stops to the route geometry. There
+#'        are two available methods: `nearest1` and `nearest2`. Defaults to 
+#'        `nearest2`. See details for more info.
 #' 
-#' @details After creating geometry points for a given shape id, the gtfs2gps()
+#' @details After creating geometry points for a given shape id, the `gtfs2gps()`
 #' function snaps the stops to the route geometry. Two strategies are implemented
-#' to do this. The `nearest` method traverses the geometry points computing their
-#' distances to the first stop. Whenever it finds a distance to the stop smaller 
+#' to do this. 
+#' - The `nearest2` method (default) triangulates the distance between each stop 
+#' and the two nearest points in the route geometry to decide which point the 
+#' stop should be snapped to. If there is any stop that is further away to the 
+#' route geometry  than `spatial_resolution`, the algorithm recursively doubles 
+#' the `spatial_resolution` to do the search/snap of all stops.
+#' - The `nearest1` method traverses the geometry points computing their 
+#' distances to the first stop. Whenever it finds a distance to the stop smaller
 #' than `spatial_resolution`, then the stop will be snapped to such point. The 
 #' algorithm then applies the same strategy to the next stop until the vector of
-#' stops end. The `restrictive` method requires not only that the distance from
-#' the stop to the geometry point is smaller than `spatial_resolution`, but also
-#' that it needs to be smaller then the distance to the next point.
-#' 
-#' The function `gtfs2gps()` only returns those shapes and trips for which all 
-#' stops were successfully snapped. The ignored shapes are shown in a warning
-#' mesage. The second strategy is more restrictive as it requires that there is 
-#' no error in the data. It is recommended that, whenever the user is not sure 
-#' about the quality of the data, the first strategy should be used.
+#' stops end.
 #' 
 #' @return A `data.table`, where each row represents a GPS point. The following 
 #' columns are returned (units of measurement in parenthesis): dist and cumdist 
@@ -63,7 +62,7 @@
 #' 
 #' poa_gps <- gtfs2gps(subset)
 gtfs2gps <- function(gtfs_data,
-                     spatial_resolution = 50,
+                     spatial_resolution = 100,
                      parallel = FALSE,
                      strategy = NULL,
                      filepath = NULL,
@@ -264,7 +263,7 @@ gtfs2gps <- function(gtfs_data,
     cores <- max(1, future::availableCores() - 1)
     message(paste('Using', cores, 'CPU cores'))
     
-    oplan <- future::plan("multiprocess", workers = cores)
+    oplan <- future::plan("multisession", workers = cores)
     on.exit(future::plan(oplan), add = TRUE)
   }
 

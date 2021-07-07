@@ -105,7 +105,7 @@ library(gtfstools)
 stopsss <- gtfs$stop_times$stop_id
    
 children[2] %in% stopsss
-parent %in% stopsss
+children %in% stopsss
 
 subset(gtfs$stop_times, stop_id==children[1])
 subset(gtfs$stop_times, stop_id==children[2])
@@ -124,7 +124,7 @@ mapview(subset(stops_sf, stop_id %in% children))
 
 
 
-system.time( gtfs <- read_gtfs('R:/Dropbox/bases_de_dados/GTFS/Curitiba/gtfs_curitiba_muni_201609.zip'))
+# system.time( gtfs <- read_gtfs('R:/Dropbox/bases_de_dados/GTFS/Curitiba/gtfs_curitiba_muni_201609.zip'))
 
 nrow(gtfs$trips)
 nrow(gtfs$stop_times)
@@ -134,8 +134,8 @@ gtfs <- gtfs2gps::filter_single_trip(gtfs)
 nrow(gtfs$trips)
 nrow(gtfs$stop_times)
 
-n <- gtfs2gps::gtfs2gps(gtfs, method = 'nearest', parallel = T, spatial_resolution = 50,)
-r <- gtfs2gps::gtfs2gps(gtfs, method = 'restrictive', parallel = T, spatial_resolution = 50)
+n <- gtfs2gps::gtfs2gps(gtfs, method = 'nearest', parallel = T, spatial_resolution = 500,)
+r <- gtfs2gps::gtfs2gps(gtfs, method = 'restrictive', parallel = T, spatial_resolution = 500)
 
 unique(n$shape_id) %>% length() # 20
 unique(r$shape_id) %>% length() # 16
@@ -150,32 +150,34 @@ unique(n2$shape_id) %>% length() # 20
 unique(r2$shape_id) %>% length() # 16
 
 ###### fun
-use_parent_station <- function(gtfs){
-  
-# check if gtfs has parent_station
-if (!'parent_station' %in% names(gtfs$stops)) { return(NULL) }
-  
-# stops which are parent_station (location_type==1) will be Parent Stations of themselves
-  if ('location_type' %in% names(gtfs$stops)) { 
-    gtfs$stops[ location_type==1, parent_station := stop_id ]
+use_parent_station <- function(gtfs) {
+  # check if gtfs has parent_station field
+  if (!'parent_station' %in% names(gtfs$stops)) {
+    return(NULL)
   }
-
-# stops with no parent_station will be Parent Stations of themselves
-gtfs$stops[ is.na(parent_station), parent_station := stop_id ]
-gtfs$stops[ parent_station=="", parent_station := stop_id ]
-
-# use average location of stops with the same parent_station
-gtfs$stops[, stop_lat := mean(stop_lat), by=parent_station]
-gtfs$stops[, stop_lon := mean(stop_lon), by=parent_station]
-
-# update stops replacing stop_id with parent_station
-gtfs$stops[, parent_station := as.character(parent_station)]
-gtfs$stop_times[gtfs$stops, on='stop_id', stop_id := i.parent_station]
-gtfs$stops[, stop_id := as.character(parent_station)]
-
-unique()
-return(gtfs)
-
+  
+  # stops which are parent_station (location_type==1) will be Parent Stations of themselves
+  if ('location_type' %in% names(gtfs$stops)) {
+    gtfs$stops[location_type == 1, parent_station := stop_id]
+  }
+  
+  # stops with no parent_station will be Parent Stations of themselves
+  gtfs$stops[is.na(parent_station), parent_station := stop_id]
+  gtfs$stops[parent_station == "", parent_station := stop_id]
+  
+  # use average location of stops with the same parent_station
+  gtfs$stops[, stop_lat := mean(stop_lat), by = parent_station]
+  gtfs$stops[, stop_lon := mean(stop_lon), by = parent_station]
+  
+  # update stops replacing stop_id with parent_station
+  gtfs$stops[, parent_station := as.character(parent_station)]
+  gtfs$stop_times[gtfs$stops, on = 'stop_id', stop_id := i.parent_station]
+  gtfs$stops[, stop_id := as.character(parent_station)]
+  
+  # remove duplicated stops
+  gtfs$stops <- unique(gtfs$stops)
+  
+  return(gtfs)
 }
 
 
