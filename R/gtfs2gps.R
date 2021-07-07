@@ -12,7 +12,7 @@
 #' @param spatial_resolution The spatial resolution in meters. Default is 50m.
 #' @param parallel Decides whether the function should run in parallel. Defaults is FALSE.
 #' When TRUE, it will use all cores available minus one using future::plan() with
-#' strategy "multiprocess" internally.
+#' strategy "multisession" internally.
 #' Note that it is possible to create your own plan before calling gtfs2gps().
 #' In this case, do not use this argument.
 #' @param strategy This argument is deprecated. Please use argument plan instead or
@@ -264,7 +264,7 @@ gtfs2gps <- function(gtfs_data,
     cores <- max(1, future::availableCores() - 1)
     message(paste('Using', cores, 'CPU cores'))
     
-    oplan <- future::plan("multiprocess", workers = cores)
+    oplan <- future::plan("multisession", workers = cores)
     on.exit(future::plan(oplan), add = TRUE)
   }
 
