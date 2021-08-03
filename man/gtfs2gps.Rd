@@ -11,7 +11,7 @@ gtfs2gps(
   strategy = NULL,
   filepath = NULL,
   compress = FALSE,
-  method = "nearest",
+  snap_method = "nearest2",
   continue = FALSE
 )
 }
@@ -42,14 +42,14 @@ was created in R. If not compress, the txt extension requires the data to be con
 from ITime to string, and therefore they need to manually converted back to ITime to 
 be properly handled by gtfs2gps.}
 
+\item{snap_method}{The method used to snap stops to the route geometry. There
+are two available methods: `nearest1` and `nearest2`. Defaults to 
+`nearest2`. See details for more info.}
+
 \item{continue}{Argument that can be used only with filepath. When TRUE, it
 skips processing the shape identifiers that were already saved into 
 files. It is useful to continue processing a GTFS file that was stopped
 for some reason. Default value is FALSE.}
-
-\item{snap_method}{The method used to snap stops to the route geometry. There
-are two available methods: `nearest1` and `nearest2`. Defaults to 
-`nearest2`. See details for more info.}
 }
 \value{
 A `data.table`, where each row represents a GPS point. The following 

@@ -20,8 +20,8 @@ rcpp_distance_haversine <- function(latFrom, lonFrom, latTo, lonTo, tolerance) {
 #' equals or less than spatial_resolution.
 #' @return A data.frame with the snapped points.
 #' @export
-cpp_snap_points_restrictive <- function(data, ref, spatial_resolution) {
-    .Call(`_gtfs2gps_cpp_snap_points_restrictive`, data, ref, spatial_resolution)
+cpp_snap_points_nearest2 <- function(data, ref, spatial_resolution) {
+    .Call(`_gtfs2gps_cpp_snap_points_nearest2`, data, ref, spatial_resolution)
 }
 
 #' @title Snap points to the closest points from another set
@@ -38,7 +38,7 @@ cpp_snap_points_restrictive <- function(data, ref, spatial_resolution) {
 #' equals or less than spatial_resolution.
 #' @return A data.frame with the snapped points.
 #' @export
-cpp_snap_points_nearest <- function(data, ref, spatial_resolution) {
-    .Call(`_gtfs2gps_cpp_snap_points_nearest`, data, ref, spatial_resolution)
+cpp_snap_points_nearest1 <- function(data, ref, spatial_resolution) {
+    .Call(`_gtfs2gps_cpp_snap_points_nearest1`, data, ref, spatial_resolution)
 }
 
