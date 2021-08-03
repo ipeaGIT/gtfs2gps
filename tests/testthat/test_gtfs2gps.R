@@ -67,10 +67,10 @@ test_that("gtfs2gps", {
     
     expect_true(all(!is.na(poa_gps$dist)))
     
-    expect_true(all(poa_gps$dist >= units::set_units(0, "m"))) # TEM ZEROS!!
+    expect_true(all(poa_gps$dist >= units::set_units(0, "m")))
     expect_true(all(poa_gps$cumdist >= units::set_units(0, "m")))
     expect_true(all(poa_gps$speed >= units::set_units(0, "km/h")))
-    #expect_true(all(poa_gps$cumtime >= units::set_units(0, "s"))) # ROLL THIS BACK
+    expect_true(all(poa_gps$cumtime >= units::set_units(0, "s")))
 
     poa_gps_30 <- read_gtfs(poa) %>%
       filter_week_days() %>%
