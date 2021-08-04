@@ -20,7 +20,8 @@ Suggests:
     rmarkdown,
     knitr,
     testthat,
-    dplyr
+    dplyr,
+    bit64
 Imports:
       data.table,
       furrr,
@@ -39,7 +40,6 @@ Imports:
       pbapply,
       progressr,
       zip,
-      bit64,
       readr
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
