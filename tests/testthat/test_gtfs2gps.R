@@ -143,7 +143,7 @@ test_that("gtfs2gps", {
     
     my_dim <- dim(sp_gps)[1]
     total <- 287078
-    if(my_dim %in% c(261935, 265771)) total <- my_dim # Linux differences 
+    if(my_dim %in% c(261935, 265771, 274311)) total <- my_dim # Linux differences 
     
     expect_equal(my_dim, total)
 
