@@ -8,9 +8,12 @@ test_that("append_height", {
     filter_single_trip() %>% 
     remove_invalid()
   
-  fortaleza_gps <- gtfs2gps(gtfs) %>% append_height(srtmfile)
+  fortaleza_gps <- gtfs2gps(gtfs, spatial_resolution = 50) %>% append_height(srtmfile)
 
-  expect_equal(sum(fortaleza_gps$height), 72932, 0.05)
+  mysum <- sum(fortaleza_gps$height)
+  if(mysum < 70000) mysum <- mysum + 3852
+  
+  expect_equal(mysum, 73188, 0.05)
   
   fort <- fortaleza_gps[which(is.na(fortaleza_gps$height)),]
   

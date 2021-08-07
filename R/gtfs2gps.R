@@ -1,6 +1,6 @@
 #' @title Convert GTFS to GPS-like data given a spatial resolution
 #' 
-#' @description Convert GTFS data to GPS format by sampling points using a
+#' @description Convert GTFS data to GPS format by sampling points using a given
 #' spatial resolution. This function creates additional points in order to
 #' guarantee that two points in a same trip will have at most a given
 #' distance, indicated as a spatial resolution. It is possible to use future package
@@ -67,7 +67,7 @@ gtfs2gps <- function(gtfs_data,
                      strategy = NULL,
                      filepath = NULL,
                      compress = FALSE,
-                     method = "nearest",
+                     snap_method = "nearest2",
                      continue = FALSE){
 
   if(!is.null(strategy))
@@ -156,10 +156,10 @@ gtfs2gps <- function(gtfs_data,
     temp_stops_coords <- sf::st_coordinates(stops_sf)
     temp_shape_coords <- sf::st_coordinates(new_shape)
 
-    mymethod <- cpp_snap_points_nearest
+    mymethod <- cpp_snap_points_nearest2
     
-    if(method == "restrictive")
-      mymethod <- cpp_snap_points_restrictive
+    if(snap_method == "nearest1")
+      mymethod <- cpp_snap_points_nearest1
     
     snapped <- mymethod(temp_stops_coords, 
                                temp_shape_coords,

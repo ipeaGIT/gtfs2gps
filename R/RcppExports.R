@@ -9,7 +9,7 @@ rcpp_distance_haversine <- function(latFrom, lonFrom, latTo, lonTo, tolerance) {
 #' @description Snap a set of points to the closest reference points.
 #' It requires that the distance from the data points to the reference
 #' points should be smaller than the spatial resolution and that such distance
-#' should be smaller then the distance to the next reference point.
+#' should be smaller than the distance to the next reference point.
 #' @param data A set of points to be snapped (a matrix). The result will have  
 #' the same number of rows of this argument. Each row will return the respective
 #' snapped point.
@@ -20,8 +20,8 @@ rcpp_distance_haversine <- function(latFrom, lonFrom, latTo, lonTo, tolerance) {
 #' equals or less than spatial_resolution.
 #' @return A data.frame with the snapped points.
 #' @export
-cpp_snap_points_restrictive <- function(data, ref, spatial_resolution) {
-    .Call(`_gtfs2gps_cpp_snap_points_restrictive`, data, ref, spatial_resolution)
+cpp_snap_points_nearest2 <- function(data, ref, spatial_resolution) {
+    .Call(`_gtfs2gps_cpp_snap_points_nearest2`, data, ref, spatial_resolution)
 }
 
 #' @title Snap points to the closest points from another set
@@ -38,7 +38,7 @@ cpp_snap_points_restrictive <- function(data, ref, spatial_resolution) {
 #' equals or less than spatial_resolution.
 #' @return A data.frame with the snapped points.
 #' @export
-cpp_snap_points_nearest <- function(data, ref, spatial_resolution) {
-    .Call(`_gtfs2gps_cpp_snap_points_nearest`, data, ref, spatial_resolution)
+cpp_snap_points_nearest1 <- function(data, ref, spatial_resolution) {
+    .Call(`_gtfs2gps_cpp_snap_points_nearest1`, data, ref, spatial_resolution)
 }
 
