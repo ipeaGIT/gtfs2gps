@@ -13,10 +13,10 @@ utils::globalVariables(c(".", "%>%", ":="))
 #' @importFrom data.table := %between% fifelse %chin%
 #' @importFrom stats na.omit
 #' @importFrom utils head tail object.size
-#' @importFrom stats na.omit
 #' @importFrom Rcpp compileAttributes
 #' @importFrom lwgeom st_geod_length
 #' @importFrom rgdal readOGR
+#' @importFrom readr write_rds
 #' @useDynLib gtfs2gps, .registration = TRUE
 NULL
 
