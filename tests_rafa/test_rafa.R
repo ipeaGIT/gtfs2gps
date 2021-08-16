@@ -283,7 +283,8 @@ beepr::beep()
 
 
 
-# build binary
+# build binary  ----------------
+system("R CMD build . --resave-data") # build tar.gz
 system("R CMD build gtfs2gps --resave-data") # build tar.gz
 # devtools::build(pkg = "gtfs2gps", path=".", binary = TRUE, manual=TRUE)
 

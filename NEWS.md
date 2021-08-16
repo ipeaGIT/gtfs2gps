@@ -1,7 +1,9 @@
 # log history of gtfs2gps package development
 
+
+
 -------------------------------------------------------
-# gtfs2gps dev v1.5 dev
+# gtfs2gps v1.5
 
 **Major changes**
 * Fixed the update of trip_number attribute. This affects the output of `gps_as_sflinestring()`. Closes #189.
@@ -11,6 +13,7 @@
 **Minor changes**
 * Function `filter_single_trip()` now also filters the `stop_times` table. Closes #195.
 * Change default `spatial_resolution` of `gtfs2gps()` from 50m to 100m. Closes #202.
+
 
 -------------------------------------------------------
 # gtfs2gps dev v1.4-0
