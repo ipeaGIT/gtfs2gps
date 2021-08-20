@@ -13,7 +13,7 @@ test_that("gps_as_sflinestring", {
   
   expect_true(is(for_gps_sf_lines, "sf"))
 
-  expect_equal(dim(for_gps_sf_lines)[1], 39)
+  expect_equal(dim(for_gps_sf_lines)[1], 41)
   expect_equal(for_gps_sf_lines$from_stop_id[1], "2649")
   expect_equal(length(names(for_gps_sf_lines)), 13)
 })
