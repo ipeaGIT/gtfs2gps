@@ -2,6 +2,7 @@ library(sf)
 library(data.table)
 library(magrittr)
 library(future.apply)
+library(furrr)
 library(roxygen2)
 library(devtools)
 library(usethis)
@@ -283,7 +284,8 @@ beepr::beep()
 
 
 
-# build binary
+# build binary  ----------------
+system("R CMD build . --resave-data") # build tar.gz
 system("R CMD build gtfs2gps --resave-data") # build tar.gz
 # devtools::build(pkg = "gtfs2gps", path=".", binary = TRUE, manual=TRUE)
 
