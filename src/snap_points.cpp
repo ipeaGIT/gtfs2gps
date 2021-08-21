@@ -40,11 +40,14 @@ Rcpp::NumericVector cpp_snap_points_nearest2_level(Rcpp::NumericMatrix& data, Rc
         result_pos.push_back(ref_i + 1);
         found = true;
       }
-    } while (ref_i + 1 < ref_nrow && !found);
+    } while (ref_i + 2 < ref_nrow && !found);
 
     i++;
   }
 
+  if(result_pos.length() < nrow)
+    result_pos.push_back(ref_nrow - 1);
+  
   if(result_pos.length() < nrow){
     if(level > 3){
       return Rcpp::NumericVector();
