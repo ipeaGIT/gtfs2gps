@@ -1,7 +1,7 @@
 Type: Package
 Package: gtfs2gps
 Title: Converting Transport Data from GTFS Format to GPS-Like Records
-Version: 1.5-1
+Version: 1.5-2
 Authors@R: c(person(given="Rafael H. M.", family="Pereira", email="rafa.pereira.br@gmail.com", role="aut", comment = c(ORCID = "0000-0003-2125-7465")),
             person(given="Pedro R.", family="Andrade", email="pedro.andrade@inpe.br", role=c("aut", "cre"), comment = c(ORCID = "0000-0001-8675-4046")),
             person(given="Joao", family="Bazzo", role="aut", comment = c(ORCID = "0000-0003-4536-5006")),
@@ -18,6 +18,7 @@ Depends:
     R (>= 3.5)
 Suggests:
     rmarkdown,
+    markdown,
     knitr,
     testthat,
     dplyr,
