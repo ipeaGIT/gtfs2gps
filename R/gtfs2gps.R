@@ -83,7 +83,7 @@ gtfs2gps <- function(gtfs_data,
   original_gtfs_data_arg <- deparse(substitute(gtfs_data))
   
   # Unzipping and reading GTFS.zip file
-  if(class(gtfs_data) == "character"){
+  if(is.character(gtfs_data)){
     message(paste("Unzipping and reading", basename(gtfs_data)))
     gtfs_data <- read_gtfs(gtfszip = gtfs_data)
   }
