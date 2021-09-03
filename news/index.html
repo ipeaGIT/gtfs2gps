@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gtfs2gps</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4-2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5-4</span>
       </span>
     </div>
 
@@ -126,6 +126,23 @@
       <small>Source: <a href='https://github.com/ipeaGIT/gtfs2gps/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="gtfs2gps-v15" class="section level1">
+<h1 class="page-header" data-toc-text="1.5">
+<a href="#gtfs2gps-v15" class="anchor"></a>gtfs2gps v1.5<small> Unreleased </small>
+</h1>
+<p><strong>Major changes</strong></p>
+<ul>
+<li>Fixed the update of trip_number attribute. This affects the output of <code><a href="../reference/gps_as_sflinestring.html">gps_as_sflinestring()</a></code>. Closes <a href='https://github.com/ipeaGIT/gtfs2gps/issues/189'>#189</a>.</li>
+<li>Imports the <code>gtfsio</code> package, used in the <code><a href="../reference/read_gtfs.html">read_gtfs()</a></code> and <code><a href="../reference/write_gtfs.html">write_gtfs()</a></code> functions. Closes <a href='https://github.com/ipeaGIT/gtfs2gps/issues/191'>#191</a>.</li>
+<li>New parameter <code>snap_method</code> added to <code><a href="../reference/gtfs2gps.html">gtfs2gps()</a></code>.</li>
+</ul>
+<p><strong>Minor changes</strong></p>
+<ul>
+<li>Function <code><a href="../reference/filter_single_trip.html">filter_single_trip()</a></code> now also filters the <code>stop_times</code> table. Closes <a href='https://github.com/ipeaGIT/gtfs2gps/issues/195'>#195</a>.</li>
+<li>Change default <code>spatial_resolution</code> of <code><a href="../reference/gtfs2gps.html">gtfs2gps()</a></code> from 50m to 100m. Closes <a href='https://github.com/ipeaGIT/gtfs2gps/issues/202'>#202</a>.</li>
+</ul>
+<hr>
+</div>
     <div id="gtfs2gps-v13-2" class="section level1">
 <h1 class="page-header" data-toc-text="1.3-2">
 <a href="#gtfs2gps-v13-2" class="anchor"></a>gtfs2gps v1.3-2<small> 2020-11-05 </small>

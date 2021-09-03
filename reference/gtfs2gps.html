@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Convert GTFS to GPS-like data given a spatial resolution — gtfs2gps" />
-<meta property="og:description" content="Convert GTFS data to GPS format by sampling points using a
+<meta property="og:description" content="Convert GTFS data to GPS format by sampling points using a given
 spatial resolution. This function creates additional points in order to
 guarantee that two points in a same trip will have at most a given
 distance, indicated as a spatial resolution. It is possible to use future package
@@ -77,7 +77,7 @@ uses progressr internally to show progress bars." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gtfs2gps</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4-2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5-4</span>
       </span>
     </div>
 
@@ -134,7 +134,7 @@ uses progressr internally to show progress bars." />
     </div>
 
     <div class="ref-description">
-    <p>Convert GTFS data to GPS format by sampling points using a
+    <p>Convert GTFS data to GPS format by sampling points using a given
 spatial resolution. This function creates additional points in order to
 guarantee that two points in a same trip will have at most a given
 distance, indicated as a spatial resolution. It is possible to use future package
@@ -144,12 +144,12 @@ uses progressr internally to show progress bars.</p>
 
     <pre class="usage"><span class='fu'>gtfs2gps</span><span class='op'>(</span>
   <span class='va'>gtfs_data</span>,
-  spatial_resolution <span class='op'>=</span> <span class='fl'>50</span>,
+  spatial_resolution <span class='op'>=</span> <span class='fl'>100</span>,
   parallel <span class='op'>=</span> <span class='cn'>FALSE</span>,
   strategy <span class='op'>=</span> <span class='cn'>NULL</span>,
   filepath <span class='op'>=</span> <span class='cn'>NULL</span>,
   compress <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  method <span class='op'>=</span> <span class='st'>"nearest"</span>,
+  snap_method <span class='op'>=</span> <span class='st'>"nearest2"</span>,
   continue <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
@@ -163,13 +163,13 @@ represented as a list of data.tables.</p></td>
     </tr>
     <tr>
       <th>spatial_resolution</th>
-      <td><p>The spatial resolution in meters. Default is 50m.</p></td>
+      <td><p>The spatial resolution in meters. Default is 100m.</p></td>
     </tr>
     <tr>
       <th>parallel</th>
       <td><p>Decides whether the function should run in parallel. Defaults is FALSE.
 When TRUE, it will use all cores available minus one using future::plan() with
-strategy "multiprocess" internally.
+strategy "multisession" internally.
 Note that it is possible to create your own plan before calling gtfs2gps().
 In this case, do not use this argument.</p></td>
     </tr>
@@ -195,16 +195,17 @@ from ITime to string, and therefore they need to manually converted back to ITim
 be properly handled by gtfs2gps.</p></td>
     </tr>
     <tr>
-      <th>method</th>
-      <td><p>The method used to snap stops to the route geometry. There are
-two available methods: `nearest` and `restrictive`. See details for more info.</p></td>
+      <th>snap_method</th>
+      <td><p>The method used to snap stops to the route geometry. There
+are two available methods: `nearest1` and `nearest2`. Defaults to 
+`nearest2`. See details for more info.</p></td>
     </tr>
     <tr>
       <th>continue</th>
       <td><p>Argument that can be used only with filepath. When TRUE, it
-skips processing the shape identifiers that were already saved into files.
-It is useful to continue processing a GTFS file that was stopped for some
-reason. Default value is FALSE.</p></td>
+skips processing the shape identifiers that were already saved into 
+files. It is useful to continue processing a GTFS file that was stopped
+for some reason. Default value is FALSE.</p></td>
     </tr>
     </table>
 
@@ -216,25 +217,24 @@ columns are returned (units of measurement in parenthesis): dist and cumdist
 (km/h), departure_time (hh:mm:ss).</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>After creating geometry points for a given shape id, the gtfs2gps()
+    <p>After creating geometry points for a given shape id, the `gtfs2gps()`
 function snaps the stops to the route geometry. Two strategies are implemented
-to do this. The `nearest` method traverses the geometry points computing their
-distances to the first stop. Whenever it finds a distance to the stop smaller 
+to do this. 
+- The `nearest2` method (default) triangulates the distance between each stop 
+and the two nearest points in the route geometry to decide which point the 
+stop should be snapped to. If there is any stop that is further away to the 
+route geometry  than `spatial_resolution`, the algorithm recursively doubles 
+the `spatial_resolution` to do the search/snap of all stops.
+- The `nearest1` method traverses the geometry points computing their 
+distances to the first stop. Whenever it finds a distance to the stop smaller
 than `spatial_resolution`, then the stop will be snapped to such point. The 
 algorithm then applies the same strategy to the next stop until the vector of
-stops end. The `restrictive` method requires not only that the distance from
-the stop to the geometry point is smaller than `spatial_resolution`, but also
-that it needs to be smaller then the distance to the next point.</p>
-<p>The function `gtfs2gps()` only returns those shapes and trips for which all 
-stops were successfully snapped. The ignored shapes are shown in a warning
-mesage. The second strategy is more restrictive as it requires that there is 
-no error in the data. It is recommended that, whenever the user is not sure 
-about the quality of the data, the first strategy should be used.</p>
+stops end.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
 <span class='va'>poa</span> <span class='op'>&lt;-</span> <span class='fu'><a href='read_gtfs.html'>read_gtfs</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/poa.zip"</span>, package <span class='op'>=</span> <span class='st'>"gtfs2gps"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Unzipped the following files to /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpOeVKZv/gtfsio:</span>
+</div><div class='output co'>#&gt; <span class='message'>Unzipped the following files to /tmp/Rtmp9KjlHj/gtfsio:</span>
 #&gt; <span class='message'>  * agency.txt</span>
 #&gt; <span class='message'>  * calendar.txt</span>
 #&gt; <span class='message'>  * routes.txt</span>
@@ -245,7 +245,7 @@ about the quality of the data, the first strategy should be used.</p>
   <span class='fu'><a href='filter_single_trip.html'>filter_single_trip</a></span><span class='op'>(</span><span class='op'>)</span>
 
 <span class='va'>poa_gps</span> <span class='op'>&lt;-</span> <span class='fu'>gtfs2gps</span><span class='op'>(</span><span class='va'>subset</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Converting shapes to sf objects</span></div><div class='output co'>#&gt; <span class='message'>Processing the data</span></div><div class='output co'>#&gt; <span class='message'>18 'speed' values are NA for shapeid 'T2-1'.</span></div><div class='output co'>#&gt; <span class='message'>Some 'speed' values are NA in the returned data.</span></div></pre>
+</div><div class='output co'>#&gt; <span class='message'>Converting shapes to sf objects</span></div><div class='output co'>#&gt; <span class='message'>Processing the data</span></div><div class='output co'>#&gt; <span class='message'>9 'speed' values are NA for shapeid 'T2-1'.</span></div><div class='output co'>#&gt; <span class='message'>Some 'speed' values are NA in the returned data.</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

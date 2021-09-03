@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Articles • gtfs2gps</title>
+<title>Snap points to the closest points from another set — cpp_snap_points_nearest2 • gtfs2gps</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,11 @@
 
 
 
-<meta property="og:title" content="Articles" />
+<meta property="og:title" content="Snap points to the closest points from another set — cpp_snap_points_nearest2" />
+<meta property="og:description" content="Snap a set of points to the closest reference points.
+It requires that the distance from the data points to the reference
+points should be smaller than the spatial resolution and that such distance
+should be smaller than the distance to the next reference point." />
 
 
 
@@ -58,7 +62,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-article-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -122,18 +126,51 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Articles</h1>
+    <h1>Snap points to the closest points from another set</h1>
+    <small class="dont-index">Source: <a href='https://github.com/ipeaGIT/gtfs2gps/blob/master/R/RcppExports.R'><code>R/RcppExports.R</code></a></small>
+    <div class="hidden name"><code>cpp_snap_points_nearest2.Rd</code></div>
     </div>
 
-    <div class="section ">
-      <h3>All vignettes</h3>
-      <p class="section-desc"></p>
-
-      <dl>
-        <dt><a href="intro_to_gtfs2gps.html">gtfs2gps: Converting GTFS data to GPS-like format</a></dt>
-        <dd></dt>
-      </dl>
+    <div class="ref-description">
+    <p>Snap a set of points to the closest reference points.
+It requires that the distance from the data points to the reference
+points should be smaller than the spatial resolution and that such distance
+should be smaller than the distance to the next reference point.</p>
     </div>
+
+    <pre class="usage"><span class='fu'>cpp_snap_points_nearest2</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>ref</span>, <span class='va'>spatial_resolution</span><span class='op'>)</span></pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>data</th>
+      <td><p>A set of points to be snapped (a matrix). The result will have
+the same number of rows of this argument. Each row will return the respective
+snapped point.</p></td>
+    </tr>
+    <tr>
+      <th>ref</th>
+      <td><p>A set of reference points (another matrix). The result will be 
+a subset of this parameter.</p></td>
+    </tr>
+    <tr>
+      <th>spatial_resolution</th>
+      <td><p>The spatial resolution of data, which means that from each
+point of data it is possible to reach at least one point within data with distance 
+equals or less than spatial_resolution.</p></td>
+    </tr>
+    </table>
+
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A data.frame with the snapped points.</p>
+
+  </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
