@@ -18,10 +18,9 @@ Rcpp::NumericVector cpp_snap_points_nearest2_level(Rcpp::NumericMatrix& data, Rc
   double dist;
   double dist_next;
 
-  while(i < nrow && ref_i + 1 < ref_nrow) {
+  while(i < nrow && ref_i + 2 < ref_nrow) {
     const double x = data[i];
     const double y = data[i + nrow];
-
     found = false;
     
     do {

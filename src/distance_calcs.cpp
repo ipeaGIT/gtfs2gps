@@ -39,15 +39,15 @@ Rcpp::NumericVector rcpp_distance_haversine(Rcpp::NumericVector latFrom, Rcpp::N
   
   distance[0] = 0;
 
-  for(int i = 1; i < n; i++){
+  for(int i = 0; i + 1 < n; i++){
 
-    latf = toRadians(latFrom[i - 1]);
-    lonf = toRadians(lonFrom[i - 1]);
-    latt = toRadians(latTo[i - 1]);
-    lont = toRadians(lonTo[i - 1]);
+    latf = toRadians(latFrom[i]);
+    lonf = toRadians(lonFrom[i]);
+    latt = toRadians(latTo[i]);
+    lont = toRadians(lonTo[i]);
     dist = distanceHaversine(latf, lonf, latt, lont, tolerance);
 
-    distance[i] = dist;
+    distance[i + 1] = dist;
   }
   return distance;
 }
