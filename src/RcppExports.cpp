@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // rcpp_distance_haversine
 Rcpp::NumericVector rcpp_distance_haversine(Rcpp::NumericVector latFrom, Rcpp::NumericVector lonFrom, Rcpp::NumericVector latTo, Rcpp::NumericVector lonTo, double tolerance);
 RcppExport SEXP _gtfs2gps_rcpp_distance_haversine(SEXP latFromSEXP, SEXP lonFromSEXP, SEXP latToSEXP, SEXP lonToSEXP, SEXP toleranceSEXP) {
