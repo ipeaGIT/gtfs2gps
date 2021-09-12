@@ -3,6 +3,7 @@
 export(append_height)
 export(cpp_snap_points_nearest1)
 export(cpp_snap_points_nearest2)
+export(estimate_cumtime)
 export(filter_by_agency_id)
 export(filter_by_day)
 export(filter_by_route_id)
