@@ -4,10 +4,16 @@
 \alias{estimate_cumtime}
 \title{Estimate cumtime based on global speed}
 \usage{
-estimate_cumtime(gps_data)
+estimate_cumtime(gps_data, min_speed = 2, max_speed = 80)
 }
 \arguments{
 \item{gps_data}{A data.table with GPS-like rows.}
+
+\item{min_speed}{Minimum speed to be considered as valid. Values below minimum
+speed will be estimated as if they were NA. Default value is 2km/h.}
+
+\item{max_speed}{Maximum speed to be considered as valid. Values above maximum
+speed will be estimated as if they were NA. Default value is 80km/h.}
 }
 \value{
 A GPS data with updated values of cumtime.
