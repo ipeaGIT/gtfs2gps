@@ -23,10 +23,6 @@
 #' poa_gps <- gtfs2gps(poa)
 #' poa_gps_new <- adjust_speed(poa_gps)
 adjust_speed <- function(gps_data, min_speed = 2, max_speed = 80, new_speed = NULL){
-#  gps_data <- poa_gps
-#  min_speed = 2
-#  max_speed = 80
-  
   max_speed <- units::set_units(max_speed, "km/h") %>% 
     units::set_units("m/s") %>%
     as.numeric()
