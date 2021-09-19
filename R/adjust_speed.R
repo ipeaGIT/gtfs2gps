@@ -1,21 +1,27 @@
+#' @title Adjust the speeds of a gps-like table created with \code{\link{gtfs2gps}} 
+#'
+#' @description Some GTFS.zip data sets might have quality issues, for example 
+#' by assuming that a trip speed is unreasonably high (e.g. an urban bus running
+#' over 100 Km/h), or in other cases the `departure_time` information might be
+#' missing for some route segments. This can lead a gps-like table to have `NA`
+#' or unrealistic `speed` and `departure_time` values. This function allows the
+#' user to adjust the speed of trips and updates `departure_time` values 
+#' accordingly. The user can adjust the problematic speeds by either setting a
+#' custom constant value, or by considering the average of all valid trips speed
+#' (Default). The columns `departure_time` and `cumtime` are updated accordingly.
+#'
+#' @param gps_data A GPS-like data.table created with \code{\link{gtfs2gps}}.
+#' @param min_speed Minimum speed (in km/h) to be considered as valid. Values 
+#' below minimum speed will be adjusted. Defaults to 2 km/h.
+#' @param max_speed Maximum speed (in km/h) to be considered as valid. Values
+#' above maximum speed will be adjusted. Defaults to 80 km/h.
 
-#' @title Estimate cumtime based on global speed
-#'
-#' @description Estimate cumtime of NA values of a GPS data based on the average
-#' speed of the valid GPS rows.
-#'
-#' @param gps_data A data.table with GPS-like rows.
-#' @param min_speed Minimum speed to be considered as valid. Values below minimum
-#' speed will be estimated as if they were NA. Default value is 2km/h.
-#' @param max_speed Maximum speed to be considered as valid. Values above maximum
-#' speed will be estimated as if they were NA. Default value is 80km/h.
-#' @param new_speed Speed to replace missing values as well as values outside
-#' min_speed and max_speed range. The default value is the average speed of the
-#' gps data.
-#' @details This function estimates speed values using the average speed of the
-#' whole GPS data, ignoring infinite, NA, and NAN values. Values above 80km/h and
-#' below 2km/h are also ignored and their values will be updated with the average.
-#' @return A GPS data with updated values of cumtime.
+#' @param new_speed Speed (in km/h) to replace missing values as well as values
+#' outside min_speed and max_speed range. By default, `new_speed = NULL` and the
+#' function considers the average speed of the entire gps data.
+#' 
+#' @return A GPS-like data with adjusted `speed` values. The columns
+#' `departure_time` and `cumtime` are also updated accordingly.
 #' @export
 #' @examples
 #' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
@@ -35,7 +41,12 @@ adjust_speed <- function(gps_data, min_speed = 2, max_speed = 80, new_speed = NU
   gps_data[speed == "Inf" | is.na(speed) | is.nan(speed), speed := NA]
   gps_data[!data.table::between(x = speed, lower = min_speed, upper = max_speed), speed := NA]
   
-  if(is.null(new_speed)) new_speed <- mean(gps_data$speed, na.rm = TRUE)
+  if(is.null(new_speed))
+    new_speed <- mean(gps_data$speed, na.rm = TRUE)
+  else
+    new_speed <- units::set_units(new_speed, "km/h") %>%
+      units::set_units("m/s") %>%
+      as.numeric()
 
   gps_data[is.na(speed), speed := new_speed]
   gps_data[, speed := units::set_units(speed, "m/s")]
