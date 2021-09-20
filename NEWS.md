@@ -1,6 +1,11 @@
 # log history of gtfs2gps package development
 
 -------------------------------------------------------
+# gtfs2gps v1.6-0
+**Major changes**
+* New function adjust_speed()
+
+-------------------------------------------------------
 # gtfs2gps v1.5-4
 
 **Major changes**
