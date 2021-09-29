@@ -38,6 +38,7 @@ update_freq <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
       # Updating all stop times by adding the headway
       dt_list[[i]][, departure_time := round(departure_time + ((i - 1) * thisheadway))]
       dt_list[[i]][, trip_number := departure_list[i]]
+      dt_list[[i]][, trip_id := paste0(trip_id,"#",departure_list[i]) ]
       return(dt_list[[i]])
     }
     
