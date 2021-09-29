@@ -7,7 +7,7 @@ test_that("read_gtfs", {
   expect_equal(length(poa), 7)
   
   expect_true(length(poa$agency) >= 1)
-  expect_equal(length(poa$routes), 3)
+  expect_equal(length(poa$routes), 5)
   expect_equal(length(poa$stops), 6)
   expect_equal(length(poa$stop_times), 5)
   expect_equal(length(poa$shapes), 4)
