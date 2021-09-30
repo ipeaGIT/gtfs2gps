@@ -4,7 +4,7 @@ update_freq <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
   if(is.null(new_stoptimes)){
     return(new_stoptimes) # nocov
   }
-
+  
   if(is.null(gtfs_data$frequencies)) {
     new_stoptimes[, trip_number := tripid ]
     return(new_stoptimes) # nocov
@@ -46,14 +46,14 @@ update_freq <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
     # Get headway of each start_time
     thisheadway <- subset(freq_temp, start_time == starttimes[1])$headway_secs
     nmber_of_departures <- subset(freq_temp, start_time == starttimes[1])$number_of_departures
-
+    
     if(length(nmber_of_departures) == 0 || is.na(nmber_of_departures)){
       message(paste0("Trip '", tripid, "' has zero departures. Ignoring it.")) # nocov
       return(NULL) # nocov
     }
-
-#    if(nmber_of_departures < 0) nmber_of_departures <- -nmber_of_departures
-      
+    
+    #    if(nmber_of_departures < 0) nmber_of_departures <- -nmber_of_departures
+    
     # # list of departures
     # departure_list <- 1:nmber_of_departures
     # list of departures
@@ -70,7 +70,7 @@ update_freq <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
     # Apply function and return the stop times of all departures from that period
     departure_stoptimes <- lapply(X = seq_along(dt_list), FUN = update_departure_stoptimes, dt_list)
     departure_stoptimes <- data.table::rbindlist(departure_stoptimes)
-    
+    departure_stoptimes[,trip_id := paste0(trip_id,"#",trip_number)]
     #departure_stoptimes <- lapply(X = departure_list, FUN = update_departure_stoptimes) %>% data.table::rbindlist()
     return(departure_stoptimes)
   }
@@ -84,20 +84,20 @@ update_freq <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
 
 # UPDATE NEWSTOPTIMES DATA.FRAME
 update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
-                    # internal test
-                    # tripid <- "176-1@1#1800" all_tripids[1]
+  # internal test
+  # tripid <- "176-1@1#1800" all_tripids[1]
   # add trip_id 
   new_stoptimes[, trip_id := all_tripids[tripid]]
   
   # add cummulative distance
   new_stoptimes[, cumdist := cumsum(dist)]
-
+  
   # subset original stoptimes to get original travel_times btwn stops
   stoptimes_temp <- gtfs_data$stop_times[trip_id == all_tripids[tripid]]
   
   # add departure_time based on stop sequence
   new_stoptimes[stoptimes_temp, on = 'stop_sequence', 'departure_time' := i.departure_time]
-
+  
   # get a 'stop_sequence' of the stops which have proper info on 'departure_time'
   stop_id_ok <- gtfs_data$stop_times[trip_id == all_tripids[tripid] & is.na(departure_time) == FALSE,]$stop_sequence
   
@@ -106,7 +106,7 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
     message(paste0("Trip '", all_tripids[tripid], "' has less than two stop_ids. Ignoring it.")) # nocov
     return(NULL) # nocov
   }
-    
+  
   ### UPDATE speeds
   # lim0: 'id' in which stop_times intervals STARTS
   lim0 <- new_stoptimes[ !is.na(departure_time) & !is.na(stop_id), id]
@@ -117,14 +117,14 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
     diff_departure <- new_stoptimes$departure_time[b] - new_stoptimes$departure_time[a]
     
     if(diff_departure < 0) diff_departure <- diff_departure + 86400 # one day in seconds
-        
+    
     new_stoptimes[a:b, speed := 3.6 * (data.table::last(cumdist) - data.table::first(cumdist)) / diff_departure]
   }
   
   # apply function for speed estimation
   L <- length(lim0)
   lapply(X = 1:(L-1), FUN = update_speeds)
-
+  
   # Speed info that was missing (either before or after 1st/last stops)
   # Get trip duration in seconds
   new_stoptimes[, cumtime := cumsum(3.6 * dist / speed)]
@@ -145,7 +145,7 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
   # update indexes in 'newstoptimes'
   #temp_newdeparture <- new_stoptimes$departure_time[1L]+stats::lag(new_stoptimes$cumtime,1,0)
   new_stoptimes[, departure_time := round(departure_time[1L] + stats::lag(cumtime, 1, 0))]
-
+  
   if(is.null(new_stoptimes)){
     message(paste0("Could not create stop times for trip '", 
                    all_tripids[tripid], "'. Ignoring it.")) # nocov
