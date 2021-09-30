@@ -112,7 +112,7 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/ipeaGIT/gtfs2gps">"gtfs2gps"</a></span><span class="op">)</span>
 <span class="va">sao</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_gtfs.html">read_gtfs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/saopaulo.zip"</span>, package <span class="op">=</span><span class="st">"gtfs2gps"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code>## Unzipped the following files to /tmp/RtmpQO7JEr/gtfsio:
+<pre><code>## Unzipped the following files to /tmp/Rtmpnb5lPS/gtfsio:
 ##   * agency.txt
 ##   * calendar.txt
 ##   * frequencies.txt
@@ -196,13 +196,13 @@
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R">  <span class="va">sao_gps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gtfs2gps.html">gtfs2gps</a></span><span class="op">(</span><span class="st">"sao_small.zip"</span>, spatial_resolution <span class="op">=</span> <span class="fl">50</span><span class="op">)</span>
   <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">sao_gps</span><span class="op">)</span></code></pre></div>
-<pre><code>##    id shape_id   trip_id trip_number route_type shape_pt_lon shape_pt_lat
-## 1:  1    51338 5010-10-0           1          3    -46.63120    -23.66268
-## 2:  2    51338 5010-10-0           1          3    -46.63117    -23.66273
-## 3:  3    51338 5010-10-0           1          3    -46.63108    -23.66288
-## 4:  4    51338 5010-10-0           1          3    -46.63095    -23.66316
-## 5:  5    51338 5010-10-0           1          3    -46.63082    -23.66345
-## 6:  6    51338 5010-10-0           1          3    -46.63111    -23.66364
+<pre><code>##    id shape_id     trip_id trip_number route_type shape_pt_lon shape_pt_lat
+## 1:  1    51338 5010-10-0#1           1          3    -46.63120    -23.66268
+## 2:  2    51338 5010-10-0#1           1          3    -46.63117    -23.66273
+## 3:  3    51338 5010-10-0#1           1          3    -46.63108    -23.66288
+## 4:  4    51338 5010-10-0#1           1          3    -46.63095    -23.66316
+## 5:  5    51338 5010-10-0#1           1          3    -46.63082    -23.66345
+## 6:  6    51338 5010-10-0#1           1          3    -46.63111    -23.66364
 ##    departure_time stop_id stop_sequence          dist        cumdist cumtime
 ## 1:           &lt;NA&gt;    &lt;NA&gt;            NA  0.000000 [m]   0.000000 [m]  NA [s]
 ## 2:           &lt;NA&gt; 3703053             1  7.230445 [m]   7.230445 [m]  NA [s]
