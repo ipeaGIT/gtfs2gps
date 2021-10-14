@@ -15,11 +15,10 @@
 #' below minimum speed will be adjusted. Defaults to 2 km/h.
 #' @param max_speed Maximum speed (in km/h) to be considered as valid. Values
 #' above maximum speed will be adjusted. Defaults to 80 km/h.
-
 #' @param new_speed Speed (in km/h) to replace missing values as well as values
 #' outside min_speed and max_speed range. By default, `new_speed = NULL` and the
 #' function considers the average speed of the entire gps data.
-#' 
+#' @param clone Use a copy of the gps_data? Defaults to TRUE.
 #' @return A GPS-like data with adjusted `speed` values. The columns
 #' `departure_time` and `cumtime` are also updated accordingly.
 #' @export
@@ -28,8 +27,8 @@
 #'
 #' poa_gps <- gtfs2gps(poa)
 #' poa_gps_new <- adjust_speed(poa_gps)
-adjust_speed <- function(gps_data, min_speed = 2, max_speed = 80, new_speed = NULL){
-  gps_data <- data.table::copy(gps_data)
+adjust_speed <- function(gps_data, min_speed = 2, max_speed = 80, new_speed = NULL, clone = TRUE){
+  if(clone) gps_data <- data.table::copy(gps_data)
 
   max_speed <- units::set_units(max_speed, "km/h") %>% 
     units::set_units("m/s") %>%
@@ -76,17 +75,17 @@ adjust_speed <- function(gps_data, min_speed = 2, max_speed = 80, new_speed = NU
     else if(id_first == 1){
       tmp_gps_data[, 
         departure_time := round(departure_time[1] + cumtime),
-        by = .(shape_id, trip_id, trip_number)]
+        by = .(trip_id, trip_number)]
     }else{
       # before the first valid observation
       tmp_gps_data[1:id_first,
         departure_time := round(departure_time[id_first] - cumtime),
-        by = .(shape_id, trip_id, trip_number)]
+        by = .(trip_id, trip_number)]
      
       # after the first valid observation
       tmp_gps_data[id_first:.N,
         departure_time := round(departure_time[id_first] + cumtime),
-        by = .(shape_id, trip_id, trip_number)]
+        by = .(trip_id, trip_number)]
     }
     
     # midnight trips fix
