@@ -155,17 +155,25 @@ The default value is 0, which means that no data will be lost.</p></td>
     <p>A GTFS data whose shapes is a subset of the input data.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>poa</span> <span class='op'>&lt;-</span> <span class='fu'><a href='read_gtfs.html'>read_gtfs</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/poa.zip"</span>, package<span class='op'>=</span><span class='st'>"gtfs2gps"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Unzipped the following files to /tmp/RtmpCiWIFD/gtfsio:</span>
-#&gt; <span class='message'>  * agency.txt</span>
-#&gt; <span class='message'>  * calendar.txt</span>
-#&gt; <span class='message'>  * routes.txt</span>
-#&gt; <span class='message'>  * shapes.txt</span>
-#&gt; <span class='message'>  * stop_times.txt</span>
-#&gt; <span class='message'>  * stops.txt</span>
-#&gt; <span class='message'>  * trips.txt</span></div><div class='output co'>#&gt; <span class='message'>Reading agency.txt</span></div><div class='output co'>#&gt; <span class='message'>Reading calendar.txt</span></div><div class='output co'>#&gt; <span class='message'>Reading routes.txt</span></div><div class='output co'>#&gt; <span class='message'>Reading shapes.txt</span></div><div class='output co'>#&gt; <span class='message'>Reading stop_times.txt</span></div><div class='output co'>#&gt; <span class='message'>Reading stops.txt</span></div><div class='output co'>#&gt; <span class='message'>Reading trips.txt</span></div><div class='input'>
-<span class='va'>poa_simpl</span> <span class='op'>&lt;-</span> <span class='fu'>simplify_shapes</span><span class='op'>(</span><span class='va'>poa</span><span class='op'>)</span>
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='va'>poa</span> <span class='op'>&lt;-</span> <span class='fu'><a href='read_gtfs.html'>read_gtfs</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/poa.zip"</span>, package<span class='op'>=</span><span class='st'>"gtfs2gps"</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Unzipped the following files to /tmp/Rtmp9AcQVX/gtfsio:</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>   * agency.txt</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>   * calendar.txt</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>   * routes.txt</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>   * shapes.txt</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>   * stop_times.txt</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>   * stops.txt</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>   * trips.txt</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Reading agency.txt</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Reading calendar.txt</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Reading routes.txt</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Reading shapes.txt</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Reading stop_times.txt</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Reading stops.txt</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Reading trips.txt</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>poa_simpl</span> <span class='op'>&lt;-</span> <span class='fu'>simplify_shapes</span><span class='op'>(</span><span class='va'>poa</span><span class='op'>)</span></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -152,32 +152,59 @@
     <p>The GPS data with a new column named height.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: ‘dplyr’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:data.table’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    between, first, last</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    filter, lag</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:base’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'>
-<span class='va'>fortaleza</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/fortaleza.zip"</span>, package <span class='op'>=</span> <span class='st'>"gtfs2gps"</span><span class='op'>)</span>
-<span class='va'>srtmfile</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/fortaleza-srtm.tif"</span>, package <span class='op'>=</span> <span class='st'>"gtfs2gps"</span><span class='op'>)</span>
-
-<span class='va'>gtfs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='read_gtfs.html'>read_gtfs</a></span><span class='op'>(</span><span class='va'>fortaleza</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='filter_week_days.html'>filter_week_days</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='filter_single_trip.html'>filter_single_trip</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='remove_invalid.html'>remove_invalid</a></span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Unzipped the following files to /tmp/RtmpCiWIFD/gtfsio:</span>
-#&gt; <span class='message'>  * agency.txt</span>
-#&gt; <span class='message'>  * calendar.txt</span>
-#&gt; <span class='message'>  * routes.txt</span>
-#&gt; <span class='message'>  * shapes.txt</span>
-#&gt; <span class='message'>  * stop_times.txt</span>
-#&gt; <span class='message'>  * stops.txt</span>
-#&gt; <span class='message'>  * trips.txt</span></div><div class='output co'>#&gt; <span class='message'>Reading agency.txt</span></div><div class='output co'>#&gt; <span class='message'>Reading calendar.txt</span></div><div class='output co'>#&gt; <span class='message'>Reading routes.txt</span></div><div class='output co'>#&gt; <span class='message'>Reading shapes.txt</span></div><div class='output co'>#&gt; <span class='message'>Reading stop_times.txt</span></div><div class='output co'>#&gt; <span class='message'>Reading stops.txt</span></div><div class='output co'>#&gt; <span class='message'>Reading trips.txt</span></div><div class='input'>
-<span class='va'>fortaleza_gps</span> <span class='op'>&lt;-</span> <span class='fu'><a href='gtfs2gps.html'>gtfs2gps</a></span><span class='op'>(</span><span class='va'>gtfs</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>append_height</span><span class='op'>(</span><span class='va'>srtmfile</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Converting shapes to sf objects</span></div><div class='output co'>#&gt; <span class='message'>Processing the data</span></div><div class='output co'>#&gt; <span class='message'>1 'speed' values are NA for shapeid 'shape804-I'.</span></div><div class='output co'>#&gt; <span class='message'>1 'speed' values are NA for shapeid 'shape806-I'.</span></div><div class='output co'>#&gt; <span class='message'>1 'speed' values are NA for shapeid 'shape810-I'.</span></div><div class='output co'>#&gt; <span class='message'>1 'speed' values are NA for shapeid 'shape814-I'.</span></div><div class='output co'>#&gt; <span class='message'>5 'speed' values are NA for shapeid 'shape815-I'.</span></div><div class='output co'>#&gt; <span class='message'>1 'speed' values are NA for shapeid 'shape816-I'.</span></div><div class='output co'>#&gt; <span class='message'>1 'speed' values are NA for shapeid 'shape820-I'.</span></div><div class='output co'>#&gt; <span class='message'>5 'speed' values are NA for shapeid 'shape825-I'.</span></div><div class='output co'>#&gt; <span class='message'>1 'speed' values are NA for shapeid 'shape832-I'.</span></div><div class='output co'>#&gt; <span class='message'>11 'speed' values are NA for shapeid 'shape833-I'.</span></div><div class='output co'>#&gt; <span class='message'>1 'speed' values are NA for shapeid 'shape836-I'.</span></div><div class='output co'>#&gt; <span class='message'>1 'speed' values are NA for shapeid 'shape841-I'.</span></div><div class='output co'>#&gt; <span class='message'>Some 'speed' values are NA in the returned data.</span></div></pre>
+    <pre class="examples"><span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Attaching package: ‘dplyr’</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> The following objects are masked from ‘package:data.table’:</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>     between, first, last</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> The following objects are masked from ‘package:stats’:</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>     filter, lag</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> The following objects are masked from ‘package:base’:</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>     intersect, setdiff, setequal, union</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>fortaleza</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/fortaleza.zip"</span>, package <span class='op'>=</span> <span class='st'>"gtfs2gps"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>srtmfile</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/fortaleza-srtm.tif"</span>, package <span class='op'>=</span> <span class='st'>"gtfs2gps"</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>gtfs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='read_gtfs.html'>read_gtfs</a></span><span class='op'>(</span><span class='va'>fortaleza</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'><a href='filter_week_days.html'>filter_week_days</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'><a href='filter_single_trip.html'>filter_single_trip</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'><a href='remove_invalid.html'>remove_invalid</a></span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Unzipped the following files to /tmp/Rtmp9AcQVX/gtfsio:</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>   * agency.txt</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>   * calendar.txt</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>   * routes.txt</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>   * shapes.txt</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>   * stop_times.txt</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>   * stops.txt</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>   * trips.txt</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Reading agency.txt</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Reading calendar.txt</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Reading routes.txt</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Reading shapes.txt</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Reading stop_times.txt</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Reading stops.txt</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Reading trips.txt</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>fortaleza_gps</span> <span class='op'>&lt;-</span> <span class='fu'><a href='gtfs2gps.html'>gtfs2gps</a></span><span class='op'>(</span><span class='va'>gtfs</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'>append_height</span><span class='op'>(</span><span class='va'>srtmfile</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Converting shapes to sf objects</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Processing the data</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> 1 'speed' values are NA for shapeid 'shape804-I'.</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> 1 'speed' values are NA for shapeid 'shape806-I'.</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> 1 'speed' values are NA for shapeid 'shape810-I'.</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> 1 'speed' values are NA for shapeid 'shape814-I'.</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> 5 'speed' values are NA for shapeid 'shape815-I'.</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> 1 'speed' values are NA for shapeid 'shape816-I'.</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> 1 'speed' values are NA for shapeid 'shape820-I'.</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> 5 'speed' values are NA for shapeid 'shape825-I'.</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> 1 'speed' values are NA for shapeid 'shape832-I'.</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> 11 'speed' values are NA for shapeid 'shape833-I'.</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> 1 'speed' values are NA for shapeid 'shape836-I'.</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> 1 'speed' values are NA for shapeid 'shape841-I'.</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Some 'speed' values are NA in the returned data.</span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
