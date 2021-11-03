@@ -21,10 +21,6 @@
 #' poa_gps_sf <- gps_as_sflinestring(poa_gps)
 gps_as_sflinestring  <- function(gps, crs = 4326){
   
-   # gps <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps")) %>%
-   #   filter_by_shape_id(c("T2-1", "A141-1")) %>% filter_single_trip() %>%
-   #   gtfs2gps();crs=4326
-  
   if(is.character(gps)){
     dt <- data.table::fread(gps, colClasses = list(character = c("id", "shape_id", "trip_id", "stop_id")))
   } else {
@@ -52,6 +48,7 @@ gps_as_sflinestring  <- function(gps, crs = 4326){
   
   # add interval code to GPS
   dt[list_ids, on = "id", interval_id := i.interval]
+  
   # rename columns
   data.table::setnames(dt,"stop_id","from_stop_id")
   
@@ -74,7 +71,7 @@ gps_as_sflinestring  <- function(gps, crs = 4326){
   # create unique id for each unique combination of interval_id & trip_id & trip_number
   dt2[, grp := .GRP, by = .(interval_id, trip_id, trip_number)]
   
-  dt2[, .N, by = grp] # number of observations in each grp
+  # dt2[, .N, by = grp] # number of observations in each grp
   
   moreThanOne <- which(as.vector(table(dt2$grp)) != 1)
   
@@ -91,10 +88,12 @@ gps_as_sflinestring  <- function(gps, crs = 4326){
   gps_sf <- sf::st_set_crs(gps_sf, crs)
   
   gps_sf$dist <- sf::st_length(gps_sf$geometry)
+  
   # edit columns
   gps_sf$grp <- NULL
   gps_sf$cumdist <- NULL
   gps_sf$cumtime <- NULL
+  
   # order columns "stop_id" <> "to_stop_id"
   colsToStop <- names(gps_sf)[1:which(names(gps_sf) %in% "from_stop_id")]
   colsFromStop <- names(gps_sf)[(which(names(gps_sf) %in% "from_stop_id") + 1):(which(names(gps_sf) %in% "to_stop_id") - 1)]
