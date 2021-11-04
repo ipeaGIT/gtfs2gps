@@ -227,7 +227,7 @@ gtfs2gps <- function(gtfs_data,
     new_stoptimes[, departure_time := data.table::as.ITime(departure_time)]
 
     data.table::setcolorder(new_stoptimes, c("id", "shape_id", "trip_id", "trip_number", "route_type", 
-      "shape_pt_lon", "shape_pt_lat", "departure_time", "stop_id", "stop_sequence", "dist", "cumdist",
+      "shape_pt_lat", "shape_pt_lon", "departure_time", "stop_id", "stop_sequence", "dist", "cumdist",
       "cumtime", "speed"))
 
     na_values <- length(which(is.na(new_stoptimes$speed)))
