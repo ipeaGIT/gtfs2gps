@@ -55,7 +55,7 @@ for some reason. Default value is FALSE.}
 A `data.table`, where each row represents a GPS point. The following 
 columns are returned (units of measurement in parenthesis): dist and cumdist 
 (meters), cumtime (seconds), shape_pt_lon and shape_pt_lat (degrees), speed 
-(km/h), departure_time (hh:mm:ss).
+(km/h), timestamp (hh:mm:ss).
 }
 \description{
 Convert GTFS data to GPS format by sampling points using a given
