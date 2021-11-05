@@ -23,7 +23,7 @@ test_that("gtfs2gps", {
     
     expect_true(all(names(poa_gps) %in% 
                       c("trip_id", "route_type", "id", "shape_pt_lon", "shape_pt_lat", "trip_number",
-                        "departure_time", "stop_id", "stop_sequence", "dist", "shape_id", "cumdist", "speed", "cumtime")))
+                        "timestamp", "stop_id", "stop_sequence", "dist", "shape_id", "cumdist", "speed", "cumtime")))
     
     expect_true(all(!is.na(poa_gps$dist)))
     
@@ -67,7 +67,7 @@ test_that("gtfs2gps", {
     
     expect_true(all(names(poa_gps) %in% 
       c("trip_id", "route_type", "id", "shape_pt_lon", "shape_pt_lat", "trip_number",
-        "departure_time", "stop_id", "stop_sequence", "dist", "shape_id", "cumdist", "speed", "cumtime")))
+        "timestamp", "stop_id", "stop_sequence", "dist", "shape_id", "cumdist", "speed", "cumtime")))
     
     expect_true(all(!is.na(poa_gps$dist)))
     
@@ -110,7 +110,7 @@ test_that("gtfs2gps", {
     data1 <- data.table::fread(files1[1])
 
     # note how the types are converted    
-    data1[, departure_time := as.ITime(departure_time)]
+    data1[, timestamp := as.ITime(timestamp)]
     data1[, stop_id := as.character(stop_id)]
     data1[, trip_number := as.double(trip_number)]
     
@@ -137,7 +137,7 @@ test_that("gtfs2gps", {
 
     expect_true(all(names(sp_gps) %in% 
       c("trip_id", "route_type", "id", "shape_pt_lon", "shape_pt_lat", "trip_number",
-        "departure_time", "stop_id", "stop_sequence", "dist", "shape_id", "cumdist", "speed", "cumtime")))
+        "timestamp", "stop_id", "stop_sequence", "dist", "shape_id", "cumdist", "speed", "cumtime")))
 
     expect_true(all(sp_gps$trip_number %in% 1:17))
     

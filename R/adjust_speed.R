@@ -2,13 +2,13 @@
 #'
 #' @description Some GTFS.zip data sets might have quality issues, for example 
 #' by assuming that a trip speed is unreasonably high (e.g. an urban bus running
-#' over 100 Km/h), or in other cases the `departure_time` information might be
+#' over 100 Km/h), or in other cases the `timestamp` information might be
 #' missing for some route segments. This can lead a gps-like table to have `NA`
-#' or unrealistic `speed` and `departure_time` values. This function allows the
-#' user to adjust the speed of trips and updates `departure_time` values 
+#' or unrealistic `speed` and `timestamp` values. This function allows the
+#' user to adjust the speed of trips and updates `timestamp` values 
 #' accordingly. The user can adjust the problematic speeds by either setting a
 #' custom constant value, or by considering the average of all valid trips speed
-#' (Default). The columns `departure_time` and `cumtime` are updated accordingly.
+#' (Default). The columns `timestamp` and `cumtime` are updated accordingly.
 #'
 #' @param gps_data A GPS-like data.table created with \code{\link{gtfs2gps}}.
 #' @param min_speed Minimum speed (in km/h) to be considered as valid. Values 
@@ -20,7 +20,7 @@
 #' function considers the average speed of the entire gps data.
 #' @param clone Use a copy of the gps_data? Defaults to TRUE.
 #' @return A GPS-like data with adjusted `speed` values. The columns
-#' `departure_time` and `cumtime` are also updated accordingly.
+#' `timestamp` and `cumtime` are also updated accordingly.
 #' @export
 #' @examples
 #' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
@@ -61,35 +61,35 @@ adjust_speed <- function(gps_data, min_speed = 2, max_speed = 80, new_speed = NU
   gps_data <- lapply(unique(gps_data$shape_id), function(i){
     tmp_gps_data <- gps_data[shape_id == i, ]
     
-    if(nrow(tmp_gps_data[!is.na(departure_time)]) < 2){
-     message(paste0("departure_time column of shape_id ", i, " was not adjusted as there are less than two departure_time's."))
+    if(nrow(tmp_gps_data[!is.na(timestamp)]) < 2){
+     message(paste0("timestamp column of shape_id ", i, " was not adjusted as there are less than two timestamp's."))
      return(tmp_gps_data)
     }
     
-    id_first <- which(!is.na(tmp_gps_data$departure_time))[1]
+    id_first <- which(!is.na(tmp_gps_data$timestamp))[1]
     
     if(length(id_first) == 0){
-      message(paste0("departure_time column of shape_id ", i, " was not adjusted as there is no valid departure_time's."))
+      message(paste0("timestamp column of shape_id ", i, " was not adjusted as there is no valid timestamp's."))
       return(tmp_gps_data)
     }
     else if(id_first == 1){
       tmp_gps_data[, 
-        departure_time := round(departure_time[1] + cumtime),
+        timestamp := round(timestamp[1] + cumtime),
         by = .(trip_id, trip_number)]
     }else{
       # before the first valid observation
       tmp_gps_data[1:id_first,
-        departure_time := round(departure_time[id_first] - cumtime),
+        timestamp := round(timestamp[id_first] - cumtime),
         by = .(trip_id, trip_number)]
      
       # after the first valid observation
       tmp_gps_data[id_first:.N,
-        departure_time := round(departure_time[id_first] + cumtime),
+        timestamp := round(timestamp[id_first] + cumtime),
         by = .(trip_id, trip_number)]
     }
     
     # midnight trips fix
-    tmp_gps_data[as.numeric(departure_time) > 86400, departure_time := departure_time - 86400]
+    tmp_gps_data[as.numeric(timestamp) > 86400, timestamp := timestamp - 86400]
     
     return(tmp_gps_data)
   }) %>% data.table::rbindlist()
@@ -100,7 +100,7 @@ adjust_speed <- function(gps_data, min_speed = 2, max_speed = 80, new_speed = NU
   gps_data[, time := units::set_units(time, "s")]
   gps_data[, cumtime := units::set_units(cumtime, "s")]
 
-  gps_data[, departure_time := data.table::as.ITime(departure_time)]
+  gps_data[, timestamp := data.table::as.ITime(timestamp)]
 
   return(gps_data)
 }

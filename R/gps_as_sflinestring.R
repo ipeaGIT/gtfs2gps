@@ -76,7 +76,7 @@ gps_as_sflinestring  <- function(gps, crs = 4326){
   moreThanOne <- which(as.vector(table(dt2$grp)) != 1)
   
   dt2 <- dt2[grp %in% moreThanOne, ]
-  dt2[, departure_time := data.table::as.ITime(departure_time)]
+  dt2[, timestamp := data.table::as.ITime(timestamp)]
   
   dt2[, to_stop_id := to_stop_id[.N], by = grp]
   

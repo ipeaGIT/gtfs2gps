@@ -52,7 +52,7 @@
 #' @return A `data.table`, where each row represents a GPS point. The following 
 #' columns are returned (units of measurement in parenthesis): dist and cumdist 
 #' (meters), cumtime (seconds), shape_pt_lon and shape_pt_lat (degrees), speed 
-#' (km/h), departure_time (hh:mm:ss).
+#' (km/h), timestamp (hh:mm:ss).
 #' @export
 #' @examples
 #' library(dplyr)
@@ -224,10 +224,11 @@ gtfs2gps <- function(gtfs_data,
       return(NULL)  # nocov
     }
     
-    new_stoptimes[, departure_time := data.table::as.ITime(departure_time)]
-
+    new_stoptimes[, timestamp := data.table::as.ITime(departure_time)]
+    new_stoptimes[, departure_time := NULL]
+    
     data.table::setcolorder(new_stoptimes, c("id", "shape_id", "trip_id", "trip_number", "route_type", 
-      "shape_pt_lon", "shape_pt_lat", "departure_time", "stop_id", "stop_sequence", "dist", "cumdist",
+      "shape_pt_lat", "shape_pt_lon", "timestamp", "stop_id", "stop_sequence", "dist", "cumdist",
       "cumtime", "speed"))
 
     na_values <- length(which(is.na(new_stoptimes$speed)))
