@@ -353,4 +353,3 @@ gtfs2gps2 <- function(gtfs_data,
   else
     return(NULL)
 }
-

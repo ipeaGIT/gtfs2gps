@@ -4,7 +4,13 @@
 \alias{adjust_speed}
 \title{Adjust the speeds of a gps-like table created with \code{\link{gtfs2gps}}}
 \usage{
-adjust_speed(gps_data, min_speed = 2, max_speed = 80, new_speed = NULL)
+adjust_speed(
+  gps_data,
+  min_speed = 2,
+  max_speed = 80,
+  new_speed = NULL,
+  clone = TRUE
+)
 }
 \arguments{
 \item{gps_data}{A GPS-like data.table created with \code{\link{gtfs2gps}}.}
@@ -18,6 +24,8 @@ above maximum speed will be adjusted. Defaults to 80 km/h.}
 \item{new_speed}{Speed (in km/h) to replace missing values as well as values
 outside min_speed and max_speed range. By default, `new_speed = NULL` and the
 function considers the average speed of the entire gps data.}
+
+\item{clone}{Use a copy of the gps_data? Defaults to TRUE.}
 }
 \value{
 A GPS-like data with adjusted `speed` values. The columns
