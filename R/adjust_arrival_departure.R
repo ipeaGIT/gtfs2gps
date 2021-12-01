@@ -25,7 +25,6 @@
 #'
 #' poa <- adjust_arrival_departure(poa)
 adjust_arrival_departure <- function(gtfs_data, min_lag = 20){
-  min_lag <- as.numeric( units::set_units(min_lag, "s"))
   
   if(is.null(gtfs_data$stop_times$arrival_time))
     gtfs_data$stop_times[, arrival_time := NULL]
