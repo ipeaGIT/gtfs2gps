@@ -4,12 +4,13 @@
 \alias{adjust_arrival_departure}
 \title{Adjust the arrival and departure times of a GTFS data}
 \usage{
-adjust_arrival_departure(gtfs_data, min_lag = 20)
+adjust_arrival_departure(gtfs_data, min_lag = units::set_units(20, "s"))
 }
 \arguments{
 \item{gtfs_data}{A GTFS data created with \code{\link{read_gtfs}}.}
 
-\item{min_lag}{Minimum waiting time when a vehicle arrives at a stop.}
+\item{min_lag}{Numeric. Minimum waiting time (in seconds) when a vehicle arrives 
+at a stop. Default is 20s.}
 }
 \value{
 A GTFS with adjusted `arrival_time` and `departure_time` on
@@ -17,16 +18,17 @@ data.table `stop_times`.
 }
 \description{
 Some GTFS.zip data have issues related to arrival and departure
-time on stops. For each stop time row, this function applies the following steps:
+time on stops. This function makes sure the GTFS has dis/embarking times at
+each stop. For each stop time row, this function applies the following steps:
 
-1. If there is `arrival_time` but no `departure_time`, it creates a departure 
-by summing the arrival plus a pre-defined `min_lag`.
+1. If there is `arrival_time` but no `departure_time`, it creates a departure_time 
+column by summing the arrival plus a pre-defined `min_lag`.
 
-2. If there is `departure_time` but no `arrival_time`, it creates an arrival 
-by subtracting a pre-defined `min_lag` from the departure.
+2. If there is `departure_time` but no `arrival_time`, it creates an arrival_time 
+column by subtracting a pre-defined `min_lag` from the departure.
 
 3. If there is an `arrival_time` and a `departure_time` but their difference
-is less than `min_lag`, it reduces the `arrival_time` and increases
+is smaller than `min_lag`, it reduces the `arrival_time` and increases
 `departure_time` so that the difference will be exactly `min_lag`.
 }
 \examples{
