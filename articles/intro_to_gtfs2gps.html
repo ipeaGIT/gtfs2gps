@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,18 +33,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gtfs2gps</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7-0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.7-0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
@@ -64,7 +60,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/ipeaGIT/gtfs2gps/">
+  <a href="https://github.com/ipeaGIT/gtfs2gps/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -83,10 +79,10 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>gtfs2gps: Converting GTFS data to GPS-like format</h1>
-                        <h4 class="author">Rafael H. M. Pereira, Pedro R. Andrade, Joao Bazzo</h4>
+                        <h4 data-toc-skip class="author">Rafael H. M. Pereira, Pedro R. Andrade, Joao Bazzo</h4>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/gtfs2gps/blob/master/vignettes/intro_to_gtfs2gps.Rmd"><code>vignettes/intro_to_gtfs2gps.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ipeaGIT/gtfs2gps/blob/HEAD/vignettes/intro_to_gtfs2gps.Rmd" class="external-link"><code>vignettes/intro_to_gtfs2gps.Rmd</code></a></small>
       <div class="hidden name"><code>intro_to_gtfs2gps.Rmd</code></div>
 
     </div>
@@ -98,55 +94,55 @@
     </div>
     
 <p>18 August 2020</p>
-<div id="introduction" class="section level1">
-<h1 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h1>
+<div class="section level1">
+<h1 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h1>
 <p>Package <code>gtfs2gps</code> allows users to convert public transport GTFS data into a single <code>data.table</code> format with GPS-like records, which can then be used in various applications such as running transport simulations or scenario analyses. Before using the package, just install it from GitHub.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"gtfs2gps"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"gtfs2gps"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="loading-data" class="section level1">
-<h1 class="hasAnchor">
-<a href="#loading-data" class="anchor"></a>Loading data</h1>
+<div class="section level1">
+<h1 id="loading-data">Loading data<a class="anchor" aria-label="anchor" href="#loading-data"></a>
+</h1>
 <p>After loading the package, GTFS data can be read into R by using <code><a href="../reference/read_gtfs.html">read_gtfs()</a></code>. This function gets a zipped GTFS file and returns a list of <code>data.table</code> objects. The returning list contains the data of each GTFS file indexed according to their file names without extension.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/ipeaGIT/gtfs2gps">"gtfs2gps"</a></span><span class="op">)</span>
-<span class="va">sao</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_gtfs.html">read_gtfs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/saopaulo.zip"</span>, package <span class="op">=</span><span class="st">"gtfs2gps"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code>## Unzipped the following files to /tmp/RtmpgctokL/gtfsio:
-##   * agency.txt
-##   * calendar.txt
-##   * frequencies.txt
-##   * routes.txt
-##   * shapes.txt
-##   * stop_times.txt
-##   * stops.txt
-##   * trips.txt</code></pre>
-<pre><code>## Reading agency.txt</code></pre>
-<pre><code>## Reading calendar.txt</code></pre>
-<pre><code>## Reading frequencies.txt</code></pre>
-<pre><code>## Reading routes.txt</code></pre>
-<pre><code>## Reading shapes.txt</code></pre>
-<pre><code>## Reading stop_times.txt</code></pre>
-<pre><code>## Reading stops.txt</code></pre>
-<pre><code>## Reading trips.txt</code></pre>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/ipeaGIT/gtfs2gps" class="external-link">"gtfs2gps"</a></span><span class="op">)</span>
+<span class="va">sao</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_gtfs.html">read_gtfs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/saopaulo.zip"</span>, package <span class="op">=</span><span class="st">"gtfs2gps"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## Unzipped the following files to /tmp/Rtmpma1sDT/gtfsio:</span>
+<span class="co">##   * agency.txt</span>
+<span class="co">##   * calendar.txt</span>
+<span class="co">##   * frequencies.txt</span>
+<span class="co">##   * routes.txt</span>
+<span class="co">##   * shapes.txt</span>
+<span class="co">##   * stop_times.txt</span>
+<span class="co">##   * stops.txt</span>
+<span class="co">##   * trips.txt</span></code></pre>
+<pre><code><span class="co">## Reading agency.txt</span></code></pre>
+<pre><code><span class="co">## Reading calendar.txt</span></code></pre>
+<pre><code><span class="co">## Reading frequencies.txt</span></code></pre>
+<pre><code><span class="co">## Reading routes.txt</span></code></pre>
+<pre><code><span class="co">## Reading shapes.txt</span></code></pre>
+<pre><code><span class="co">## Reading stop_times.txt</span></code></pre>
+<pre><code><span class="co">## Reading stops.txt</span></code></pre>
+<pre><code><span class="co">## Reading trips.txt</span></code></pre>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">sao</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] "agency"      "calendar"    "frequencies" "routes"      "shapes"     
-## [6] "stop_times"  "stops"       "trips"</code></pre>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">sao</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## [1] "agency"      "calendar"    "frequencies" "routes"      "shapes"     </span>
+<span class="co">## [6] "stop_times"  "stops"       "trips"</span></code></pre>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">sao</span><span class="op">$</span><span class="va">trips</span><span class="op">)</span></code></pre></div>
-<pre><code>##    route_id service_id   trip_id shape_id
-## 1:  121G-10        USD 121G-10-0    52421
-## 2:  148L-10        USD 148L-10-0    52857
-## 3:  148L-10        USD 148L-10-1    52858
-## 4:  1720-21        USD 1720-21-0    52936
-## 5:  1721-10        USD 1721-10-0    52941
-## 6:  1726-10        USD 1726-10-0    52429</code></pre>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">sao</span><span class="op">$</span><span class="va">trips</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">##    route_id service_id   trip_id shape_id</span>
+<span class="co">## 1:  121G-10        USD 121G-10-0    52421</span>
+<span class="co">## 2:  148L-10        USD 148L-10-0    52857</span>
+<span class="co">## 3:  148L-10        USD 148L-10-1    52858</span>
+<span class="co">## 4:  1720-21        USD 1720-21-0    52936</span>
+<span class="co">## 5:  1721-10        USD 1721-10-0    52941</span>
+<span class="co">## 6:  1726-10        USD 1726-10-0    52429</span></code></pre>
 <p>Note that not all GTFS files are loaded into R. This function only loads the necessary data to spatially and temporally handle trips and stops, which are: “shapes.txt”, “stop_times.txt”, “stops.txt”, “trips.txt”, “agency.txt”, “calendar.txt”, “routes.txt”, and “frequencies.txt”, with this last four being optional. If a given GTFS zipped file does not contain all of these required files then <code><a href="../reference/read_gtfs.html">read_gtfs()</a></code> will stop with an error.</p>
 </div>
-<div id="subsetting-gtfs-data" class="section level1">
-<h1 class="hasAnchor">
-<a href="#subsetting-gtfs-data" class="anchor"></a>Subsetting GTFS Data</h1>
+<div class="section level1">
+<h1 id="subsetting-gtfs-data">Subsetting GTFS Data<a class="anchor" aria-label="anchor" href="#subsetting-gtfs-data"></a>
+</h1>
 <p>GTFS data sets can be fairly large for complex public transport networks and, in some cases, users might want to focus on specific transport services at week days/weekends, or on specific trips or routes. The package brings some functions to filter GTFS.zip and speed up the data processing.</p>
 <ul>
 <li>
@@ -170,53 +166,53 @@
 </ul>
 <p>These functions subset all the relevant GTFS files in order to remove all the unnecessary rows, keeping the data consistent. The returning values of the four functions is a list of <code>data.table</code> objects, in the same way of the input data. For example, in the code below we filter only shape ids between 53000 and 53020.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org">magrittr</a></span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/object.size.html">object.size</a></span><span class="op">(</span><span class="va">sao</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/format.html">format</a></span><span class="op">(</span>units <span class="op">=</span> <span class="st">"Kb"</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] "2160.2 Kb"</code></pre>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/object.size.html" class="external-link">object.size</a></span><span class="op">(</span><span class="va">sao</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span>units <span class="op">=</span> <span class="st">"Kb"</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## [1] "2160.2 Kb"</span></code></pre>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sao_small</span> <span class="op">&lt;-</span> <span class="fu">gtfs2gps</span><span class="fu">::</span><span class="fu"><a href="../reference/filter_by_shape_id.html">filter_by_shape_id</a></span><span class="op">(</span><span class="va">sao</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">51338</span>, <span class="fl">51956</span>, <span class="fl">51657</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/object.size.html">object.size</a></span><span class="op">(</span><span class="va">sao_small</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/format.html">format</a></span><span class="op">(</span>units <span class="op">=</span> <span class="st">"Kb"</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] "100.7 Kb"</code></pre>
+<code class="sourceCode R"><span class="va">sao_small</span> <span class="op">&lt;-</span> <span class="fu">gtfs2gps</span><span class="fu">::</span><span class="fu"><a href="../reference/filter_by_shape_id.html">filter_by_shape_id</a></span><span class="op">(</span><span class="va">sao</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">51338</span>, <span class="fl">51956</span>, <span class="fl">51657</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/object.size.html" class="external-link">object.size</a></span><span class="op">(</span><span class="va">sao_small</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span>units <span class="op">=</span> <span class="st">"Kb"</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## [1] "100.7 Kb"</span></code></pre>
 <p>We can then easily convert the data to simple feature format and plot them.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sao_small_shapes_sf</span> <span class="op">&lt;-</span> <span class="fu">gtfs2gps</span><span class="fu">::</span><span class="fu"><a href="../reference/gtfs_shapes_as_sf.html">gtfs_shapes_as_sf</a></span><span class="op">(</span><span class="va">sao_small</span><span class="op">)</span>
 <span class="va">sao_small_stops_sf</span> <span class="op">&lt;-</span> <span class="fu">gtfs2gps</span><span class="fu">::</span><span class="fu"><a href="../reference/gtfs_stops_as_sf.html">gtfs_stops_as_sf</a></span><span class="op">(</span><span class="va">sao_small</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html">st_geometry</a></span><span class="op">(</span><span class="va">sao_small_shapes_sf</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html">st_geometry</a></span><span class="op">(</span><span class="va">sao_small_stops_sf</span><span class="op">)</span>, pch <span class="op">=</span> <span class="fl">20</span>, col <span class="op">=</span> <span class="st">"red"</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/box.html">box</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_geometry</a></span><span class="op">(</span><span class="va">sao_small_shapes_sf</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_geometry</a></span><span class="op">(</span><span class="va">sao_small_stops_sf</span><span class="op">)</span>, pch <span class="op">=</span> <span class="fl">20</span>, col <span class="op">=</span> <span class="st">"red"</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/box.html" class="external-link">box</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="intro_to_gtfs2gps_files/figure-html/sao_small_shapes_sf-1.png" width="700"></p>
 <p>After subsetting the data, it is also possible to save it as a new GTFS file using <code><a href="../reference/write_gtfs.html">write_gtfs()</a></code>, as shown below.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/write_gtfs.html">write_gtfs</a></span><span class="op">(</span><span class="va">sao_small</span>, <span class="st">"sao_small.zip"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="converting-to-gps-like-format" class="section level1">
-<h1 class="hasAnchor">
-<a href="#converting-to-gps-like-format" class="anchor"></a>Converting to GPS-like format</h1>
+<div class="section level1">
+<h1 id="converting-to-gps-like-format">Converting to GPS-like format<a class="anchor" aria-label="anchor" href="#converting-to-gps-like-format"></a>
+</h1>
 <p>To convert GTFS to GPS-like format, use <code><a href="../reference/gtfs2gps.html">gtfs2gps()</a></code>. This is the core function of the package. It takes a GTFS zipped file as an input and returns a <code>data.table</code> where each row represents a ‘GPS-like’ data point for every trip in the GTFS file. In summary, this function interpolates the space-time position of each vehicle in each trip considering the network distance and average speed between stops. The function samples the timestamp of each vehicle every <span class="math inline">\(15m\)</span> by default, but the user can set a different value in the <code>spatial_resolution</code> argument. See the example below.</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R">  <span class="va">sao_gps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gtfs2gps.html">gtfs2gps</a></span><span class="op">(</span><span class="st">"sao_small.zip"</span>, spatial_resolution <span class="op">=</span> <span class="fl">50</span><span class="op">)</span>
-  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">sao_gps</span><span class="op">)</span></code></pre></div>
-<pre><code>##    id shape_id     trip_id trip_number route_type shape_pt_lat shape_pt_lon
-## 1:  1    51338 5010-10-0#1           1          3    -23.66268    -46.63120
-## 2:  2    51338 5010-10-0#1           1          3    -23.66273    -46.63117
-## 3:  3    51338 5010-10-0#1           1          3    -23.66288    -46.63108
-## 4:  4    51338 5010-10-0#1           1          3    -23.66316    -46.63095
-## 5:  5    51338 5010-10-0#1           1          3    -23.66345    -46.63082
-## 6:  6    51338 5010-10-0#1           1          3    -23.66364    -46.63111
-##    timestamp stop_id stop_sequence          dist        cumdist cumtime
-## 1:      &lt;NA&gt;    &lt;NA&gt;            NA  0.000000 [m]   0.000000 [m]  NA [s]
-## 2:      &lt;NA&gt; 3703053             1  7.230445 [m]   7.230445 [m]  NA [s]
-## 3:      &lt;NA&gt;    &lt;NA&gt;            NA 18.369274 [m]  25.599720 [m]  NA [s]
-## 4:      &lt;NA&gt;    &lt;NA&gt;            NA 34.505965 [m]  60.105685 [m]  NA [s]
-## 5:      &lt;NA&gt;    &lt;NA&gt;            NA 34.505965 [m]  94.611650 [m]  NA [s]
-## 6:      &lt;NA&gt;    &lt;NA&gt;            NA 36.478776 [m] 131.090426 [m]  NA [s]
-##             speed
-## 1:      NA [km/h]
-## 2: 26.5931 [km/h]
-## 3: 26.5931 [km/h]
-## 4: 26.5931 [km/h]
-## 5: 26.5931 [km/h]
-## 6: 26.5931 [km/h]</code></pre>
+  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">sao_gps</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">##    id shape_id     trip_id trip_number route_type shape_pt_lat shape_pt_lon</span>
+<span class="co">## 1:  1    51338 5010-10-0#1           1          3    -23.66268    -46.63120</span>
+<span class="co">## 2:  2    51338 5010-10-0#1           1          3    -23.66273    -46.63117</span>
+<span class="co">## 3:  3    51338 5010-10-0#1           1          3    -23.66288    -46.63108</span>
+<span class="co">## 4:  4    51338 5010-10-0#1           1          3    -23.66316    -46.63095</span>
+<span class="co">## 5:  5    51338 5010-10-0#1           1          3    -23.66345    -46.63082</span>
+<span class="co">## 6:  6    51338 5010-10-0#1           1          3    -23.66364    -46.63111</span>
+<span class="co">##    timestamp stop_id stop_sequence          dist        cumdist cumtime</span>
+<span class="co">## 1:      &lt;NA&gt;    &lt;NA&gt;            NA  0.000000 [m]   0.000000 [m]  NA [s]</span>
+<span class="co">## 2:      &lt;NA&gt; 3703053             1  7.230445 [m]   7.230445 [m]  NA [s]</span>
+<span class="co">## 3:      &lt;NA&gt;    &lt;NA&gt;            NA 18.369274 [m]  25.599720 [m]  NA [s]</span>
+<span class="co">## 4:      &lt;NA&gt;    &lt;NA&gt;            NA 34.505965 [m]  60.105685 [m]  NA [s]</span>
+<span class="co">## 5:      &lt;NA&gt;    &lt;NA&gt;            NA 34.505965 [m]  94.611650 [m]  NA [s]</span>
+<span class="co">## 6:      &lt;NA&gt;    &lt;NA&gt;            NA 36.478776 [m] 131.090426 [m]  NA [s]</span>
+<span class="co">##             speed</span>
+<span class="co">## 1:      NA [km/h]</span>
+<span class="co">## 2: 26.5931 [km/h]</span>
+<span class="co">## 3: 26.5931 [km/h]</span>
+<span class="co">## 4: 26.5931 [km/h]</span>
+<span class="co">## 5: 26.5931 [km/h]</span>
+<span class="co">## 6: 26.5931 [km/h]</span></code></pre>
 <p>The following figure maps the first 100 data points of the sample data we processed. They can be converted to <code>simple feature</code> points or linestring.</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R">  <span class="va">sao_gps60</span> <span class="op">&lt;-</span> <span class="va">sao_gps</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span>, <span class="op">]</span>
@@ -228,35 +224,35 @@
   <span class="va">sao_gps60_sflinestring</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gps_as_sflinestring.html">gps_as_sflinestring</a></span><span class="op">(</span><span class="va">sao_gps60</span><span class="op">)</span>
 
   <span class="co"># plot</span>
-  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html">st_geometry</a></span><span class="op">(</span><span class="va">sao_gps60_sfpoints</span><span class="op">)</span>, pch <span class="op">=</span> <span class="fl">20</span><span class="op">)</span>
-  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html">st_geometry</a></span><span class="op">(</span><span class="va">sao_gps60_sflinestring</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"blue"</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-  <span class="fu"><a href="https://rdrr.io/r/graphics/box.html">box</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_geometry</a></span><span class="op">(</span><span class="va">sao_gps60_sfpoints</span><span class="op">)</span>, pch <span class="op">=</span> <span class="fl">20</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_geometry</a></span><span class="op">(</span><span class="va">sao_gps60_sflinestring</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"blue"</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/graphics/box.html" class="external-link">box</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="intro_to_gtfs2gps_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 <p>The function <code><a href="../reference/gtfs2gps.html">gtfs2gps()</a></code> automatically recognizes whether the GTFS data brings detailed <code>stop_times.txt</code> information or whether it is a <code>frequency.txt</code> GTFS file. A sample data of a GTFS with detailed <code>stop_times.txt</code> cab be found below:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">poa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa.zip"</span>, package <span class="op">=</span><span class="st">"gtfs2gps"</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">poa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa.zip"</span>, package <span class="op">=</span><span class="st">"gtfs2gps"</span><span class="op">)</span>
 
 <span class="va">poa_gps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gtfs2gps.html">gtfs2gps</a></span><span class="op">(</span><span class="va">poa</span>, spatial_resolution <span class="op">=</span> <span class="fl">50</span><span class="op">)</span>
 
 <span class="va">poa_gps_sflinestrig</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gps_as_sfpoints.html">gps_as_sfpoints</a></span><span class="op">(</span><span class="va">poa_gps</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html">st_geometry</a></span><span class="op">(</span><span class="va">poa_gps_sflinestrig</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">200</span>,<span class="op">]</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_geometry</a></span><span class="op">(</span><span class="va">poa_gps_sflinestrig</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">200</span>,<span class="op">]</span><span class="op">)</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/graphics/box.html">box</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/graphics/box.html" class="external-link">box</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="intro_to_gtfs2gps_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 </div>
-<div id="methodological-note" class="section level1">
-<h1 class="hasAnchor">
-<a href="#methodological-note" class="anchor"></a>Methodological note</h1>
+<div class="section level1">
+<h1 id="methodological-note">Methodological note<a class="anchor" aria-label="anchor" href="#methodological-note"></a>
+</h1>
 <p>For a given trip, the function <code>gtfs2gps</code> calculates the average speed between each pair of consecutive stops — given by the ratio between cumulative network distance <code>S</code> and departure time <code>t</code> for a consecutive pair of valid stop_ids (<code>i</code>),</p>
 <p><span class="math display">\[Large Speed_i = \frac{S_{i+1}-S_i}{t_{i+1}-t_i}\]</span></p>
 <p>Since the beginning of each trip usually starts before the first stop_id, the mean speed cannot be calculated as shown in the previous equation because information on <code>i</code> period does not exist. In this case, the function consider the mean speed for the whole trip. It also happens after the last valid stop_id (<code>N</code>) of the trips, where info on <code>i + 1</code> also does not exist.</p>
-<p><img src="https://github.com/ipeaGIT/gtfs2gps/blob/master/man/figures/speed.PNG"><!-- --></p>
+<p><img src="https://github.com/ipeaGIT/gtfs2gps/blob/master/reference/figures/speed.PNG"><!-- --></p>
 </div>
-<div id="final-remarks" class="section level1">
-<h1 class="hasAnchor">
-<a href="#final-remarks" class="anchor"></a>Final remarks</h1>
-<p>If you have any suggestions or want to report an error, please visit the GitHub page of the package <a href="https://github.com/ipeaGIT/gtfs2gps">here</a>.</p>
+<div class="section level1">
+<h1 id="final-remarks">Final remarks<a class="anchor" aria-label="anchor" href="#final-remarks"></a>
+</h1>
+<p>If you have any suggestions or want to report an error, please visit the GitHub page of the package <a href="https://github.com/ipeaGIT/gtfs2gps" class="external-link">here</a>.</p>
 </div>
   </div>
 
@@ -271,11 +267,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Rafael H. M. Pereira, Pedro R. Andrade, Joao Bazzo, Ipea - Institue for Applied Economic Research.</p>
+  <p></p>
+<p>Developed by Rafael H. M. Pereira, Pedro R. Andrade, Joao Bazzo, Ipea - Institue for Applied Economic Research.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.0.</p>
 </div>
 
       </footer>
@@ -283,6 +281,8 @@
 
   
 
+
+  
 
   </body>
 </html>
