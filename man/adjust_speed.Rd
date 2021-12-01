@@ -29,18 +29,18 @@ function considers the average speed of the entire gps data.}
 }
 \value{
 A GPS-like data with adjusted `speed` values. The columns
-`departure_time` and `cumtime` are also updated accordingly.
+`timestamp` and `cumtime` are also updated accordingly.
 }
 \description{
 Some GTFS.zip data sets might have quality issues, for example 
 by assuming that a trip speed is unreasonably high (e.g. an urban bus running
-over 100 Km/h), or in other cases the `departure_time` information might be
+over 100 Km/h), or in other cases the `timestamp` information might be
 missing for some route segments. This can lead a gps-like table to have `NA`
-or unrealistic `speed` and `departure_time` values. This function allows the
-user to adjust the speed of trips and updates `departure_time` values 
+or unrealistic `speed` and `timestamp` values. This function allows the
+user to adjust the speed of trips and updates `timestamp` values 
 accordingly. The user can adjust the problematic speeds by either setting a
 custom constant value, or by considering the average of all valid trips speed
-(Default). The columns `departure_time` and `cumtime` are updated accordingly.
+(Default). The columns `timestamp` and `cumtime` are updated accordingly.
 }
 \examples{
 poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
