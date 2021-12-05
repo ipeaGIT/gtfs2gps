@@ -4,13 +4,14 @@
 \alias{adjust_arrival_departure}
 \title{Adjust the arrival and departure times of a GTFS data}
 \usage{
-adjust_arrival_departure(gtfs_data, min_lag = units::set_units(20, "s"))
+adjust_arrival_departure(gtfs_data, min_lag = 20)
 }
 \arguments{
 \item{gtfs_data}{A GTFS data created with \code{\link{read_gtfs}}.}
 
-\item{min_lag}{Numeric. Minimum waiting time (in seconds) when a vehicle arrives 
-at a stop. Default is 20s.}
+\item{min_lag}{Numeric. Minimum waiting time when a vehicle arrives 
+at a stop. It can be a numeric or a units value that can be converted
+to seconds. Default is 20s.}
 }
 \value{
 A GTFS with adjusted `arrival_time` and `departure_time` on
