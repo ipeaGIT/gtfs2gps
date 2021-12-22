@@ -1,6 +1,4 @@
-# gtfs2gps
-
-<img align="right" src="https://github.com/ipeaGIT/gtfs2gps/blob/master/man/figures/gtfs2gps_hex.png?raw=true" alt="logo" width="180"> 
+# gtfs2gps <img align="right" src="man/figures/logo.png" alt="logo" width="180"> 
 
 [![CRAN/METACRAN Version](https://www.r-pkg.org/badges/version/gtfs2gps)](https://CRAN.R-project.org/package=gtfs2gps).[![CRAN/METACRAN Total downloads](http://cranlogs.r-pkg.org/badges/grand-total/gtfs2gps?color=blue)](https://CRAN.R-project.org/package=gtfs2gps)
 [![R-CMD-check](https://github.com/ipeaGIT/gtfs2gps/workflows/R-CMD-check/badge.svg)](https://github.com/ipeaGIT/gtfs2gps/actions)
