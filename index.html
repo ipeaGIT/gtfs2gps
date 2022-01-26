@@ -85,15 +85,11 @@
       </header><div class="row">
   <div class="contents col-md-9">
 <div class="section level1">
-<div class="page-header"><h1 id="gtfs2gps-">gtfs2gps <img align="right" src="reference/figures/logo.png" alt="logo" width="180"><a class="anchor" aria-label="anchor" href="#gtfs2gps-"></a>
+<div class="page-header"><h1 id="gtfs2gps-converting-public-transport-data-from-gtfs-format-to-gps-like-records-">gtfs2gps: Converting public transport data from GTFS format to GPS-like records <img align="right" src="reference/figures/logo.png" alt="logo" width="180"><a class="anchor" aria-label="anchor" href="#gtfs2gps-converting-public-transport-data-from-gtfs-format-to-gps-like-records-"></a>
 </h1></div>
 <p><a href="https://CRAN.R-project.org/package=gtfs2gps" class="external-link"><img src="https://www.r-pkg.org/badges/version/gtfs2gps" alt="CRAN/METACRAN Version"></a>.<a href="https://CRAN.R-project.org/package=gtfs2gps" class="external-link"><img src="http://cranlogs.r-pkg.org/badges/grand-total/gtfs2gps?color=blue" alt="CRAN/METACRAN Total downloads"></a> <a href="https://github.com/ipeaGIT/gtfs2gps/actions" class="external-link"><img src="https://github.com/ipeaGIT/gtfs2gps/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a> <a href="https://codecov.io/gh/ipeaGIT/gtfs2gps?branch=master" class="external-link"><img src="https://codecov.io/gh/ipeaGIT/gtfs2gps/branch/master/graph/badge.svg" alt="Codecov test coverage"></a> <a href="https://zenodo.org/badge/latestdoi/203697230" class="external-link"><img src="https://zenodo.org/badge/203697230.svg" alt="DOI"></a></p>
-<div class="section level3">
-<h3 id="converting-public-transport-data-from-gtfs-format-to-gps-like-records">Converting public transport data from GTFS format to GPS-like records<a class="anchor" aria-label="anchor" href="#converting-public-transport-data-from-gtfs-format-to-gps-like-records"></a>
-</h3>
 <p><strong>gtfs2gps</strong> is an R package that converts public transportation data in GTFS format to GPS-like records in a <code>data.frame</code>/<code>data.table</code>, which can then be used in various applications such as running transport simulations or scenario analyses.</p>
 <p>The core function of the package takes a <code>GTFS.zip</code> file and interpolates the space-time position of each vehicle in each trip considering the network distance and average speed between stops. The output is a <code>data.table</code> where each row represents the timestamp of each vehicle at a given spatial resolution. The package also has some functions to subset GTFS data in time and space and to convert both representations to <a href="https://CRAN.R-project.org/package=sf" class="external-link">simple feature</a> format.</p>
-</div>
 <div class="section level3">
 <h3 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h3>
@@ -173,7 +169,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>

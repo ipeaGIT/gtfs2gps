@@ -101,21 +101,21 @@
     </div>
     
 <p>18 August 2020</p>
-<div class="section level1">
-<h1 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
-</h1>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
 <p>Package <code>gtfs2gps</code> allows users to convert public transport GTFS data into a single <code>data.table</code> format with GPS-like records, which can then be used in various applications such as running transport simulations or scenario analyses. Before using the package, just install it from GitHub.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"gtfs2gps"</span><span class="op">)</span></code></pre></div>
 </div>
-<div class="section level1">
-<h1 id="loading-data">Loading data<a class="anchor" aria-label="anchor" href="#loading-data"></a>
-</h1>
+<div class="section level2">
+<h2 id="loading-data">Loading data<a class="anchor" aria-label="anchor" href="#loading-data"></a>
+</h2>
 <p>After loading the package, GTFS data can be read into R by using <code><a href="../reference/read_gtfs.html">read_gtfs()</a></code>. This function gets a zipped GTFS file and returns a list of <code>data.table</code> objects. The returning list contains the data of each GTFS file indexed according to their file names without extension.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/ipeaGIT/gtfs2gps" class="external-link">"gtfs2gps"</a></span><span class="op">)</span>
 <span class="va">sao</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_gtfs.html">read_gtfs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/saopaulo.zip"</span>, package <span class="op">=</span><span class="st">"gtfs2gps"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## Unzipped the following files to /tmp/Rtmp9oQhPf/gtfsio:</span>
+<pre><code><span class="co">## Unzipped the following files to /tmp/Rtmpp7klvY/gtfsio:</span>
 <span class="co">##   * agency.txt</span>
 <span class="co">##   * calendar.txt</span>
 <span class="co">##   * frequencies.txt</span>
@@ -147,9 +147,9 @@
 <span class="co">## 6:  1726-10        USD 1726-10-0    52429</span></code></pre>
 <p>Note that not all GTFS files are loaded into R. This function only loads the necessary data to spatially and temporally handle trips and stops, which are: “shapes.txt”, “stop_times.txt”, “stops.txt”, “trips.txt”, “agency.txt”, “calendar.txt”, “routes.txt”, and “frequencies.txt”, with this last four being optional. If a given GTFS zipped file does not contain all of these required files then <code><a href="../reference/read_gtfs.html">read_gtfs()</a></code> will stop with an error.</p>
 </div>
-<div class="section level1">
-<h1 id="subsetting-gtfs-data">Subsetting GTFS Data<a class="anchor" aria-label="anchor" href="#subsetting-gtfs-data"></a>
-</h1>
+<div class="section level2">
+<h2 id="subsetting-gtfs-data">Subsetting GTFS Data<a class="anchor" aria-label="anchor" href="#subsetting-gtfs-data"></a>
+</h2>
 <p>GTFS data sets can be fairly large for complex public transport networks and, in some cases, users might want to focus on specific transport services at week days/weekends, or on specific trips or routes. The package brings some functions to filter GTFS.zip and speed up the data processing.</p>
 <ul>
 <li>
@@ -192,9 +192,9 @@
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/write_gtfs.html">write_gtfs</a></span><span class="op">(</span><span class="va">sao_small</span>, <span class="st">"sao_small.zip"</span><span class="op">)</span></code></pre></div>
 </div>
-<div class="section level1">
-<h1 id="converting-to-gps-like-format">Converting to GPS-like format<a class="anchor" aria-label="anchor" href="#converting-to-gps-like-format"></a>
-</h1>
+<div class="section level2">
+<h2 id="converting-to-gps-like-format">Converting to GPS-like format<a class="anchor" aria-label="anchor" href="#converting-to-gps-like-format"></a>
+</h2>
 <p>To convert GTFS to GPS-like format, use <code><a href="../reference/gtfs2gps.html">gtfs2gps()</a></code>. This is the core function of the package. It takes a GTFS zipped file as an input and returns a <code>data.table</code> where each row represents a ‘GPS-like’ data point for every trip in the GTFS file. In summary, this function interpolates the space-time position of each vehicle in each trip considering the network distance and average speed between stops. The function samples the timestamp of each vehicle every <span class="math inline">\(15m\)</span> by default, but the user can set a different value in the <code>spatial_resolution</code> argument. See the example below.</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R">  <span class="va">sao_gps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gtfs2gps.html">gtfs2gps</a></span><span class="op">(</span><span class="st">"sao_small.zip"</span>, spatial_resolution <span class="op">=</span> <span class="fl">50</span><span class="op">)</span>
@@ -248,17 +248,17 @@
 <span class="fu"><a href="https://rdrr.io/r/graphics/box.html" class="external-link">box</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="intro_to_gtfs2gps_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 </div>
-<div class="section level1">
-<h1 id="methodological-note">Methodological note<a class="anchor" aria-label="anchor" href="#methodological-note"></a>
-</h1>
+<div class="section level2">
+<h2 id="methodological-note">Methodological note<a class="anchor" aria-label="anchor" href="#methodological-note"></a>
+</h2>
 <p>For a given trip, the function <code>gtfs2gps</code> calculates the average speed between each pair of consecutive stops — given by the ratio between cumulative network distance <code>S</code> and departure time <code>t</code> for a consecutive pair of valid stop_ids (<code>i</code>),</p>
 <p><span class="math display">\[Large Speed_i = \frac{S_{i+1}-S_i}{t_{i+1}-t_i}\]</span></p>
 <p>Since the beginning of each trip usually starts before the first stop_id, the mean speed cannot be calculated as shown in the previous equation because information on <code>i</code> period does not exist. In this case, the function consider the mean speed for the whole trip. It also happens after the last valid stop_id (<code>N</code>) of the trips, where info on <code>i + 1</code> also does not exist.</p>
-<p><img src="https://github.com/ipeaGIT/gtfs2gps/blob/master/reference/figures/speed.PNG"><!-- --></p>
+<p><img src="https://github.com/ipeaGIT/gtfs2gps/blob/master/man/figures/speed.PNG"><!-- --></p>
 </div>
-<div class="section level1">
-<h1 id="final-remarks">Final remarks<a class="anchor" aria-label="anchor" href="#final-remarks"></a>
-</h1>
+<div class="section level2">
+<h2 id="final-remarks">Final remarks<a class="anchor" aria-label="anchor" href="#final-remarks"></a>
+</h2>
 <p>If you have any suggestions or want to report an error, please visit the GitHub page of the package <a href="https://github.com/ipeaGIT/gtfs2gps" class="external-link">here</a>.</p>
 </div>
   </div>
@@ -280,7 +280,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
