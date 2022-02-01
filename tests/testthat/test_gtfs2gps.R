@@ -16,7 +16,7 @@ test_that("gtfs2gps", {
     my_length <- length(poa_gps$dist[which(!poa_gps$dist < units::set_units(50, "m"))])
     expect_equal(my_length, 0)
     
-    expect_equal(sum(poa_gps$dist), 516072.7, 0.1)
+    expect_equal(sum(units::drop_units(poa_gps$dist)), 516072.7, 0.1)
     
     expect_true(all(poa_gps$trip_number[1] == 1))
     expect_true(all(poa_gps$trip_number[.N] == 3))
@@ -60,7 +60,7 @@ test_that("gtfs2gps", {
     my_length <- length(poa_gps$dist[which(!poa_gps$dist < units::set_units(50, "m"))])
     expect_equal(my_length, 0)
     
-    expect_equal(sum(poa_gps$dist), 516072, 1)
+    expect_equal(sum(units::drop_units(poa_gps$dist)), 516072, 1)
 
     expect_true(all(poa_gps$trip_number[1] == 1))
     expect_true(all(poa_gps$trip_number[.N] == 3))
