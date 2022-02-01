@@ -32,4 +32,4 @@ if(getRversion() >= "2.15.1") utils::globalVariables(
     'service_duration', 'headway_secs', 'number_of_departures',
     'cumtime', 'speed', 'i', 'route_type', 'trip_number', 'mdate',
     '.I', 'interval_id', 'i.interval', '.SD', 'grp', '.GRP',
-    'start_trip_number','end_trip_number', 'time'))
+    'start_trip_number','end_trip_number', 'time', 'lag', 'timestamp', 'i.arrival_time'))
