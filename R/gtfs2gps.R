@@ -232,16 +232,15 @@ gtfs2gps <- function(gtfs_data,
       return(NULL)  # nocov
     }
     
-    new_stoptimes[, timestamp := data.table::as.ITime(arrival_time)]
-    new_stoptimes$lag <- NULL
+   # new_stoptimes$lag <- NULL
     new_stoptimes$arrival_time <- NULL
     new_stoptimes$departure_time <- NULL
 
     data.table::setcolorder(new_stoptimes, c("shape_id","trip_id", "route_type"
-                                             , "id", "shape_pt_lon", "shape_pt_lat"
+                                             , "id", "timestamp", "shape_pt_lon", "shape_pt_lat"
                                              , "stop_id", "stop_sequence"
-                                             , "dist", "cumdist", "speed"
-                                             , "cumtime", "timestamp"))
+                                             , "speed", "dist", "cumdist" 
+                                             , "cumtime"))
 
     na_values <- length(which(is.na(new_stoptimes$speed)))
     if(na_values > 0)
@@ -281,6 +280,7 @@ gtfs2gps <- function(gtfs_data,
   }
 
   badShapes <- c()
+  msgs <- c()
   all_shapeids <- unique(shapes_sf$shape_id)
   p <- progressr::progressor(steps = length(all_shapeids))
 
@@ -289,6 +289,7 @@ gtfs2gps <- function(gtfs_data,
     result <- NULL
     tryCatch({result <- corefun(shapeid)}, error = function(msg) {
       badShapes <<- c(badShapes, shapeid) # nocov
+      msgs <<- c(msgs, msg)
     })
 
     return(result)
@@ -303,14 +304,18 @@ gtfs2gps <- function(gtfs_data,
 
   if(length(badShapes) > 0){
     if(original_gtfs_data_arg == ".") original_gtfs_data_arg <- "<your gtfs data>" # nocov
-    
+
+        
     message(paste0("Some internal bug occurred while processing gtfs data.\n", # nocov
                    "Please give us a feedback by creating a GitHub issue\n", # nocov
                    "(https://github.com/ipeaGIT/gtfs2gps/issues/new)\n"), # nocov
                    "and attaching a subset of your data created from the\n", # nocov
                    "code below:\n", # nocov
                    "################################################") # nocov
+
+    print(msgs)
     
+        
     ids <- paste0("ids <- c('", paste(badShapes, collapse = "', '"), "')") # nocov
     code1 <- paste0("data <- gtfs2gps::filter_by_shape_id(", original_gtfs_data_arg, ", ids)") # nocov
     code2 <- "gtfs2gps::write_gtfs(data, 'shapes_with_error.zip')" # nocov
