@@ -123,6 +123,8 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
   new_points[, departure_time := arrival_time]
   new_points[, id := id - 0.1]
 
+  new_stoptimes[lim0, dist := 0]
+
   new_stoptimes <- rbind(new_stoptimes, new_points)
   data.table::setorder(new_stoptimes, "id")
   new_stoptimes$id <- 1:dim(new_stoptimes)[1]
