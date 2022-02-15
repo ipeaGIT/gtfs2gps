@@ -168,6 +168,8 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
   
   lapply(1:(length(lim0) - 1), FUN = update_speeds)
 
+  new_stoptimes[is.na(speed), cumtime := NA]
+
   # Get lag
   #new_stoptimes[!is.na(departure_time) & !is.na(stop_id)
   #              ,lag := departure_time - arrival_time]
