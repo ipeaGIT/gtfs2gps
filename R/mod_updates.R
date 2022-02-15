@@ -134,6 +134,8 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
   new_stoptimes[1, speed := 1e-12]
   new_stoptimes[lim0 + 1, speed := 1e-12]
   new_stoptimes[, cumtime := 0]
+  
+  last_point_was_stop <- FALSE
 
   lim0 <- new_stoptimes[ !is.na(timestamp) & !is.na(stop_id), id]
   #  function for speed estimation
@@ -144,22 +146,24 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
     diff_timestamp <- new_stoptimes$timestamp[b] - new_stoptimes$timestamp[a]
     if(diff_timestamp < 0) diff_timestamp <- diff_timestamp + 86400 # one day in seconds
     
-    if(a + 1 == b) {
+    if(a + 1 == b && !last_point_was_stop) {
+      last_point_was_stop <<- TRUE
       value <- new_stoptimes[a, cumtime] + diff_timestamp
       new_stoptimes[b, cumtime := value]
       new_stoptimes[b, speed := 1e-12]
       return() # two consecutive points with arrival_time don't need to be interpolated
     }
-    
+
     increment <- diff_timestamp / (b - a)
     
     new_stoptimes[a:b, cumtime := .I * increment + data.table::first(cumtime)]
     new_stoptimes[a:b, speed := 3.6 * dist / (cumtime - data.table::shift(cumtime))]
     # cumtime is related to row a, therefore it cannot be (a+1):b
-    
+
     new_stoptimes[a, speed := 1e-12]
     
     new_stoptimes[a:b, timestamp := data.table::first(timestamp) + round(cumtime - data.table::first(cumtime))]
+    last_point_was_stop <<- FALSE
   }
   
   lapply(1:(length(lim0) - 1), FUN = update_speeds)
