@@ -79,6 +79,29 @@ distances to the first stop. Whenever it finds a distance to the stop smaller
 than `spatial_resolution`, then the stop will be snapped to such point. The 
 algorithm then applies the same strategy to the next stop until the vector of
 stops end.
+
+The `speed`, `cumdist`, and `cumtime` are based on the difference of distance 
+and time between the current and previous row of the same trip. It means that 
+the first data point at the first stop of each trip represens a stationary 
+vehicle. The `adjust_speed()` function can be used to post-process the output 
+to replace eventual `NA` values in the `speed` column.
+
+Each stop is presented as two data points for each trip in the output. The 
+`timestamp` value in the first data point represents the time when the 
+vehicle arrived at that stop (corresponding the `arrival_time` column in the
+`stop_times.txt` file), while the `timestamp` in the second data point 
+represents the time when the vehicle departured from that stop (corresponding
+the `departure_time` column in the `stop_times.txt` file). The second point 
+considers that the vehicle is stationary at the stop, immediately before 
+departing.
+
+Some GTFS feeds do not report embark/disembark times (so `arrival_time` and 
+`departure_time` are identical at the same stop). In this case, the user can
+call the `adjust_arrival_departure()` function to set the minimum time each 
+vehicle will spend at stops to embark/disembark passengers.
+
+To avoid division by zero, the minimum speed of vehicles in the output is
+1e-12 Km/h, so that vehicles are never completely stopped.
 }
 \examples{
 library(dplyr)
