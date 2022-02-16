@@ -49,10 +49,34 @@
 #' algorithm then applies the same strategy to the next stop until the vector of
 #' stops end.
 #' 
+#' The `speed`, `cumdist`, and `cumtime` are based on the difference of distance 
+#' and time between the current and previous row of the same trip. It means that 
+#' the first data point at the first stop of each trip represens a stationary 
+#' vehicle. The `adjust_speed()` function can be used to post-process the output 
+#' to replace eventual `NA` values in the `speed` column.
+#' 
+#' Each stop is presented as two data points for each trip in the output. The 
+#' `timestamp` value in the first data point represents the time when the 
+#' vehicle arrived at that stop (corresponding the `arrival_time` column in the
+#' `stop_times.txt` file), while the `timestamp` in the second data point 
+#' represents the time when the vehicle departured from that stop (corresponding
+#' the `departure_time` column in the `stop_times.txt` file). The second point 
+#' considers that the vehicle is stationary at the stop, immediately before 
+#' departing.
+#' 
+#' Some GTFS feeds do not report embark/disembark times (so `arrival_time` and 
+#' `departure_time` are identical at the same stop). In this case, the user can
+#' call the `adjust_arrival_departure()` function to set the minimum time each 
+#' vehicle will spend at stops to embark/disembark passengers.
+#' 
+#' To avoid division by zero, the minimum speed of vehicles in the output is
+#' 1e-12 Km/h, so that vehicles are never completely stopped.
+#' 
 #' @return A `data.table`, where each row represents a GPS point. The following 
 #' columns are returned (units of measurement in parenthesis): dist and cumdist 
 #' (meters), cumtime (seconds), shape_pt_lon and shape_pt_lat (degrees), speed 
 #' (km/h), timestamp (hh:mm:ss).
+#' 
 #' @export
 #' @examples
 #' library(dplyr)
@@ -133,8 +157,11 @@ gtfs2gps <- function(gtfs_data,
     }
     
     # check stop sequence
-    stops_seq <- gtfs_data$stop_times[trip_id == all_tripids[which.max(nstop)], .(stop_id, stop_sequence, departure_time)]
-    stops_seq[gtfs_data$stops, on = "stop_id", c('stop_lat', 'stop_lon') := list(i.stop_lat, i.stop_lon)] # add lat long info
+    stops_seq <- gtfs_data$stop_times[trip_id == all_tripids[which.max(nstop)]
+                                      , .(stop_id, stop_sequence,  arrival_time, departure_time)]
+    stops_seq[gtfs_data$stops
+              , on = "stop_id"
+              , c('stop_lat', 'stop_lon') := list(i.stop_lat, i.stop_lon)] # add lat long info
 
     data.table::setorderv(stops_seq, "stop_sequence")
 
@@ -162,8 +189,8 @@ gtfs2gps <- function(gtfs_data,
       mymethod <- cpp_snap_points_nearest1
     
     snapped <- mymethod(temp_stops_coords, 
-                               temp_shape_coords,
-                               spatial_resolution)
+                        temp_shape_coords,
+                        spatial_resolution)
 
     # Skip shape_id IF there are no snapped stops
     if(is.null(snapped) | length(snapped) == 0 ){
@@ -198,9 +225,14 @@ gtfs2gps <- function(gtfs_data,
     new_stoptimes[stops_seq$ref, stop_id := stops_seq$stop_id ]
     new_stoptimes[stops_seq$ref, stop_sequence := stops_seq$stop_sequence ]
     new_stoptimes[stops_seq$ref, departure_time := stops_seq$departure_time ]
-    
+    new_stoptimes[stops_seq$ref, arrival_time := stops_seq$arrival_time ]
+
     # calculate Distance between successive points
-    new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type = "lead"), data.table::shift(shape_pt_lon, type = "lead"), tolerance = 1e10)]
+    new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat
+                                                    , shape_pt_lon
+                                                    , data.table::shift(shape_pt_lat, type = "lead")
+                                                    , data.table::shift(shape_pt_lon, type = "lead")
+                                                    , tolerance = 1e10)]
     # new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat, shape_pt_lon, data.table::shift(shape_pt_lat, type = "lag"), data.table::shift(shape_pt_lon, type = "lag"), tolerance = 1e10)]
     # new_stoptimes[1, dist := 0]
     new_stoptimes <- na.omit(new_stoptimes, cols = "dist")
@@ -224,32 +256,35 @@ gtfs2gps <- function(gtfs_data,
       return(NULL)  # nocov
     }
     
-    new_stoptimes[, timestamp := data.table::as.ITime(departure_time)]
-    new_stoptimes[, departure_time := NULL]
-    
-    data.table::setcolorder(new_stoptimes, c("id", "shape_id", "trip_id", "trip_number", "route_type", 
-      "shape_pt_lat", "shape_pt_lon", "timestamp", "stop_id", "stop_sequence", "dist", "cumdist",
-      "cumtime", "speed"))
+   # new_stoptimes$lag <- NULL
+    new_stoptimes$arrival_time <- NULL
+    new_stoptimes$departure_time <- NULL
+
+    data.table::setcolorder(new_stoptimes, c("shape_id","trip_id", "route_type"
+                                             , "id", "timestamp", "shape_pt_lon", "shape_pt_lat"
+                                             , "stop_id", "stop_sequence"
+                                             , "speed", "dist", "cumdist" 
+                                             , "cumtime"))
 
     na_values <- length(which(is.na(new_stoptimes$speed)))
     if(na_values > 0)
       message(paste0(na_values, " 'speed' values are NA for shapeid '", shapeid, "'."))
-    
+
     infinite_values <- length(which(is.infinite(new_stoptimes$speed)))
     if(infinite_values > 0)
       message(paste0(infinite_values, " 'speed' values are Inf for shapeid '", shapeid, "'."))
-    
+
     negative_values <- length(which(new_stoptimes$speed <= 0))
     if(negative_values > 0)
       message(paste0(negative_values, " 'speed' values are zero or negative for shapeid '", shapeid, "'."))
-
+    
     if(!is.null(filepath)){ # Write object
       if(compress)
         readr::write_rds(x = new_stoptimes,
-          file = paste0(filepath, "/", shapeid, ".rds"), compress = "gz")
+                         file = paste0(filepath, "/", shapeid, ".rds"), compress = "gz")
       else
         data.table::fwrite(x = new_stoptimes,
-          file = paste0(filepath, "/", shapeid, ".txt"))
+                           file = paste0(filepath, "/", shapeid, ".txt"))
       return(NULL)
     }
 
@@ -263,42 +298,48 @@ gtfs2gps <- function(gtfs_data,
     # number of cores
     cores <- max(1, future::availableCores() - 1)
     message(paste('Using', cores, 'CPU cores'))
-    
+
     oplan <- future::plan("multisession", workers = cores)
     on.exit(future::plan(oplan), add = TRUE)
   }
 
   badShapes <- c()
+  msgs <- c()
   all_shapeids <- unique(shapes_sf$shape_id)
   p <- progressr::progressor(steps = length(all_shapeids))
-  
+
   tryCorefun <- function(shapeid){
     p()
     result <- NULL
     tryCatch({result <- corefun(shapeid)}, error = function(msg) {
       badShapes <<- c(badShapes, shapeid) # nocov
+      msgs <<- c(msgs, msg)
     })
-    
+
     return(result)
   }
-  
+
   message("Processing the data")
   requiredPackages = c('data.table', 'sf', 'magrittr', 'Rcpp', 'sfheaders', 'units')
   output <- furrr::future_map(.x = all_shapeids, .f = tryCorefun, 
                               .options = furrr::furrr_options(
-                              packages = requiredPackages))
-    output <- data.table::rbindlist(output)
-  
+                                packages = requiredPackages))
+  output <- data.table::rbindlist(output)
+
   if(length(badShapes) > 0){
     if(original_gtfs_data_arg == ".") original_gtfs_data_arg <- "<your gtfs data>" # nocov
-    
+
+        
     message(paste0("Some internal bug occurred while processing gtfs data.\n", # nocov
                    "Please give us a feedback by creating a GitHub issue\n", # nocov
                    "(https://github.com/ipeaGIT/gtfs2gps/issues/new)\n"), # nocov
                    "and attaching a subset of your data created from the\n", # nocov
                    "code below:\n", # nocov
                    "################################################") # nocov
+
+    print(msgs)
     
+        
     ids <- paste0("ids <- c('", paste(badShapes, collapse = "', '"), "')") # nocov
     code1 <- paste0("data <- gtfs2gps::filter_by_shape_id(", original_gtfs_data_arg, ", ids)") # nocov
     code2 <- "gtfs2gps::write_gtfs(data, 'shapes_with_error.zip')" # nocov
@@ -317,7 +358,7 @@ gtfs2gps <- function(gtfs_data,
 
   total_trips <- data.table::uniqueN(gtfs_data$trips$trip_id)
   processed_trips <- data.table::uniqueN(output$trip_id)
-  
+
   if(processed_trips < total_trips && is.null(filepath)){
     perc <- round(processed_trips / total_trips * 100, 2)
     message(paste0(processed_trips, " out of ", total_trips, " trips (", perc, "%) were properly processed."))
@@ -336,11 +377,9 @@ gtfs2gps <- function(gtfs_data,
     output$dist <- units::set_units(output$dist, "m")
     output$cumdist <- units::set_units(output$cumdist, "m")
     output$cumtime <- units::set_units(output$cumtime, "s")
-    
+
     return(output)
   }
   else
     return(NULL)
 }
-
-  

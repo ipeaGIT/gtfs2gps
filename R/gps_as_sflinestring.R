@@ -89,13 +89,13 @@ gps_as_sflinestring  <- function(gps, crs = 4326){
   gps_sf <- sf::st_set_crs(gps_sf, crs)
   
   # calculate legnth of each segment
-  setDT(gps_sf)[, dist := sf::st_length(geometry)]
+  data.table::setDT(gps_sf)[, dist := sf::st_length(geometry)]
   
   # edit columns
   gps_sf[, grp := NULL]
   gps_sf[, cumdist := NULL]
   gps_sf[, cumtime := NULL]
-  gps_sf <- st_sf(gps_sf)
+  gps_sf <- sf::st_sf(gps_sf)
 
   # order columns "stop_id" <> "to_stop_id"
   colsToStop <- names(gps_sf)[1:which(names(gps_sf) %in% "from_stop_id")]
