@@ -26,9 +26,9 @@ This function gets a zipped GTFS file and returns a list of `data.table` objects
 
 ```{r}
 library("gtfs2gps")
-sao <- read_gtfs(system.file("extdata/saopaulo.zip", package ="gtfs2gps"))
-names(sao)
-head(sao$trips)
+poa <- read_gtfs(system.file("extdata/poa.zip", package ="gtfs2gps"))
+names(poa)
+head(poa$trips)
 ```
 
 Note that not all GTFS files are loaded into R. This function only loads the necessary data to spatially and temporally handle trips and stops, which are:
@@ -55,25 +55,25 @@ These functions subset all the relevant GTFS files in order to remove all the un
 
 ```{r}
 library(magrittr)
-object.size(sao) %>% format(units = "Kb")
-sao_small <- gtfs2gps::filter_by_shape_id(sao, c(51338, 51956, 51657))
-object.size(sao_small) %>% format(units = "Kb")
+object.size(poa) %>% format(units = "Kb")
+poa_small <- gtfs2gps::filter_by_shape_id(poa, c("T2-1", "A141-1"))
+object.size(poa_small) %>% format(units = "Kb")
 ```
 
 We can then easily convert the data to simple feature format and plot them.
 
-```{r sao_small_shapes_sf, message = FALSE}
-sao_small_shapes_sf <- gtfs2gps::gtfs_shapes_as_sf(sao_small)
-sao_small_stops_sf <- gtfs2gps::gtfs_stops_as_sf(sao_small)
-plot(sf::st_geometry(sao_small_shapes_sf))
-plot(sf::st_geometry(sao_small_stops_sf), pch = 20, col = "red", add = TRUE)
+```{r poa_small_shapes_sf, message = FALSE}
+poa_small_shapes_sf <- gtfs2gps::gtfs_shapes_as_sf(poa_small)
+poa_small_stops_sf <- gtfs2gps::gtfs_stops_as_sf(poa_small)
+plot(sf::st_geometry(poa_small_shapes_sf))
+plot(sf::st_geometry(poa_small_stops_sf), pch = 20, col = "red", add = TRUE)
 box()
 ```
 
 After subsetting the data, it is also possible to save it as a new GTFS file using `write_gtfs()`, as shown below.
 
 ```{r, message = FALSE}
-write_gtfs(sao_small, "sao_small.zip")
+write_gtfs(poa_small, "poa_small.zip")
 ```
 
 # Converting to GPS-like format
@@ -81,23 +81,23 @@ write_gtfs(sao_small, "sao_small.zip")
 To convert GTFS to GPS-like format, use `gtfs2gps()`. This is the core function of the package. It takes a GTFS zipped file as an input and returns a `data.table` where each row represents a 'GPS-like' data point for every trip in the GTFS file. In summary, this function interpolates the space-time position of each vehicle in each trip considering the network distance and average speed between stops. The function samples the timestamp of each vehicle every $15m$ by default, but the user can set a different value in the `spatial_resolution` argument. See the example below.
 
 ```{r, message = FALSE}
-  sao_gps <- gtfs2gps("sao_small.zip", spatial_resolution = 50)
-  head(sao_gps)
+  poa_gps <- gtfs2gps("poa_small.zip", spatial_resolution = 50)
+  head(poa_gps)
 ```
  The following figure maps the first 100 data points of the sample data we processed. They can be converted to `simple feature` points or linestring.
 
 ```{r, message = FALSE}
-  sao_gps60 <- sao_gps[1:100, ]
+  poa_gps60 <- poa_gps[1:100, ]
   
   # points
-  sao_gps60_sfpoints <- gps_as_sfpoints(sao_gps60)
+  poa_gps60_sfpoints <- gps_as_sfpoints(poa_gps60)
   
   # linestring
-  sao_gps60_sflinestring <- gps_as_sflinestring(sao_gps60)
+  poa_gps60_sflinestring <- gps_as_sflinestring(poa_gps60)
 
   # plot
-  plot(sf::st_geometry(sao_gps60_sfpoints), pch = 20)
-  plot(sf::st_geometry(sao_gps60_sflinestring), col = "blue", add = TRUE)
+  plot(sf::st_geometry(poa_gps60_sfpoints), pch = 20)
+  plot(sf::st_geometry(poa_gps60_sflinestring), col = "blue", add = TRUE)
   box()
 ```
 
