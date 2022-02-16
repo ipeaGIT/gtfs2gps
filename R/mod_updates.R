@@ -156,7 +156,7 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
 
     increment <- diff_timestamp / (b - a)
     
-    new_stoptimes[a:b, cumtime := .I * increment + data.table::first(cumtime)]
+    new_stoptimes[a:b, cumtime := (.I - 1) * increment + data.table::first(cumtime)]
     new_stoptimes[a:b, speed := 3.6 * dist / (cumtime - data.table::shift(cumtime))]
     # cumtime is related to row a, therefore it cannot be (a+1):b
 
