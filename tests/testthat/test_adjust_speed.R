@@ -9,7 +9,7 @@ test_that("adjust_speed", {
     expect_true(any(is.na(poa_gps$cumtime)))
     
     expect_equal(mean(poa_gps$speed, na.rm = TRUE), 24.7198, 0.0001)
-    expect_equal(mean(poa_gps$cumtime, na.rm = TRUE), 1596.216, 0.001)    
+    expect_equal(mean(poa_gps$cumtime, na.rm = TRUE), 1588.508, 0.001)    
 
     poa_gps_new <- adjust_speed(poa_gps)
     
