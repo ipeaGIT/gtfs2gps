@@ -134,8 +134,18 @@ test_that("gtfs2gps", {
     
     test <- function(){
     
-    sp_gps <- read_gtfs(sp) %>%
-      adjust_arrival_departure() %>%
+    sp <- system.file("extdata/saopaulo.zip", package="gtfs2gps")
+    
+    sp2 <- gtfstools::read_gtfs(sp)
+    sp3 <- gtfstools::frequencies_to_stop_times(sp2)
+    sp_gps <- sp3 %>%
+      adjust_arrival_departure()
+    
+    gtfstools::write_gtfs(sp3, "sp3.zip")
+    
+    sp4 <- read_gtfs("sp3.zip")
+    
+    sp_gps <- sp4 %>%
 #      filter_by_shape_id(52072) %>%
       filter_week_days() %>%
       filter_single_trip() %>%

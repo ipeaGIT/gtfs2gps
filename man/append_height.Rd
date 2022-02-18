@@ -24,6 +24,7 @@ fortaleza <- system.file("extdata/fortaleza.zip", package = "gtfs2gps")
 srtmfile <- system.file("extdata/fortaleza-srtm.tif", package = "gtfs2gps")
 
 gtfs <- read_gtfs(fortaleza) \%>\%
+  filter_by_shape_id(c("shape804-I", "shape806-I")) \%>\%
   filter_week_days() \%>\%
   filter_single_trip() \%>\%
   remove_invalid()

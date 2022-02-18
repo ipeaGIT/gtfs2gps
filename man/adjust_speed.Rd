@@ -43,7 +43,10 @@ custom constant value, or by considering the average of all valid trips speed
 (Default). The columns `timestamp` and `cumtime` are updated accordingly.
 }
 \examples{
-poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
+library(dplyr)
+poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps")) \%>\%
+  filter_week_days() \%>\%
+  filter_single_trip()
 
 poa_gps <- gtfs2gps(poa)
 poa_gps_new <- adjust_speed(poa_gps)
