@@ -4,10 +4,12 @@ test_that("gtfs2gps", {
     poa_gps_0 <- read_gtfs(poa) %>%
       adjust_arrival_departure() %>%
       filter_week_days() %>%
-    #  filter_single_trip() %>%
-    #  filter_by_shape_id("176-1") %>%
       gtfs2gps(parallel = FALSE, spatial_resolution = 50)
 
+    expect_equal(sum(units::drop_units(poa_gps_0$cumtime), na.rm = TRUE), 657326, 0.01)
+    expect_equal(sum(units::drop_units(poa_gps_0$speed), na.rm = TRUE), 3079200, 0.01)
+    expect_equal(sum(units::drop_units(poa_gps_0$cumdist), na.rm = TRUE), 1447649389, 0.01)
+    
     my_dim_0 <- dim(poa_gps_0)[1]
     expect_equal(my_dim_0, 128543)
     
