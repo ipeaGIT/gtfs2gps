@@ -16,13 +16,10 @@
 #' subset <- fortaleza %>%
 #'   filter_week_days() %>%
 #'   filter_single_trip() %>%
-#'   filter_by_shape_id(c("shape804-I", "shape806-I"))
+#'   filter_by_shape_id("shape806-I")
 #' 
 #' for_gps <- gtfs2gps(subset)
-#' for_gps_sf_points <- gps_as_sfpoints(for_gps) # without height
-#' 
-#' for_gps <- append_height(for_gps, srtmfile)
-#' for_gps_sf_points <- gps_as_sfpoints(for_gps) # with height
+#' for_gps_sf_points <- gps_as_sfpoints(for_gps)
 gps_as_sfpoints <- function(gps, crs = 4326){
   if(is.null(gps$height))
     temp_gps <- sfheaders::sf_point(gps, x = "shape_pt_lon", y = "shape_pt_lat", keep = TRUE)

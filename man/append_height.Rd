@@ -18,6 +18,8 @@ The GPS data with a new column named height.
 Add a column named height to GPS data using a tif data as reference.
 }
 \examples{
+\dontrun{
+# this example takes more than 10s to run
 library(dplyr)
 
 fortaleza <- system.file("extdata/fortaleza.zip", package = "gtfs2gps")
@@ -28,4 +30,5 @@ gtfs <- read_gtfs(fortaleza) \%>\%
   filter_single_trip() 
 
 fortaleza_gps <- gtfs2gps(gtfs, spatial_resolution = 500) \%>\% append_height(srtmfile)
+}
 }
