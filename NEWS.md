@@ -2,7 +2,7 @@
 
 -------------------------------------------------------
 # gtfs2gps v2.0-0
-*Major changes
+* Major changes
   * `gtfs2gps()` now creates two points for a stop when arrival and departure exist. Speed and travel time are now calculated considering both departure_ and arrival_time columns.
   * The travel statistics in the output table (speed, dist, cumdist, cumtime) for a given point are now calculated in relation to the previous point. More details in the documentation of the `gtfs2gps()` function.
   * Names of the output columns of gtfs2gps() were updated
