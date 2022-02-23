@@ -1,6 +1,14 @@
 # log history of gtfs2gps package development
 
 -------------------------------------------------------
+# gtfs2gps v2.0-0
+**Major changes**
+* gtfs2gps() now creates two points for a stop when arrival and departure exist
+* Fixing several small errors in the output of gtfs2gps()
+* Names of the output columns of gtfs2gps() were updated
+* New function adjust_arrival_departure()
+
+-------------------------------------------------------
 # gtfs2gps v1.6-0
 **Major changes**
 * New function adjust_speed()

@@ -5,17 +5,19 @@
 #' @return The GPS data with a new column named height.
 #' @export
 #' @examples
+#' \dontrun{
+#' # this example takes more than 10s to run
 #' library(dplyr)
 #' 
 #' fortaleza <- system.file("extdata/fortaleza.zip", package = "gtfs2gps")
 #' srtmfile <- system.file("extdata/fortaleza-srtm.tif", package = "gtfs2gps")
 #' 
 #' gtfs <- read_gtfs(fortaleza) %>%
-#'   filter_week_days() %>%
-#'   filter_single_trip() %>%
-#'   remove_invalid()
+#'   filter_by_shape_id("shape836-I") %>%
+#'   filter_single_trip() 
 #' 
-#' fortaleza_gps <- gtfs2gps(gtfs) %>% append_height(srtmfile)
+#' fortaleza_gps <- gtfs2gps(gtfs, spatial_resolution = 500) %>% append_height(srtmfile)
+#' }
 append_height <- function(gps, heightfile){
   f_gps <- gps
 

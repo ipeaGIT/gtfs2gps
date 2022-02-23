@@ -4,10 +4,12 @@ test_that("gtfs2gps", {
     poa_gps_0 <- read_gtfs(poa) %>%
       adjust_arrival_departure() %>%
       filter_week_days() %>%
-    #  filter_single_trip() %>%
-    #  filter_by_shape_id("176-1") %>%
       gtfs2gps(parallel = FALSE, spatial_resolution = 50)
 
+    expect_equal(sum(units::drop_units(poa_gps_0$cumtime), na.rm = TRUE), 657326, 0.01)
+    expect_equal(sum(units::drop_units(poa_gps_0$speed), na.rm = TRUE), 3079200, 0.01)
+    expect_equal(sum(units::drop_units(poa_gps_0$cumdist), na.rm = TRUE), 1447649389, 0.01)
+    
     my_dim_0 <- dim(poa_gps_0)[1]
     expect_equal(my_dim_0, 128543)
     
@@ -130,40 +132,50 @@ test_that("gtfs2gps", {
     expect_error(gtfs2gps(sp, continue = TRUE), "Cannot use argument 'continue' without passing a 'filepath'.", fixed = TRUE)
     expect_error(gtfs2gps(sp, compress = TRUE), "Cannot use argument 'compress' without passing a 'filepath'.", fixed = TRUE)
     
-    test <- function(){
+    #test <- function(){
     
-    sp_gps <- read_gtfs(sp) %>%
-      adjust_arrival_departure() %>%
-#      filter_by_shape_id(52072) %>%
-      filter_week_days() %>%
-      filter_single_trip() %>%
-      gtfs2gps(parallel = FALSE, spatial_resolution = 15)
-
-    expect_true(all(names(sp_gps) %in% 
-      c("trip_id", "route_type", "id", "shape_pt_lon", "shape_pt_lat", "trip_number",
-        "timestamp", "stop_id", "stop_sequence", "dist", "shape_id", "cumdist", "speed", "cumtime")))
-
-    expect_true(all(sp_gps$trip_number %in% 1:17))
+    #sp <- system.file("extdata/saopaulo.zip", package="gtfs2gps")
     
-    my_dim <- dim(sp_gps)[1]
-    total <- 287078
-    if(my_dim %in% c(261935, 265771, 274311)) total <- my_dim # Linux differences 
+    #sp2 <- gtfstools::read_gtfs(sp)
+    #sp3 <- gtfstools::frequencies_to_stop_times(sp2)
+    #sp_gps <- sp3 %>%
+    #  adjust_arrival_departure()
     
-    expect_equal(my_dim, total)
+    #gtfstools::write_gtfs(sp3, "sp3.zip")
+    
+    #sp4 <- read_gtfs("sp3.zip")
+    
+    #sp_gps <- sp4 %>%
+    #  filter_by_shape_id(52072) %>%
+    #  filter_week_days() %>%
+    #  filter_single_trip() %>%
+    #  gtfs2gps(parallel = FALSE, spatial_resolution = 15)
 
-    expect_true(all(sp_gps$dist >= units::set_units(0, "m")))
-    expect_true(all(sp_gps$cumdist >= units::set_units(0, "m")))
-    expect_equal(length(sp_gps$speed > units::set_units(0, "km/h")), total)
-    expect_equal(length(sp_gps$cumtime > units::set_units(0, "s")), total)
+    #expect_true(all(names(sp_gps) %in% 
+    #  c("trip_id", "route_type", "id", "shape_pt_lon", "shape_pt_lat", "trip_number",
+    #    "timestamp", "stop_id", "stop_sequence", "dist", "shape_id", "cumdist", "speed", "cumtime")))
+
+    #expect_true(all(sp_gps$trip_number %in% 1:17))
+    
+    #my_dim <- dim(sp_gps)[1]
+    #total <- 287078
+    #if(my_dim %in% c(261935, 265771, 274311)) total <- my_dim # Linux differences 
+    
+    #expect_equal(my_dim, total)
+
+    #expect_true(all(sp_gps$dist >= units::set_units(0, "m")))
+    #expect_true(all(sp_gps$cumdist >= units::set_units(0, "m")))
+    #expect_equal(length(sp_gps$speed > units::set_units(0, "km/h")), total)
+    #expect_equal(length(sp_gps$cumtime > units::set_units(0, "s")), total)
     
     # messages when gtfs2gps cannot convert all shapes nor all trips
-    gtfs <- read_gtfs(sp) %>%
-      filter_by_shape_id(52000:52200) %>%
-      filter_week_days() %>%
-      filter_single_trip()
+    #gtfs <- read_gtfs(sp) %>%
+    #  filter_by_shape_id(52000:52200) %>%
+    #  filter_week_days() %>%
+    #  filter_single_trip()
     
-    gtfs$stop_times <- gtfs$stop_times[-(300:390), ]
-    result <- gtfs2gps(gtfs, parallel = TRUE, spatial_resolution = 15)
+    #gtfs$stop_times <- gtfs$stop_times[-(300:390), ]
+    #result <- gtfs2gps(gtfs, parallel = TRUE, spatial_resolution = 15)
     
-    }
+    #}
 })

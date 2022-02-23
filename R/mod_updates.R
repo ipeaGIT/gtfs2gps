@@ -154,15 +154,19 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
       return() # two consecutive points with arrival_time don't need to be interpolated
     }
 
-    increment <- diff_timestamp / (b - a)
-    
-    new_stoptimes[a:b, cumtime := (.I - 1) * increment + data.table::first(cumtime)]
-    new_stoptimes[a:b, speed := 3.6 * dist / (cumtime - data.table::shift(cumtime))]
-    # cumtime is related to row a, therefore it cannot be (a+1):b
+    new_speed <- (new_stoptimes$cumdist[b] - new_stoptimes$cumdist[a]) / as.numeric(diff_timestamp) # m/s
 
+    new_stoptimes[a:b, speed := 3.6 * new_speed] # km/h
+    
+    cumtime_a <- new_stoptimes[a, cumtime]
+    
+    new_stoptimes[a:b, cumtime := (cumdist - data.table::shift(cumdist, 1)) / new_speed]
+
+    new_stoptimes[a, cumtime := cumtime_a] # necessary because the shift above will produce NA
+    
     new_stoptimes[a, speed := 1e-12]
     
-    new_stoptimes[a:b, timestamp := data.table::first(timestamp) + round(cumtime - data.table::first(cumtime))]
+    new_stoptimes[a:(b-1), timestamp := data.table::first(timestamp) + round(cumtime - data.table::first(cumtime))]
     last_point_was_stop <<- FALSE
   }
   
