@@ -7,11 +7,8 @@
 * Fixing several small errors in the output of gtfs2gps()
 * Names of the output columns of gtfs2gps() were updated
 * New function adjust_arrival_departure()
-
--------------------------------------------------------
-# gtfs2gps v1.6-0
-**Major changes**
 * New function adjust_speed()
+
 
 -------------------------------------------------------
 # gtfs2gps v1.5-4
