@@ -3,11 +3,12 @@
 -------------------------------------------------------
 # gtfs2gps v2.0-0
 **Major changes**
-* gtfs2gps() now creates two points for a stop when arrival and departure exist
-* Fixing several small errors in the output of gtfs2gps()
+* `gtfs2gps()` now creates two points for a stop when arrival and departure exist. Speed and travel time are now calculated considering both departure_ and arrival_time columns.
+* The travel statistics in the output table (speed, dist, cumdist, cumtime) for a given point are now calculated in relation to the previous point. More details in the documentation of the `gtfs2gps()` function.
 * Names of the output columns of gtfs2gps() were updated
-* New function adjust_arrival_departure()
-* New function adjust_speed()
+* New function `adjust_arrival_departure()` to allow users set a minimum time for dis/embarking times at each stop.
+* New function `adjust_speed()` to fix outlier speeds and replace missing speed values with a speed set by the user or the average speed of the system. The timestamp values are updated accordingly.
+* Fixing several small errors in the output of gtfs2gps(), what breaks compatibility with previous versions of the gtfs2gps package.
 
 
 -------------------------------------------------------
