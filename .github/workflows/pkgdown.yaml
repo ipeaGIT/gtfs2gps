@@ -22,13 +22,6 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v1
 
-      - name: Install sf libraries on macOS
-        if: runner.os == 'macOS'
-        run: | 
-          brew install proj
-          brew install geos
-          brew install gdal
-
       - name: Install pak and query dependencies
         run: |
           install.packages("pak", repos = "https://r-lib.github.io/p/pak/dev/")
