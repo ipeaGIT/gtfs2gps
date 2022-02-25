@@ -267,20 +267,26 @@ usethis::use_build_ignore("  Georeferencing-gain.Rmd")
 usethis::use_build_ignore("crosswalk_pre.R")
 
 
+# checks spelling
+library(spelling)
+devtools::spell_check(pkg = ".", vignettes = TRUE, use_wordlist = TRUE)
+
 
 
 ### tests ----------------
 
 devtools::test(stop_on_failure = T)
 
-
-
 ### CMD Check ----------------
 # Check package errors
-Sys.setenv(NOT_CRAN = "false")
-devtools::check(pkg = ".",  cran = TRUE)
-beepr::beep()
 
+# LOCAL
+Sys.setenv(NOT_CRAN = "true")
+devtools::check(pkg = ".",  cran = FALSE, env_vars = c(NOT_CRAN = "true"))
+
+# CRAN
+Sys.setenv(NOT_CRAN = "false")
+devtools::check(pkg = ".",  cran = TRUE, env_vars = c(NOT_CRAN = "false"))
 
 
 
