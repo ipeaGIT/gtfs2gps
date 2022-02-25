@@ -33,75 +33,109 @@ gps_as_sflinestring  <- function(gps, crs = 4326){
   ## stop intervals
   ## each pair of consecutive stops is called a 'unique interval'
   
-  # get row potion of each stop
-  id0 <- c(1, which(!is.na(dt$stop_sequence)))
+  # get stop_ids that is duplicated (number == 2)
+  dt[,numbers :=  .N,by = .(shape_id,trip_id,stop_id,stop_sequence,trip_number)]
+  dt[is.na(stop_sequence),numbers := NA]
   
-  # get row position of consecutive stops
-  id1 <- c(id0[-1], nrow(dt))
+  fir_id <- data.table::copy(dt)[!is.na(stop_sequence) & numbers == 2
+                                 ,.SD[1]
+                                 ,by = .(shape_id,trip_id,stop_id,stop_sequence,trip_number)]
+  fir_id[id == 1 & !is.na(stop_id),speed := dt[id == 3,]$speed]
+  
+  sec_id <- data.table::copy(dt)[!is.na(stop_sequence) & numbers == 2
+                                 ,.SD[2]
+                                 ,by = .(shape_id,trip_id,stop_id,stop_sequence,trip_number)]
+  sec_id[id == 2 & !is.na(stop_id),speed := dt[id == 3,]$speed]
+  
+  # get id / stop / timestamp position of consecutive stops
+  id0 <- c(1,sec_id$id)
+  stop0 <- c(sec_id$stop_id[1],sec_id$stop_id)
+  timestamp0 <- c(sec_id$timestamp[1],sec_id$timestamp)
+  
+  id1 <- c(fir_id$id,nrow(dt))
+  stop1 <- c(fir_id$stop_id,tail(fir_id$stop_id,1))
+  timestamp1 <- c(fir_id$timestamp,tail(fir_id$timestamp,1))
+  # head(id0); head(id1)
+  # tail(id0); tail(id1)
+  # head(stop0);head(stop1)
+  # head(timestamp0);head(timestamp1)
+  # tail(stop0);tail(stop1)
+  # tail(timestamp0);tail(timestamp1)
   
   # create a data table grouping ids by unique intervals
   # Here we create a data.table indicating what are all the point ids in each interval
+  
   list_ids <- data.table::data.table(
-    interval = rep(seq_along(id0), id1 - id0 + 1),
-    id = unlist(lapply(seq_along(id0), function(i) id0[i]:id1[i]))
+    from_stop_id = rep(stop0, id1 - id0 + 1),
+    to_stop_id = rep(stop1, id1 - id0 + 1),
+    from_timestamp = rep(timestamp0, id1 - id0 + 1),
+    to_timestamp = rep(timestamp1, id1 - id0 + 1),
+    id = unlist(lapply(seq_along(id0), function(i) id0[i]:id1[i])),
+    trip_number = dt$trip_number,
+    shape_id = dt$shape_id
   )
   
+  list_ids[, interval_status := .GRP, by = c("shape_id","from_stop_id","to_stop_id","trip_number")]
+  my_f <- function(a){
+    b <- c(a[1],head(a,-1))
+    c <- a - b
+    d <- c(1,which(c!=0),length(c)+1)
+    e <- d[-1]-d[-length(d)]
+    g <- rep(1:length(e),e)
+    return(g)
+  }
+  list_ids[,interval_status := my_f(interval_status), by = c("shape_id","trip_number")]
+  list_ids[, from_stop_id := data.table::fifelse(interval_status == min(interval_status)
+                                                 ,"-",from_stop_id), by = c("shape_id","trip_number")]
+  list_ids[, to_stop_id := data.table::fifelse(interval_status == max(interval_status)
+                                               ,"-",to_stop_id), by = c("shape_id","trip_number")]
+  list_ids[, from_timestamp := data.table::fifelse(interval_status == min(interval_status)
+                                                   ,as.ITime(NA),from_timestamp), by = c("shape_id","trip_number")]
+  list_ids[, to_timestamp := data.table::fifelse(interval_status == max(interval_status)
+                                                 ,as.ITime(NA),to_timestamp), by = c("shape_id","trip_number")]
+  
   # add interval code to GPS
-  dt[list_ids, on = "id", interval_id := i.interval]
+  dt[list_ids, on = c("id","trip_number","shape_id"),`:=`(interval_id = i.interval_status
+                                                          ,from_stop_id = i.from_stop_id
+                                                          ,to_stop_id = i.to_stop_id
+                                                          ,from_timestamp = i.from_timestamp
+                                                          ,to_timestamp = i.to_timestamp
+  )]
   
-  # rename columns
-  data.table::setnames(dt,"stop_id","from_stop_id")
-  
-  ## Each stop is the start of an interval and the end of another one.
-  ## So we we need to duplicate each stop to make sure every interval has a unique start and end point  
-  
-  # get unique valid stops (extra spatial points)
-  dt1 <- data.table::copy(dt)[, .SD[1], by = .(trip_id, interval_id, trip_number)]
-  
-  # rename columns
-  data.table::setnames(dt1, "from_stop_id", "to_stop_id")
-  #dt1 <- data.table::setcolorder(dt1, names(dt))
-  
-  # recode their unique id's so they fall and the end of each interval
-  dt1[, c("id", "interval_id") := list(id - 0.1, interval_id - 1)] 
-  
-  # add extra points in valid_id's of the GPS data
-  dt2 <- data.table::rbindlist(l = list(dt, dt1), use.names = TRUE, fill = TRUE)[order(id)]
-  
-  # create unique id for each unique combination of interval_id & trip_id & trip_number
-  dt2[, grp := .GRP, by = .(interval_id, trip_id, trip_number)]
-  
-  # dt2[, .N, by = grp] # number of observations in each grp
-  
-  moreThanOne <- which(as.vector(table(dt2$grp)) != 1)
-  
-  dt2 <- dt2[grp %in% moreThanOne, ]
-  dt2[, timestamp := data.table::as.ITime(timestamp)]
-  
-  dt2[, to_stop_id := to_stop_id[.N], by = grp]
+  # add info on timestamps and update interval_id
+  dt[,N_intervals := .N,by = .(interval_id,trip_number,trip_id,shape_id)]
+  dt <- dt[N_intervals > 1, ]
+  dt[,N_intervals := NULL]
+  dt[,numbers := NULL]
+  dt[, from_timestamp := data.table::as.ITime(from_timestamp)]
+  dt[, to_timestamp := data.table::as.ITime(to_timestamp)]
+  dt[, interval_id := paste0(interval_id,"_",shape_id,"_",trip_number,"_",to_stop_id,"_",from_stop_id)]
   
   ## convert to linestring
-  gps_sf <- sfheaders::sf_linestring(obj = dt2, 
+  gps_sf <- sfheaders::sf_linestring(obj = dt, 
                                      x = 'shape_pt_lon',
                                      y = 'shape_pt_lat',
-                                     linestring_id = 'grp',
+                                     linestring_id = 'interval_id',
                                      keep = TRUE)
-  gps_sf <- sf::st_set_crs(gps_sf, crs)
+  gps_sf <- sf::st_set_crs(gps_sf, crs) # crs=4329
   
   # calculate legnth of each segment
   data.table::setDT(gps_sf)[, dist := sf::st_length(geometry)]
+  gps_sf$interval_id <- NULL
+  
+  # add time / speed info
+  gps_sf[,time := to_timestamp - from_timestamp]
+  gps_sf[,time := units::set_units(as.numeric(time),"s")]
+  gps_sf[,speed := units::set_units(dist/time,"km/h")]
   
   # edit columns
-  gps_sf[, grp := NULL]
-  gps_sf[, cumdist := NULL]
-  gps_sf[, cumtime := NULL]
+  gps_sf[, cumdist := cumsum(dist), by = c("shape_id","trip_id","trip_number")]
+  gps_sf[, cumtime := cumsum(time), by = c("shape_id","trip_id","trip_number")]
+  gps_sf[, time := NULL]
+  gps_sf[, stop_id := NULL]
+  gps_sf[, interval_id := NULL]
   gps_sf <- sf::st_sf(gps_sf)
-
-  # order columns "stop_id" <> "to_stop_id"
-  colsToStop <- names(gps_sf)[1:which(names(gps_sf) %in% "from_stop_id")]
-  colsFromStop <- names(gps_sf)[(which(names(gps_sf) %in% "from_stop_id") + 1):(which(names(gps_sf) %in% "to_stop_id") - 1)]
-  colsNewnames <- c(colsToStop, "to_stop_id", colsFromStop)
-  gps_sf <- gps_sf[colsNewnames]
+  
   
   return(gps_sf)
 }
