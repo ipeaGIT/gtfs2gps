@@ -11,7 +11,7 @@ test_that("adjust_speed", {
     expect_true(any(is.na(poa_gps$cumtime)))
     
     expect_equal(mean(units::drop_units(poa_gps$speed), na.rm = TRUE), 25.3617, 0.0001)
-    expect_equal(mean(units::drop_units(poa_gps$cumtime), na.rm = TRUE), 7.645476, 0.001)    
+    expect_equal(mean(units::drop_units(poa_gps$cumtime), na.rm = TRUE), 1505.717, 0.001)
 
     poa_gps_new <- adjust_speed(poa_gps)
 

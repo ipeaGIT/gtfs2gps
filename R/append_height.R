@@ -19,12 +19,8 @@
 #' fortaleza_gps <- gtfs2gps(gtfs, spatial_resolution = 500) %>% append_height(srtmfile)
 #' }
 append_height <- function(gps, heightfile){
-  f_gps <- gps
-
-  sp::coordinates(f_gps) <- ~shape_pt_lon + shape_pt_lat
-  
-  myraster <- raster::raster(heightfile)
-  gps$height <- raster::extract(myraster, f_gps)
-
+  myraster <- terra::rast(heightfile)
+  result <-  terra::extract(myraster, gps[, c("shape_pt_lon", "shape_pt_lat")])
+  gps$height <- result[, 2]
   return(gps)
 }

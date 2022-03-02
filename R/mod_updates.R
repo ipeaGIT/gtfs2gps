@@ -134,6 +134,7 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
   new_stoptimes[1, speed := 1e-12]
   new_stoptimes[lim0 + 1, speed := 1e-12]
   new_stoptimes[, cumtime := 0]
+  new_stoptimes[, time := 0]
   
   last_point_was_stop <- FALSE
 
@@ -158,11 +159,13 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
 
     new_stoptimes[a:b, speed := 3.6 * new_speed] # km/h
     
-    cumtime_a <- new_stoptimes[a, cumtime]
+    time_a <- new_stoptimes[a, cumtime]
     
-    new_stoptimes[a:b, cumtime := (cumdist - data.table::shift(cumdist, 1)) / new_speed]
+    new_stoptimes[a:b, time := (cumdist - data.table::shift(cumdist, 1)) / new_speed]
 
-    new_stoptimes[a, cumtime := cumtime_a] # necessary because the shift above will produce NA
+    new_stoptimes[a, time := time_a] # necessary because the shift above will produce NA
+    
+    new_stoptimes[a:b, cumtime := cumsum(time)]
     
     new_stoptimes[a, speed := 1e-12]
     
@@ -173,7 +176,8 @@ update_dt <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
   lapply(1:(length(lim0) - 1), FUN = update_speeds)
 
   new_stoptimes[is.na(speed), cumtime := NA]
-
+  new_stoptimes[, time := NULL]
+  
   # Get lag
   #new_stoptimes[!is.na(departure_time) & !is.na(stop_id)
   #              ,lag := departure_time - arrival_time]

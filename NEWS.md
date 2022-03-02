@@ -2,7 +2,7 @@
 
 -------------------------------------------------------
 # gtfs2gps v2.0-0
-*Major changes
+* Major changes
   * `gtfs2gps()` now creates two points for a stop when arrival and departure exist. Speed and travel time are now calculated considering both departure_ and arrival_time columns.
   * The travel statistics in the output table (speed, dist, cumdist, cumtime) for a given point are now calculated in relation to the previous point. More details in the documentation of the `gtfs2gps()` function.
   * Names of the output columns of gtfs2gps() were updated
@@ -21,12 +21,12 @@
 -------------------------------------------------------
 # gtfs2gps v1.5
 
-*Major changes
+* Major changes
   * Fixed the update of trip_number attribute. This affects the output of `gps_as_sflinestring()`. Closes #189.
   * Imports the `gtfsio` package, used in the `read_gtfs()` and `write_gtfs()` functions. Closes #191.
   * New parameter `snap_method` added to `gtfs2gps()`.
 
-*Minor changes
+* Minor changes
   * Function `filter_single_trip()` now also filters the `stop_times` table. Closes #195.
   * Change default `spatial_resolution` of `gtfs2gps()` from 50m to 100m. Closes #202.
 
@@ -34,7 +34,7 @@
 -------------------------------------------------------
 # gtfs2gps dev v1.4-0
 
-*Major changes
+* Major changes
   * Allows filtering a GTFS feed by weekday and accounts for `calendar_dates.txt` info. Closes #103, #124 and #141
   * New sample GTFS.zip data for Berlin
   * New `compress` parameter in `gtfs2gps` function so that users can save the function outputs in compressed `.RDS` format.
