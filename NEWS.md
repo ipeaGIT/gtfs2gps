@@ -1,5 +1,13 @@
 # log history of gtfs2gps package development
 
+
+-------------------------------------------------------
+# gtfs2gps v2.0-1
+
+* Minor changes
+  * `gtfs2gps()` now prints a message alerting if there are any trips with negative speed values in the output. [Closes #172](https://github.com/ipeaGIT/gtfs2gps/issues/172).
+
+
 -------------------------------------------------------
 # gtfs2gps v2.0-0
 * Major changes

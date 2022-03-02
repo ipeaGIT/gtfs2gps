@@ -371,6 +371,13 @@ gtfs2gps <- function(gtfs_data,
     if(any(is.infinite(output$speed)))
       message("Some 'speed' values are Inf in the returned data.")
     
+    # check if there are any trips with negative speed
+    trips_negative_speed <- unique(output$trip_id[which( output$speed < 0)])
+    
+    if(length(trips_negative_speed) > 0 ){
+      message(paste0("There are negative speeds reported in the GTFS for the following trip_id's: ",  paste0(trips_negative_speed, collapse=", ")))}
+    
+    
     if(is.null(output) || dim(output)[1] == 0) return(NULL)
 
     output$speed <- units::set_units(output$speed, "km/h")
