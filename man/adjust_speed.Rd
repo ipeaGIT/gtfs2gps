@@ -15,14 +15,18 @@ adjust_speed(
 \arguments{
 \item{gps_data}{A GPS-like data.table created with \code{\link{gtfs2gps}}.}
 
-\item{min_speed}{Minimum speed (in km/h) to be considered as valid. Values 
+\item{min_speed}{Minimum speed to be considered as valid. It can
+be a numeric (in km/h) or a units value able to be converted to km/h. Values 
 below minimum speed will be adjusted. Defaults to 2 km/h.}
 
-\item{max_speed}{Maximum speed (in km/h) to be considered as valid. Values
+\item{max_speed}{Maximum speed to be considered as valid. It can
+be a numeric (in km/h) or a units value able to be converted to km/h. Values
 above maximum speed will be adjusted. Defaults to 80 km/h.}
 
-\item{new_speed}{Speed (in km/h) to replace missing values as well as values
-outside min_speed and max_speed range. By default, `new_speed = NULL` and the
+\item{new_speed}{Speed to replace missing values as well as values
+outside min_speed and max_speed range. It can
+be a numeric (in km/h) or a units value able to be converted to km/h.
+By default, `new_speed = NULL` and the
 function considers the average speed of the entire gps data.}
 
 \item{clone}{Use a copy of the gps_data? Defaults to TRUE.}
