@@ -94,7 +94,7 @@ Defaults to <code>TRUE</code>.</p></dd>
 <span class="r-in"><span class="va">poa</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_gtfs.html">read_gtfs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa.zip"</span>, package <span class="op">=</span> <span class="st">"gtfs2gps"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span class="r-in">  <span class="fu"><a href="filter_by_shape_id.html">filter_by_shape_id</a></span><span class="op">(</span><span class="st">"T2-1"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span class="r-in">  <span class="fu"><a href="filter_single_trip.html">filter_single_trip</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Unzipped the following files to /tmp/RtmpqBILhl/gtfsio:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Unzipped the following files to /tmp/RtmpSEqvck/gtfsio:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   * agency.txt</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   * calendar.txt</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   * routes.txt</span>
@@ -112,7 +112,7 @@ Defaults to <code>TRUE</code>.</p></dd>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># write GTFS data into a zip file</span></span>
 <span class="r-in"><span class="fu">write_gtfs</span><span class="op">(</span><span class="va">poa</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"/mypoa.zip"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Writing text files to /tmp/RtmpqBILhl/gtfsio35de4c57411</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Writing text files to /tmp/RtmpSEqvck/gtfsio35be20a38cb3</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   - Writing agency.txt</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   - Writing calendar.txt</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   - Writing routes.txt</span>
@@ -120,7 +120,7 @@ Defaults to <code>TRUE</code>.</p></dd>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   - Writing stop_times.txt</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   - Writing stops.txt</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   - Writing trips.txt</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> GTFS object successfully zipped to /tmp/RtmpqBILhl/mypoa.zip</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> GTFS object successfully zipped to /tmp/RtmpSEqvck/mypoa.zip</span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>
