@@ -1,14 +1,16 @@
 # log history of gtfs2gps package development
 
 
--------------------------------------------------------
+
+
 # gtfs2gps v2.0-1
 
 * Minor changes
   * `gtfs2gps()` now prints a message alerting if there are any trips with negative speed values in the output. [Closes #172](https://github.com/ipeaGIT/gtfs2gps/issues/172).
 
 
--------------------------------------------------------
+
+
 # gtfs2gps v2.0-0
 * Major changes
   * `gtfs2gps()` now creates two points for a stop when arrival and departure exist. Speed and travel time are now calculated considering both departure_ and arrival_time columns.
@@ -19,14 +21,15 @@
   * Fixing several small errors in the output of gtfs2gps(), what breaks compatibility with previous versions of the gtfs2gps package.
 
 
--------------------------------------------------------
-# gtfs2gps v1.5-4
 
+
+# gtfs2gps v1.5-4
 * Major changes
   * Fixed CRAN bugs
   * Fixed small bug that prevented creating departure times correctly
 
--------------------------------------------------------
+
+
 # gtfs2gps v1.5
 
 * Major changes
@@ -39,7 +42,7 @@
   * Change default `spatial_resolution` of `gtfs2gps()` from 50m to 100m. Closes #202.
 
 
--------------------------------------------------------
+
 # gtfs2gps dev v1.4-0
 
 * Major changes
@@ -59,7 +62,7 @@
   * Added package Hex sticker Closes #75
 
 
--------------------------------------------------------
+
 # gtfs2gps v1.3-2
 
 * Major changes
@@ -72,7 +75,7 @@
   * Improve time filter in `filter_day_period`. Closes #89 and 147
   * Improved documentation of  `spatial_resolution` parameter. Closes #116
 
--------------------------------------------------------
+
 # gtfs2gps v1.3-0
 
 * Major changes
@@ -80,14 +83,14 @@
   * Handling units of measurement
   * Speeding up some algorithms
 
--------------------------------------------------------
+
 # gtfs2gps v1.2-1
 
 * Minor changes
   * Allowing to read gtfs files without calendar/agency
   * New verifications to create a better feedback for the user
 
--------------------------------------------------------
+
 # gtfs2gps v1.2-0
 
 * Major changes
@@ -95,7 +98,7 @@
   * Small changes in `gps_as_sflinestring()` due to new GDAL
   * Function to simplify shapes
 
--------------------------------------------------------
+
 # gtfs2gps v1.1-0
 
 * Major changes
@@ -103,7 +106,7 @@
   * Update related to the newest versions of lwgeom and sf (#112)
   * Replacing `sf_multipoint` by `sf_point` in `gps_as_sf()` to keep all the data
 
--------------------------------------------------------
+
 # gtfs2gps v1.0-7
 
 * Minor changes
