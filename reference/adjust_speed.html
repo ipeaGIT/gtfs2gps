@@ -25,7 +25,7 @@ custom constant value, or by considering the average of all valid trips speed
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gtfs2gps</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.7-0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0-1</span>
       </span>
     </div>
 
@@ -34,7 +34,7 @@ custom constant value, or by considering the average of all valid trips speed
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -93,14 +93,18 @@ custom constant value, or by considering the average of all valid trips speed
     <dl><dt>gps_data</dt>
 <dd><p>A GPS-like data.table created with <code><a href="gtfs2gps.html">gtfs2gps</a></code>.</p></dd>
 <dt>min_speed</dt>
-<dd><p>Minimum speed (in km/h) to be considered as valid. Values 
+<dd><p>Minimum speed to be considered as valid. It can
+be a numeric (in km/h) or a units value able to be converted to km/h. Values 
 below minimum speed will be adjusted. Defaults to 2 km/h.</p></dd>
 <dt>max_speed</dt>
-<dd><p>Maximum speed (in km/h) to be considered as valid. Values
+<dd><p>Maximum speed to be considered as valid. It can
+be a numeric (in km/h) or a units value able to be converted to km/h. Values
 above maximum speed will be adjusted. Defaults to 80 km/h.</p></dd>
 <dt>new_speed</dt>
-<dd><p>Speed (in km/h) to replace missing values as well as values
-outside min_speed and max_speed range. By default, `new_speed = NULL` and the
+<dd><p>Speed to replace missing values as well as values
+outside min_speed and max_speed range. It can
+be a numeric (in km/h) or a units value able to be converted to km/h.
+By default, `new_speed = NULL` and the
 function considers the average speed of the entire gps data.</p></dd>
 <dt>clone</dt>
 <dd><p>Use a copy of the gps_data? Defaults to TRUE.</p></dd>
@@ -113,8 +117,19 @@ function considers the average speed of the entire gps data.</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">poa</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_gtfs.html">read_gtfs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa.zip"</span>, package<span class="op">=</span><span class="st">"gtfs2gps"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Unzipped the following files to /tmp/RtmpSLmB7c/gtfsio:</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘dplyr’</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:stats’:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     filter, lag</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:base’:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     intersect, setdiff, setequal, union</span>
+<span class="r-in"><span class="va">poa</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_gtfs.html">read_gtfs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa.zip"</span>, package<span class="op">=</span><span class="st">"gtfs2gps"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span class="r-in">  <span class="fu"><a href="filter_week_days.html">filter_week_days</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span class="r-in">  <span class="fu"><a href="filter_single_trip.html">filter_single_trip</a></span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Unzipped the following files to /tmp/RtmpjZDiYg/gtfsio:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   * agency.txt</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   * calendar.txt</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   * routes.txt</span>
@@ -138,6 +153,9 @@ function considers the average speed of the entire gps data.</p></dd>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from ‘package:purrr’:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     transpose</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:dplyr’:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     between, first, last</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Linking to GEOS 3.6.2, GDAL 2.2.3, PROJ 4.9.3; sf_use_s2() is TRUE</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘magrittr’</span>
@@ -145,14 +163,12 @@ function considers the average speed of the entire gps data.</p></dd>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     set_names</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> udunits database from /usr/share/xml/udunits/udunits2.xml</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 73 'speed' values are NA for shapeid '176-1'.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 30 'speed' values are NA for shapeid 'A141-1'.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 'speed' values are NA for shapeid 'R10-2'.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 1764 'speed' values are NA for shapeid 'T2-1'.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 1 'speed' values are NA for shapeid '176-1'.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 3 'speed' values are NA for shapeid 'A141-1'.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 1 'speed' values are NA for shapeid 'R10-2'.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 9 'speed' values are NA for shapeid 'T2-1'.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Some 'speed' values are NA in the returned data.</span>
 <span class="r-in"><span class="va">poa_gps_new</span> <span class="op">&lt;-</span> <span class="fu">adjust_speed</span><span class="op">(</span><span class="va">poa_gps</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> timestamp column of shape_id A141-1 was not adjusted as there are less than two timestamp's.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> timestamp column of shape_id T2-1 was not adjusted as there are less than two timestamp's.</span>
 </code></pre></div>
     </div>
   </div>
