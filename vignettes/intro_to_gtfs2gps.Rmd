@@ -1,15 +1,21 @@
 ---
 title: 'gtfs2gps: Converting GTFS data to GPS-like format'
 author: "Rafael H. M. Pereira, Pedro R. Andrade, Joao Bazzo"
-output: github_document
-abstract: Package `gtfs2gps` has a set of functions to convert public transport GTFS data to GPS-like format using `data.table`. It also has some functions to subset GTFS data in time and space and to convert both representations to simple feature format.
+output: rmarkdown::html_vignette
+abstract: Package `gtfs2gps` has a set of functions to convert public transport GTFS data to GPS-like format using `data.table`. It also has some functions to convert both representations to simple feature format.
 urlcolor: blue
 vignette: |
-  %\VignetteEncoding{UTF-8}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{gtfs2gps}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
-18 August 2020
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+03 March 2022
 
 # Introduction 
 
@@ -119,7 +125,7 @@ box()
 
 For a given trip, the function `gtfs2gps` calculates the average speed between each pair of consecutive stops --- given by the ratio between cumulative network distance `S` and departure time `t` for a consecutive pair of valid stop_ids (`i`), 
 
-```{r speed, echo = FALSE, message = FALSE}
+```{r equation, echo = FALSE, message = FALSE}
 knitr::include_graphics("https://github.com/ipeaGIT/gtfs2gps/blob/master/man/figures/equation1.png")
 ```
 
