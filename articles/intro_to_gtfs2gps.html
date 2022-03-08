@@ -115,7 +115,7 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/ipeaGIT/gtfs2gps" class="external-link">"gtfs2gps"</a></span><span class="op">)</span>
 <span class="va">poa</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_gtfs.html">read_gtfs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa.zip"</span>, package <span class="op">=</span><span class="st">"gtfs2gps"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; Unzipped the following files to /tmp/RtmpObl6HR/gtfsio:</span>
+<span class="co">#&gt; Unzipped the following files to /tmp/RtmpfB4RgJ/gtfsio:</span>
 <span class="co">#&gt;   * agency.txt</span>
 <span class="co">#&gt;   * calendar.txt</span>
 <span class="co">#&gt;   * routes.txt</span>
@@ -247,9 +247,9 @@
 <h2 id="methodological-note">Methodological note<a class="anchor" aria-label="anchor" href="#methodological-note"></a>
 </h2>
 <p>For a given trip, the function <code>gtfs2gps</code> calculates the average speed between each pair of consecutive stops — given by the ratio between cumulative network distance <code>S</code> and departure time <code>t</code> for a consecutive pair of valid stop_ids (<code>i</code>),</p>
-<p><img src="https://github.com/ipeaGIT/gtfs2gps/blob/master/man/figures/equation1.png"><!-- --></p>
+<p><img src="https://github.com/ipeaGIT/gtfs2gps/blob/master/man/figures/equation1.png?raw=true"><!-- --></p>
 <p>Since the beginning of each trip usually starts before the first stop_id, the mean speed cannot be calculated as shown in the previous equation because information on <code>i</code> period does not exist. In this case, the function consider the mean speed for the whole trip. It also happens after the last valid stop_id (<code>N</code>) of the trips, where info on <code>i + 1</code> also does not exist.</p>
-<p><img src="https://github.com/ipeaGIT/gtfs2gps/blob/master/man/figures/speed.PNG"><!-- --></p>
+<p><img src="https://github.com/ipeaGIT/gtfs2gps/blob/master/man/figures/speed.PNG?raw=true"><!-- --></p>
 </div>
 <div class="section level2">
 <h2 id="final-remarks">Final remarks<a class="anchor" aria-label="anchor" href="#final-remarks"></a>
