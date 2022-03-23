@@ -124,9 +124,12 @@ gps_as_sflinestring  <- function(gps, crs = 4326){
   gps_sf$interval_id <- NULL
   
   # add time / speed info
-  gps_sf[,time := to_timestamp - from_timestamp]
-  gps_sf[,time := units::set_units(as.numeric(time),"s")]
-  gps_sf[,speed := units::set_units(dist/time,"km/h")]
+  gps_sf[!is.na(from_timestamp),time := to_timestamp - from_timestamp]
+  gps_sf[!is.na(from_timestamp),time := units::set_units(as.numeric(time),"s")]
+  gps_sf[!is.na(from_timestamp),speed := units::set_units(dist/time,"km/h")]
+  
+  gps_sf[is.na(from_timestamp),time := units::set_units(dist/speed,"s")]
+  gps_sf[is.na(from_timestamp),from_timestamp := to_timestamp - data.table::as.ITime(as.numeric(time))]
   
   # edit columns
   gps_sf[, cumdist := cumsum(dist), by = c("shape_id","trip_id","trip_number")]
