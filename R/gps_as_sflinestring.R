@@ -90,9 +90,9 @@ gps_as_sflinestring  <- function(gps, crs = 4326){
   list_ids[, to_stop_id := data.table::fifelse(interval_status == max(interval_status)
                                                ,"-",to_stop_id), by = c("shape_id","trip_number")]
   list_ids[, from_timestamp := data.table::fifelse(interval_status == min(interval_status)
-                                                   ,as.ITime(NA),from_timestamp), by = c("shape_id","trip_number")]
+                                                   ,data.table::as.ITime(NA),from_timestamp), by = c("shape_id","trip_number")]
   list_ids[, to_timestamp := data.table::fifelse(interval_status == max(interval_status)
-                                                 ,as.ITime(NA),to_timestamp), by = c("shape_id","trip_number")]
+                                                 ,data.table::as.ITime(NA),to_timestamp), by = c("shape_id","trip_number")]
   
   # add interval code to GPS
   dt[list_ids, on = c("id","trip_number","shape_id"),`:=`(interval_id = i.interval_status
