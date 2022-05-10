@@ -7,7 +7,7 @@
 
 **gtfs2gps** is an R package that converts public transportation data in GTFS format to GPS-like records in a `data.frame`/`data.table`, which can then be used in various applications such as running transport simulations or scenario analyses. 
 
-The core function of the package takes a `GTFS.zip` file and interpolates the space-time position of each vehicle in each trip considering the network distance and average speed between stops. The output is a `data.table` where each row represents the timestamp of each vehicle at a given spatial resolution. The package also has some functions to subset GTFS data in time and space and to convert both representations to [simple feature](https://CRAN.R-project.org/package=sf) format.
+The core function of the package takes a `GTFS.zip` file and interpolates the space-time position of each vehicle in each trip considering the network distance and average speed between stops. The output is a `data.table` where each row represents the timestamp of each vehicle at a given spatial resolution. The package also has some functions to subset GTFS data in time and space and to convert both representations to [simple feature](https://CRAN.R-project.org/package=sf) format. More information about the methods used in the package can be found in this [preprint].(https://osf.io/preprints/socarxiv/qydr6/)
 
 ### Installation
 
@@ -22,7 +22,7 @@ library(gtfs2gps)
 
 Please see our vignette:
 
-* [gtfs2gps: Converting GTFS data to GPS format](https://github.com/ipeaGIT/gtfs2gps/blob/master/vignettes/intro_to_gtfs2gps.md)
+* [gtfs2gps: Converting GTFS data to GPS format](https://ipeagit.github.io/gtfs2gps/articles/intro_to_gtfs2gps.html)
 
 
 
