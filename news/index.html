@@ -59,103 +59,78 @@
 
     <div class="section level2">
 <h2 class="page-header" data-toc-text="2.0-1" id="gtfs2gps-v20-1">gtfs2gps v2.0-1<small>2022-03-05</small><a class="anchor" aria-label="anchor" href="#gtfs2gps-v20-1"></a></h2>
-<ul><li>Minor changes
-<ul><li>Fixing CRAN error and warning related to the vignette.</li>
-</ul></li>
-</ul></div>
+<ul><li>Minor changes<ul><li>Fixing CRAN error and warning related to the vignette.</li></ul></li></ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="2.0-1" id="gtfs2gps-v20-1-1">gtfs2gps v2.0-1<small>2022-03-05</small><a class="anchor" aria-label="anchor" href="#gtfs2gps-v20-1-1"></a></h2>
-<ul><li>Minor changes
-<ul><li>
+<ul><li>Minor changes<ul><li>
 <code><a href="../reference/gtfs2gps.html">gtfs2gps()</a></code> now prints a message alerting if there are any trips with negative speed values in the output. <a href="https://github.com/ipeaGIT/gtfs2gps/issues/172" class="external-link">Closes </a><a href="https://github.com/ipeaGIT/gtfs2gps/issues/172" class="external-link">#172</a>.</li>
 <li>Fixing small bugs in the output of gtfs2gps().</li>
-</ul></li>
-</ul></div>
+</ul></li></ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="2.0-0" id="gtfs2gps-v20-0">gtfs2gps v2.0-0<small>2022-02-22</small><a class="anchor" aria-label="anchor" href="#gtfs2gps-v20-0"></a></h2>
-<ul><li>Major changes
-<ul><li>
+<ul><li>Major changes<ul><li>
 <code><a href="../reference/gtfs2gps.html">gtfs2gps()</a></code> now creates two points for a stop when arrival and departure exist. Speed and travel time are now calculated considering both departure_ and arrival_time columns.</li>
 <li>The travel statistics in the output table (speed, dist, cumdist, cumtime) for a given point are now calculated in relation to the previous point. More details in the documentation of the <code><a href="../reference/gtfs2gps.html">gtfs2gps()</a></code> function.</li>
 <li>Names of the output columns of gtfs2gps() were updated</li>
 <li>New function <code><a href="../reference/adjust_arrival_departure.html">adjust_arrival_departure()</a></code> to allow users set a minimum time for dis/embarking times at each stop.</li>
 <li>New function <code><a href="../reference/adjust_speed.html">adjust_speed()</a></code> to fix outlier speeds and replace missing speed values with a speed set by the user or the average speed of the system. The timestamp values are updated accordingly.</li>
 <li>Fixing several small errors in the output of gtfs2gps(), what breaks compatibility with previous versions of the gtfs2gps package.</li>
-</ul></li>
-</ul></div>
+</ul></li></ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.5-4" id="gtfs2gps-v15-4">gtfs2gps v1.5-4<small>2021-09-06</small><a class="anchor" aria-label="anchor" href="#gtfs2gps-v15-4"></a></h2>
-<ul><li>Major changes
-<ul><li>Fixed CRAN bugs</li>
+<ul><li>Major changes<ul><li>Fixed CRAN bugs</li>
 <li>Fixed small bug that prevented creating departure times correctly</li>
-</ul></li>
-</ul></div>
+</ul></li></ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.5" id="gtfs2gps-v15">gtfs2gps v1.5<a class="anchor" aria-label="anchor" href="#gtfs2gps-v15"></a></h2>
-<ul><li>Major changes
-<ul><li>Fixed the update of trip_number attribute. This affects the output of <code><a href="../reference/gps_as_sflinestring.html">gps_as_sflinestring()</a></code>. Closes <a href="https://github.com/ipeaGIT/gtfs2gps/issues/189" class="external-link">#189</a>.</li>
+<ul><li>Major changes<ul><li>Fixed the update of trip_number attribute. This affects the output of <code><a href="../reference/gps_as_sflinestring.html">gps_as_sflinestring()</a></code>. Closes <a href="https://github.com/ipeaGIT/gtfs2gps/issues/189" class="external-link">#189</a>.</li>
 <li>Imports the <code>gtfsio</code> package, used in the <code><a href="../reference/read_gtfs.html">read_gtfs()</a></code> and <code><a href="../reference/write_gtfs.html">write_gtfs()</a></code> functions. Closes <a href="https://github.com/ipeaGIT/gtfs2gps/issues/191" class="external-link">#191</a>.</li>
 <li>New parameter <code>snap_method</code> added to <code><a href="../reference/gtfs2gps.html">gtfs2gps()</a></code>.</li>
 </ul></li>
-<li>Minor changes
-<ul><li>Function <code><a href="../reference/filter_single_trip.html">filter_single_trip()</a></code> now also filters the <code>stop_times</code> table. Closes <a href="https://github.com/ipeaGIT/gtfs2gps/issues/195" class="external-link">#195</a>.</li>
+<li>Minor changes<ul><li>Function <code><a href="../reference/filter_single_trip.html">filter_single_trip()</a></code> now also filters the <code>stop_times</code> table. Closes <a href="https://github.com/ipeaGIT/gtfs2gps/issues/195" class="external-link">#195</a>.</li>
 <li>Change default <code>spatial_resolution</code> of <code><a href="../reference/gtfs2gps.html">gtfs2gps()</a></code> from 50m to 100m. Closes <a href="https://github.com/ipeaGIT/gtfs2gps/issues/202" class="external-link">#202</a>.</li>
 </ul></li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.3-2" id="gtfs2gps-v13-2">gtfs2gps v1.3-2<small>2020-11-05</small><a class="anchor" aria-label="anchor" href="#gtfs2gps-v13-2"></a></h2>
-<ul><li>Major changes
-<ul><li>New function to merge GTFS feeds. Closes <a href="https://github.com/ipeaGIT/gtfs2gps/issues/34" class="external-link">#34</a></li>
+<ul><li>Major changes<ul><li>New function to merge GTFS feeds. Closes <a href="https://github.com/ipeaGIT/gtfs2gps/issues/34" class="external-link">#34</a></li>
 <li>New pkgdown website. <a href="https://ipeagit.github.io/gtfs2gps/" class="external-link uri">https://ipeagit.github.io/gtfs2gps/</a> . Closes <a href="https://github.com/ipeaGIT/gtfs2gps/issues/146" class="external-link">#146</a></li>
 <li>Distance of 1st point of GPS trip now start with distance zero. Closes <a href="https://github.com/ipeaGIT/gtfs2gps/issues/136" class="external-link">#136</a></li>
 </ul></li>
-<li>Minor changes
-<ul><li>changes parallel execution to conform new <code>future</code> standards. closes <a href="https://github.com/ipeaGIT/gtfs2gps/issues/55" class="external-link">#55</a></li>
+<li>Minor changes<ul><li>changes parallel execution to conform new <code>future</code> standards. closes <a href="https://github.com/ipeaGIT/gtfs2gps/issues/55" class="external-link">#55</a></li>
 <li>Improve time filter in <code>filter_day_period</code>. Closes <a href="https://github.com/ipeaGIT/gtfs2gps/issues/89" class="external-link">#89</a> and 147</li>
 <li>Improved documentation of <code>spatial_resolution</code> parameter. Closes <a href="https://github.com/ipeaGIT/gtfs2gps/issues/116" class="external-link">#116</a></li>
 </ul></li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.3-0" id="gtfs2gps-v13-0">gtfs2gps v1.3-0<small>2020-09-15</small><a class="anchor" aria-label="anchor" href="#gtfs2gps-v13-0"></a></h2>
-<ul><li>Major changes
-<ul><li>Use progress bar from progressr. Closes <a href="https://github.com/ipeaGIT/gtfs2gps/issues/142" class="external-link">#142</a></li>
+<ul><li>Major changes<ul><li>Use progress bar from progressr. Closes <a href="https://github.com/ipeaGIT/gtfs2gps/issues/142" class="external-link">#142</a></li>
 <li>Handling units of measurement</li>
 <li>Speeding up some algorithms</li>
-</ul></li>
-</ul></div>
+</ul></li></ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.2-1" id="gtfs2gps-v12-1">gtfs2gps v1.2-1<small>2020-06-12</small><a class="anchor" aria-label="anchor" href="#gtfs2gps-v12-1"></a></h2>
-<ul><li>Minor changes
-<ul><li>Allowing to read gtfs files without calendar/agency</li>
+<ul><li>Minor changes<ul><li>Allowing to read gtfs files without calendar/agency</li>
 <li>New verifications to create a better feedback for the user</li>
-</ul></li>
-</ul></div>
+</ul></li></ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.2-0" id="gtfs2gps-v12-0">gtfs2gps v1.2-0<small>2020-05-28</small><a class="anchor" aria-label="anchor" href="#gtfs2gps-v12-0"></a></h2>
-<ul><li>Major changes
-<ul><li>Processing mixed detailed and frequency-based GTFS files</li>
+<ul><li>Major changes<ul><li>Processing mixed detailed and frequency-based GTFS files</li>
 <li>Small changes in <code><a href="../reference/gps_as_sflinestring.html">gps_as_sflinestring()</a></code> due to new GDAL</li>
 <li>Function to simplify shapes</li>
-</ul></li>
-</ul></div>
+</ul></li></ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1-0" id="gtfs2gps-v11-0">gtfs2gps v1.1-0<small>2020-04-12</small><a class="anchor" aria-label="anchor" href="#gtfs2gps-v11-0"></a></h2>
-<ul><li>Major changes
-<ul><li>New function append_height(), to create height column to GPS data</li>
+<ul><li>Major changes<ul><li>New function append_height(), to create height column to GPS data</li>
 <li>Update related to the newest versions of lwgeom and sf (<a href="https://github.com/ipeaGIT/gtfs2gps/issues/112" class="external-link">#112</a>)</li>
 <li>Replacing <code>sf_multipoint</code> by <code>sf_point</code> in <code>gps_as_sf()</code> to keep all the data</li>
-</ul></li>
-</ul></div>
+</ul></li></ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0-7" id="gtfs2gps-v10-7">gtfs2gps v1.0-7<small>2020-04-01</small><a class="anchor" aria-label="anchor" href="#gtfs2gps-v10-7"></a></h2>
-<ul><li>Minor changes
-<ul><li>Removing bugs found by CRAN automatic tests</li>
-</ul></li>
-</ul><hr></div>
+<ul><li>Minor changes<ul><li>Removing bugs found by CRAN automatic tests</li></ul></li></ul><hr></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0-5" id="gtfs2gps-v10-5">gtfs2gps v1.0-5<small>2020-03-16</small><a class="anchor" aria-label="anchor" href="#gtfs2gps-v10-5"></a></h2>
-<ul><li>Launch of <strong>gtfs2gps</strong> v1.0-5 on <a href="https://CRAN.R-project.org/package=gtfs2gps" class="external-link">CRAN</a> on 2020-03-16</li>
-</ul></div>
+<ul><li>Launch of <strong>gtfs2gps</strong> v1.0-5 on <a href="https://CRAN.R-project.org/package=gtfs2gps" class="external-link">CRAN</a> on 2020-03-16</li></ul></div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -170,7 +145,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer></div>
