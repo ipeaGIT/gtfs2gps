@@ -278,11 +278,11 @@ gtfs2gps <- function(gtfs_data,
     if(negative_values > 0)
       message(paste0(negative_values, " 'speed' values are zero or negative for shapeid '", shapeid, "'."))
 
-    new_stoptimes$speed <- units::set_units(new_stoptimes$speed, "km/h")
-    new_stoptimes$dist <- units::set_units(new_stoptimes$dist, "m")
-    new_stoptimes$cumdist <- units::set_units(new_stoptimes$cumdist, "m")
-    new_stoptimes$cumtime <- units::set_units(new_stoptimes$cumtime, "s")
-
+    new_stoptimes[, speed := units::set_units(speed, "km/h") ]
+    new_stoptimes[, dist := units::set_units(dist, "m") ]
+    new_stoptimes[, cumdist := units::set_units(cumdist, "m") ]
+    new_stoptimes[, cumtime := units::set_units(cumtime, "s") ]
+    
     if(!is.null(filepath)){ # Write object
       if(compress)
         readr::write_rds(x = new_stoptimes,
