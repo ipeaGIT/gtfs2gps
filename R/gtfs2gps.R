@@ -277,6 +277,11 @@ gtfs2gps <- function(gtfs_data,
     negative_values <- length(which(new_stoptimes$speed <= 0))
     if(negative_values > 0)
       message(paste0(negative_values, " 'speed' values are zero or negative for shapeid '", shapeid, "'."))
+
+    new_stoptimes[, speed := units::set_units(speed, "km/h") ]
+    new_stoptimes[, dist := units::set_units(dist, "m") ]
+    new_stoptimes[, cumdist := units::set_units(cumdist, "m") ]
+    new_stoptimes[, cumtime := units::set_units(cumtime, "s") ]
     
     if(!is.null(filepath)){ # Write object
       if(compress)
@@ -372,18 +377,13 @@ gtfs2gps <- function(gtfs_data,
       message("Some 'speed' values are Inf in the returned data.")
     
     # check if there are any trips with negative speed
-    trips_negative_speed <- unique(output$trip_id[which( output$speed < 0)])
-    
+    trips_negative_speed <- unique(output$trip_id[which(output$speed < units::set_units(0, "km/h"))])
+
     if(length(trips_negative_speed) > 0 ){
       message(paste0("There are negative speeds reported in the GTFS for the following trip_id's: ",  paste0(trips_negative_speed, collapse=", ")))}
     
     
     if(is.null(output) || dim(output)[1] == 0) return(NULL)
-
-    output$speed <- units::set_units(output$speed, "km/h")
-    output$dist <- units::set_units(output$dist, "m")
-    output$cumdist <- units::set_units(output$cumdist, "m")
-    output$cumtime <- units::set_units(output$cumtime, "s")
 
     return(output)
   }
