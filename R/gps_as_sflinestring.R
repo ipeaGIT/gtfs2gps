@@ -90,9 +90,9 @@ gps_as_sflinestring  <- function(gps, crs = 4326){
   list_ids[, to_stop_id := data.table::fifelse(interval_status == max(interval_status)
                                                ,"-",to_stop_id), by = c("shape_id","trip_number")]
   list_ids[, from_timestamp := data.table::fifelse(interval_status == min(interval_status)
-                                                   ,as.ITime(NA),from_timestamp), by = c("shape_id","trip_number")]
+                                                   ,data.table::as.ITime(NA),from_timestamp), by = c("shape_id","trip_number")]
   list_ids[, to_timestamp := data.table::fifelse(interval_status == max(interval_status)
-                                                 ,as.ITime(NA),to_timestamp), by = c("shape_id","trip_number")]
+                                                 ,data.table::as.ITime(NA),to_timestamp), by = c("shape_id","trip_number")]
   
   # add interval code to GPS
   dt[list_ids, on = c("id","trip_number","shape_id"),`:=`(interval_id = i.interval_status
@@ -124,9 +124,14 @@ gps_as_sflinestring  <- function(gps, crs = 4326){
   gps_sf$interval_id <- NULL
   
   # add time / speed info
-  gps_sf[,time := to_timestamp - from_timestamp]
+  gps_sf[!is.na(from_timestamp) & !is.na(to_timestamp),time := to_timestamp - from_timestamp]
   gps_sf[,time := units::set_units(as.numeric(time),"s")]
-  gps_sf[,speed := units::set_units(dist/time,"km/h")]
+  gps_sf[!is.na(time),speed := units::set_units(dist/time,"km/h")]
+  #gps_sf[!is.na(from_timestamp) & !is.na(to_timestamp),speed := units::set_units(dist/time,"km/h")]
+  gps_sf[,time :=  data.table::fifelse(is.na(time),as.numeric(NA),as.numeric(time))]
+  gps_sf[,time :=  data.table::as.ITime(time)]
+  gps_sf[is.na(from_timestamp),from_timestamp := to_timestamp - time]
+  gps_sf[is.na(to_timestamp),to_timestamp := from_timestamp + time]
   
   # edit columns
   gps_sf[, cumdist := cumsum(dist), by = c("shape_id","trip_id","trip_number")]
@@ -135,7 +140,6 @@ gps_as_sflinestring  <- function(gps, crs = 4326){
   gps_sf[, stop_id := NULL]
   gps_sf[, interval_id := NULL]
   gps_sf <- sf::st_sf(gps_sf)
-  
   
   return(gps_sf)
 }
