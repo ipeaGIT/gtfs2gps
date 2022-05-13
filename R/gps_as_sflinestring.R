@@ -5,7 +5,6 @@
 #'  between consecutive stops.
 #'
 #' @param gps A data.table with timestamp data.
-#' @param crs A Coordinate Reference System. The default value is 4326 (latlong WGS84).
 #' @return A simple feature (sf) object with LineString data.
 #' @export
 #' @examples
@@ -19,12 +18,12 @@
 #' poa_gps <- gtfs2gps(poa_subset)
 #' 
 #' poa_gps_sf <- gps_as_sflinestring(poa_gps)
-gps_as_sflinestring  <- function(gps, crs = 4326){
+gps_as_sflinestring  <- function(gps){
   
   if(is.character(gps)){
     dt <- data.table::fread(gps, colClasses = list(character = c("id", "shape_id", "trip_id", "stop_id")))
   } else {
-    dt <- gps
+    dt <- data.table::copy(gps)
   }
   
   # create new row ids
@@ -51,10 +50,12 @@ gps_as_sflinestring  <- function(gps, crs = 4326){
   id0 <- c(1,sec_id$id)
   stop0 <- c(sec_id$stop_id[1],sec_id$stop_id)
   timestamp0 <- c(sec_id$timestamp[1],sec_id$timestamp)
+  timestamp0 <- as.numeric(timestamp0)
   
   id1 <- c(fir_id$id,nrow(dt))
   stop1 <- c(fir_id$stop_id,tail(fir_id$stop_id,1))
   timestamp1 <- c(fir_id$timestamp,tail(fir_id$timestamp,1))
+  timestamp1 <- as.numeric(timestamp1)
   # head(id0); head(id1)
   # tail(id0); tail(id1)
   # head(stop0);head(stop1)
@@ -90,9 +91,11 @@ gps_as_sflinestring  <- function(gps, crs = 4326){
   list_ids[, to_stop_id := data.table::fifelse(interval_status == max(interval_status)
                                                ,"-",to_stop_id), by = c("shape_id","trip_number")]
   list_ids[, from_timestamp := data.table::fifelse(interval_status == min(interval_status)
-                                                   ,data.table::as.ITime(NA),from_timestamp), by = c("shape_id","trip_number")]
+                                                   ,as.numeric(NA),from_timestamp)
+           , by = c("shape_id","trip_number")]
   list_ids[, to_timestamp := data.table::fifelse(interval_status == max(interval_status)
-                                                 ,data.table::as.ITime(NA),to_timestamp), by = c("shape_id","trip_number")]
+                                                 ,as.numeric(NA),to_timestamp)
+           , by = c("shape_id","trip_number")]
   
   # add interval code to GPS
   dt[list_ids, on = c("id","trip_number","shape_id"),`:=`(interval_id = i.interval_status
@@ -107,9 +110,8 @@ gps_as_sflinestring  <- function(gps, crs = 4326){
   dt <- dt[N_intervals > 1, ]
   dt[,N_intervals := NULL]
   dt[,numbers := NULL]
-  dt[, from_timestamp := data.table::as.ITime(from_timestamp)]
-  dt[, to_timestamp := data.table::as.ITime(to_timestamp)]
   dt[, interval_id := paste0(interval_id,"_",shape_id,"_",trip_number,"_",to_stop_id,"_",from_stop_id)]
+  dt[,speed := speed[2],by = interval_id]
   
   ## convert to linestring
   gps_sf <- sfheaders::sf_linestring(obj = dt, 
@@ -117,29 +119,54 @@ gps_as_sflinestring  <- function(gps, crs = 4326){
                                      y = 'shape_pt_lat',
                                      linestring_id = 'interval_id',
                                      keep = TRUE)
-  gps_sf <- sf::st_set_crs(gps_sf, crs) # crs=4329
+  gps_sf <- sf::st_set_crs(gps_sf, 4329) 
   
   # calculate legnth of each segment
   data.table::setDT(gps_sf)[, dist := sf::st_length(geometry)]
-  gps_sf$interval_id <- NULL
+  gps_sf[,dist := units::drop_units(dist)] # m
+  gps_sf[,speed := units::drop_units(speed/ 3.6)] # km/h to m/s
   
   # add time / speed info
-  gps_sf[!is.na(from_timestamp) & !is.na(to_timestamp),time := to_timestamp - from_timestamp]
-  gps_sf[,time := units::set_units(as.numeric(time),"s")]
-  gps_sf[!is.na(time),speed := units::set_units(dist/time,"km/h")]
-  #gps_sf[!is.na(from_timestamp) & !is.na(to_timestamp),speed := units::set_units(dist/time,"km/h")]
-  gps_sf[,time :=  data.table::fifelse(is.na(time),as.numeric(NA),as.numeric(time))]
-  gps_sf[,time :=  data.table::as.ITime(time)]
+  gps_sf[,time := dist / speed] # s
+  gps_sf[
+    ,time := fifelse(is.na(time) & !is.na(from_timestamp) & !is.na(to_timestamp)
+                     ,to_timestamp - from_timestamp,time)]
+  # fix midnight trips
+  gps_sf[time < 0,to_timestamp := to_timestamp + 86400]
+  gps_sf[time < 0,time := to_timestamp - from_timestamp]
+  
+  # fix time parameters
+  # gps_sf[time == 0, time := NA]
+  # gps_sf[,speed := as.numeric(speed) / 3.6] # km/h to m/s
+  # gps_sf[,speed := round(speed,6)]
+  # gps_sf[speed == 0,speed := dist/time] # m/s
+  # gps_sf[!is.na(time),speed := dist/time] # m/s
+  # gps_sf[is.na(time) & !is.na(dist) & !is.na(speed)
+  #        ,time := dist / speed] # s <- m/(m/s)
+  # gps_sf[!is.na(time) & is.na(to_timestamp) & !is.na(from_timestamp)
+  #        ,to_timestamp := from_timestamp + time]
+  # gps_sf[!is.na(time) & is.na(to_timestamp) & !is.na(from_timestamp)
+  #        ,to_timestamp := from_timestamp + time]
   gps_sf[is.na(from_timestamp),from_timestamp := to_timestamp - time]
   gps_sf[is.na(to_timestamp),to_timestamp := from_timestamp + time]
+  
+  # rewrite mignight trips
+  gps_sf[from_timestamp > 86400, from_timestamp := from_timestamp - 86400]
+  gps_sf[to_timestamp > 86400, to_timestamp := to_timestamp - 86400]
+  
+  # final units
+  gps_sf[,speed := units::set_units(3.6 * speed,"km/h")] # m/s to km/h
+  gps_sf[,from_timestamp := data.table::as.ITime(from_timestamp)]
+  gps_sf[,to_timestamp := data.table::as.ITime(to_timestamp)]
+  gps_sf[,dist := units::set_units(dist,"m")]
   
   # edit columns
   gps_sf[, cumdist := cumsum(dist), by = c("shape_id","trip_id","trip_number")]
   gps_sf[, cumtime := cumsum(time), by = c("shape_id","trip_id","trip_number")]
   gps_sf[, time := NULL]
   gps_sf[, stop_id := NULL]
-  gps_sf[, interval_id := NULL]
+  gps_sf$interval_id <- NULL
   gps_sf <- sf::st_sf(gps_sf)
-  
+  gps_sf$interval_id <- NULL
   return(gps_sf)
 }
