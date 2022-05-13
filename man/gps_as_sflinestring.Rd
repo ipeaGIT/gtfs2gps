@@ -4,12 +4,10 @@
 \alias{gps_as_sflinestring}
 \title{Converts a GPS-like data.table to a LineString Simple Feature (sf) object}
 \usage{
-gps_as_sflinestring(gps, crs = 4326)
+gps_as_sflinestring(gps)
 }
 \arguments{
 \item{gps}{A data.table with timestamp data.}
-
-\item{crs}{A Coordinate Reference System. The default value is 4326 (latlong WGS84).}
 }
 \value{
 A simple feature (sf) object with LineString data.
