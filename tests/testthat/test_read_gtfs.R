@@ -14,8 +14,8 @@ test_that("read_gtfs", {
   expect_equal(length(poa$trips), 4)
   expect_equal(length(poa$calendar), 10)
   
-  expect_type(poa$stop_times$arrival_time, "integer")
-  expect_type(poa$stop_times$departure_time, "integer")
+  expect_type(poa$stop_times$arrival_time, "character")
+  expect_type(poa$stop_times$departure_time, "character")
   
   expect_equal(dim(poa$stop_times)[1], 23040)
   expect_equal(dim(poa$shapes)[1], 1265)
@@ -23,8 +23,8 @@ test_that("read_gtfs", {
   
   sp <- read_gtfs(system.file("extdata/saopaulo.zip", package="gtfs2gps"))
   
-  expect_type(sp$frequencies$start_time, "integer")
-  expect_type(sp$frequencies$end_time, "integer")
+  expect_type(sp$frequencies$start_time, "character")
+  expect_type(sp$frequencies$end_time, "character")
   
   file.copy(system.file("extdata/poa.zip", package="gtfs2gps"), "poa.zip")
   

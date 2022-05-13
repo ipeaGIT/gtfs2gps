@@ -11,7 +11,6 @@
 #' @export
 #' @examples
 #' poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
-#' 
 read_gtfs <- function(gtfszip, quiet = FALSE){
   # read GTFS feed
   result <- 
@@ -35,16 +34,6 @@ read_gtfs <- function(gtfszip, quiet = FALSE){
   if(is.null(result$stop_times) || dim(result$stop_times)[1] == 0) stop("stop_times.txt is empty in the GTFS file")
   
   if(!is.null(result$frequencies) && dim(result$frequencies)[1] == 0) stop("frequencies.txt is empty in the GTFS file")
-  
-  mysub <- function(value) sub("^24:", "00:", value)
-  
-  result$stop_times[, departure_time := data.table::as.ITime(mysub(departure_time), format = "%H:%M:%OS")]
-  result$stop_times[, arrival_time := data.table::as.ITime(mysub(arrival_time), format ="%H:%M:%OS")]
-  
-  if(!is.null(result$frequencies)){
-    result$frequencies[, start_time := data.table::as.ITime(mysub(start_time), format = "%H:%M:%OS")]
-    result$frequencies[, end_time := data.table::as.ITime(mysub(end_time), format = "%H:%M:%OS")]
-  }
-  
+
   return(result)
 }

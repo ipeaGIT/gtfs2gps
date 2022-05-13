@@ -214,6 +214,11 @@ filter_by_agency_id <- function(gtfs_data, agency_ids){
 #' 
 #' subset <- filter_valid_stop_times(poa)
 filter_valid_stop_times <- function(gtfs_data){
+  gtfs_data <- data.table::copy(gtfs_data)
+
+  gtfs_data$stop_times[, departure_time := gtfstools:::string_to_seconds(departure_time)]
+  gtfs_data$stop_times[, arrival_time := gtfstools:::string_to_seconds(arrival_time)]
+
   gtfs_data$stop_times <- subset(gtfs_data$stop_times, !is.na(arrival_time) & !is.na(departure_time))
 
   stop_ids <- unique(gtfs_data$stop_times$stop_id)
@@ -224,6 +229,9 @@ filter_valid_stop_times <- function(gtfs_data){
     gtfs_data$routes <- subset(gtfs_data$routes, route_id %in% route_ids)
   }
 
+  gtfs_data$stop_times[, departure_time := gtfstools:::seconds_to_string(departure_time)]
+  gtfs_data$stop_times[, arrival_time := gtfstools:::seconds_to_string(arrival_time)]
+  
   return(gtfs_data)
 }
 
