@@ -29,6 +29,7 @@ Imports:
       furrr,
       future,
       gtfsio,
+      gtfstools,
       magrittr,
       Rcpp,
       units,
