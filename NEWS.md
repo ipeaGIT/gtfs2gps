@@ -4,6 +4,8 @@
 
 * Minor changes
   * Fixing CRAN error and warning related to the vignette.
+  * The function `adjust_speed()` now does not change very low speed (1.000000e-12 [km/h]) because these values indicate a situation of a stopped vehicle. Closed [249](https://github.com/ipeaGIT/gtfs2gps/issues/249).
+
 
 # gtfs2gps v2.0-1
 
