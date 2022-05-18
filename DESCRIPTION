@@ -38,6 +38,7 @@ Imports:
       lwgeom,
       pbapply,
       progressr,
+      gtfstools,
       readr
 RoxygenNote: 7.1.2
 VignetteBuilder: knitr
