@@ -1,5 +1,9 @@
 # log history of gtfs2gps package development
 
+# gtfs2gps v2.0-3
+* Minor changes
+  * Saving units when using argument `filepath` in `gtfs2gps()`.
+
 # gtfs2gps v2.0-1
 
 * Major changes

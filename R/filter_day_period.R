@@ -15,15 +15,28 @@
 #' # filter gtfs data
 #' poa_f <- filter_day_period(poa, period_start = "10:00", period_end = "10:20")
 filter_day_period <- function(gtfs, period_start = "00:00:01", period_end = "23:59:59"){
+  gtfs <- data.table::copy(gtfs)
+  
   if(is.na(data.table::as.ITime(period_start))){ stop("Error: Invalid period_start input") }
   if(is.na(data.table::as.ITime(period_end))){ stop("Error: Invalid period_end input") }
 
+  period_start <- gtfstools:::string_to_seconds(period_start)
+  period_end <- gtfstools:::string_to_seconds(period_end)
+  
+  gtfs$stop_times[, departure_time := gtfstools:::string_to_seconds(departure_time)]
+  gtfs$stop_times[, arrival_time := gtfstools:::string_to_seconds(arrival_time)]
+
+  if(!is.null(gtfs$frequencies)){
+    gtfs$frequencies[, start_time := gtfstools:::string_to_seconds(start_time)]
+    gtfs$frequencies[, end_time := gtfstools:::string_to_seconds(end_time)]
+  }
+  
   # 1) filter stop times
-  gtfs$stop_times <- gtfs$stop_times[ data.table::between(departure_time, data.table::as.ITime(period_start), data.table::as.ITime(period_end)), ]
+  gtfs$stop_times <- gtfs$stop_times[ data.table::between(departure_time, period_start, period_end), ]
   
   # Update frequencies
   if(test_gtfs_freq(gtfs) == "frequency"){
-      gtfs$frequencies <- gtfs$frequencies[ data.table::as.ITime(start_time) >= data.table::as.ITime(period_start) & data.table::as.ITime(end_time) <= data.table::as.ITime(period_end) ] 
+      gtfs$frequencies <- gtfs$frequencies[start_time >= period_start & end_time <= period_end]
   }
 
   # Remaining unique stops and trips
@@ -48,6 +61,14 @@ filter_day_period <- function(gtfs, period_start = "00:00:01", period_end = "23:
   if(!is.null(gtfs$agency) && !is.null(unique(gtfs$routes$agency_id)))
     gtfs$agency <- gtfs$agency[ agency_id %chin% unique(gtfs$routes$agency_id) ]
 
+  gtfs$stop_times[, departure_time := gtfstools:::seconds_to_string(departure_time)]
+  gtfs$stop_times[, arrival_time := gtfstools:::seconds_to_string(arrival_time)]
+  
+  if(!is.null(gtfs$frequencies)){
+    gtfs$frequencies[, start_time := gtfstools:::seconds_to_string(start_time)]
+    gtfs$frequencies[, end_time := gtfstools:::seconds_to_string(end_time)]
+  }
+  
   # return fun output
   return(gtfs)
 }

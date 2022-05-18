@@ -112,12 +112,12 @@ gtfs2gps <- function(gtfs_data,
     gtfs_data <- read_gtfs(gtfszip = gtfs_data)
   }
   
-  gtfs_data$stop_times[, departure_time := as.numeric(departure_time)]
-  gtfs_data$stop_times[, arrival_time := as.numeric(arrival_time)]
+  gtfs_data$stop_times[, departure_time := gtfstools:::string_to_seconds(departure_time)]
+  gtfs_data$stop_times[, arrival_time := gtfstools:::string_to_seconds(arrival_time)]
   
   if(!is.null(gtfs_data$frequencies)){
-    gtfs_data$frequencies[, start_time := as.numeric(start_time)]
-    gtfs_data$frequencies[, end_time := as.numeric(end_time)]
+    gtfs_data$frequencies[, start_time := gtfstools:::string_to_seconds(start_time)]
+    gtfs_data$frequencies[, end_time := gtfstools:::string_to_seconds(end_time)]
   }
 
   # Convert all shapes into sf objects
