@@ -26,7 +26,7 @@ fortaleza <- system.file("extdata/fortaleza.zip", package = "gtfs2gps")
 srtmfile <- system.file("extdata/fortaleza-srtm.tif", package = "gtfs2gps")
 
 gtfs <- read_gtfs(fortaleza) \%>\%
-  filter_by_shape_id("shape836-I") \%>\%
+  gtfstools::filter_by_shape_id("shape836-I") \%>\%
   filter_single_trip() 
 
 fortaleza_gps <- gtfs2gps(gtfs, spatial_resolution = 500) \%>\% append_height(srtmfile)

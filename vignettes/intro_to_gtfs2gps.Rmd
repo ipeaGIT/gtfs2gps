@@ -47,7 +47,6 @@ If a given GTFS zipped file does not contain all of these required files then `r
 
 GTFS data sets can be fairly large for complex public transport networks and, in some cases, users might want to focus on specific transport services at week days/weekends, or on specific trips or routes. The package brings some functions to filter GTFS.zip and speed up the data processing.
 
-* **filter_by_shape_id():** Filter shapes using given shape ids.
 * **filter_by_agency_id():**  Filter routes using given agency ids.
 * **filter_valid_stop_times():** Return only stop times that have geospatial locations.
 * **filter_week_days():** Remove weekend trips.
@@ -62,7 +61,7 @@ These functions subset all the relevant GTFS files in order to remove all the un
 ```{r}
 library(magrittr)
 object.size(poa) %>% format(units = "Kb")
-poa_small <- gtfs2gps::filter_by_shape_id(poa, c("T2-1", "A141-1"))
+poa_small <- gtfstools::filter_by_shape_id(poa, c("T2-1", "A141-1"))
 object.size(poa_small) %>% format(units = "Kb")
 ```
 

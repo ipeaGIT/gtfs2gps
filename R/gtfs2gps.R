@@ -81,7 +81,7 @@
 #' @examples
 #' library(dplyr)
 #' poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
-#' subset <- filter_by_shape_id(poa, "T2-1") %>%
+#' subset <- gtfstools::filter_by_shape_id(poa, "T2-1") %>%
 #'   filter_single_trip()
 #' 
 #' poa_gps <- gtfs2gps(subset)
@@ -112,12 +112,12 @@ gtfs2gps <- function(gtfs_data,
     gtfs_data <- read_gtfs(gtfszip = gtfs_data)
   }
   
-  gtfs_data$stop_times[, departure_time := gtfstools:::string_to_seconds(departure_time)]
-  gtfs_data$stop_times[, arrival_time := gtfstools:::string_to_seconds(arrival_time)]
+  gtfs_data$stop_times[, departure_time := string_to_seconds(departure_time)]
+  gtfs_data$stop_times[, arrival_time := string_to_seconds(arrival_time)]
   
   if(!is.null(gtfs_data$frequencies)){
-    gtfs_data$frequencies[, start_time := gtfstools:::string_to_seconds(start_time)]
-    gtfs_data$frequencies[, end_time := gtfstools:::string_to_seconds(end_time)]
+    gtfs_data$frequencies[, start_time := string_to_seconds(start_time)]
+    gtfs_data$frequencies[, end_time := string_to_seconds(end_time)]
   }
 
   # Convert all shapes into sf objects
@@ -346,7 +346,7 @@ gtfs2gps <- function(gtfs_data,
     
         
     ids <- paste0("ids <- c('", paste(badShapes, collapse = "', '"), "')") # nocov
-    code1 <- paste0("data <- gtfs2gps::filter_by_shape_id(", original_gtfs_data_arg, ", ids)") # nocov
+    code1 <- paste0("data <- gtfstools::filter_by_shape_id(", original_gtfs_data_arg, ", ids)") # nocov
     code2 <- "gtfs2gps::write_gtfs(data, 'shapes_with_error.zip')" # nocov
     
     message(paste(ids, code1, code2, sep = "\n")) # nocov

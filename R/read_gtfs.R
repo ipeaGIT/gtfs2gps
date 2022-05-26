@@ -14,7 +14,7 @@
 read_gtfs <- function(gtfszip, quiet = FALSE){
   # read GTFS feed
   result <- 
-    gtfsio::import_gtfs(
+    gtfstools::read_gtfs(
       path = gtfszip,
       quiet = quiet,
       # files = c("agency", "routes", "stops", "stop_times", "shapes", "trips", "calendar", "calendar_dates", "frequencies"),

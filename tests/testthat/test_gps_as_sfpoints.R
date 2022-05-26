@@ -4,9 +4,9 @@ test_that("gps_as_sfpoints", {
   srtmfile <- system.file("extdata/fortaleza-srtm.tif", package="gtfs2gps")
   
   subset <- fortaleza %>%
-    filter_week_days() %>%
+    gtfstools::filter_by_weekday(c("monday", "tuesday", "wednesday", "thursday", "friday")) %>%
     filter_single_trip() %>%
-    filter_by_shape_id(c("shape804-I", "shape806-I"))
+    gtfstools::filter_by_shape_id(c("shape804-I", "shape806-I"))
   
   for_gps <- gtfs2gps(subset)
   for_gps_sf_points <- gps_as_sfpoints(for_gps) # without height

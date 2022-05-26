@@ -1,6 +1,6 @@
 test_that("snap_points", {
   gtfs <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps")) %>%
-    filter_by_shape_id("T2-1")
+    gtfstools::filter_by_shape_id("T2-1")
   
   gtfs$stops <- gtfs$stops[1,]
   gtfs$shapes <- gtfs$shapes[143:153,]
@@ -21,7 +21,7 @@ test_that("snap_points", {
 
   # complete test
   gtfs <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps")) %>%
-    filter_by_shape_id("T2-1")
+    gtfstools::filter_by_shape_id("T2-1")
 
   shapes <- gtfs_shapes_as_sf(gtfs)
   stops <- gtfs_stops_as_sf(gtfs)

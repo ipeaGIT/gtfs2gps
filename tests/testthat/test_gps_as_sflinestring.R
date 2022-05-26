@@ -3,9 +3,9 @@ test_that("gps_as_sflinestring", {
   fortaleza <- read_gtfs(system.file("extdata/fortaleza.zip", package = "gtfs2gps"))
 
   subset <- fortaleza %>%
-    filter_week_days() %>%
+    gtfstools::filter_by_weekday(c("monday", "tuesday", "wednesday", "thursday", "friday")) %>%
     filter_single_trip() %>%
-    filter_by_shape_id(c("shape804-I", "shape806-I"))
+    gtfstools::filter_by_shape_id(c("shape804-I", "shape806-I"))
   
   for_gps <- gtfs2gps(subset) %>% adjust_speed()
 
@@ -21,7 +21,7 @@ test_that("gps_as_sflinestring", {
   # test to fix NA values
   library(magrittr)
   gps <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps")) %>%
-    filter_by_shape_id(.,"176-1") %>% 
+    gtfstools::filter_by_shape_id(.,"176-1") %>% 
     filter_single_trip() %>% 
     gtfs2gps() %>% 
     adjust_speed() %>% 

@@ -8,8 +8,8 @@ test_that("adjust_arrival_departure", {
     
     poa <- adjust_arrival_departure(poa)
 
-    poa$stop_times[, departure_time := gtfstools:::string_to_seconds(departure_time)]
-    poa$stop_times[, arrival_time := gtfstools:::string_to_seconds(arrival_time)]
+    poa$stop_times[, departure_time := string_to_seconds(departure_time)]
+    poa$stop_times[, arrival_time := string_to_seconds(arrival_time)]
     
     poa$stop_times <- poa$stop_times[poa$stop_times[, !is.na(departure_time)], ]        
     

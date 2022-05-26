@@ -25,9 +25,9 @@ fortaleza <- read_gtfs(system.file("extdata/fortaleza.zip", package = "gtfs2gps"
 srtmfile <- system.file("extdata/fortaleza-srtm.tif", package="gtfs2gps")
 
 subset <- fortaleza \%>\%
-  filter_week_days() \%>\%
+  gtfstools::filter_by_weekday(c("monday", "wednesday")) \%>\%
   filter_single_trip() \%>\%
-  filter_by_shape_id("shape806-I")
+  gtfstools::filter_by_shape_id("shape806-I")
 
 for_gps <- gtfs2gps(subset)
 for_gps_sf_points <- gps_as_sfpoints(for_gps)
