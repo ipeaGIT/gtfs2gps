@@ -1,5 +1,0 @@
-route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color
-T2,EPTC,T2,TRANSVERSAL 2,,3,,CFD600,0
-A141,EPTC,A141,ALIMENTADORA RESTINGA / LOMBA / 5UNIDADE,,3,,FF0000,0
-176,EPTC,176,SERRARIA (RODOVIARIA),,3,,FF0000,0
-R10,EPTC,R10,RAPIDA RESTINGA NOVA / CAVALHADA,,3,,FF0000,0

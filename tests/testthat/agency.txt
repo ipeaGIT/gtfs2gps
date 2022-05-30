@@ -1,2 +1,0 @@
-agency_id,agency_name,agency_url,agency_timezone,agency_lang,agency_phone,agency_fare_url
-EPTC,Empresa Publica de Transportes e Circulação,http://www.eptc.com.br,America/Sao_Paulo,pt,156,http://www2.portoalegre.rs.gov.br/eptc/default.php?p_secao=155
