@@ -1,6 +1,6 @@
 test_that("adjust_speed", {
     poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps")) %>%
-        filter_week_days() %>%
+        gtfstools::filter_by_weekday(c("monday", "tuesday", "wednesday", "thursday", "friday")) %>%
         filter_single_trip()
 
     poa_gps <- gtfs2gps(poa)

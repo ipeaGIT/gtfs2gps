@@ -3,7 +3,7 @@ test_that("gtfs2gps", {
 
     poa_gps_0 <- read_gtfs(poa) %>%
       adjust_arrival_departure() %>%
-      filter_week_days() %>%
+      gtfstools::filter_by_weekday(c("monday", "tuesday", "wednesday", "thursday", "friday")) %>%
       gtfs2gps(parallel = FALSE, spatial_resolution = 50)
 
     expect_equal(sum(units::drop_units(poa_gps_0$cumtime), na.rm = TRUE), 212843109, 0.01)
@@ -38,7 +38,7 @@ test_that("gtfs2gps", {
     expect_true(all(poa_gps$cumtime >= units::set_units(0, "s")))
     
     poa_gps <- read_gtfs(poa) %>%
-      filter_week_days() %>%
+      gtfstools::filter_by_weekday(c("monday", "tuesday", "wednesday", "thursday", "friday")) %>%
       gtfs2gps(spatial_resolution = 50)
 
     #poa_shape <- read_gtfs(poa) %>% gtfs_shapes_as_sf()
@@ -80,7 +80,7 @@ test_that("gtfs2gps", {
     expect_true(all(poa_gps$cumtime >= units::set_units(0, "s")))
 
     poa_gps_30 <- read_gtfs(poa) %>%
-      filter_week_days() %>%
+      gtfstools::filter_by_weekday(c("monday", "tuesday", "wednesday", "thursday", "friday")) %>%
       gtfs2gps(spatial_resolution = 30)
     
     expect_equal(dim(poa_gps_30)[1], 200560)
@@ -88,7 +88,7 @@ test_that("gtfs2gps", {
     
     # save into file
     poa_simple <- read_gtfs(poa) %>%
-      filter_by_shape_id(c("T2-1", "A141-1"))
+      gtfstools::filter_by_shape_id(c("T2-1", "A141-1"))
 
     poa_gps <- gtfs2gps(poa_simple, filepath = ".", spatial_resolution = 50)
     expect_null(poa_gps)
@@ -146,8 +146,8 @@ test_that("gtfs2gps", {
     #sp4 <- read_gtfs("sp3.zip")
     
     #sp_gps <- sp4 %>%
-    #  filter_by_shape_id(52072) %>%
-    #  filter_week_days() %>%
+    #  gtfstools::filter_by_shape_id(52072) %>%
+    # gtfstools::filter_by_weekday(c("monday", "tuesday", "wednesday", "thursday", "friday")) %>%
     #  filter_single_trip() %>%
     #  gtfs2gps(parallel = FALSE, spatial_resolution = 15)
 
@@ -170,8 +170,8 @@ test_that("gtfs2gps", {
     
     # messages when gtfs2gps cannot convert all shapes nor all trips
     #gtfs <- read_gtfs(sp) %>%
-    #  filter_by_shape_id(52000:52200) %>%
-    #  filter_week_days() %>%
+    #  gtfstools::filter_by_shape_id(52000:52200) %>%
+    # gtfstools::filter_by_weekday(c("monday", "tuesday", "wednesday", "thursday", "friday")) %>%
     #  filter_single_trip()
     
     #gtfs$stop_times <- gtfs$stop_times[-(300:390), ]

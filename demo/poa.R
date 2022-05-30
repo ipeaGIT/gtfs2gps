@@ -3,7 +3,7 @@ library(gtfs2gps)
 library(dplyr)
 
 poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps")) %>%
-  filter_by_shape_id("T2-1")
+  gtfstools::filter_by_shape_id("T2-1")
 
 names(poa)
 sp$trips

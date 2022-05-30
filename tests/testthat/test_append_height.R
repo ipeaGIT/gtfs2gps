@@ -4,7 +4,7 @@ test_that("append_height", {
   srtmfile <- system.file("extdata/fortaleza-srtm.tif", package="gtfs2gps")
   
   gtfs <- read_gtfs(fortaleza) %>%
-    filter_by_shape_id("shape804-I") %>%
+    gtfstools::filter_by_shape_id("shape804-I") %>%
     filter_single_trip() %>% 
     remove_invalid()
   

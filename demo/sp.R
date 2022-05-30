@@ -6,7 +6,7 @@ sp <- read_gtfs(system.file("extdata/saopaulo.zip", package="gtfs2gps"))
 names(sp)
 sp$trips
 
-sp_small <- gtfs2gps::filter_by_shape_id(sp, 53000:53020)
+sp_small <- gtfstools::filter_by_shape_id(sp, 53000:53020)
 
 sp_small_sf <- gtfs_shapes_as_sf(sp_small)
 

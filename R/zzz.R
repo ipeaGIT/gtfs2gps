@@ -9,6 +9,15 @@ utils::globalVariables(c(".", "%>%", ":="))
   data.table::setDTthreads(percent = 100) # nocov
 }
 
+.onAttach <- function(lib, pkg){
+  message <- paste0(
+    sprintf("gtfs2gps version %s is now loaded\n",utils::packageDescription("gtfs2gps")$Version),
+    "NOTE: All filter functions from gtfs2gps were removed\n",
+    "Please replace them by similar functions from gtfstools")
+
+  packageStartupMessage(message)
+}
+
 #' @importFrom magrittr %>%
 #' @importFrom data.table := %between% fifelse %chin%
 #' @importFrom stats na.omit

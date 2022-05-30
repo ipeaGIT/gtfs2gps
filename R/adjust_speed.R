@@ -29,7 +29,7 @@
 #' @examples
 #' library(dplyr)
 #' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps")) %>%
-#'   filter_week_days() %>%
+#'   gtfstools::filter_by_weekday(c("monday", "wednesday")) %>%
 #'   filter_single_trip()
 #'
 #' poa_gps <- gtfs2gps(poa)

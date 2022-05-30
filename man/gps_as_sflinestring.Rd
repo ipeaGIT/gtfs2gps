@@ -22,7 +22,7 @@ library(gtfs2gps)
 library(dplyr)
 
 poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
-poa_subset <- filter_by_shape_id(poa, c("T2-1", "A141-1")) \%>\%
+poa_subset <- gtfstools::filter_by_shape_id(poa, c("T2-1", "A141-1")) \%>\%
   filter_single_trip()
 
 poa_gps <- gtfs2gps(poa_subset)

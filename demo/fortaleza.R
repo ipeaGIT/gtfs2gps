@@ -8,7 +8,7 @@ names(fortaleza)
 ids <- fortaleza$shapes$shape_id %>% unique()
 ids
 
-fortaleza <- filter_by_shape_id(fortaleza, ids[1:4])
+fortaleza <- gtfstools::filter_by_shape_id(fortaleza, ids[1:4])
 
 for_small_sf <- gtfs_shapes_as_sf(fortaleza)
 
