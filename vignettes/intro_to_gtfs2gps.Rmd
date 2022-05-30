@@ -43,20 +43,7 @@ Note that not all GTFS files are loaded into R. This function only loads the nec
 this last four being optional.
 If a given GTFS zipped file does not contain all of these required files then `read_gtfs()` will stop with an error.
 
-# Subsetting GTFS Data
-
-GTFS data sets can be fairly large for complex public transport networks and, in some cases, users might want to focus on specific transport services at week days/weekends, or on specific trips or routes. The package brings some functions to filter GTFS.zip and speed up the data processing.
-
-* **filter_by_agency_id():**  Filter routes using given agency ids.
-* **filter_valid_stop_times():** Return only stop times that have geospatial locations.
-* **filter_week_days():** Remove weekend trips.
-* **filter_single_trip():** Return only one trip per shape_id.
-* **filter_by_route_type():** Filter by transport mode.
-* **filter_by_route_id():** Filter routes and trips by route id.
-* **filter_day_period():** Filter according to a time interval.
-* **remove_invalid():** Remove all inconsistent data, checking all relations.
-
-These functions subset all the relevant GTFS files in order to remove all the unnecessary rows, keeping the data consistent. The returning values of the four functions is a list of `data.table` objects, in the same way of the input data. For example, in the code below we filter only shape ids between 53000 and 53020.
+In the code below we filter only shape ids between 53000 and 53020 to allow faster execution the next scripts.
 
 ```{r}
 library(magrittr)
