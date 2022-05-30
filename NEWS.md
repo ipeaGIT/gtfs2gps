@@ -1,5 +1,9 @@
 # log history of gtfs2gps package development
 
+# gtfs2gps v2.1-0
+* Major changes
+  * Filter functions were removed from the package as gtftools implements them
+
 # gtfs2gps v2.0-3
 * Minor changes
   * Saving units when using argument `filepath` in `gtfs2gps()`.
