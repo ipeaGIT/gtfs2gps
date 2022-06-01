@@ -7,7 +7,7 @@
 gtfs2gps(
   gtfs_data,
   spatial_resolution = 100,
-  parallel = FALSE,
+  parallel = TRUE,
   strategy = NULL,
   filepath = NULL,
   compress = FALSE,

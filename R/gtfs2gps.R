@@ -87,7 +87,7 @@
 #' poa_gps <- gtfs2gps(subset)
 gtfs2gps <- function(gtfs_data,
                      spatial_resolution = 100,
-                     parallel = FALSE,
+                     parallel = TRUE,
                      strategy = NULL,
                      filepath = NULL,
                      compress = FALSE,

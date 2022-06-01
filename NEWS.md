@@ -2,7 +2,9 @@
 
 # gtfs2gps v2.1-0
 * Major changes
-  * Filter functions were removed from the package as gtftools implements them
+  * Filter functions were removed from the package because gtftools alredy implements them
+  * Function `gtfs2gps` now uses `parallel = TRUE` by default.
+
 
 # gtfs2gps v2.0-3
 * Minor changes
