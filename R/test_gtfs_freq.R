@@ -3,7 +3,7 @@
 #' presents detailed time table for all routes and trip ids.
 #' @param gtfs A GTFS data set stored in memory as a list of data.tables/data.frames.
 #' @return A string "frequency" or "simple".
-#' @export
+#' 
 #' @examples
 #' # read a gtfs.zip to memory
 #' poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
