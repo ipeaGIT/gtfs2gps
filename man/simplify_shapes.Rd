@@ -19,8 +19,3 @@ A GTFS data whose shapes is a subset of the input data.
 Remove points from the shapes of a GTFS file in order to
 reduce its size. It uses Douglas-Peucker algorithm internally.
 }
-\examples{
-poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
-
-poa_simpl <- simplify_shapes(poa)
-}

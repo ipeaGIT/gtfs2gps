@@ -7,12 +7,9 @@
 #' @param gtfs_data A list of data.tables read using gtfs2gps::read_gtfs().
 #' @param tol Numerical tolerance value to be used by the Douglas-Peucker algorithm.
 #' The default value is 0, which means that no data will be lost.
+#' 
 #' @return A GTFS data whose shapes is a subset of the input data.
 #' 
-#' @examples
-#' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
-#'
-#' poa_simpl <- simplify_shapes(poa)
 simplify_shapes <- function(gtfs_data, tol = 0){
   
   gtfs_sf <- gtfs_shapes_as_sf(gtfs_data)
