@@ -72,8 +72,6 @@ Rcpp::NumericVector cpp_snap_points_nearest2_level(Rcpp::NumericMatrix& data, Rc
 //' point of data it is possible to reach at least one point within data with distance 
 //' equals or less than spatial_resolution.
 //' @return A data.frame with the snapped points.
-//' @export
-// [[Rcpp::export]]
 Rcpp::NumericVector cpp_snap_points_nearest2(Rcpp::NumericMatrix& data, Rcpp::NumericMatrix& ref, int spatial_resolution){
   return cpp_snap_points_nearest2_level(data, ref, spatial_resolution, 1);
 }
@@ -129,8 +127,6 @@ Rcpp::NumericVector cpp_snap_points_nearest1_level(Rcpp::NumericMatrix& data, Rc
 //' point of data it is possible to reach at least one point within data with distance 
 //' equals or less than spatial_resolution.
 //' @return A data.frame with the snapped points.
-//' @export
-// [[Rcpp::export]]
 Rcpp::NumericVector cpp_snap_points_nearest1(Rcpp::NumericMatrix& data, Rcpp::NumericMatrix& ref, int spatial_resolution){
   return cpp_snap_points_nearest1_level(data, ref, spatial_resolution, 1);
 }
