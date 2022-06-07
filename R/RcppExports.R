@@ -5,3 +5,11 @@ rcpp_distance_haversine <- function(latFrom, lonFrom, latTo, lonTo, tolerance) {
     .Call(`_gtfs2gps_rcpp_distance_haversine`, latFrom, lonFrom, latTo, lonTo, tolerance)
 }
 
+cpp_snap_points_nearest2 <- function(data, ref, spatial_resolution) {
+    .Call(`_gtfs2gps_cpp_snap_points_nearest2`, data, ref, spatial_resolution)
+}
+
+cpp_snap_points_nearest1 <- function(data, ref, spatial_resolution) {
+    .Call(`_gtfs2gps_cpp_snap_points_nearest1`, data, ref, spatial_resolution)
+}
+
