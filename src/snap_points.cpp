@@ -58,20 +58,20 @@ Rcpp::NumericVector cpp_snap_points_nearest2_level(Rcpp::NumericMatrix& data, Rc
   return result_pos;
 }
 
-//' @title Snap points to the closest points from another set
-//' @description Snap a set of points to the closest reference points.
-//' It requires that the distance from the data points to the reference
-//' points should be smaller than the spatial resolution and that such distance
-//' should be smaller than the distance to the next reference point.
-//' @param data A set of points to be snapped (a matrix). The result will have  
-//' the same number of rows of this argument. Each row will return the respective
-//' snapped point.
-//' @param ref A set of reference points (another matrix). The result will be 
-//' a subset of this parameter.
-//' @param spatial_resolution The spatial resolution of data, which means that from each
-//' point of data it is possible to reach at least one point within data with distance 
-//' equals or less than spatial_resolution.
-//' @return A data.frame with the snapped points.
+// Snap a set of points to the closest reference points.
+// It requires that the distance from the data points to the reference
+// points should be smaller than the spatial resolution and that such distance
+// should be smaller than the distance to the next reference point.
+// @param data A set of points to be snapped (a matrix). The result will have  
+// the same number of rows of this argument. Each row will return the respective
+// snapped point.
+// @param ref A set of reference points (another matrix). The result will be 
+// a subset of this parameter.
+// @param spatial_resolution The spatial resolution of data, which means that from each
+// point of data it is possible to reach at least one point within data with distance 
+// equals or less than spatial_resolution.
+// @return A data.frame with the snapped points.
+// [[Rcpp::export]]
 Rcpp::NumericVector cpp_snap_points_nearest2(Rcpp::NumericMatrix& data, Rcpp::NumericMatrix& ref, int spatial_resolution){
   return cpp_snap_points_nearest2_level(data, ref, spatial_resolution, 1);
 }
@@ -114,19 +114,19 @@ Rcpp::NumericVector cpp_snap_points_nearest1_level(Rcpp::NumericMatrix& data, Rc
   return result_pos;
 }
 
-//' @title Snap points to the closest points from another set
-//' @description Snap a set of points to the closest reference points.
-//' It requires that the distance from the data points to the reference
-//' points should be smaller than the spatial resolution.
-//' @param data A set of points to be snapped (a matrix). The result will have  
-//' the same number of rows of this argument. Each row will return the respective
-//' snapped point.
-//' @param ref A set of reference points (another matrix). The result will be 
-//' a subset of this parameter.
-//' @param spatial_resolution The spatial resolution of data, which means that from each
-//' point of data it is possible to reach at least one point within data with distance 
-//' equals or less than spatial_resolution.
-//' @return A data.frame with the snapped points.
+// Snap a set of points to the closest reference points.
+// It requires that the distance from the data points to the reference
+// points should be smaller than the spatial resolution.
+// @param data A set of points to be snapped (a matrix). The result will have  
+// the same number of rows of this argument. Each row will return the respective
+// snapped point.
+// @param ref A set of reference points (another matrix). The result will be 
+// a subset of this parameter.
+// @param spatial_resolution The spatial resolution of data, which means that from each
+// point of data it is possible to reach at least one point within data with distance 
+// equals or less than spatial_resolution.
+// @return A data.frame with the snapped points.
+// [[Rcpp::export]]
 Rcpp::NumericVector cpp_snap_points_nearest1(Rcpp::NumericMatrix& data, Rcpp::NumericMatrix& ref, int spatial_resolution){
   return cpp_snap_points_nearest1_level(data, ref, spatial_resolution, 1);
 }
