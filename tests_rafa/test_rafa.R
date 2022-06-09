@@ -70,6 +70,10 @@ emtu <- "R:/Dropbox/bases_de_dados/GTFS/SP GTFS/GTFS EMTU_20190815.zip"
   function_coverage(fun=gtfs2gps::gps_as_sflinestring, test_file("./tests/testthat/test_gps_as_sflinestring.R"))
   function_coverage(fun=gtfs2gps::gps_as_sfpoints, test_file("./tests/testthat/test_gps_as_sfpoints.R"))
   
+  
+a <-   function_coverage(fun=gtfs2gps::gtfs2gps, test_file("./tests/testthat/test_gtfs2gps.R"))
+  
+  
  a <-  covr::package_coverage(path = ".", type = "tests")
   
   

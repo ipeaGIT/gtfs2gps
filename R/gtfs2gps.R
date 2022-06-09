@@ -79,12 +79,13 @@
 #' 
 #' @export
 #' @examples
-#' library(dplyr)
-#' poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
-#' subset <- gtfstools::filter_by_shape_id(poa, "T2-1") %>%
-#'   filter_single_trip()
+#' library(gtfs2gps)
 #' 
-#' poa_gps <- gtfs2gps(subset)
+#' gtfs <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
+#' gtfs_subset <- filter_single_trip(gtfs)
+#' 
+#' poa_gps <- gtfs2gps(gtfs_subset, spatial_resolution = 300)
+#' 
 gtfs2gps <- function(gtfs_data,
                      spatial_resolution = 100,
                      parallel = TRUE,
@@ -94,15 +95,18 @@ gtfs2gps <- function(gtfs_data,
                      snap_method = "nearest2",
                      continue = FALSE){
 
-  if(!is.null(strategy))
+  if(!is.null(strategy)){
     warning("Argument 'strategy' is deprecated and will be removed in a future version.") # nocov
+  }
 
   ###### PART 1. Load and prepare data inputs ------------------------------------
-  if(compress & is.null(filepath))
+  if(compress & is.null(filepath)){
     stop("Cannot use argument 'compress' without passing a 'filepath'.")
+  }
 
-  if(continue & is.null(filepath))
+  if(continue & is.null(filepath)){
     stop("Cannot use argument 'continue' without passing a 'filepath'.")
+  }
   
   original_gtfs_data_arg <- deparse(substitute(gtfs_data))
   
@@ -112,14 +116,16 @@ gtfs2gps <- function(gtfs_data,
     gtfs_data <- read_gtfs(gtfszip = gtfs_data)
   }
   
-  gtfs_data$stop_times[, departure_time := string_to_seconds(departure_time)]
-  gtfs_data$stop_times[, arrival_time := string_to_seconds(arrival_time)]
   
-  if(!is.null(gtfs_data$frequencies)){
-    gtfs_data$frequencies[, start_time := string_to_seconds(start_time)]
-    gtfs_data$frequencies[, end_time := string_to_seconds(end_time)]
-  }
-
+  # if gtfs is frequency-based, then convert it to stop times
+  if (gtfs2gps:::test_gtfs_freq(gtfs_data) =='frequency') {
+    gtfs_data <- gtfstools::frequencies_to_stop_times(gtfs_data)
+  }  
+  
+  # convert departure and arrival times from strings to seconds
+  gtfs_data$stop_times[, departure_time := gtfs2gps:::string_to_seconds(departure_time)]
+  gtfs_data$stop_times[, arrival_time := gtfs2gps:::string_to_seconds(arrival_time)]
+  
   # Convert all shapes into sf objects
   message("Converting shapes to sf objects")
   shapes_sf <- gtfs_shapes_as_sf(gtfs_data)
@@ -183,23 +189,24 @@ gtfs2gps <- function(gtfs_data,
     temp_stops_coords <- sf::st_coordinates(stops_sf)
     temp_shape_coords <- sf::st_coordinates(new_shape)
 
-    mymethod <- cpp_snap_points_nearest2
+    mymethod <- gtfs2gps:::cpp_snap_points_nearest2
     
-    if(snap_method == "nearest1")
-      mymethod <- cpp_snap_points_nearest1
+    if(snap_method == "nearest1"){
+      mymethod <- gtfs2gps:::cpp_snap_points_nearest1
+      }
     
     snapped <- mymethod(temp_stops_coords, 
                         temp_shape_coords,
                         spatial_resolution)
 
     # Skip shape_id IF there are no snapped stops
-    if(is.null(snapped) | length(snapped) == 0 ){
+    if (is.null(snapped) | length(snapped) == 0 ) {
       message(paste0("Shape '", shapeid, "' has no snapped stops. Ignoring it."))  # nocov
       return(NULL) # nocov
     }
 
     # Skip shape_id IF there is no route_id associated with that shape_id
-    if(is.na(routeid)){
+    if (is.na(routeid)) {
       message(paste0("Shape '", shapeid, "' has no route_id. Ignoring it."))  # nocov
       return(NULL) # nocov
     }
@@ -215,8 +222,8 @@ gtfs2gps <- function(gtfs_data,
                                             shape_pt_lon = sf::st_coordinates(new_shape)[,1],
                                             shape_pt_lat = sf::st_coordinates(new_shape)[,2])
     
-    # identify route type
-    if(!is.null(gtfs_data$routes)){
+    # add route type
+    if (!is.null(gtfs_data$routes)) {
       routetype <- gtfs_data$routes[route_id == routeid]$route_type
       new_stoptimes[, route_type := routetype ]
     }
@@ -228,7 +235,7 @@ gtfs2gps <- function(gtfs_data,
     new_stoptimes[stops_seq$ref, arrival_time := stops_seq$arrival_time ]
 
     # calculate Distance between successive points
-    new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat
+    new_stoptimes[, dist := gtfs2gps:::rcpp_distance_haversine(shape_pt_lat
                                                     , shape_pt_lon
                                                     , data.table::shift(shape_pt_lat, type = "lead")
                                                     , data.table::shift(shape_pt_lon, type = "lead")
@@ -237,12 +244,12 @@ gtfs2gps <- function(gtfs_data,
     # new_stoptimes[1, dist := 0]
     new_stoptimes <- na.omit(new_stoptimes, cols = "dist")
 
-    if(dim(new_stoptimes)[1] < 2){
+    if (dim(new_stoptimes)[1] < 2) {
       message(paste0("Shape '", shapeid, "' has less than two stops after conversion. Ignoring it."))  # nocov
       return(NULL) # nocov
     }
 
-    if(length(which(!is.na(new_stoptimes$stop_sequence))) < 2){
+    if (length(which(!is.na(new_stoptimes$stop_sequence))) < 2) {
       message(paste0("Shape '", shapeid, "' has less than two stop_sequences after conversion. Ignoring it."))  # nocov
       return(NULL) # nocov
     }
@@ -250,11 +257,13 @@ gtfs2gps <- function(gtfs_data,
     ###### PART 2.2 Function recalculate new stop_times for each trip id of each Shape id ------------------------------
     new_stoptimes <- lapply(X = seq_along(all_tripids), FUN = update_freq,
                             new_stoptimes, gtfs_data, all_tripids)
-    new_stoptimes <- data.table::rbindlist(new_stoptimes)  
-    if(is.null(new_stoptimes$departure_time)){
+    
+    new_stoptimes <- data.table::rbindlist(new_stoptimes)
+    
+    if (is.null(new_stoptimes$departure_time)) {
       message(paste0("Shape '", shapeid, "' has no departure_time. Ignoring it."))  # nocov
       return(NULL)  # nocov
-    }
+      }
     
    # new_stoptimes$lag <- NULL
     new_stoptimes$arrival_time <- NULL
@@ -267,16 +276,22 @@ gtfs2gps <- function(gtfs_data,
                                              , "cumtime"))
 
     na_values <- length(which(is.na(new_stoptimes$speed)))
-    if(na_values > 0)
-      message(paste0(na_values, " 'speed' values are NA for shapeid '", shapeid, "'."))
+    
+    if(na_values > 0){
+      message(paste0(na_values, " 'speed' values are NA for shape_id '", shapeid, "'."))
+    }
 
     infinite_values <- length(which(is.infinite(new_stoptimes$speed)))
-    if(infinite_values > 0)
+    
+    if(infinite_values > 0){
       message(paste0(infinite_values, " 'speed' values are Inf for shapeid '", shapeid, "'."))
+    }
 
     negative_values <- length(which(new_stoptimes$speed <= 0))
-    if(negative_values > 0)
+    
+    if(negative_values > 0){
       message(paste0(negative_values, " 'speed' values are zero or negative for shapeid '", shapeid, "'."))
+    }
 
     new_stoptimes[, speed := units::set_units(speed, "km/h") ]
     new_stoptimes[, dist := units::set_units(dist, "m") ]
