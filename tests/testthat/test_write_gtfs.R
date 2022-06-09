@@ -1,9 +1,14 @@
 test_that("write_gtfs", {
+  
+    # temp file
+    poa2_zip <- tempfile(pattern = 'poa', fileext = '.zip')
+  
+  
     poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps"))
     
-    write_gtfs(poa, "poa2.zip")
+    write_gtfs(poa, zipfile = poa2_zip)
     
-    poa <- read_gtfs("poa2.zip")
+    poa <- read_gtfs(poa2_zip)
     
     expect_type(poa, "list")
     expect_equal(length(poa), 7)
@@ -19,14 +24,16 @@ test_that("write_gtfs", {
     expect_equal(dim(poa$shapes)[1], 1265)
     expect_equal(dim(poa$trips)[1], 387)
     
-    invisible(file.remove("poa2.zip"))
+  # test with frequencies
     
-    # test with frequencies
+    # temp file
+    sp2_zip <- tempfile(pattern = 'sp2', fileext = '.zip')
+    
     sp <- read_gtfs(system.file("extdata/saopaulo.zip", package="gtfs2gps"))
     
-    write_gtfs(sp, "sp2.zip")
+    write_gtfs(sp, zipfile = sp2_zip)
     
-    sp <- read_gtfs("sp2.zip")
+    sp <- read_gtfs(sp2_zip)
     
     expect_type(sp, "list")
     expect_equal(length(sp), 8)
@@ -41,6 +48,4 @@ test_that("write_gtfs", {
     
     expect_equal(dim(sp$shapes)[1], 35886)
     expect_equal(dim(sp$trips)[1], 92)
-    
-    invisible(file.remove("sp2.zip"))
 })
