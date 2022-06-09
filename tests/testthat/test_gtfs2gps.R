@@ -117,7 +117,7 @@ test_that("gtfs2gps", {
     data1[, stop_id := as.character(stop_id)]
     data1[, trip_number := as.double(trip_number)]
     
-    data2 <- readr::read_rds(files2[1])
+    data2 <- readRDS(files2[1])
     
     expect_true(all(data1$trip_id == data2$trip_id))
     

@@ -104,10 +104,11 @@ To avoid division by zero, the minimum speed of vehicles in the output is
 1e-12 Km/h, so that vehicles are never completely stopped.
 }
 \examples{
-library(dplyr)
-poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
-subset <- gtfstools::filter_by_shape_id(poa, "T2-1") \%>\%
-  filter_single_trip()
+library(gtfs2gps)
 
-poa_gps <- gtfs2gps(subset)
+gtfs <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
+gtfs_subset <- filter_single_trip(gtfs)
+
+poa_gps <- gtfs2gps(gtfs_subset, spatial_resolution = 300)
+
 }

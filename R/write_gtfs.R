@@ -11,7 +11,7 @@
 #' @return The status value returned by the external zip command, invisibly.
 #' @export
 #' @examples
-#' library(dplyr)
+#' library(magrittr)
 #' 
 #' # read a gtfs.zip to memory
 #' poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps")) %>%
@@ -23,7 +23,7 @@
 #' 
 write_gtfs <- function(gtfs, zipfile, overwrite = TRUE, quiet = FALSE){
   
-  gtfsio::export_gtfs(gtfs = gtfs, 
+  gtfstools::write_gtfs(gtfs = gtfs, 
                       path = zipfile, 
                       overwrite = TRUE, 
                       quiet = quiet

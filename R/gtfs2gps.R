@@ -300,8 +300,8 @@ gtfs2gps <- function(gtfs_data,
     
     if(!is.null(filepath)){ # Write object
       if(compress)
-        readr::write_rds(x = new_stoptimes,
-                         file = paste0(filepath, "/", shapeid, ".rds"), compress = "gz")
+        saveRDS(object = new_stoptimes,
+                         file = paste0(filepath, "/", shapeid, ".rds"), compress = TRUE)
       else
         data.table::fwrite(x = new_stoptimes,
                            file = paste0(filepath, "/", shapeid, ".txt"))
