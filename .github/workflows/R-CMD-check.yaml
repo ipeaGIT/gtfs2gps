@@ -44,6 +44,9 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v1
 
+      - name: Install spatial dependencies
+        run: sudo apt-get install libgdal-dev libproj-dev libgeos-dev libudunits2-dev netcdf-bin
+
       - name: Query dependencies
         run: |
           install.packages('remotes')
