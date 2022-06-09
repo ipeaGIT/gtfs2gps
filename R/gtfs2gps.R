@@ -118,13 +118,13 @@ gtfs2gps <- function(gtfs_data,
   
   
   # if gtfs is frequency-based, then convert it to stop times
-  if (gtfs2gps:::test_gtfs_freq(gtfs_data) =='frequency') {
+  if (test_gtfs_freq(gtfs_data) =='frequency') {
     gtfs_data <- gtfstools::frequencies_to_stop_times(gtfs_data)
   }  
   
   # convert departure and arrival times from strings to seconds
-  gtfs_data$stop_times[, departure_time := gtfs2gps:::string_to_seconds(departure_time)]
-  gtfs_data$stop_times[, arrival_time := gtfs2gps:::string_to_seconds(arrival_time)]
+  gtfs_data$stop_times[, departure_time := string_to_seconds(departure_time)]
+  gtfs_data$stop_times[, arrival_time := string_to_seconds(arrival_time)]
   
   # Convert all shapes into sf objects
   message("Converting shapes to sf objects")

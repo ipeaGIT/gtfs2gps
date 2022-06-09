@@ -15,8 +15,6 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-03 March 2022
-
 # Introduction 
 
 Package `gtfs2gps` allows users to convert public transport GTFS data into a single `data.table` format with GPS-like records, which can then be used in various applications such as running transport simulations or scenario analyses. Before using the package, just install it from GitHub.
@@ -43,7 +41,7 @@ Note that not all GTFS files are loaded into R. This function only loads the nec
 this last four being optional.
 If a given GTFS zipped file does not contain all of these required files then `read_gtfs()` will stop with an error.
 
-In the code below we filter only shape ids between 53000 and 53020 to allow faster execution the next scripts.
+In the code below we filter only the shape ids `c("T2-1", "A141-1") to allow faster execution the next scripts.
 
 ```{r}
 library(magrittr)
@@ -65,7 +63,9 @@ box()
 After subsetting the data, it is also possible to save it as a new GTFS file using `write_gtfs()`, as shown below.
 
 ```{r, message = FALSE}
-write_gtfs(poa_small, "poa_small.zip")
+temp_gtfs <- tempfile(pattern = 'poa_small', fileext = '.zip')
+
+gtfs2gps::write_gtfs(poa_small, temp_gtfs)
 ```
 
 # Converting to GPS-like format
@@ -73,7 +73,7 @@ write_gtfs(poa_small, "poa_small.zip")
 To convert GTFS to GPS-like format, use `gtfs2gps()`. This is the core function of the package. It takes a GTFS zipped file as an input and returns a `data.table` where each row represents a 'GPS-like' data point for every trip in the GTFS file. In summary, this function interpolates the space-time position of each vehicle in each trip considering the network distance and average speed between stops. The function samples the timestamp of each vehicle every $15m$ by default, but the user can set a different value in the `spatial_resolution` argument. See the example below.
 
 ```{r, message = FALSE}
-  poa_gps <- gtfs2gps("poa_small.zip", spatial_resolution = 50)
+  poa_gps <- gtfs2gps(temp_gtfs, spatial_resolution = 100)
   head(poa_gps)
 ```
  The following figure maps the first 100 data points of the sample data we processed. They can be converted to `simple feature` points or linestring.
@@ -109,7 +109,7 @@ box()
 
 # Methodological note
 
-For a given trip, the function `gtfs2gps` calculates the average speed between each pair of consecutive stops --- given by the ratio between cumulative network distance `S` and departure time `t` for a consecutive pair of valid stop_ids (`i`), 
+For a given trip, the function `gtfs2gps` calculates the average speed between each pair of consecutive stops given by the ratio between cumulative network distance `S` and departure time `t` for a consecutive pair of valid stop_ids (`i`), 
 
 ```{r equation, echo = FALSE, message = FALSE}
 knitr::include_graphics("https://github.com/ipeaGIT/gtfs2gps/blob/master/man/figures/equation1.png?raw=true")
