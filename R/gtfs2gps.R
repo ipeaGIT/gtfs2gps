@@ -189,10 +189,10 @@ gtfs2gps <- function(gtfs_data,
     temp_stops_coords <- sf::st_coordinates(stops_sf)
     temp_shape_coords <- sf::st_coordinates(new_shape)
 
-    mymethod <- gtfs2gps:::cpp_snap_points_nearest2
+    mymethod <- cpp_snap_points_nearest2
     
     if(snap_method == "nearest1"){
-      mymethod <- gtfs2gps:::cpp_snap_points_nearest1
+      mymethod <- cpp_snap_points_nearest1
       }
     
     snapped <- mymethod(temp_stops_coords, 
@@ -235,7 +235,7 @@ gtfs2gps <- function(gtfs_data,
     new_stoptimes[stops_seq$ref, arrival_time := stops_seq$arrival_time ]
 
     # calculate Distance between successive points
-    new_stoptimes[, dist := gtfs2gps:::rcpp_distance_haversine(shape_pt_lat
+    new_stoptimes[, dist := rcpp_distance_haversine(shape_pt_lat
                                                     , shape_pt_lon
                                                     , data.table::shift(shape_pt_lat, type = "lead")
                                                     , data.table::shift(shape_pt_lon, type = "lead")
