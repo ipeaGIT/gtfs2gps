@@ -27,7 +27,7 @@
 #' `timestamp` and `cumtime` are also updated accordingly.
 #' @export
 #' @examples
-#' library(dplyr)
+#' library(magrittr)
 #' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps")) %>%
 #'   gtfstools::filter_by_weekday(c("monday", "wednesday")) %>%
 #'   filter_single_trip()

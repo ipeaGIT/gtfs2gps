@@ -7,7 +7,7 @@
 #' @examples
 #' \dontrun{
 #' # this example takes more than 10s to run
-#' library(dplyr)
+#' library(magrittr)
 #' 
 #' fortaleza <- system.file("extdata/fortaleza.zip", package = "gtfs2gps")
 #' srtmfile <- system.file("extdata/fortaleza-srtm.tif", package = "gtfs2gps")

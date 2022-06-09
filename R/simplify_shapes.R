@@ -16,10 +16,10 @@ simplify_shapes <- function(gtfs_data, tol = 0){
   gtfs_sf$ID <- 1:nrow(gtfs_sf)
   
   # geometry operations
-  gtfs_st_simpl <- terra::vect(gtfs_sf) %>% 
-    terra::simplifyGeom(x = .,tolerance = tol) %>% 
-    terra::geom() %>% 
-    data.table::as.data.table()
+  gtfs_st_simpl <- terra::vect(gtfs_sf)
+  gtfs_st_simpl <- terra::simplifyGeom(x = gtfs_st_simpl, tolerance = tol)
+  gtfs_st_simpl <- terra::geom(gtfs_st_simpl)
+  gtfs_st_simpl <- data.table::as.data.table(gtfs_st_simpl)
   
   # organize ouput data.table
   gtfs_st_simpl[data.table::setDT(gtfs_sf)

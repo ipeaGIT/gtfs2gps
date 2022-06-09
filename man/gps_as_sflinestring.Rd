@@ -19,7 +19,7 @@ Every interval of GPS data points between stops for each trip_id is
 }
 \examples{
 library(gtfs2gps)
-library(dplyr)
+library(magrittr)
 
 poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
 poa_subset <- gtfstools::filter_by_shape_id(poa, c("T2-1", "A141-1")) \%>\%

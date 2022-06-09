@@ -19,7 +19,7 @@ Convert a GPS data stored in a data.table into Simple Feature points.
 }
 \examples{
 library(gtfs2gps)
-library(dplyr)
+library(magrittr)
 
 fortaleza <- read_gtfs(system.file("extdata/fortaleza.zip", package = "gtfs2gps"))
 srtmfile <- system.file("extdata/fortaleza-srtm.tif", package="gtfs2gps")
