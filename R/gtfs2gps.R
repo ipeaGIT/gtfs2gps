@@ -397,7 +397,6 @@ gtfs2gps <- function(gtfs_data,
     if(length(trips_negative_speed) > 0 ){
       message(paste0("There are negative speeds reported in the GTFS for the following trip_id's: ",  paste0(trips_negative_speed, collapse=", ")))}
     
-    
     if(is.null(output) || dim(output)[1] == 0) return(NULL)
 
     return(output)

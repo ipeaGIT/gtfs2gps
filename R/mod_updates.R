@@ -7,7 +7,7 @@ update_freq <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
     return(new_stoptimes) # nocov
   }
   
-  if (gtfs2gps:::test_gtfs_freq(gtfs_data) =='simple') {
+  if (test_gtfs_freq(gtfs_data) =='simple') {
     new_stoptimes[, trip_number := tripid ]
     return(new_stoptimes) # nocov
   }  
