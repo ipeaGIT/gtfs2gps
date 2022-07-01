@@ -19,7 +19,12 @@ gtfs2gps(
 \item{gtfs_data}{A path to a GTFS file to be converted to GPS, or a GTFS data
 represented as a list of data.tables.}
 
-\item{spatial_resolution}{The spatial resolution in meters. Default is 100m.}
+\item{spatial_resolution}{The spatial resolution in meters. Default is 100m.
+This function only creates points in order to guarantee that the minimum
+distance between two consecutive points will be at most the
+spatial_resolution. If a given shape has two consecutive points with a
+distance lower than the spatial resolution, the algorithm will not remove
+such points.}
 
 \item{parallel}{Decides whether the function should run in parallel. Defaults is FALSE.
 When TRUE, it will use all cores available minus one using future::plan() with
@@ -63,7 +68,8 @@ spatial resolution. This function creates additional points in order to
 guarantee that two points in a same trip will have at most a given
 distance, indicated as a spatial resolution. It is possible to use future package
 to parallelize the execution (or use argument plan). This function also
-uses progressr internally to show progress bars.
+uses progressr internally to show progress bars. See the example below on how
+to show a progress bar while executing this function.
 }
 \details{
 After creating geometry points for a given shape id, the `gtfs2gps()`
@@ -106,9 +112,7 @@ To avoid division by zero, the minimum speed of vehicles in the output is
 \examples{
 library(gtfs2gps)
 
-gtfs <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
-gtfs_subset <- filter_single_trip(gtfs)
-
-poa_gps <- gtfs2gps(gtfs_subset, spatial_resolution = 300)
+gtfs <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps")) 
+poa_gps <- progressr::with_progress(gtfs2gps(gtfs))
 
 }

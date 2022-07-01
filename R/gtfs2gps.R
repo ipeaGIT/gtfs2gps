@@ -5,11 +5,17 @@
 #' guarantee that two points in a same trip will have at most a given
 #' distance, indicated as a spatial resolution. It is possible to use future package
 #' to parallelize the execution (or use argument plan). This function also
-#' uses progressr internally to show progress bars.
+#' uses progressr internally to show progress bars. See the example below on how
+#' to show a progress bar while executing this function.
 #' 
 #' @param gtfs_data A path to a GTFS file to be converted to GPS, or a GTFS data
 #' represented as a list of data.tables.
 #' @param spatial_resolution The spatial resolution in meters. Default is 100m.
+#' This function only creates points in order to guarantee that the minimum
+#' distance between two consecutive points will be at most the
+#' spatial_resolution. If a given shape has two consecutive points with a
+#' distance lower than the spatial resolution, the algorithm will not remove
+#' such points. 
 #' @param parallel Decides whether the function should run in parallel. Defaults is FALSE.
 #' When TRUE, it will use all cores available minus one using future::plan() with
 #' strategy "multisession" internally.
@@ -81,10 +87,8 @@
 #' @examples
 #' library(gtfs2gps)
 #' 
-#' gtfs <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
-#' gtfs_subset <- filter_single_trip(gtfs)
-#' 
-#' poa_gps <- gtfs2gps(gtfs_subset, spatial_resolution = 300)
+#' gtfs <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps")) 
+#' poa_gps <- progressr::with_progress(gtfs2gps(gtfs))
 #' 
 gtfs2gps <- function(gtfs_data,
                      spatial_resolution = 100,
@@ -361,7 +365,6 @@ gtfs2gps <- function(gtfs_data,
 
     print(msgs)
     
-        
     ids <- paste0("ids <- c('", paste(badShapes, collapse = "', '"), "')") # nocov
     code1 <- paste0("data <- gtfstools::filter_by_shape_id(", original_gtfs_data_arg, ", ids)") # nocov
     code2 <- "gtfs2gps::write_gtfs(data, 'shapes_with_error.zip')" # nocov
@@ -398,7 +401,6 @@ gtfs2gps <- function(gtfs_data,
 
     if(length(trips_negative_speed) > 0 ){
       message(paste0("There are negative speeds reported in the GTFS for the following trip_id's: ",  paste0(trips_negative_speed, collapse=", ")))}
-    
     
     if(is.null(output) || dim(output)[1] == 0) return(NULL)
 
