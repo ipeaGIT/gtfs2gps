@@ -12,7 +12,8 @@ gtfs2gps(
   filepath = NULL,
   compress = FALSE,
   snap_method = "nearest2",
-  continue = FALSE
+  continue = FALSE,
+  quiet = FALSE
 )
 }
 \arguments{
@@ -55,6 +56,8 @@ are two available methods: `nearest1` and `nearest2`. Defaults to
 skips processing the shape identifiers that were already saved into 
 files. It is useful to continue processing a GTFS file that was stopped
 for some reason. Default value is FALSE.}
+
+\item{quiet}{Hide messages while processing the data? Defaults to FALSE.}
 }
 \value{
 A `data.table`, where each row represents a GPS point. The following 
@@ -113,6 +116,6 @@ To avoid division by zero, the minimum speed of vehicles in the output is
 library(gtfs2gps)
 
 gtfs <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps")) 
-poa_gps <- progressr::with_progress(gtfs2gps(gtfs))
+poa_gps <- progressr::with_progress(gtfs2gps(gtfs, quiet=TRUE))
 
 }

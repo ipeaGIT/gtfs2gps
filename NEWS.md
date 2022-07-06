@@ -7,6 +7,7 @@
   * Function `gtfs2gps` now uses `gtfstools::frequencies_to_stop_times()` to convert. frequency-based GTFS feeds to stop times before processing the data.
 
 * Minor changes
+  * New argument `quiet` to `gtfs2gps()`
   * Removed `readr`, `pbapply`, `lwgeom` and `magrittr` from package dependencies.
 
 

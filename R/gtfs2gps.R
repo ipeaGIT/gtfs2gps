@@ -40,6 +40,7 @@
 #' @param snap_method The method used to snap stops to the route geometry. There
 #'        are two available methods: `nearest1` and `nearest2`. Defaults to 
 #'        `nearest2`. See details for more info.
+#' @param quiet Hide messages while processing the data? Defaults to FALSE.
 #' 
 #' @details After creating geometry points for a given shape id, the `gtfs2gps()`
 #' function snaps the stops to the route geometry. Two strategies are implemented
@@ -88,7 +89,7 @@
 #' library(gtfs2gps)
 #' 
 #' gtfs <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps")) 
-#' poa_gps <- progressr::with_progress(gtfs2gps(gtfs))
+#' poa_gps <- progressr::with_progress(gtfs2gps(gtfs, quiet=TRUE))
 #' 
 gtfs2gps <- function(gtfs_data,
                      spatial_resolution = 100,
@@ -97,7 +98,10 @@ gtfs2gps <- function(gtfs_data,
                      filepath = NULL,
                      compress = FALSE,
                      snap_method = "nearest2",
-                     continue = FALSE){
+                     continue = FALSE,
+                     quiet = FALSE){
+
+  if(quiet) return(suppressMessages(gtfs2gps(gtfs_data, spatial_resolution, parallel, strategy, filepath, compress, snap_method, continue)))
 
   if(!is.null(strategy)){
     warning("Argument 'strategy' is deprecated and will be removed in a future version.") # nocov
