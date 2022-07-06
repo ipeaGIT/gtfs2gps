@@ -124,6 +124,8 @@ gtfs2gps <- function(gtfs_data,
     gtfs_data <- read_gtfs(gtfszip = gtfs_data)
   }
   
+  # do not change input data by reference
+  gtfs_data <- data.table::copy(gtfs_data)
   
   # if gtfs is frequency-based, then convert it to stop times
   if (test_gtfs_freq(gtfs_data) =='frequency') {
