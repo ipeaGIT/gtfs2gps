@@ -185,16 +185,12 @@ gtfs2gps <- function(gtfs_data,
     stops_sf <- sfheaders::sf_point(stops_seq, x = "stop_lon", y = "stop_lat", keep = TRUE)
     sf::st_crs(stops_sf) <- sf::st_crs(shapes_sf)
     
-    spatial_resolution <- units::set_units(spatial_resolution / 1000, "km")
-    
     # new faster version using sfheaders
     new_shape <- subset(shapes_sf, shape_id == shapeid)
-    new_shape <- sf::st_segmentize(new_shape, spatial_resolution)
+    new_shape <- sf::st_segmentize(x = new_shape
+                                   ,dfMaxLength =  units::set_units(spatial_resolution / 1000, "km"))
     new_shape <- sfheaders::sf_cast(new_shape, "POINT")
-    
-    # convert units of spatial resolution to meters
-    spatial_resolution <- units::set_units(spatial_resolution, "m")
-    
+
     # snap stops the nodes of the shape route
     temp_stops_coords <- sf::st_coordinates(stops_sf)
     temp_shape_coords <- sf::st_coordinates(new_shape)
@@ -207,7 +203,7 @@ gtfs2gps <- function(gtfs_data,
     
     snapped <- mymethod(temp_stops_coords, 
                         temp_shape_coords,
-                        spatial_resolution)
+                        units::set_units(spatial_resolution, "m"))
     
     # Skip shape_id IF there are no snapped stops
     if (is.null(snapped) | length(snapped) == 0 ) {
