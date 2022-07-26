@@ -117,7 +117,7 @@
 <span><span class="co">#&gt; NOTE: All filter functions from gtfs2gps were removed</span></span>
 <span><span class="co">#&gt; Please replace them by similar functions from gtfstools</span></span>
 <span><span class="va">poa</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_gtfs.html">read_gtfs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa.zip"</span>, package <span class="op">=</span><span class="st">"gtfs2gps"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Unzipped the following files to /tmp/Rtmpgfi139/gtfsio:</span></span>
+<span><span class="co">#&gt; Unzipped the following files to /tmp/Rtmpr7addF/gtfsio:</span></span>
 <span><span class="co">#&gt;   * agency.txt</span></span>
 <span><span class="co">#&gt;   * calendar.txt</span></span>
 <span><span class="co">#&gt;   * routes.txt</span></span>
@@ -203,8 +203,6 @@
 <span>  </span>
 <span>  <span class="co"># linestring</span></span>
 <span>  <span class="va">poa_gps60_sflinestring</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gps_as_sflinestring.html">gps_as_sflinestring</a></span><span class="op">(</span><span class="va">poa_gps60</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in CPL_crs_from_input(x): GDAL Error 6: EPSG PCS/GCS code 4329 not found</span></span>
-<span><span class="co">#&gt; in EPSG support files. Is this a valid EPSG coordinate system?</span></span>
 <span></span>
 <span>  <span class="co"># plot</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_geometry</a></span><span class="op">(</span><span class="va">poa_gps60_sfpoints</span><span class="op">)</span>, pch <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
