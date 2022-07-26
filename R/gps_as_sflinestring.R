@@ -119,7 +119,7 @@ gps_as_sflinestring  <- function(gps){
                                      y = 'shape_pt_lat',
                                      linestring_id = 'interval_id',
                                      keep = TRUE)
-  gps_sf <- sf::st_set_crs(gps_sf, 4329) 
+  gps_sf <- sf::st_set_crs(gps_sf, 4326) 
   
   # calculate legnth of each segment
   data.table::setDT(gps_sf)[, dist := sf::st_length(geometry)]
