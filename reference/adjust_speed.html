@@ -25,7 +25,7 @@ custom constant value, or by considering the average of all valid trips speed
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gtfs2gps</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0-3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0-999</span>
       </span>
     </div>
 
@@ -79,57 +79,60 @@ custom constant value, or by considering the average of all valid trips speed
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">adjust_speed</span><span class="op">(</span>
-  <span class="va">gps_data</span>,
-  min_speed <span class="op">=</span> <span class="fl">2</span>,
-  max_speed <span class="op">=</span> <span class="fl">80</span>,
-  new_speed <span class="op">=</span> <span class="cn">NULL</span>,
-  clone <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">adjust_speed</span><span class="op">(</span></span>
+<span>  <span class="va">gps_data</span>,</span>
+<span>  min_speed <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  max_speed <span class="op">=</span> <span class="fl">80</span>,</span>
+<span>  new_speed <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  clone <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>gps_data</dt>
 <dd><p>A GPS-like data.table created with <code><a href="gtfs2gps.html">gtfs2gps</a></code>.</p></dd>
+
+
 <dt>min_speed</dt>
 <dd><p>Minimum speed to be considered as valid. It can
 be a numeric (in km/h) or a units value able to be converted to km/h. Values 
 below minimum speed will be adjusted. Defaults to 2 km/h.</p></dd>
+
+
 <dt>max_speed</dt>
 <dd><p>Maximum speed to be considered as valid. It can
 be a numeric (in km/h) or a units value able to be converted to km/h. Values
 above maximum speed will be adjusted. Defaults to 80 km/h.</p></dd>
+
+
 <dt>new_speed</dt>
 <dd><p>Speed to replace missing values as well as values
 outside min_speed and max_speed range. It can
 be a numeric (in km/h) or a units value able to be converted to km/h.
 By default, `new_speed = NULL` and the
 function considers the average speed of the entire gps data.</p></dd>
+
+
 <dt>clone</dt>
 <dd><p>Use a copy of the gps_data? Defaults to TRUE.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A GPS-like data with adjusted `speed` values. The columns
+    
+
+<p>A GPS-like data with adjusted `speed` values. The columns
 `timestamp` and `cumtime` are also updated accordingly.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘dplyr’</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:stats’:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     filter, lag</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:base’:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     intersect, setdiff, setequal, union</span>
-<span class="r-in"><span class="va">poa</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_gtfs.html">read_gtfs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa.zip"</span>, package<span class="op">=</span><span class="st">"gtfs2gps"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu"><a href="filter_week_days.html">filter_week_days</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu"><a href="filter_single_trip.html">filter_single_trip</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Unzipped the following files to /tmp/RtmpSLd0j5/gtfsio:</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">poa</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_gtfs.html">read_gtfs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa.zip"</span>, package<span class="op">=</span><span class="st">"gtfs2gps"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">gtfstools</span><span class="fu">::</span><span class="fu"><a href="https://ipeagit.github.io/gtfstools/reference/filter_by_weekday.html" class="external-link">filter_by_weekday</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"monday"</span>, <span class="st">"wednesday"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="filter_single_trip.html">filter_single_trip</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Unzipped the following files to /tmp/RtmpGYIKed/gtfsio:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   * agency.txt</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   * calendar.txt</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   * routes.txt</span>
@@ -144,31 +147,25 @@ function considers the average speed of the entire gps data.</p></dd>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Reading stop_times.txt</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Reading stops.txt</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Reading trips.txt</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">poa_gps</span> <span class="op">&lt;-</span> <span class="fu"><a href="gtfs2gps.html">gtfs2gps</a></span><span class="op">(</span><span class="va">poa</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">poa_gps</span> <span class="op">&lt;-</span> <span class="fu"><a href="gtfs2gps.html">gtfs2gps</a></span><span class="op">(</span><span class="va">poa</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Converting shapes to sf objects</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Using 1 CPU cores</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Processing the data</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘purrr’</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from ‘package:magrittr’:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     set_names</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘data.table’</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from ‘package:purrr’:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     transpose</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:dplyr’:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     between, first, last</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Linking to GEOS 3.6.2, GDAL 2.2.3, PROJ 4.9.3; sf_use_s2() is TRUE</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘magrittr’</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from ‘package:purrr’:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     set_names</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> udunits database from /usr/share/xml/udunits/udunits2.xml</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 1 'speed' values are NA for shapeid '176-1'.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 3 'speed' values are NA for shapeid 'A141-1'.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 1 'speed' values are NA for shapeid 'R10-2'.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 9 'speed' values are NA for shapeid 'T2-1'.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Some 'speed' values are NA in the returned data.</span>
-<span class="r-in"><span class="va">poa_gps_new</span> <span class="op">&lt;-</span> <span class="fu">adjust_speed</span><span class="op">(</span><span class="va">poa_gps</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">poa_gps_new</span> <span class="op">&lt;-</span> <span class="fu">adjust_speed</span><span class="op">(</span><span class="va">poa_gps</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -183,7 +180,7 @@ function considers the average speed of the entire gps data.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

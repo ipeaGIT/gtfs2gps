@@ -31,37 +31,10 @@
     <loc>/reference/append_height.html</loc>
   </url>
   <url>
-    <loc>/reference/cpp_snap_points_nearest1.html</loc>
-  </url>
-  <url>
-    <loc>/reference/cpp_snap_points_nearest2.html</loc>
-  </url>
-  <url>
-    <loc>/reference/filter_by_agency_id.html</loc>
-  </url>
-  <url>
-    <loc>/reference/filter_by_day.html</loc>
-  </url>
-  <url>
-    <loc>/reference/filter_by_route_id.html</loc>
-  </url>
-  <url>
-    <loc>/reference/filter_by_route_type.html</loc>
-  </url>
-  <url>
-    <loc>/reference/filter_by_shape_id.html</loc>
-  </url>
-  <url>
-    <loc>/reference/filter_day_period.html</loc>
-  </url>
-  <url>
     <loc>/reference/filter_single_trip.html</loc>
   </url>
   <url>
     <loc>/reference/filter_valid_stop_times.html</loc>
-  </url>
-  <url>
-    <loc>/reference/filter_week_days.html</loc>
   </url>
   <url>
     <loc>/reference/gps_as_sflinestring.html</loc>
@@ -82,13 +55,7 @@
     <loc>/reference/index.html</loc>
   </url>
   <url>
-    <loc>/reference/merge_gtfs_feeds.html</loc>
-  </url>
-  <url>
     <loc>/reference/read_gtfs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/remove_by_route_id.html</loc>
   </url>
   <url>
     <loc>/reference/remove_invalid.html</loc>

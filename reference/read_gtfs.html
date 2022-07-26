@@ -21,7 +21,7 @@ this function will stop with an error message.'><meta property="og:image" conten
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gtfs2gps</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0-3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0-999</span>
       </span>
     </div>
 
@@ -71,26 +71,31 @@ this function will stop with an error message.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">read_gtfs</span><span class="op">(</span><span class="va">gtfszip</span>, quiet <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">read_gtfs</span><span class="op">(</span><span class="va">gtfszip</span>, quiet <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>gtfszip</dt>
 <dd><p>A zipped GTFS data.</p></dd>
+
+
 <dt>quiet</dt>
 <dd><p>A logical. Whether to hide log messages and progress bars. 
 Defaults to `FALSE`.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A list of data.tables, where each index represents the respective GTFS file name.</p>
+    
+
+<p>A list of data.tables, where each index represents the respective GTFS file name.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">poa</span> <span class="op">&lt;-</span> <span class="fu">read_gtfs</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa.zip"</span>, package <span class="op">=</span> <span class="st">"gtfs2gps"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Unzipped the following files to /tmp/RtmpSLd0j5/gtfsio:</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">poa</span> <span class="op">&lt;-</span> <span class="fu">read_gtfs</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa.zip"</span>, package <span class="op">=</span> <span class="st">"gtfs2gps"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Unzipped the following files to /tmp/RtmpGYIKed/gtfsio:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   * agency.txt</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   * calendar.txt</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   * routes.txt</span>
@@ -105,7 +110,6 @@ Defaults to `FALSE`.</p></dd>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Reading stop_times.txt</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Reading stops.txt</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Reading trips.txt</span>
-<span class="r-in"></span>
 </code></pre></div>
     </div>
   </div>
@@ -120,7 +124,7 @@ Defaults to `FALSE`.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

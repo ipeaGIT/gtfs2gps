@@ -18,7 +18,7 @@ reduce its size. It uses Douglas-Peucker algorithm internally."><meta property="
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gtfs2gps</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0-3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0-999</span>
       </span>
     </div>
 
@@ -65,44 +65,27 @@ reduce its size. It uses Douglas-Peucker algorithm internally.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">simplify_shapes</span><span class="op">(</span><span class="va">gtfs_data</span>, tol <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">simplify_shapes</span><span class="op">(</span><span class="va">gtfs_data</span>, tol <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>gtfs_data</dt>
 <dd><p>A list of data.tables read using gtfs2gps::read_gtfs().</p></dd>
+
+
 <dt>tol</dt>
 <dd><p>Numerical tolerance value to be used by the Douglas-Peucker algorithm.
 The default value is 0, which means that no data will be lost.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A GTFS data whose shapes is a subset of the input data.</p>
+    
+
+<p>A GTFS data whose shapes is a subset of the input data.</p>
     </div>
 
-    <div id="ref-examples">
-    <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">poa</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_gtfs.html">read_gtfs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa.zip"</span>, package<span class="op">=</span><span class="st">"gtfs2gps"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Unzipped the following files to /tmp/RtmpSLd0j5/gtfsio:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   * agency.txt</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   * calendar.txt</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   * routes.txt</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   * shapes.txt</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   * stop_times.txt</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   * stops.txt</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   * trips.txt</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Reading agency.txt</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Reading calendar.txt</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Reading routes.txt</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Reading shapes.txt</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Reading stop_times.txt</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Reading stops.txt</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Reading trips.txt</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">poa_simpl</span> <span class="op">&lt;-</span> <span class="fu">simplify_shapes</span><span class="op">(</span><span class="va">poa</span><span class="op">)</span></span>
-</code></pre></div>
-    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -115,7 +98,7 @@ The default value is 0, which means that no data will be lost.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

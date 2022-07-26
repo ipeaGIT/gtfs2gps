@@ -18,7 +18,7 @@ This function overwrites the zip file if it exists."><meta property="og:image" c
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gtfs2gps</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0-3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0-999</span>
       </span>
     </div>
 
@@ -65,36 +65,45 @@ This function overwrites the zip file if it exists.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">write_gtfs</span><span class="op">(</span><span class="va">gtfs</span>, <span class="va">zipfile</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span>, quiet <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">write_gtfs</span><span class="op">(</span><span class="va">gtfs</span>, <span class="va">zipfile</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span>, quiet <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>gtfs</dt>
 <dd><p>A GTFS data set stored in memory as a list of data.tables/data.frames.</p></dd>
+
+
 <dt>zipfile</dt>
 <dd><p>The pathname of a .zip file to be saved with the GTFS data.</p></dd>
+
+
 <dt>overwrite</dt>
 <dd><p>A logical. Whether to overwrite an existing <code>.zip</code> file.
 Defaults to <code>TRUE</code>.</p></dd>
+
+
 <dt>quiet</dt>
 <dd><p>A logical. Whether to hide log messages and progress bars. 
 Defaults to <code>TRUE</code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>The status value returned by the external zip command, invisibly.</p>
+    
+
+<p>The status value returned by the external zip command, invisibly.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># read a gtfs.zip to memory</span></span>
-<span class="r-in"><span class="va">poa</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_gtfs.html">read_gtfs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa.zip"</span>, package <span class="op">=</span> <span class="st">"gtfs2gps"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu"><a href="filter_by_shape_id.html">filter_by_shape_id</a></span><span class="op">(</span><span class="st">"T2-1"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu"><a href="filter_single_trip.html">filter_single_trip</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Unzipped the following files to /tmp/RtmpSLd0j5/gtfsio:</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># read a gtfs.zip to memory</span></span></span>
+<span class="r-in"><span><span class="va">poa</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_gtfs.html">read_gtfs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa.zip"</span>, package <span class="op">=</span> <span class="st">"gtfs2gps"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">gtfstools</span><span class="fu">::</span><span class="fu"><a href="https://ipeagit.github.io/gtfstools/reference/filter_by_shape_id.html" class="external-link">filter_by_shape_id</a></span><span class="op">(</span><span class="st">"T2-1"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="filter_single_trip.html">filter_single_trip</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Unzipped the following files to /tmp/RtmpGYIKed/gtfsio:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   * agency.txt</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   * calendar.txt</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   * routes.txt</span>
@@ -109,10 +118,10 @@ Defaults to <code>TRUE</code>.</p></dd>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Reading stop_times.txt</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Reading stops.txt</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Reading trips.txt</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># write GTFS data into a zip file</span></span>
-<span class="r-in"><span class="fu">write_gtfs</span><span class="op">(</span><span class="va">poa</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"/mypoa.zip"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Writing text files to /tmp/RtmpSLd0j5/gtfsio454062373048</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># write GTFS data into a zip file</span></span></span>
+<span class="r-in"><span><span class="fu">write_gtfs</span><span class="op">(</span><span class="va">poa</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"/mypoa.zip"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Writing text files to /tmp/RtmpGYIKed/gtfsio40c052c8ee3f</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   - Writing agency.txt</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   - Writing calendar.txt</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   - Writing routes.txt</span>
@@ -120,8 +129,8 @@ Defaults to <code>TRUE</code>.</p></dd>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   - Writing stop_times.txt</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   - Writing stops.txt</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   - Writing trips.txt</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> GTFS object successfully zipped to /tmp/RtmpSLd0j5/mypoa.zip</span>
-<span class="r-in"></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> GTFS object successfully zipped to /tmp/RtmpGYIKed/mypoa.zip</span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -136,7 +145,7 @@ Defaults to <code>TRUE</code>.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>
