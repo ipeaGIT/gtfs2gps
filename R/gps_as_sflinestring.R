@@ -123,8 +123,8 @@ gps_as_sflinestring  <- function(gps){
   
   # calculate legnth of each segment
   data.table::setDT(gps_sf)[, dist := sf::st_length(geometry)]
-  gps_sf[,dist := units::drop_units(dist)] # m
-  gps_sf[,speed := units::drop_units(speed/ 3.6)] # km/h to m/s
+  gps_sf[,dist := as.numeric(dist)] # m
+  gps_sf[,speed := as.numeric(speed/ 3.6)] # km/h to m/s
   
   # add time / speed info
   gps_sf[,time := dist / speed] # s
