@@ -104,7 +104,7 @@ gtfs2gps <- function(gtfs_data,
                      continue = FALSE,
                      quiet = FALSE){
   
-  if(quiet) return(suppressMessages(gtfs2gps(gtfs_data, spatial_resolution, parallel, strategy, filepath, compress, snap_method, continue)))
+  if(quiet) return(suppressMessages(gtfs2gps(gtfs_data, spatial_resolution, parallel, ncores, strategy, filepath, compress, snap_method, continue)))
   
   if(!is.null(strategy)){
     warning("Argument 'strategy' is deprecated and will be removed in a future version.") # nocov

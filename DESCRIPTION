@@ -36,7 +36,6 @@ Imports:
       terra,
       sfheaders,
       progressr,
-      lwgeom,
       checkmate
 RoxygenNote: 7.2.0
 VignetteBuilder: knitr
