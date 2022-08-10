@@ -21,6 +21,8 @@
 #' strategy "multisession" internally.
 #' Note that it is possible to create your own plan before calling gtfs2gps().
 #' In this case, do not use this argument.
+#' @param ncores Number of cores to be used in parallel execution. If parallel is
+# FALSE then this argument is ignored.
 #' @param strategy This argument is deprecated. Please use argument plan instead or
 #' use future::plan() directly.
 #' @param filepath Output file path. As default, the output is returned when gtfs2gps finishes.
@@ -94,6 +96,7 @@
 gtfs2gps <- function(gtfs_data,
                      spatial_resolution = 100,
                      parallel = TRUE,
+                     ncores = NULL,
                      strategy = NULL,
                      filepath = NULL,
                      compress = FALSE,
@@ -101,7 +104,7 @@ gtfs2gps <- function(gtfs_data,
                      continue = FALSE,
                      quiet = FALSE){
   
-  if(quiet) return(suppressMessages(gtfs2gps(gtfs_data, spatial_resolution, parallel, strategy, filepath, compress, snap_method, continue)))
+  if(quiet) return(suppressMessages(gtfs2gps(gtfs_data, spatial_resolution, parallel, ncores, strategy, filepath, compress, snap_method, continue)))
   
   if(!is.null(strategy)){
     warning("Argument 'strategy' is deprecated and will be removed in a future version.") # nocov
@@ -327,10 +330,12 @@ gtfs2gps <- function(gtfs_data,
   if(parallel)
   {
     # number of cores
-    cores <- max(1, future::availableCores() - 1)
-    message(paste('Using', cores, 'CPU cores'))
+    if (is.null(ncores))
+      ncores <- max(1, future::availableCores() - 1)
+
+    message(paste('Using', ncores, 'CPU cores'))
     
-    oplan <- future::plan("multisession", workers = cores)
+    oplan <- future::plan("multisession", workers = ncores)
     on.exit(future::plan(oplan), add = TRUE)
   }
   
@@ -351,7 +356,7 @@ gtfs2gps <- function(gtfs_data,
   }
   
   message("Processing the data")
-  requiredPackages = c('data.table', 'sf', 'magrittr', 'Rcpp', 'sfheaders', 'units')
+  requiredPackages = c('data.table', 'sf', 'Rcpp', 'sfheaders', 'units')
   output <- furrr::future_map(.x = all_shapeids, .f = tryCorefun, 
                               .options = furrr::furrr_options(
                                 packages = requiredPackages))

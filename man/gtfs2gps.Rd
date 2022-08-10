@@ -8,6 +8,7 @@ gtfs2gps(
   gtfs_data,
   spatial_resolution = 100,
   parallel = TRUE,
+  ncores = NULL,
   strategy = NULL,
   filepath = NULL,
   compress = FALSE,
@@ -32,6 +33,8 @@ When TRUE, it will use all cores available minus one using future::plan() with
 strategy "multisession" internally.
 Note that it is possible to create your own plan before calling gtfs2gps().
 In this case, do not use this argument.}
+
+\item{ncores}{Number of cores to be used in parallel execution. If parallel is}
 
 \item{strategy}{This argument is deprecated. Please use argument plan instead or
 use future::plan() directly.}
