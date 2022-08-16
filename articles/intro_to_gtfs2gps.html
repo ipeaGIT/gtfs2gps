@@ -117,7 +117,7 @@
 <span><span class="co">#&gt; NOTE: All filter functions from gtfs2gps were removed</span></span>
 <span><span class="co">#&gt; Please replace them by similar functions from gtfstools</span></span>
 <span><span class="va">poa</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_gtfs.html">read_gtfs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/poa.zip"</span>, package <span class="op">=</span><span class="st">"gtfs2gps"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Unzipped the following files to /tmp/RtmpHFCM0P/gtfsio:</span></span>
+<span><span class="co">#&gt; Unzipped the following files to /tmp/RtmpkOz4hb/gtfsio:</span></span>
 <span><span class="co">#&gt;   * agency.txt</span></span>
 <span><span class="co">#&gt;   * calendar.txt</span></span>
 <span><span class="co">#&gt;   * routes.txt</span></span>
@@ -171,8 +171,8 @@
 </h2>
 <p>To convert GTFS to GPS-like format, use <code><a href="../reference/gtfs2gps.html">gtfs2gps()</a></code>. This is the core function of the package. It takes a GTFS zipped file as an input and returns a <code>data.table</code> where each row represents a ‘GPS-like’ data point for every trip in the GTFS file. In summary, this function interpolates the space-time position of each vehicle in each trip considering the network distance and average speed between stops. The function samples the timestamp of each vehicle every <span class="math inline">\(15m\)</span> by default, but the user can set a different value in the <code>spatial_resolution</code> argument. See the example below.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span>  <span class="va">poa_gps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gtfs2gps.html">gtfs2gps</a></span><span class="op">(</span><span class="va">temp_gtfs</span>, spatial_resolution <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">poa_gps</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">poa_gps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gtfs2gps.html">gtfs2gps</a></span><span class="op">(</span><span class="va">temp_gtfs</span>, spatial_resolution <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">poa_gps</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    shape_id     trip_id route_type id timestamp shape_pt_lon shape_pt_lat</span></span>
 <span><span class="co">#&gt; 1:   A141-1 A141-1@1#30          3  1      &lt;NA&gt;    -51.14692    -30.14979</span></span>
 <span><span class="co">#&gt; 2:   A141-1 A141-1@1#30          3  2      &lt;NA&gt;    -51.14610    -30.15014</span></span>
@@ -196,18 +196,18 @@
 <span><span class="co">#&gt; 6: 58.31967 [s]           1</span></span></code></pre></div>
 <p>The following figure maps the first 100 data points of the sample data we processed. They can be converted to <code>simple feature</code> points or linestring.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span>  <span class="va">poa_gps60</span> <span class="op">&lt;-</span> <span class="va">poa_gps</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span>, <span class="op">]</span></span>
-<span>  </span>
-<span>  <span class="co"># points</span></span>
-<span>  <span class="va">poa_gps60_sfpoints</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gps_as_sfpoints.html">gps_as_sfpoints</a></span><span class="op">(</span><span class="va">poa_gps60</span><span class="op">)</span></span>
-<span>  </span>
-<span>  <span class="co"># linestring</span></span>
-<span>  <span class="va">poa_gps60_sflinestring</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gps_as_sflinestring.html">gps_as_sflinestring</a></span><span class="op">(</span><span class="va">poa_gps60</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">poa_gps60</span> <span class="op">&lt;-</span> <span class="va">poa_gps</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span>, <span class="op">]</span></span>
 <span></span>
-<span>  <span class="co"># plot</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_geometry</a></span><span class="op">(</span><span class="va">poa_gps60_sfpoints</span><span class="op">)</span>, pch <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_geometry</a></span><span class="op">(</span><span class="va">poa_gps60_sflinestring</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"blue"</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/box.html" class="external-link">box</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co"># points</span></span>
+<span><span class="va">poa_gps60_sfpoints</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gps_as_sfpoints.html">gps_as_sfpoints</a></span><span class="op">(</span><span class="va">poa_gps60</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># linestring</span></span>
+<span><span class="va">poa_gps60_sflinestring</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gps_as_sflinestring.html">gps_as_sflinestring</a></span><span class="op">(</span><span class="va">poa_gps60</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># plot</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_geometry</a></span><span class="op">(</span><span class="va">poa_gps60_sfpoints</span><span class="op">)</span>, pch <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_geometry</a></span><span class="op">(</span><span class="va">poa_gps60_sflinestring</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"blue"</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/box.html" class="external-link">box</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="intro_to_gtfs2gps_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 <p>The function <code><a href="../reference/gtfs2gps.html">gtfs2gps()</a></code> automatically recognizes whether the GTFS data brings detailed <code>stop_times.txt</code> information or whether it is a <code>frequency.txt</code> GTFS file. A sample data of a GTFS with detailed <code>stop_times.txt</code> cab be found below:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
