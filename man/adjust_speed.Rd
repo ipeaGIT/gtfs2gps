@@ -49,6 +49,7 @@ custom constant value, or by considering the average of all valid trips speed
 \examples{
 library(magrittr)
 poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps")) \%>\%
+  gtfstools::filter_by_shape_id("T2-1") \%>\%
   gtfstools::filter_by_weekday(c("monday", "wednesday")) \%>\%
   filter_single_trip()
 

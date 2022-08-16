@@ -73,24 +73,24 @@ gtfs2gps::write_gtfs(poa_small, temp_gtfs)
 To convert GTFS to GPS-like format, use `gtfs2gps()`. This is the core function of the package. It takes a GTFS zipped file as an input and returns a `data.table` where each row represents a 'GPS-like' data point for every trip in the GTFS file. In summary, this function interpolates the space-time position of each vehicle in each trip considering the network distance and average speed between stops. The function samples the timestamp of each vehicle every $15m$ by default, but the user can set a different value in the `spatial_resolution` argument. See the example below.
 
 ```{r, message = FALSE}
-  poa_gps <- gtfs2gps(temp_gtfs, spatial_resolution = 100)
-  head(poa_gps)
+poa_gps <- gtfs2gps(temp_gtfs, spatial_resolution = 100)
+head(poa_gps)
 ```
  The following figure maps the first 100 data points of the sample data we processed. They can be converted to `simple feature` points or linestring.
 
 ```{r, message = FALSE}
-  poa_gps60 <- poa_gps[1:100, ]
-  
-  # points
-  poa_gps60_sfpoints <- gps_as_sfpoints(poa_gps60)
-  
-  # linestring
-  poa_gps60_sflinestring <- gps_as_sflinestring(poa_gps60)
+poa_gps60 <- poa_gps[1:100, ]
 
-  # plot
-  plot(sf::st_geometry(poa_gps60_sfpoints), pch = 20)
-  plot(sf::st_geometry(poa_gps60_sflinestring), col = "blue", add = TRUE)
-  box()
+# points
+poa_gps60_sfpoints <- gps_as_sfpoints(poa_gps60)
+
+# linestring
+poa_gps60_sflinestring <- gps_as_sflinestring(poa_gps60)
+
+# plot
+plot(sf::st_geometry(poa_gps60_sfpoints), pch = 20)
+plot(sf::st_geometry(poa_gps60_sflinestring), col = "blue", add = TRUE)
+box()
 ```
 
 The function `gtfs2gps()` automatically recognizes whether the GTFS data brings detailed `stop_times.txt` information or whether it is a `frequency.txt` GTFS file. A sample data of a GTFS with detailed  `stop_times.txt` cab be found below:

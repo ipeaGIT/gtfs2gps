@@ -38,6 +38,6 @@ Imports:
       progressr,
       lwgeom,
       checkmate
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.1
 VignetteBuilder: knitr
 LinkingTo: Rcpp
