@@ -89,8 +89,12 @@
 #' @export
 #' @examples
 #' library(gtfs2gps)
+#' library(magrittr)
 #' 
-#' gtfs <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps")) 
+#' gtfs <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps")) %>%
+#'   gtfstools::filter_by_shape_id("T2-1") %>%
+#'   filter_single_trip()
+#'   
 #' poa_gps <- progressr::with_progress(gtfs2gps(gtfs, quiet=TRUE))
 #' 
 gtfs2gps <- function(gtfs_data,
