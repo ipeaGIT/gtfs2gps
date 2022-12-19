@@ -1,7 +1,7 @@
 pandoc: 2.7.3
-pkgdown: 2.0.6
+pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   intro_to_gtfs2gps: intro_to_gtfs2gps.html
-last_built: 2022-08-16T18:10Z
+last_built: 2022-12-19T00:07Z
 
