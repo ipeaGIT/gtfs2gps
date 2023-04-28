@@ -13,12 +13,12 @@ test_that("gtfs2gps", {
     my_dim_0 <- dim(poa_gps_0)[1]
     expect_equal(my_dim_0, 128543)
     
-    poa_gps <- poa_gps_0[speed > units::set_units(0, "km/h") & cumtime >= units::set_units(0, "s") & !is.na(speed),]
+    poa_gps <- poa_gps_0[units::drop_units(speed) > 0 & units::drop_units(cumtime) >= 0 & !is.na(speed),]
     
     my_dim <- dim(poa_gps)[1]
     expect_equal(my_dim, 126660)
     
-    my_length <- length(poa_gps$dist[which(!poa_gps$dist < units::set_units(50, "m"))])
+    my_length <- length(poa_gps$dist[which(!units::drop_units(poa_gps$dist) < 50)])
     expect_equal(my_length, 0)
     
     expect_equal(sum(units::drop_units(poa_gps$dist)), 4085722, 0.1)
@@ -53,14 +53,14 @@ test_that("gtfs2gps", {
 
     expect_equal(my_dim, total)
 
-    poa_gps <- poa_gps[speed > units::set_units(0, "km/h") & cumtime > units::set_units(0, "s") & !is.na(speed) & !is.infinite(speed),]
+    poa_gps <- poa_gps[units::drop_units(speed) > 0 & units::drop_units(cumtime) > 0 & !is.na(speed) & !is.infinite(speed),]
 
-    expect_true(all(na.omit(poa_gps$speed) > units::set_units(0, "km/h")))
+    expect_true(all(na.omit(units::drop_units(poa_gps$speed) > 0)))
     
     my_dim <- dim(poa_gps)[1]
     expect_equal(my_dim, 126272)
     
-    my_length <- length(poa_gps$dist[which(!poa_gps$dist < units::set_units(50, "m"))])
+    my_length <- length(poa_gps$dist[which(!(units::drop_units(poa_gps$dist) < 50))])
     expect_equal(my_length, 0)
     
     expect_equal(sum(units::drop_units(poa_gps$dist)), 516072, 1)
