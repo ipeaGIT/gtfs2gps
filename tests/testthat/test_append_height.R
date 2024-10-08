@@ -3,12 +3,12 @@ test_that("append_height", {
   fortaleza <- system.file("extdata/fortaleza.zip", package="gtfs2gps")
   srtmfile <- system.file("extdata/fortaleza-srtm.tif", package="gtfs2gps")
   
-  gtfs <- read_gtfs(fortaleza) %>%
-    gtfstools::filter_by_shape_id("shape804-I") %>%
-    filter_single_trip() %>% 
+  gtfs <- read_gtfs(fortaleza) |>
+    gtfstools::filter_by_shape_id("shape804-I") |>
+    filter_single_trip() |> 
     remove_invalid()
   
-  fortaleza_gps <- gtfs2gps(gtfs, spatial_resolution = 500) %>% append_height(srtmfile)
+  fortaleza_gps <- gtfs2gps(gtfs, spatial_resolution = 500) |> append_height(srtmfile)
 
   mysum <- sum(fortaleza_gps$height)
 

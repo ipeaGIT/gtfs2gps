@@ -1,9 +1,9 @@
 test_that("gtfs2gps", {
     poa <- system.file("extdata/poa.zip", package="gtfs2gps")
 
-    poa_gps_0 <- read_gtfs(poa) %>%
-      adjust_arrival_departure() %>%
-      gtfstools::filter_by_weekday(c("monday", "tuesday", "wednesday", "thursday", "friday")) %>%
+    poa_gps_0 <- read_gtfs(poa) |>
+      adjust_arrival_departure() |>
+      gtfstools::filter_by_weekday(c("monday", "tuesday", "wednesday", "thursday", "friday")) |>
       gtfs2gps(parallel = FALSE, spatial_resolution = 50)
 
     expect_equal(sum(units::drop_units(poa_gps_0$cumtime), na.rm = TRUE), 212843109, 0.01)
@@ -37,11 +37,11 @@ test_that("gtfs2gps", {
     expect_true(all(poa_gps$speed >= units::set_units(0, "km/h")))
     expect_true(all(poa_gps$cumtime >= units::set_units(0, "s")))
     
-    poa_gps <- read_gtfs(poa) %>%
-      gtfstools::filter_by_weekday(c("monday", "tuesday", "wednesday", "thursday", "friday")) %>%
+    poa_gps <- read_gtfs(poa) |>
+      gtfstools::filter_by_weekday(c("monday", "tuesday", "wednesday", "thursday", "friday")) |>
       gtfs2gps(spatial_resolution = 50)
 
-    #poa_shape <- read_gtfs(poa) %>% gtfs_shapes_as_sf()
+    #poa_shape <- read_gtfs(poa) |> gtfs_shapes_as_sf()
     #plot(poa_shape)
     #poa_gps_shape <- gps_as_sf(poa_gps)
     #plot(poa_gps_shape)
@@ -79,15 +79,15 @@ test_that("gtfs2gps", {
     expect_true(all(poa_gps$speed >= units::set_units(0, "km/h")))
     expect_true(all(poa_gps$cumtime >= units::set_units(0, "s")))
 
-    poa_gps_30 <- read_gtfs(poa) %>%
-      gtfstools::filter_by_weekday(c("monday", "tuesday", "wednesday", "thursday", "friday")) %>%
+    poa_gps_30 <- read_gtfs(poa) |>
+      gtfstools::filter_by_weekday(c("monday", "tuesday", "wednesday", "thursday", "friday")) |>
       gtfs2gps(spatial_resolution = 30)
     
     expect_equal(dim(poa_gps_30)[1], 200560)
     expect(dim(poa_gps_30)[1] > dim(poa_gps)[1], "more spatial_resolution is not decreasing the number of points")
     
     # save into file
-    poa_simple <- read_gtfs(poa) %>%
+    poa_simple <- read_gtfs(poa) |>
       gtfstools::filter_by_shape_id(c("T2-1", "A141-1"))
 
     poa_gps <- gtfs2gps(poa_simple, filepath = ".", spatial_resolution = 50)
@@ -137,17 +137,17 @@ test_that("gtfs2gps", {
     # 
     # sp2 <- gtfstools::read_gtfs(sp)
     # sp3 <- gtfstools::frequencies_to_stop_times(sp2)
-    # sp_gps <- sp3 %>%
+    # sp_gps <- sp3 |>
     #   adjust_arrival_departure()
     # 
     # gtfstools::write_gtfs(sp3, "sp3.zip")
     # 
     # sp4 <- read_gtfs("sp3.zip")
     # 
-    # sp_gps <- sp4 %>%
-    #   gtfstools::filter_by_shape_id(52072) %>%
-    #  gtfstools::filter_by_weekday(c("monday", "tuesday", "wednesday", "thursday", "friday")) %>%
-    #   filter_single_trip() %>%
+    # sp_gps <- sp4 |>
+    #   gtfstools::filter_by_shape_id(52072) |>
+    #  gtfstools::filter_by_weekday(c("monday", "tuesday", "wednesday", "thursday", "friday")) |>
+    #   filter_single_trip() |>
     #   gtfs2gps(parallel = FALSE, spatial_resolution = 15)
     # 
     # expect_true(all(names(sp_gps) %in%
@@ -168,9 +168,9 @@ test_that("gtfs2gps", {
     # expect_equal(length(sp_gps$cumtime > units::set_units(0, "s")), total)
     # 
     # # messages when gtfs2gps cannot convert all shapes nor all trips
-    # gtfs <- read_gtfs(sp) %>%
-    #   gtfstools::filter_by_shape_id(52000:52200) %>%
-    #  gtfstools::filter_by_weekday(c("monday", "tuesday", "wednesday", "thursday", "friday")) %>%
+    # gtfs <- read_gtfs(sp) |>
+    #   gtfstools::filter_by_shape_id(52000:52200) |>
+    #  gtfstools::filter_by_weekday(c("monday", "tuesday", "wednesday", "thursday", "friday")) |>
     #   filter_single_trip()
     # 
     # gtfs$stop_times <- gtfs$stop_times[-(300:390), ]

@@ -23,7 +23,7 @@
 #' In this case, do not use this argument.
 #' @param ncores Number of cores to be used in parallel execution. If parallel is
 #'        FALSE then this argument is ignored. By Default, the function uses all 
-#'        available cores minus one..
+#'        available cores minus one.
 #' @param strategy This argument is deprecated. Please use argument plan instead or
 #' use future::plan() directly.
 #' @param filepath Output file path. As default, the output is returned when gtfs2gps finishes.
