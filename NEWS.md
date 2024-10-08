@@ -1,5 +1,11 @@
 # log history of gtfs2gps package development
 
+# gtfs2gps v2.1-2
+
+* Minor changes
+  * remove {magrittr} from Suggests
+
+
 # gtfs2gps v2.1-1
 
 * Major changes
