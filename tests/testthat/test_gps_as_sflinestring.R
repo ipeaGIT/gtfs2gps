@@ -20,7 +20,7 @@ test_that("gps_as_sflinestring", {
   # -----
   # test to fix NA values
   gps <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps")) |>
-    gtfstools::filter_by_shape_id(.,"176-1") |> 
+    gtfstools::filter_by_shape_id("176-1") |> 
     filter_single_trip() |> 
     gtfs2gps() |> 
     adjust_speed() |> 

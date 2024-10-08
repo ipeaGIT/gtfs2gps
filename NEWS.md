@@ -5,8 +5,7 @@
 * Minor changes
   * puts package back on CRAN
   * remove {magrittr} from Suggests
-  * Clarifies in the documentation of the parameter `ncores` is , by default, all available cores minus one. closes #271
-
+  * Clarifies in the documentation the default behavior of the parameter `ncores`. closes #271. When `parallel = FALSE`, this argument is ignored. When `parallel = TRUE`, then by default the function uses all available cores minus one.
 
 # gtfs2gps v2.1-1
 

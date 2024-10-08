@@ -16,44 +16,6 @@ library(gtfs2gps)
 devtools::document(pkg = ".")
 
 
-# calculate Distance between successive points
-new_stoptimes[ , dist := geosphere::distGeo(matrix(c(shape_pt_lon, shape_pt_lat), ncol = 2),
-                                            matrix(c(data.table::shift(shape_pt_lon, type="lag"), data.table::shift(shape_pt_lat, type="lag")), ncol = 2))/1000]
-
-
-
-
-#### SPEED
-poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
-
-system.time(poa_gps <- gtfs2gps(poa))
-user  system elapsed 
-9.34    0.15    9.67 
-7.59    0.15    7.73 
-7.15    0.36    7.51 
-
-spo <- read_gtfs(system.file("extdata/saopaulo.zip", package = "gtfs2gps"))
-system.time(spo_gps <- gtfs2gps(spo))
-user  system elapsed 
-79.97    1.71   82.67 
-79.31    1.68   81.69
-77.51    1.37   80.29 
-##### INPUT  ------------------------
-  # normal
-  gtfsn <- './inst/extdata/poa.zip'
-  # freq based
-  gtfsf <- './inst/extdata/saopaulo.zip'
-
-emtu <- "R:/Dropbox/bases_de_dados/GTFS/SP GTFS/GTFS EMTU_20190815.zip"
-  
-  
-##### TESTS normal fun ------------------------
-  # normal data
-  system.time(  normal <- gtfs2gps_dt_parallel2(emtu) ) # 61.55  secs
-
-  # freq data
-  system.time(  normfreq <- gtfs2gps_dt_parallel(gtfsf) ) # 130.50 secs
-  
   
 ##### Coverage ------------------------
 
@@ -294,15 +256,6 @@ devtools::check(pkg = ".",  cran = TRUE, env_vars = c(NOT_CRAN = "false"))
 
 
 
-# build binary  ----------------
-system("R CMD build . --resave-data") # build tar.gz
-system("R CMD build gtfs2gps --resave-data") # build tar.gz
-# devtools::build(pkg = "gtfs2gps", path=".", binary = TRUE, manual=TRUE)
-
-# Check package errors
-# devtools::check("gtfs2gps")
-system("R CMD check gtfs2gps_1.0.tar.gz")
-system("R CMD check --as-cran gtfs2gps_1.0-0.tar.gz")
 
 
 
@@ -310,57 +263,6 @@ system("R CMD check --as-cran gtfs2gps_1.0-0.tar.gz")
 
 
 
-
-
-
-
-a <- all_feeds[[1]]$stops$stop_id
-
-b <- all_feeds[[2]]$stops$stop_id
-
-
-intersect(a,b, a)
-
-Reduce(intersect, list(a,b,c))
-
-
-all_feeds[[c(1,2)]]$stops$stop_id
-
-
-
-spo <- system.file("extdata/saopaulo.zip", package = "gtfs2gps")
-poa <- system.file("extdata/poa.zip", package = "gtfs2gps")
-gtfs_list <- list(spo, poa)
-
-# read all feeds
-all_feeds <- lapply(gtfs_list, read_gtfs)
-
-
-##### STOPS ----------------------
-
-# extract stops from all GTFS feeds
-stops <- sapply(all_feeds, "[", 'stops')
-
-# extract stop ids
-stop_ids <-  sapply(stops, "[[", 'stop_id')
-
-# check inersection between ids
-output_intersect <- Reduce(intersect, stop_ids)
-
-# if there is any overlap
-if( length(output_intersect) = 0){ 
-  stops <- rbindlist(stops, fill = T)
-}
-
-
-
-
-for(i in 1:length(agency_ids)){
-  stop_ids[i] <- sprintf("%s_%s", agency_ids[[i]], stop_ids[[i]])
-  # route_ids[i] <- sprintf("%s_%s", agency_ids[[i]], route_ids[[i]])
-  # trip_ids[i] <- sprintf("%s_%s", agency_ids[[i]], trip_ids[[i]])
-  # ...
-}
 
 
 ##### website  ----------------------
@@ -368,3 +270,19 @@ library(pkgdown)
 library(usethis)
 
 pkgdown::build_site()
+
+
+
+
+
+# submit to CRAN -----------------
+usethis::use_cran_comments('teste 2222, , asdadsad')
+
+urlchecker::url_check()
+devtools::check(remote = TRUE, manual = TRUE)
+devtools::check_win_release()
+devtools::check_mac_release()
+rhub::check_for_cran(show_status = FALSE)
+
+
+devtools::submit_cran()

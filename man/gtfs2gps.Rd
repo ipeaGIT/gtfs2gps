@@ -34,9 +34,9 @@ strategy "multisession" internally.
 Note that it is possible to create your own plan before calling gtfs2gps().
 In this case, do not use this argument.}
 
-\item{ncores}{Number of cores to be used in parallel execution. If parallel is
-FALSE then this argument is ignored. By Default, the function uses all 
-available cores minus one..}
+\item{ncores}{Number of cores to be used in parallel execution. When 
+`parallel = FALSE`, this argument is ignored. When `parallel = TRUE`,
+then by default the function uses all available cores minus one.}
 
 \item{strategy}{This argument is deprecated. Please use argument plan instead or
 use future::plan() directly.}
