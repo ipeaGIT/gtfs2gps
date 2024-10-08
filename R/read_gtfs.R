@@ -7,10 +7,14 @@
 #' @param gtfszip A zipped GTFS data.
 #' @param quiet A logical. Whether to hide log messages and progress bars. 
 #'              Defaults to `FALSE`.
+#'              
 #' @return A list of data.tables, where each index represents the respective GTFS file name.
+#' 
 #' @export
+#' 
 #' @examples
 #' poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
+#' 
 read_gtfs <- function(gtfszip, quiet = FALSE){
   # read GTFS feed
   result <- 

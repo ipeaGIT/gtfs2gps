@@ -27,10 +27,9 @@
 #' `timestamp` and `cumtime` are also updated accordingly.
 #' @export
 #' @examples
-#' library(magrittr)
-#' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps")) %>%
-#'   gtfstools::filter_by_shape_id("T2-1") %>%
-#'   gtfstools::filter_by_weekday(c("monday", "wednesday")) %>%
+#' poa <- read_gtfs(system.file("extdata/poa.zip", package="gtfs2gps")) |>
+#'   gtfstools::filter_by_shape_id("T2-1") |>
+#'   gtfstools::filter_by_weekday(c("monday", "wednesday")) |>
 #'   filter_single_trip()
 #'
 #' poa_gps <- gtfs2gps(poa)
@@ -38,12 +37,12 @@
 adjust_speed <- function(gps_data, min_speed = 2, max_speed = 80, new_speed = NULL, clone = TRUE){
   if(clone) gps_data <- data.table::copy(gps_data)
   
-  max_speed <- units::set_units(max_speed, "km/h") %>% 
-    units::set_units("m/s") %>%
+  max_speed <- units::set_units(max_speed, "km/h") |> 
+    units::set_units("m/s") |>
     units::drop_units()
   
-  min_speed <- units::set_units(min_speed, "km/h") %>%
-    units::set_units("m/s") %>%
+  min_speed <- units::set_units(min_speed, "km/h") |>
+    units::set_units("m/s") |>
     units::drop_units()
   
   gps_data[, speed := units::drop_units(units::set_units(speed, "m/s"))]
@@ -63,8 +62,8 @@ adjust_speed <- function(gps_data, min_speed = 2, max_speed = 80, new_speed = NU
                                ,w = gps_data[stopped_bus == FALSE,as.numeric(dist)]
                                ,na.rm=TRUE)
   else
-    new_speed <- units::set_units(new_speed, "km/h") %>%
-    units::set_units("m/s") %>%
+    new_speed <- units::set_units(new_speed, "km/h") |>
+    units::set_units("m/s") |>
     units::drop_units()
   
   gps_data[, dist := units::drop_units(dist)]
@@ -110,7 +109,7 @@ adjust_speed <- function(gps_data, min_speed = 2, max_speed = 80, new_speed = NU
     tmp_gps_data[as.numeric(timestamp) > 86400, timestamp := timestamp - 86400]
     
     return(tmp_gps_data)
-  }) %>% data.table::rbindlist()
+  }) |> data.table::rbindlist()
   
   gps_data[, speed := units::set_units(units::set_units(speed, "m/s"), "km/h")]
   gps_data[, dist := units::set_units(dist, "m")]

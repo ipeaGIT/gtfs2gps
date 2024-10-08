@@ -19,14 +19,13 @@ Convert a GPS data stored in a data.table into Simple Feature points.
 }
 \examples{
 library(gtfs2gps)
-library(magrittr)
 
 fortaleza <- read_gtfs(system.file("extdata/fortaleza.zip", package = "gtfs2gps"))
 srtmfile <- system.file("extdata/fortaleza-srtm.tif", package="gtfs2gps")
 
-subset <- fortaleza \%>\%
-  gtfstools::filter_by_weekday(c("monday", "wednesday")) \%>\%
-  filter_single_trip() \%>\%
+subset <- fortaleza |>
+  gtfstools::filter_by_weekday(c("monday", "wednesday")) |>
+  filter_single_trip() |>
   gtfstools::filter_by_shape_id("shape806-I")
 
 for_gps <- gtfs2gps(subset)

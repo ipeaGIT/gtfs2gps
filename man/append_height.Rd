@@ -20,15 +20,14 @@ Add a column named height to GPS data using a tif data as reference.
 \examples{
 \dontrun{
 # this example takes more than 10s to run
-library(magrittr)
 
 fortaleza <- system.file("extdata/fortaleza.zip", package = "gtfs2gps")
 srtmfile <- system.file("extdata/fortaleza-srtm.tif", package = "gtfs2gps")
 
-gtfs <- read_gtfs(fortaleza) \%>\%
-  gtfstools::filter_by_shape_id("shape836-I") \%>\%
+gtfs <- read_gtfs(fortaleza) |>
+  gtfstools::filter_by_shape_id("shape836-I") |>
   filter_single_trip() 
 
-fortaleza_gps <- gtfs2gps(gtfs, spatial_resolution = 500) \%>\% append_height(srtmfile)
+fortaleza_gps <- gtfs2gps(gtfs, spatial_resolution = 500) |> append_height(srtmfile)
 }
 }

@@ -9,13 +9,14 @@
 #'        Defaults to \code{TRUE}.
 #'        
 #' @return The status value returned by the external zip command, invisibly.
+#' 
 #' @export
+#' 
 #' @examples
-#' library(magrittr)
 #' 
 #' # read a gtfs.zip to memory
-#' poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps")) %>%
-#'   gtfstools::filter_by_shape_id("T2-1") %>%
+#' poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps")) |>
+#'   gtfstools::filter_by_shape_id("T2-1") |>
 #'   filter_single_trip()
 #' 
 #' # write GTFS data into a zip file

@@ -44,10 +44,9 @@ If a given GTFS zipped file does not contain all of these required files then `r
 In the code below we filter only the shape ids `c("T2-1", "A141-1") to allow faster execution the next scripts.
 
 ```{r}
-library(magrittr)
-object.size(poa) %>% format(units = "Kb")
+object.size(poa) |> format(units = "Kb")
 poa_small <- gtfstools::filter_by_shape_id(poa, c("T2-1", "A141-1"))
-object.size(poa_small) %>% format(units = "Kb")
+object.size(poa_small) |> format(units = "Kb")
 ```
 
 We can then easily convert the data to simple feature format and plot them.

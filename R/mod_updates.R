@@ -76,7 +76,7 @@ update_freq <- function(tripid, new_stoptimes, gtfs_data, all_tripids){
     departure_stoptimes <- lapply(X = seq_along(dt_list), FUN = update_departure_stoptimes, dt_list)
     departure_stoptimes <- data.table::rbindlist(departure_stoptimes)
     departure_stoptimes[,trip_id := paste0(trip_id,"#",trip_number)]
-    #departure_stoptimes <- lapply(X = departure_list, FUN = update_departure_stoptimes) %>% data.table::rbindlist()
+    #departure_stoptimes <- lapply(X = departure_list, FUN = update_departure_stoptimes) |> data.table::rbindlist()
     return(departure_stoptimes)
   }
   

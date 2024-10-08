@@ -24,4 +24,5 @@ this function will stop with an error message.
 }
 \examples{
 poa <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps"))
+
 }

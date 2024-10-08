@@ -117,10 +117,9 @@ To avoid division by zero, the minimum speed of vehicles in the output is
 }
 \examples{
 library(gtfs2gps)
-library(magrittr)
 
-gtfs <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps")) \%>\%
-  gtfstools::filter_by_shape_id("T2-1") \%>\%
+gtfs <- read_gtfs(system.file("extdata/poa.zip", package = "gtfs2gps")) |>
+  gtfstools::filter_by_shape_id("T2-1") |>
   filter_single_trip()
   
 poa_gps <- progressr::with_progress(gtfs2gps(gtfs, quiet=TRUE))
