@@ -3,7 +3,9 @@
 # gtfs2gps v2.1-2
 
 * Minor changes
+  * puts package back on CRAN
   * remove {magrittr} from Suggests
+  * Clarifies in the documentation of the parameter `ncores` is , by default, all available cores minus one. closes #271
 
 
 # gtfs2gps v2.1-1
