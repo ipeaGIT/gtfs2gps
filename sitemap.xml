@@ -1,72 +1,26 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/articles/intro_to_gtfs2gps.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/adjust_arrival_departure.html</loc>
-  </url>
-  <url>
-    <loc>/reference/adjust_speed.html</loc>
-  </url>
-  <url>
-    <loc>/reference/append_height.html</loc>
-  </url>
-  <url>
-    <loc>/reference/filter_single_trip.html</loc>
-  </url>
-  <url>
-    <loc>/reference/filter_valid_stop_times.html</loc>
-  </url>
-  <url>
-    <loc>/reference/gps_as_sflinestring.html</loc>
-  </url>
-  <url>
-    <loc>/reference/gps_as_sfpoints.html</loc>
-  </url>
-  <url>
-    <loc>/reference/gtfs2gps.html</loc>
-  </url>
-  <url>
-    <loc>/reference/gtfs_shapes_as_sf.html</loc>
-  </url>
-  <url>
-    <loc>/reference/gtfs_stops_as_sf.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/read_gtfs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/remove_invalid.html</loc>
-  </url>
-  <url>
-    <loc>/reference/simplify_shapes.html</loc>
-  </url>
-  <url>
-    <loc>/reference/test_gtfs_freq.html</loc>
-  </url>
-  <url>
-    <loc>/reference/write_gtfs.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://ipeagit.github.io/gtfs2gps/404.html</loc></url>
+<url><loc>https://ipeagit.github.io/gtfs2gps/LICENSE-text.html</loc></url>
+<url><loc>https://ipeagit.github.io/gtfs2gps/articles/index.html</loc></url>
+<url><loc>https://ipeagit.github.io/gtfs2gps/articles/intro_to_gtfs2gps.html</loc></url>
+<url><loc>https://ipeagit.github.io/gtfs2gps/authors.html</loc></url>
+<url><loc>https://ipeagit.github.io/gtfs2gps/index.html</loc></url>
+<url><loc>https://ipeagit.github.io/gtfs2gps/news/index.html</loc></url>
+<url><loc>https://ipeagit.github.io/gtfs2gps/reference/adjust_arrival_departure.html</loc></url>
+<url><loc>https://ipeagit.github.io/gtfs2gps/reference/adjust_speed.html</loc></url>
+<url><loc>https://ipeagit.github.io/gtfs2gps/reference/append_height.html</loc></url>
+<url><loc>https://ipeagit.github.io/gtfs2gps/reference/filter_single_trip.html</loc></url>
+<url><loc>https://ipeagit.github.io/gtfs2gps/reference/filter_valid_stop_times.html</loc></url>
+<url><loc>https://ipeagit.github.io/gtfs2gps/reference/gps_as_sflinestring.html</loc></url>
+<url><loc>https://ipeagit.github.io/gtfs2gps/reference/gps_as_sfpoints.html</loc></url>
+<url><loc>https://ipeagit.github.io/gtfs2gps/reference/gtfs2gps.html</loc></url>
+<url><loc>https://ipeagit.github.io/gtfs2gps/reference/gtfs_shapes_as_sf.html</loc></url>
+<url><loc>https://ipeagit.github.io/gtfs2gps/reference/gtfs_stops_as_sf.html</loc></url>
+<url><loc>https://ipeagit.github.io/gtfs2gps/reference/index.html</loc></url>
+<url><loc>https://ipeagit.github.io/gtfs2gps/reference/read_gtfs.html</loc></url>
+<url><loc>https://ipeagit.github.io/gtfs2gps/reference/remove_invalid.html</loc></url>
+<url><loc>https://ipeagit.github.io/gtfs2gps/reference/simplify_shapes.html</loc></url>
+<url><loc>https://ipeagit.github.io/gtfs2gps/reference/test_gtfs_freq.html</loc></url>
+<url><loc>https://ipeagit.github.io/gtfs2gps/reference/write_gtfs.html</loc></url>
 </urlset>
+
