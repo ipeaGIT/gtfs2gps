@@ -84,7 +84,7 @@ test_that("gtfs2gps", {
       gtfs2gps(spatial_resolution = 30)
     
     expect_equal(dim(poa_gps_30)[1], 200560)
-    expect(dim(poa_gps_30)[1] > dim(poa_gps)[1], "more spatial_resolution is not decreasing the number of points")
+    expect_true(dim(poa_gps_30)[1] > dim(poa_gps)[1])
     
     # save into file
     poa_simple <- read_gtfs(poa) |>
